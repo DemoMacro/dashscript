@@ -219,32 +219,32 @@
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a1",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nsrc\\main.rs:33:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a14",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:17: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a16",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:17: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a4",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:17: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -259,8 +259,8 @@
     "id": "test262.test.built-ins.math.atan2.s15.8.2.5_a8",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:17: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -939,8 +939,8 @@
     "id": "test262.test.built-ins.math.max.s15.8.2.11_a2",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nsrc\\main.rs:34:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -956,7 +956,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40856) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«-0.0», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (34824) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«-0.0», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -995,8 +995,8 @@
     "id": "test262.test.built-ins.math.min.s15.8.2.12_a2",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nsrc\\main.rs:34:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1012,7 +1012,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25284) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (38824) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1027,104 +1027,104 @@
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a1",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a12",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a15",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a16",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a17",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a19",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a20",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a23",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nsrc\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a4",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:24: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a6",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a7",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a8",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.math.pow.applying-the-exp-operator_a9",
     "layer": "test262",
     "category": "math",
-    "status": "partial",
-    "detail": "src\\main.rs:4:20: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1396,7 +1396,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38028) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«inf», «0.30000000000000004») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a back",
+    "detail": "Test262Error: \nthread 'main' (20996) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«inf», «0.30000000000000004») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a back",
     "note": ""
   },
   {

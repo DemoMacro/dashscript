@@ -35,8 +35,8 @@
     "id": "test262.test.built-ins.parsefloat.s15.1.2.3_a1_t4",
     "layer": "test262",
     "category": "parsefloat",
-    "status": "partial",
-    "detail": "src\\main.rs:50:25: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nsrc\\main.rs:102:25: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

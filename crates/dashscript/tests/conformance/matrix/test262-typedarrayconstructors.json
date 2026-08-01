@@ -4643,8 +4643,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.set.resized-out-of-bounds-to-in-bounds-index",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:10:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:15:55: error[E0308]: mismatched types: expected `u8`, found `HashMap<String, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

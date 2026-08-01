@@ -596,7 +596,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41656) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«Number(-0.0)», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (672) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«Number(-0.0)», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -747,8 +747,8 @@
     "id": "test262.test.built-ins.json.stringify.replacer-array-number-object",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:4:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 2 warnings emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -756,7 +756,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20252) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"{\\\"b\\\":1.0,\\\"c\\\":3.0,\\\"a\\\":2.0}\"», «\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"») to be true\nnote: run with `RUST_BACKTRACE=1` ",
+    "detail": "Test262Error: \nthread 'main' (20996) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"{\\\"a\\\":2.0,\\\"b\\\":1.0,\\\"c\\\":3.0}\"», «\"{\\\"c\\\":3,\\\"b\\\":1,\\\"a\\\":2}\"») to be true\nnote: run with `RUST_BACKTRACE=1` ",
     "note": ""
   },
   {
@@ -787,16 +787,16 @@
     "id": "test262.test.built-ins.json.stringify.replacer-array-string-object",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:9: error[E0615]: attempted to take value of method `to_string` on type `std::string::String`: method, not a field\nsrc\\main.rs:4:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:5:9: error[E0609]: no field `value_of` on type `std::string::String`: unknown field\nsrc\\main.rs:5:5: warning: unreachable expression: unreachable expression\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 2 warnings emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.json.stringify.replacer-array-undefined",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:20:22: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -899,8 +899,8 @@
     "id": "test262.test.built-ins.json.stringify.space-number-float",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:10:21: error[E0308]: mismatched types: expected `Vec<f64>`, found `HashMap<String, f64>`\nsrc\\main.rs:17:28: error[E0308]: mismatched types: expected `HashMap<String, Vec<f64>>`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -915,8 +915,8 @@
     "id": "test262.test.built-ins.json.stringify.space-number-range",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:10:21: error[E0308]: mismatched types: expected `Vec<f64>`, found `HashMap<String, f64>`\nsrc\\main.rs:17:28: error[E0308]: mismatched types: expected `HashMap<String, Vec<f64>>`, found `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1124,7 +1124,7 @@
     "layer": "test262",
     "category": "json",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (31964) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\\"�d834\\\"\"», «\"\\\"\\\\ud834\\\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ba",
+    "detail": "Test262Error: \nthread 'main' (39468) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\\"�d834\\\"\"», «\"\\\"\\\\ud834\\\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ba",
     "note": ""
   },
   {
@@ -1187,8 +1187,8 @@
     "id": "test262.test.built-ins.json.stringify.value-tojson-result",
     "layer": "test262",
     "category": "json",
-    "status": "partial",
-    "detail": "src\\main.rs:6:21: warning: unreachable expression: unreachable expression\nsrc\\main.rs:13:9: error[E0609]: no field `to_json` on type `Vec<bool>`: unknown field\nsrc\\main.rs:13:5: warning: unreachable expression: unreachable expression\nsrc\\main.rs:18:19: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:19:9: error[E0609]: no field `to_json` on type `std::string::String`: unknown field\nsrc\\main.rs:19:5: warning: unreachable expression: unreachable expression",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

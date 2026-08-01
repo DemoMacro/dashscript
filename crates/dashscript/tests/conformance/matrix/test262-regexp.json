@@ -212,7 +212,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34540) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
+    "detail": "Test262Error: \nthread 'main' (14968) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
     "note": ""
   },
   {
@@ -412,7 +412,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (32176) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
+    "detail": "Test262Error: \nthread 'main' (21168) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
     "note": ""
   },
   {
@@ -420,7 +420,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42424) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (40812) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (21916) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (22700) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41164) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (23604) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -492,7 +492,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (13488) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39888) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -532,7 +532,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (32976) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
+    "detail": "Test262Error: \nthread 'main' (10572) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
     "note": ""
   },
   {
@@ -788,7 +788,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40408) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (40016) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -3899,8 +3899,8 @@
     "id": "test262.test.built-ins.regexp.prototype.test.s15.10.6.3_a1_t11",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0433]: cannot find type `Number` in this scope: use of undeclared type `Number`\nsrc\\main.rs:10:11: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3923,8 +3923,8 @@
     "id": "test262.test.built-ins.regexp.prototype.test.s15.10.6.3_a1_t14",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0433]: cannot find type `Boolean` in this scope: use of undeclared type `Boolean`\nsrc\\main.rs:10:11: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3971,8 +3971,8 @@
     "id": "test262.test.built-ins.regexp.prototype.test.s15.10.6.3_a1_t2",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:10:11: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4003,8 +4003,8 @@
     "id": "test262.test.built-ins.regexp.prototype.test.s15.10.6.3_a1_t3",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "src\\main.rs:3:20: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nsrc\\main.rs:10:11: error[E0369]: binary operation `!=` cannot be applied to type `Option<DsMatch>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -4188,7 +4188,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34416) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (26116) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {

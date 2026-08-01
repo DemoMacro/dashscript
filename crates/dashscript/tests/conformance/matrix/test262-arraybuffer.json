@@ -43,8 +43,8 @@
     "id": "test262.test.built-ins.arraybuffer.isview.arg-is-arraybuffer",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:4:38: error[E0425]: cannot find value `array_buffer` in this scope: not found in this scope\nsrc\\main.rs:3:18: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -147,8 +147,8 @@
     "id": "test262.test.built-ins.arraybuffer.length-is-absent",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:18: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -251,8 +251,8 @@
     "id": "test262.test.built-ins.arraybuffer.options-maxbytelength-undefined",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:4:11: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:8:11: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -291,8 +291,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.bytelength.detached-buffer",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:4:5: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -323,8 +323,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.bytelength.return-bytelength",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:5:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -363,16 +363,16 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.detached.detached-buffer",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:5:5: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.arraybuffer.prototype.detached.detached-buffer-resizable",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:8:5: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope\nsrc\\main.rs:10:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:15:5: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope\nsrc\\main.rs:17:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:22:5: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -436,7 +436,7 @@
     "layer": "test262",
     "category": "arraybuffer",
     "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:7:5: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "detail": "engine error: TypeError: Error converting from js 'object' into type 'ArrayBuffer'",
     "note": ""
   },
   {
@@ -467,8 +467,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.maxbytelength.detached-buffer",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:14: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:4:5: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -499,16 +499,16 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.maxbytelength.return-maxbytelength-non-resizable",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:5:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.arraybuffer.prototype.maxbytelength.return-maxbytelength-resizable",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:8:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:13:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -539,8 +539,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.resizable.detached-buffer",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:4:5: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope\nsrc\\main.rs:6:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:10:5: error[E0425]: cannot find function `_detachbuffer` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -571,8 +571,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.resizable.return-resizable",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:5:15: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -771,24 +771,24 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.end-default-if-absent",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.end-default-if-undefined",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:15:20: error[E0308]: mismatched types: expected `Option<_>`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.end-exceeds-length",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -803,16 +803,16 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.negative-end",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.negative-start",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -835,8 +835,8 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.number-conversion",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:6:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:9:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:16:18: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`\nsrc\\main.rs:16:60: error[E0599]: the method `min` exists for struct `HashMap<String, _>`, but its trait bounds were not satisfied: method cannot be called on `HashMap<String, _>` due to unsatisfied trait bounds\nsrc\\main.rs:20:18: error[E0369]: binary operation `<` cannot be applied to type `HashMap<String, _>`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -939,32 +939,32 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.start-default-if-absent",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.start-default-if-undefined",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:11:20: error[E0308]: mismatched types: expected `Option<_>`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.start-exceeds-end",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.start-exceeds-length",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -979,16 +979,16 @@
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.tointeger-conversion-end",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.arraybuffer.prototype.slice.tointeger-conversion-start",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:24: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1507,8 +1507,8 @@
     "id": "test262.test.built-ins.arraybuffer.toindex-length",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:10:14: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:12:14: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:14:14: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:16:14: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1523,8 +1523,8 @@
     "id": "test262.test.built-ins.arraybuffer.zero-length",
     "layer": "test262",
     "category": "arraybuffer",
-    "status": "partial",
-    "detail": "src\\main.rs:3:25: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nsrc\\main.rs:5:25: error[E0433]: cannot find type `ArrayBuffer` in this scope: use of undeclared type `ArrayBuffer`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   }
 ]

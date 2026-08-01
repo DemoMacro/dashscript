@@ -224,3 +224,36 @@ pub fn is_engine_value_global(name: &str) -> bool {
 pub fn is_harness_helper(name: &str) -> bool {
     HARNESS_HELPER_GLOBALS.contains(&name)
 }
+
+/// ES builtin/wrapper constructors whose `new <X>(…)` form has no static
+/// lowering in `expressions/new`. `new_expr` special-cases `Map`/`WeakMap`/
+/// `Set`/`WeakSet`, the `u8` typed arrays, `RegExp`, `TextEncoder`/
+/// `TextDecoder`, `Worker`, and `Temporal.<Type>`; every other `new` callee
+/// falls through to the generic `Foo::new(…)` emit. For the names here that
+/// emit produces a phantom type (`new Array(0)` → `Array::new(0)` → E0433
+/// `cannot find type Array`) — there is no `Array`/`ArrayBuffer`/`Object`/
+/// `Function`/`Number`/`String`/`Boolean` Rust item. None of these `new` forms
+/// ever passes statically, so degrading them to the engine (where the boxed
+/// wrapper / sparse-array constructor runs natively) cannot regress a static
+/// pass. Disjoint from [`ENGINE_VALUE_GLOBALS`]: those (`Promise`/`DataView`/
+/// the non-`u8` typed arrays) reach `new` inside reflection fixtures that
+/// already degrade via the `.constructor` rule, and a `new`-site degrade there
+/// carries a per-function emit-interaction risk (see the `NewExpression` arm in
+/// `classify`); the wrapper/static-only constructors here have no such
+/// exposure, so they degrade cleanly.
+pub const UNMAPPED_NEW_GLOBALS: &[&str] = &[
+    "Array",
+    "ArrayBuffer",
+    "Object",
+    "Function",
+    "Number",
+    "String",
+    "Boolean",
+];
+
+/// True if `new <name>(…)` has no static lowering — the call degrades the
+/// enclosing function to the engine. See [`UNMAPPED_NEW_GLOBALS`].
+#[inline]
+pub fn is_unmapped_new_global(name: &str) -> bool {
+    UNMAPPED_NEW_GLOBALS.contains(&name)
+}

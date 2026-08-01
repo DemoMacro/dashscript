@@ -75,8 +75,8 @@
     "id": "test262.test.built-ins.object.assign.source-null-undefined",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:18: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -115,8 +115,8 @@
     "id": "test262.test.built-ins.object.assign.source-string",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:18: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -11868,7 +11868,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39304) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39060) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -11996,7 +11996,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (33348) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (7092) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -12219,8 +12219,8 @@
     "id": "test262.test.built-ins.object.fromentries.string-entry-string-object-succeeds",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:23: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:5:20: error[E0277]: a value of type `HashMap<String, f64>` cannot be built from an iterator over elements of type `String`: value of type `HashMap<String, f64>` cannot be built from `std::iter::Iterator<Item=String>`\nsrc\\main.rs:7:18: error[E0308]: mismatched types: expected `&_`, found `usize`\nsrc\\main.rs:7:18: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16083,8 +16083,8 @@
     "id": "test262.test.built-ins.object.is.not-same-value-x-y-object",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:8:38: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:8:50: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:9:38: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nsrc\\main.rs:9:55: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nsrc\\main.rs:10:38: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:10:55: error[E0425]: cannot find function `object` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16163,8 +16163,8 @@
     "id": "test262.test.built-ins.object.is.same-value-x-y-object",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:13: error[E0425]: cannot find function `object` in this scope: not found in this scope\nsrc\\main.rs:5:13: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nsrc\\main.rs:7:13: error[E0425]: cannot find function `array` in this scope: not found in this scope\nsrc\\main.rs:8:13: error[E0433]: cannot find type `Array` in this scope: use of undeclared type `Array`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16219,8 +16219,8 @@
     "id": "test262.test.built-ins.object.isextensible.15.2.3.13-0-3",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:13: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16348,7 +16348,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35120) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (29904) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -16531,8 +16531,8 @@
     "id": "test262.test.built-ins.object.isfrozen.15.2.3.12-2-a-12",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:3:19: error[E0061]: this function takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:4:9: error[E0615]: attempted to take value of method `len` on type `String`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17148,7 +17148,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39280) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (35224) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17211,8 +17211,8 @@
     "id": "test262.test.built-ins.object.keys.15.2.3.14-3-1",
     "layer": "test262",
     "category": "object",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (11384) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"y\"», «\"x\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -19819,24 +19819,24 @@
     "id": "test262.test.built-ins.object.s15.2.2.1_a2_t1",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:6:17: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nsrc\\main.rs:7:46: error[E0277]: the trait bound `HashMap<String, f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<String, f64>`\nsrc\\main.rs:9:17: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.s15.2.2.1_a2_t2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:5: warning: unreachable statement: unreachable statement\nsrc\\main.rs:4:17: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nsrc\\main.rs:2:1: error: this function depends on never type fallback being `()`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.s15.2.2.1_a2_t3",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "src\\main.rs:4:17: error[E0433]: cannot find type `Object` in this scope: use of undeclared type `Object`\nsrc\\main.rs:6:46: error[E0277]: the trait bound `Vec<f64>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `Vec<f64>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
