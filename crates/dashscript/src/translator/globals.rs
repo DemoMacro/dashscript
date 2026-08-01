@@ -85,6 +85,31 @@ pub const ENGINE_VALUE_GLOBALS: &[&str] = &[
     "AsyncDisposableStack",
     "$262",
     "TemporalHelpers",
+    // Reflection/metaprogramming globals — no static mapping exists, but
+    // QuickJS ships them natively, so any reference degrades to the engine
+    // rather than the hard `reject` these used to be (degrade, don't reject).
+    "Symbol",
+    "Proxy",
+    "WeakRef",
+    "FinalizationRegistry",
+    "Reflect",
+    // Weak collections — `new WeakMap()` as a class field initializer still
+    // maps to a strong `HashMap` via the class-enhancement path; a bare
+    // reference or a member call degrades.
+    "WeakMap",
+    "WeakSet",
+    // Other unmapped constructors/namespaces — a bare reference or member
+    // call would otherwise snake-case the name (E0425). `Error` is
+    // intentionally absent: `new Error("…")` has a static mapping (`throw
+    // new Error` → `DsError`), and listing it here would make the `new`
+    // callee trip the bare-value rule (`is_global_object_callee` does not
+    // skip engine-value globals as `new` receivers), forcing every `throw`
+    // site onto the engine. A bare `Error` value reference (reflection like
+    // `Object.getOwnPropertyNames(Error)`) stays `Mapped` and lowers
+    // generically — an honest partial, rare in practice.
+    "BigInt",
+    "Generator",
+    "Intl",
 ];
 
 /// True if `name` is a global DashScript models only as a static-call/new

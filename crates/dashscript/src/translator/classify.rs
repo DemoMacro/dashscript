@@ -119,13 +119,12 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Delete) => {
             reject("`delete` has no DashScript mapping")
         }
-        // Reflection/metaprogramming globals, `arguments`, `eval`, and a
-        // global-object name read as a first-class value (the translator models
-        // these only as a static-call/new receiver or type annotation).
+        // `arguments`/`eval`, and a global-object name read as a first-class
+        // value. Reflection globals (`Symbol`/`Proxy`/`Reflect`/`WeakRef`/…)
+        // and unmapped constructors (`Date`/`Promise`/`WeakMap`/…)
+        // degrade to the engine — see [`ENGINE_VALUE_GLOBALS`]; only `arguments`
+        // and `eval` (no engine substitute) stay rejected here.
         Expression::Identifier(id) => match id.name.as_str() {
-            "Symbol" | "Proxy" | "WeakRef" | "FinalizationRegistry" => {
-                reject_owned(format!("`{}` (JS reflection) is unsupported", id.name))
-            }
             "arguments" => reject("the `arguments` object is unsupported"),
             "eval" => reject("`eval` is unsupported"),
             name if is_engine_value_global(name) => degrade_owned(format!(
@@ -446,9 +445,13 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
     // a `Temporal.<Type>.<method>` call never reaches this arm.
     if let Expression::Identifier(id) = &sm.object {
         if is_engine_value_global(id.name.as_str()) {
-            return degrade(
-                "`<engine-value-global>.<method>` has no static mapping — runs under the engine",
-            );
+            // Name the global in the message (e.g. `` `Reflect.<method>` ``) so
+            // the diagnostic and test assertions can match on it — the earlier
+            // generic `<engine-value-global>` placeholder hid which global fired.
+            let name = id.name.as_str();
+            return degrade_owned(format!(
+                "`{name}.<method>` has no static mapping — runs under the engine"
+            ));
         }
     }
     // `<re>.exec(…)` inside a loop — regress is stateless, so the loop would
@@ -521,10 +524,6 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
         );
         if obj.name.as_str() == "Object" && is_object_reflection {
             return reject_owned(format!("`Object.{prop}` reflection is unsupported"));
-        }
-        // The entire `Reflect` namespace is reflection.
-        if obj.name.as_str() == "Reflect" {
-            return reject("`Reflect` is unsupported");
         }
         // `String.raw` — the tagged-template runtime form.
         if obj.name.as_str() == "String" && prop == "raw" {
@@ -761,9 +760,21 @@ mod tests {
     }
 
     #[test]
-    fn rejects_reflection_globals() {
-        assert!(matches!(classify_first_expr("Symbol"), Mapping::Reject(_)));
-        assert!(matches!(classify_first_expr("Proxy"), Mapping::Reject(_)));
+    fn degrades_reflection_globals() {
+        // Symbol/Proxy/Reflect/WeakRef/… degrade to the engine (QuickJS ships
+        // them) rather than rejecting — see ENGINE_VALUE_GLOBALS.
+        assert!(matches!(
+            classify_first_expr("Symbol"),
+            Mapping::DegradeEngine(_)
+        ));
+        assert!(matches!(
+            classify_first_expr("Proxy"),
+            Mapping::DegradeEngine(_)
+        ));
+        assert!(matches!(
+            classify_first_expr("Reflect"),
+            Mapping::DegradeEngine(_)
+        ));
     }
 
     #[test]
@@ -832,10 +843,14 @@ mod tests {
     }
 
     #[test]
-    fn rejects_reflect_namespace() {
+    fn degrades_reflect_member_call() {
+        // `<engine-value-global>.<method>` (e.g. `Reflect.has`) has no static
+        // member-call mapping — degrade so the engine runs the real method
+        // (QuickJS ships `Reflect`). The bare-value form is covered by
+        // `degrades_reflection_globals` above.
         assert!(matches!(
             classify_first_expr("Reflect.has({}, \"x\")"),
-            Mapping::Reject(_)
+            Mapping::DegradeEngine(_)
         ));
     }
 

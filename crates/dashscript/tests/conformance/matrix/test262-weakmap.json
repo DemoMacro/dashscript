@@ -27,8 +27,8 @@
     "id": "test262.test.built-ins.weakmap.is-a-constructor",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `weak_map` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -171,16 +171,16 @@
     "id": "test262.test.built-ins.weakmap.prototype.delete.delete-entry-with-object-key",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:22: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:7:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.weakmap.prototype.delete.delete-entry-with-object-key-initial-iterable",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:4:19: error[E0433]: cannot find type `WeakMap` in this scope: use of undeclared type `WeakMap`\nsrc\\main.rs:4:47: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -243,8 +243,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.delete.not-a-constructor",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `weak_map` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -259,8 +259,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.delete.returns-false-when-object-key-not-present",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:42: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -355,8 +355,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.get.not-a-constructor",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `weak_map` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -371,8 +371,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.get.returns-undefined-with-object-key",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:5:46: error[E0308]: mismatched types: expected `&_`, found `HashMap<String, f64>`\nsrc\\main.rs:5:42: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:3:19: error[E0277]: the size for values of type `str` cannot be known at compilation time: doesn't have a size known at compile-time\nsrc\\main.rs:6:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`\nsrc\\main.rs:8:9: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, str>`",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -387,8 +387,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.get.returns-value-with-object-key",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:6:19: error[E0433]: cannot find type `WeakMap` in this scope: use of undeclared type `WeakMap`\nsrc\\main.rs:6:47: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -411,8 +411,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.getorinsert.adds-object-element",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:7:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:8:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:9:9: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:10:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:11:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:12:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -475,16 +475,16 @@
     "id": "test262.test.built-ins.weakmap.prototype.getorinsert.not-a-constructor",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `weak_map` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.weakmap.prototype.getorinsert.returns-value-if-key-is-not-present-object-key",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:7:42: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:8:42: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:9:42: error[E0599]: no method named `get_or_insert` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -499,8 +499,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.getorinsert.returns-value-if-key-is-present-object-key",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:6:19: error[E0433]: cannot find type `WeakMap` in this scope: use of undeclared type `WeakMap`\nsrc\\main.rs:6:47: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -531,8 +531,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.adds-object-element",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:7:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:8:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:9:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:10:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:11:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:12:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -627,8 +627,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.not-a-constructor",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `weak_map` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -643,16 +643,16 @@
     "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.overwrites-mutation-from-callbackfn",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:7:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:10:17: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:14:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:17:17: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:20:9: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:23:17: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.returns-value-if-key-is-not-present-object-key",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:8:15: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:12:15: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:16:15: error[E0599]: no method named `get_or_insert_computed` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -667,8 +667,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.returns-value-if-key-is-present-object-key",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:6:19: error[E0433]: cannot find type `WeakMap` in this scope: use of undeclared type `WeakMap`\nsrc\\main.rs:6:47: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -747,8 +747,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.has.not-a-constructor",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `weak_map` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -763,8 +763,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.has.returns-false-when-object-key-not-present",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:6:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:7:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:8:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:9:9: error[E0599]: no method named `delete` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:10:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -779,8 +779,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.has.returns-true-when-object-key-present",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:5:9: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:42: error[E0599]: no method named `has` found for struct `HashMap<K, V, S, A>` in the current scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -899,24 +899,24 @@
     "id": "test262.test.built-ins.weakmap.prototype.set.not-a-constructor",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `weak_map` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.weakmap.prototype.set.returns-this",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:5:15: error[E0599]: no method named `set` found for struct `HashMap<K, V, S, A>` in the current scope\nsrc\\main.rs:6:9: error[E0277]: the trait bound `HashMap<_, _>: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `HashMap<_, _>`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.weakmap.prototype.set.returns-this-when-ignoring-duplicate",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "src\\main.rs:4:19: error[E0433]: cannot find type `WeakMap` in this scope: use of undeclared type `WeakMap`\nsrc\\main.rs:4:47: error[E0308]: mismatched types: expected `HashMap<String, f64>`, found `f64`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

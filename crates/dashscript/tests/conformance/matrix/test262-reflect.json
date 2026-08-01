@@ -27,8 +27,8 @@
     "id": "test262.test.built-ins.reflect.apply.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -123,8 +123,8 @@
     "id": "test262.test.built-ins.reflect.defineproperty.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -195,8 +195,8 @@
     "id": "test262.test.built-ins.reflect.deleteproperty.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -251,8 +251,8 @@
     "id": "test262.test.built-ins.reflect.get.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -315,8 +315,8 @@
     "id": "test262.test.built-ins.reflect.getownpropertydescriptor.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -395,8 +395,8 @@
     "id": "test262.test.built-ins.reflect.getprototypeof.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -451,8 +451,8 @@
     "id": "test262.test.built-ins.reflect.has.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -507,8 +507,8 @@
     "id": "test262.test.built-ins.reflect.isextensible.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -555,8 +555,8 @@
     "id": "test262.test.built-ins.reflect.ownkeys.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -611,8 +611,8 @@
     "id": "test262.test.built-ins.reflect.preventextensions.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -691,8 +691,8 @@
     "id": "test262.test.built-ins.reflect.set.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:3:53: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:3:38: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -787,8 +787,8 @@
     "id": "test262.test.built-ins.reflect.setprototypeof.not-a-constructor",
     "layer": "test262",
     "category": "reflect",
-    "status": "partial",
-    "detail": "src\\main.rs:4:26: error[E0425]: cannot find value `reflect` in this scope: not found in this scope\nsrc\\main.rs:4:11: error[E0425]: cannot find function `is_constructor` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
