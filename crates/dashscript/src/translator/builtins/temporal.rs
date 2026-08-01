@@ -107,8 +107,8 @@ pub(in crate::translator) fn temporal_static(
 /// `Temporal.<ty>.<method>` has a static lowering. The classify table routes a
 /// mapped pair to the static path (zero-cost `temporal_rs`) and an unmapped
 /// pair to the engine (polyfill), so this must stay in lockstep with
-/// `temporal_static`'s arms (the `temporal_static_maps_drift` metatest pins
-/// them). Argument compatibility — a property-bag coercion like
+/// `temporal_static`'s arms (pinned by the `drift` module's
+/// `static_maps_match_emit_arms` test). Argument compatibility — a property-bag coercion like
 /// `from({year,month})` — is decided separately in `classify`; a mapped pair
 /// whose args force a coercion still degrades.
 pub(in crate::translator) fn temporal_static_maps(ty: &str, method: &str) -> bool {
@@ -126,7 +126,7 @@ pub(in crate::translator) fn temporal_static_maps(ty: &str, method: &str) -> boo
 /// Classify-time mirror of [`temporal_new`]'s match — true when
 /// `new Temporal.<ty>(…)` has a static ISO-field lowering (the four date/time
 /// types whose constructors take integer ISO fields). Drift-pinned against
-/// `temporal_new`.
+/// `temporal_new` (the `drift` module's `new_maps_match_emit_arms` test).
 pub(in crate::translator) fn temporal_new_maps(ty: &str) -> bool {
     matches!(
         ty,
@@ -504,4 +504,95 @@ fn temporal_unwrap(call: Expr, err_rhs: Expr) -> Expr {
             Err(__err) => #err_rhs,
         }
     })
+}
+
+#[cfg(test)]
+mod drift {
+    //! Classify↔emit drift guard for the Temporal static mappings. The classify
+    //! mirrors ([`super::temporal_static_maps`] / [`super::temporal_new_maps`])
+    //! must report `true` for exactly the pairs the emit arms
+    //! ([`super::temporal_static`] / [`super::temporal_new`]) lower. Each
+    //! contract below is the emit side hand-transcribed; the tests pin that the
+    //! mirror neither lags (a mapped pair needlessly routed to the engine) nor
+    //! leads (a claimed static lowering with no emit arm). Adding an emit arm
+    //! means adding its pair here AND in the matching `*_maps` function — both
+    //! tests fail on drift.
+
+    use super::{temporal_new_maps, temporal_static_maps};
+
+    /// Every `(ty, method)` pair the `temporal_static` emit match lowers.
+    const STATIC_CONTRACT: &[(&str, &str)] = &[
+        // `from` (single-arg `from_utf8`): date/time types + Duration + Instant.
+        ("PlainDate", "from"),
+        ("PlainDateTime", "from"),
+        ("PlainTime", "from"),
+        ("PlainYearMonth", "from"),
+        ("PlainMonthDay", "from"),
+        ("Duration", "from"),
+        ("Instant", "from"),
+        // `from` (ZonedDateTime takes disambiguation options).
+        ("ZonedDateTime", "from"),
+        // `compare` (ISO-field `compare_iso`).
+        ("PlainDate", "compare"),
+        ("PlainDateTime", "compare"),
+        ("PlainYearMonth", "compare"),
+        // `compare` (`compare_instant`).
+        ("ZonedDateTime", "compare"),
+        // `compare` (`Ord`-deriving scalar `.cmp`).
+        ("Instant", "compare"),
+        ("PlainTime", "compare"),
+        // `Instant::from_epoch_milliseconds`.
+        ("Instant", "fromEpochMilliseconds"),
+    ];
+
+    /// Pairs with no `temporal_static` arm — the mirror must not claim one.
+    const STATIC_NEGATIVE: &[(&str, &str)] = &[
+        ("Duration", "compare"),
+        ("PlainMonthDay", "compare"),
+        ("ZonedDateTime", "fromEpochMilliseconds"),
+        ("PlainDate", "toJSON"),
+        ("PlainDate", "fromEpochSeconds"),
+    ];
+
+    /// The `ty` values the `temporal_new` emit match lowers (ISO-field ctors).
+    const NEW_CONTRACT: &[&str] = &["PlainDate", "PlainDateTime", "PlainTime", "PlainYearMonth"];
+
+    /// Types with no `temporal_new` arm (epoch/time-zone/10-arity/ref-year only).
+    const NEW_NEGATIVE: &[&str] = &["Duration", "Instant", "ZonedDateTime", "PlainMonthDay"];
+
+    #[test]
+    fn static_maps_match_emit_arms() {
+        for &(ty, method) in STATIC_CONTRACT {
+            assert!(
+                temporal_static_maps(ty, method),
+                "temporal_static_maps({ty:?}, {method:?}) = false, but `temporal_static` \
+                 lowers it — add the pair to the classify mirror so the static path is \
+                 not needlessly sent to the engine"
+            );
+        }
+        for &(ty, method) in STATIC_NEGATIVE {
+            assert!(
+                !temporal_static_maps(ty, method),
+                "temporal_static_maps({ty:?}, {method:?}) = true, but `temporal_static` \
+                 has no arm for it — the mirror would route to a non-existent lowering"
+            );
+        }
+    }
+
+    #[test]
+    fn new_maps_match_emit_arms() {
+        for &ty in NEW_CONTRACT {
+            assert!(
+                temporal_new_maps(ty),
+                "temporal_new_maps({ty:?}) = false, but `temporal_new` lowers it — add \
+                 the type to the classify mirror"
+            );
+        }
+        for &ty in NEW_NEGATIVE {
+            assert!(
+                !temporal_new_maps(ty),
+                "temporal_new_maps({ty:?}) = true, but `temporal_new` has no arm for it"
+            );
+        }
+    }
 }
