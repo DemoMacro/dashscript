@@ -1113,9 +1113,13 @@ enum SrPrim {
         realm: u32,
         fn_id: u32,
     },
-    /// Non-primitive result, or an error thrown inside the realm — both must
-    /// surface as a `TypeError` to the outer realm per the ShadowRealm spec.
+    /// Non-primitive result, or a runtime error thrown inside the realm — both
+    /// must surface as a `TypeError` to the outer realm per the ShadowRealm spec.
     TypeError,
+    /// The source text failed to *parse* in the inner realm — per spec this
+    /// surfaces as a `SyntaxError` (not the `TypeError` that wraps runtime
+    /// throws). Distinguished from a runtime throw by a pre-parse step.
+    SyntaxError,
 }
 
 impl<'js> rquickjs::IntoJs<'js> for SrPrim {
@@ -1193,6 +1197,12 @@ impl<'js> rquickjs::IntoJs<'js> for SrPrim {
                     "ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
                 ))
             }
+            SrPrim::SyntaxError => {
+                return Err(Exception::throw_syntax(
+                    ctx,
+                    "ShadowRealm.prototype.evaluate: source text failed to parse",
+                ))
+            }
         })
     }
 }
@@ -1240,10 +1250,26 @@ fn sr_install(ctx: &rquickjs::Ctx) -> rquickjs::Result<()> {
                     return Ok(SrPrim::TypeError);
                 };
                 inner.with(|ic| -> rquickjs::Result<SrPrim> {
+                    // Spec: a top-level *parse* failure throws a SyntaxError;
+                    // a *runtime* throw is wrapped into a TypeError. rquickjs's
+                    // eval fuses parse and execute, so to tell them apart we
+                    // pre-parse via the Function constructor — `new Function(src)`
+                    // parses src as a function body, which agrees with script-body
+                    // SyntaxError detection for the cases that matter (a strict
+                    // directive prologue applies in both). A throw here is a parse
+                    // error ⇒ `SyntaxError`; otherwise the real eval runs, where
+                    // any throw is a runtime error ⇒ `TypeError`.
+                    let function_ctor: Function = ic.globals().get("Function")?;
+                    if function_ctor.call::<_, Value>((src.as_str(),)).is_err() {
+                        let _ = ic.catch();
+                        return Ok(SrPrim::SyntaxError);
+                    }
                     let v: Value = match ic.eval_with_options::<Value, _>(src.as_str(), sr_sloppy())
                     {
                         Ok(v) => v,
-                        // An error thrown inside the realm is wrapped into a TypeError.
+                        // A runtime error thrown inside the realm is wrapped into
+                        // a TypeError (and a non-primitive result is too — see
+                        // sr_value_to_prim).
                         Err(_) => {
                             let _ = ic.catch();
                             return Ok(SrPrim::TypeError);
