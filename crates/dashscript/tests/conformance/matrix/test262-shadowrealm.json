@@ -180,7 +180,7 @@
     "layer": "test262",
     "category": "shadowrealm",
     "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "detail": "engine error: TypeError: ShadowRealm WrappedFunction call: non-primitive argument",
     "note": ""
   },
   {
@@ -204,7 +204,7 @@
     "layer": "test262",
     "category": "shadowrealm",
     "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "detail": "engine error: TypeError: ShadowRealm WrappedFunction call: non-primitive argument",
     "note": ""
   },
   {
@@ -228,23 +228,23 @@
     "layer": "test262",
     "category": "shadowrealm",
     "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "detail": "engine error: TypeError: ShadowRealm WrappedFunction call: non-primitive argument",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-proxied-observes-boundary",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-throws-typeerror-from-caller-realm",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -252,23 +252,23 @@
     "layer": "test262",
     "category": "shadowrealm",
     "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "detail": "engine error: TypeError: ShadowRealm WrappedFunction call: non-primitive argument",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-throws-typeerror-on-non-primitive-arguments",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-function-throws-typeerror-on-non-primitive-returns",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -283,8 +283,8 @@
     "id": "test262.test.built-ins.shadowrealm.prototype.evaluate.wrapped-functions-can-resolve-callable-returns",
     "layer": "test262",
     "category": "shadowrealm",
-    "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -428,7 +428,7 @@
     "layer": "test262",
     "category": "shadowrealm",
     "status": "partial",
-    "detail": "engine error: TypeError: ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
+    "detail": "Test262Error: Test262Error: Thrown value was not an object!",
     "note": ""
   }
 ]

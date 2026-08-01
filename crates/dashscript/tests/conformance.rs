@@ -1054,15 +1054,18 @@ fn harness_source(name: &str) -> Option<&'static str> {
 /// rquickjs `Context` (a separate realm with its own intrinsics and
 /// globalThis), held in a per-`engine_eval` registry keyed by an opaque id the
 /// instance carries as `__ds_realm`. `evaluate(src)` evals in that realm and
-/// returns the result only when it is a spec-primitive — a non-primitive, or an
-/// error thrown inside the realm, is wrapped into a `TypeError`, matching the
-/// spec's "evaluate resolves to a non-primitive" / "error from the other realm
-/// is wrapped into a TypeError" semantics. Cross-realm WrappedFunction
-/// (`evaluate` returning a callable that round-trips into the inner realm) and
-/// `importValue` (async module loading) are out of scope: fixtures needing them
-/// honestly degrade rather than fake a pass. The registry is cleared at the end
-/// of each `engine_eval` (`RealmsGuard`) so inner realms (and their runtimes)
-/// drop with the fixture — no cross-fixture residue.
+/// returns the result when it is a spec-primitive, or a `TypeError` for a
+/// non-primitive / an error thrown inside the realm (per the spec). When
+/// `evaluate` resolves to a callable, it returns a WrappedFunction — a fresh
+/// outer-realm function that re-enters the inner realm on each call,
+/// marshalling primitive args in and a primitive (or another WrappedFunction)
+/// out, throwing `TypeError` for non-primitive args or returns (per the spec).
+/// Callable args (functions passed into a wrapped call) are NOT wrapped back —
+/// a callable arg throws `TypeError` (the bidirectional case is out of scope;
+/// fixtures needing it degrade honestly). `importValue` (async module loading)
+/// is out of scope too. The registry is cleared at the end of each
+/// `engine_eval` (`RealmsGuard`) so inner realms (and their runtimes) drop
+/// with the fixture — no cross-fixture residue.
 const SHADOWREALM_PRELUDE: &str = r#"
 function ShadowRealm() { this.__ds_realm = __ds_sr_create(); }
 ShadowRealm.prototype = {
@@ -1071,17 +1074,45 @@ ShadowRealm.prototype = {
 };
 "#;
 
-/// A primitive lifted out of a ShadowRealm's `evaluate`, or a signal that the
-/// evaluation did not resolve to a primitive. Marshalled across realms:
-/// extracted in the inner realm, rebuilt in the outer realm during
-/// [`rquickjs::IntoJs`] conversion (a JS value cannot be shared across
-/// runtimes — undefined behavior — so only primitives cross).
+/// Per-inner-realm helper for the ShadowRealm polyfill: the spec-faithful
+/// `CopyNameAndLength` read (HasOwnProperty + length + name) run before a
+/// callable is wrapped. A throwing property access — a revoked Proxy, a
+/// throwing `name`/`length` accessor, or a `getOwnPropertyDescriptor` trap
+/// that throws — surfaces here; the Rust caller catches it and converts the
+/// throw to a TypeError at the `evaluate` boundary. `hasOwnProperty` (not
+/// `[[HasProperty]]`) is what reaches a proxy's `[[GetOwnProperty]]`: QuickJS's
+/// proxy `[[Get]]` recurses on the target when no `get` trap is set, so a plain
+/// `.length`/`.name` would miss a `getOwnPropertyDescriptor`-trap throw.
+const SR_INNER_PRELUDE: &str = r#"
+globalThis.__ds_wfn_check = function (fn) {
+  Object.prototype.hasOwnProperty.call(fn, "length");
+  fn.length;
+  fn.name;
+};
+"#;
+
+/// A value lifted out of a ShadowRealm's `evaluate` (or a wrapped call's
+/// return) — a spec-primitive, or a `WrappedFn` handle to an inner-realm
+/// callable. Marshalled across realms: extracted in the inner realm, rebuilt
+/// in the outer realm during [`rquickjs::IntoJs`] conversion (a JS value
+/// cannot be shared across runtimes — undefined behavior — so only primitives
+/// and callable handles cross). Callable *arguments* to a wrapped call are not
+/// wrapped back — the bidirectional case needs a `Ctx`→`Context` conversion
+/// rquickjs does not expose, so a callable arg throws `TypeError` (honest
+/// `partial`) rather than faking a pass.
 enum SrPrim {
     Und,
     Null,
     Bool(bool),
     Num(f64),
     Str(String),
+    /// A callable the inner realm produced — registered there under
+    /// `__ds_wfn_<fn_id>` and re-exposed in the outer realm as a
+    /// WrappedFunction (`into_js` builds the outer closure capturing the ids).
+    WrappedFn {
+        realm: u32,
+        fn_id: u32,
+    },
     /// Non-primitive result, or an error thrown inside the realm — both must
     /// surface as a `TypeError` to the outer realm per the ShadowRealm spec.
     TypeError,
@@ -1089,13 +1120,73 @@ enum SrPrim {
 
 impl<'js> rquickjs::IntoJs<'js> for SrPrim {
     fn into_js(self, ctx: &rquickjs::Ctx<'js>) -> rquickjs::Result<rquickjs::Value<'js>> {
-        use rquickjs::{Exception, Value};
+        use rquickjs::function::{Args, Rest};
+        use rquickjs::{Ctx, Exception, Function, Value};
         Ok(match self {
             SrPrim::Und => Value::new_undefined(ctx.clone()),
             SrPrim::Null => Value::new_null(ctx.clone()),
             SrPrim::Bool(b) => Value::new_bool(ctx.clone(), b),
             SrPrim::Num(n) => Value::new_float(ctx.clone(), n),
             SrPrim::Str(s) => return s.into_js(ctx),
+            SrPrim::WrappedFn { realm, fn_id } => {
+                // Build a fresh outer-realm function that re-enters the inner
+                // realm on each call. Args are marshalled to primitives on the
+                // way in (a non-primitive arg throws `TypeError`); the inner
+                // callable is looked up by `fn_id`, called at runtime arity
+                // (`Args::new` + `push_arg`); the return is marshalled back to a
+                // primitive (or another WrappedFunction). `realm`/`fn_id` are
+                // `u32` (Copy), so the closure is `Fn`.
+                let wrapper = Function::new(
+                    ctx.clone(),
+                    move |ctx: Ctx<'js>, args: Rest<Value<'js>>| -> rquickjs::Result<Value<'js>> {
+                        let mut arg_prims: Vec<SrPrim> = Vec::with_capacity(args.0.len());
+                        for a in args.0 {
+                            match sr_arg_to_prim(&ctx, a) {
+                                Ok(p) => arg_prims.push(p),
+                                Err(()) => {
+                                    return Err(Exception::throw_type(
+                                        &ctx,
+                                        "ShadowRealm WrappedFunction call: non-primitive argument",
+                                    ))
+                                }
+                            }
+                        }
+                        let inner = DS_REALMS.with(|m| m.borrow().get(&realm).cloned());
+                        let Some(inner) = inner else {
+                            return Err(Exception::throw_type(
+                                &ctx,
+                                "ShadowRealm: inner realm released",
+                            ));
+                        };
+                        // `Ok(None)` means the inner callable itself is gone
+                        // (the realm was cleared between evaluate and call) —
+                        // surfaced as a TypeError, matching a released realm.
+                        let ret = inner.with(|ic| -> rquickjs::Result<Option<SrPrim>> {
+                            let f: Function = match ic
+                                .globals()
+                                .get::<_, Function>(format!("__ds_wfn_{fn_id}"))
+                            {
+                                Ok(f) => f,
+                                Err(_) => return Ok(None),
+                            };
+                            let mut call_args = Args::new(ic.clone(), arg_prims.len());
+                            for p in arg_prims {
+                                call_args.push_arg(p)?;
+                            }
+                            let r: Value = f.call_arg(call_args)?;
+                            sr_value_to_prim(&ic, r, realm).map(Some)
+                        })?;
+                        match ret {
+                            Some(p) => p.into_js(&ctx),
+                            None => Err(Exception::throw_type(
+                                &ctx,
+                                "ShadowRealm: wrapped callable released",
+                            )),
+                        }
+                    },
+                )?;
+                return Ok(wrapper.into_value());
+            }
             SrPrim::TypeError => {
                 return Err(Exception::throw_type(
                     ctx,
@@ -1115,18 +1206,21 @@ thread_local! {
     static DS_REALMS: std::cell::RefCell<std::collections::HashMap<u32, rquickjs::Context>> =
         std::cell::RefCell::new(std::collections::HashMap::new());
     static DS_REALM_NEXT: std::cell::Cell<u32> = const { std::cell::Cell::new(1) };
+    /// Id counter for cross-realm callables registered under `__ds_wfn_<id>`.
+    static DS_SR_FN_NEXT: std::cell::Cell<u32> = const { std::cell::Cell::new(1) };
 }
 
 /// Install the ShadowRealm polyfill (constructor + `evaluate`) on the engine
 /// context. `importValue` is deliberately absent — its async-module semantics
 /// are out of scope, so fixtures using it degrade honestly.
 fn sr_install(ctx: &rquickjs::Ctx) -> rquickjs::Result<()> {
-    use rquickjs::{Context, FromJs, Function, Runtime, Type, Value};
+    use rquickjs::{Context, Function, Runtime, Value};
     ctx.globals().set(
         "__ds_sr_create",
         Function::new(ctx.clone(), || -> rquickjs::Result<u32> {
             let rt = Runtime::new()?;
             let inner = Context::full(&rt)?;
+            inner.with(|ic| ic.eval_with_options::<(), _>(SR_INNER_PRELUDE, sr_sloppy()))?;
             let id = DS_REALM_NEXT.with(|c| {
                 let v = c.get();
                 c.set(v.checked_add(1).unwrap_or(1));
@@ -1155,16 +1249,7 @@ fn sr_install(ctx: &rquickjs::Ctx) -> rquickjs::Result<()> {
                             return Ok(SrPrim::TypeError);
                         }
                     };
-                    Ok(match v.type_of() {
-                        Type::Uninitialized | Type::Undefined => SrPrim::Und,
-                        Type::Null => SrPrim::Null,
-                        Type::Bool => SrPrim::Bool(bool::from_js(&ic, v)?),
-                        Type::Int | Type::Float => SrPrim::Num(f64::from_js(&ic, v)?),
-                        Type::String => SrPrim::Str(String::from_js(&ic, v)?),
-                        // Object/function/symbol/bigint: non-primitive (symbol/bigint
-                        // cross-realm marshalling is out of scope) → TypeError.
-                        _ => SrPrim::TypeError,
-                    })
+                    sr_value_to_prim(&ic, v, id)
                 })
             },
         )?,
@@ -1179,6 +1264,65 @@ fn sr_sloppy() -> rquickjs::context::EvalOptions {
     let mut o = rquickjs::context::EvalOptions::default();
     o.strict = false;
     o
+}
+
+/// Extract an inner-realm value into the cross-realm [`SrPrim`] form. A
+/// callable becomes a `WrappedFn` handle (registered in the inner global as
+/// `__ds_wfn_<id>` so the outer-realm wrapper can re-enter and call it);
+/// primitives map directly; anything else (object/symbol/bigint) is a
+/// non-primitive → `TypeError` per the ShadowRealm spec.
+fn sr_value_to_prim<'js>(
+    ic: &rquickjs::Ctx<'js>,
+    v: rquickjs::Value<'js>,
+    realm: u32,
+) -> rquickjs::Result<SrPrim> {
+    use rquickjs::{FromJs, Type};
+    Ok(match v.type_of() {
+        Type::Uninitialized | Type::Undefined => SrPrim::Und,
+        Type::Null => SrPrim::Null,
+        Type::Bool => SrPrim::Bool(bool::from_js(ic, v)?),
+        Type::Int | Type::Float => SrPrim::Num(f64::from_js(ic, v)?),
+        Type::String => SrPrim::Str(String::from_js(ic, v)?),
+        Type::Function => {
+            // Spec (sec-wrappedfunctioncreate, CopyNameAndLength): wrapping a
+            // callable reads `length` then `name` via HasOwnProperty/Get. A
+            // revoked Proxy, a throwing accessor, or a throwing
+            // `getOwnPropertyDescriptor` trap makes that read throw, and the
+            // ShadowRealm `evaluate` boundary surfaces it as a TypeError.
+            // `__ds_wfn_check` (installed in each inner realm) runs that read;
+            // a throw here becomes `TypeError` instead of a handle. The pending
+            // exception is cleared so it can't leak into a later eval.
+            let check: rquickjs::Function = ic.globals().get("__ds_wfn_check")?;
+            if check.call::<_, ()>((v.clone(),)).is_err() {
+                let _ = ic.catch();
+                return Ok(SrPrim::TypeError);
+            }
+            let fn_id = DS_SR_FN_NEXT.with(|c| {
+                let n = c.get();
+                c.set(n.checked_add(1).unwrap_or(1));
+                n
+            });
+            ic.globals().set(format!("__ds_wfn_{fn_id}"), v)?;
+            SrPrim::WrappedFn { realm, fn_id }
+        }
+        _ => SrPrim::TypeError,
+    })
+}
+
+/// Marshal an outer-realm call argument into the cross-realm [`SrPrim`] form.
+/// Only primitives cross — a callable or object arg has no static wrap-back
+/// here (the bidirectional callable-arg case is out of scope), so it signals
+/// the caller to throw `TypeError` per the ShadowRealm spec.
+fn sr_arg_to_prim<'js>(ctx: &rquickjs::Ctx<'js>, v: rquickjs::Value<'js>) -> Result<SrPrim, ()> {
+    use rquickjs::{FromJs, Type};
+    match v.type_of() {
+        Type::Uninitialized | Type::Undefined => Ok(SrPrim::Und),
+        Type::Null => Ok(SrPrim::Null),
+        Type::Bool => bool::from_js(ctx, v).map(SrPrim::Bool).map_err(|_| ()),
+        Type::Int | Type::Float => f64::from_js(ctx, v).map(SrPrim::Num).map_err(|_| ()),
+        Type::String => String::from_js(ctx, v).map(SrPrim::Str).map_err(|_| ()),
+        _ => Err(()),
+    }
 }
 
 /// Drops all ShadowRealm inner realms when `engine_eval` returns (or unwinds),
