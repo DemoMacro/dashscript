@@ -3,8 +3,8 @@
     "id": "test262.test.built-ins.proxy.apply.arguments-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -35,8 +35,8 @@
     "id": "test262.test.built-ins.proxy.apply.null-handler-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -67,8 +67,8 @@
     "id": "test262.test.built-ins.proxy.apply.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -107,8 +107,8 @@
     "id": "test262.test.built-ins.proxy.construct.arguments-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -147,8 +147,8 @@
     "id": "test262.test.built-ins.proxy.construct.null-handler-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -171,8 +171,8 @@
     "id": "test262.test.built-ins.proxy.construct.return-not-object-throws-boolean-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -187,8 +187,8 @@
     "id": "test262.test.built-ins.proxy.construct.return-not-object-throws-null-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -203,8 +203,8 @@
     "id": "test262.test.built-ins.proxy.construct.return-not-object-throws-number-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -219,8 +219,8 @@
     "id": "test262.test.built-ins.proxy.construct.return-not-object-throws-string-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -235,8 +235,8 @@
     "id": "test262.test.built-ins.proxy.construct.return-not-object-throws-symbol-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -251,8 +251,8 @@
     "id": "test262.test.built-ins.proxy.construct.return-not-object-throws-undefined-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -275,8 +275,8 @@
     "id": "test262.test.built-ins.proxy.construct.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -315,16 +315,16 @@
     "id": "test262.test.built-ins.proxy.construct.trap-is-undefined-proto-from-cross-realm-newtarget",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.proxy.construct.trap-is-undefined-proto-from-newtarget-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -491,8 +491,8 @@
     "id": "test262.test.built-ins.proxy.defineproperty.desc-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -507,8 +507,8 @@
     "id": "test262.test.built-ins.proxy.defineproperty.null-handler-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -539,8 +539,8 @@
     "id": "test262.test.built-ins.proxy.defineproperty.targetdesc-configurable-desc-not-configurable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -563,16 +563,16 @@
     "id": "test262.test.built-ins.proxy.defineproperty.targetdesc-not-compatible-descriptor-not-configurable-target-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.proxy.defineproperty.targetdesc-not-compatible-descriptor-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -595,8 +595,8 @@
     "id": "test262.test.built-ins.proxy.defineproperty.targetdesc-undefined-not-configurable-descriptor-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -611,8 +611,8 @@
     "id": "test262.test.built-ins.proxy.defineproperty.targetdesc-undefined-target-is-not-extensible-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -635,8 +635,8 @@
     "id": "test262.test.built-ins.proxy.defineproperty.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -763,8 +763,8 @@
     "id": "test262.test.built-ins.proxy.deleteproperty.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -819,16 +819,16 @@
     "id": "test262.test.built-ins.proxy.get-fn-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.proxy.get-fn-realm-recursive",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -939,8 +939,8 @@
     "id": "test262.test.built-ins.proxy.get.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1043,8 +1043,8 @@
     "id": "test262.test.built-ins.proxy.getownpropertydescriptor.result-type-is-not-object-nor-undefined-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1115,8 +1115,8 @@
     "id": "test262.test.built-ins.proxy.getownpropertydescriptor.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1203,8 +1203,8 @@
     "id": "test262.test.built-ins.proxy.getprototypeof.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1435,8 +1435,8 @@
     "id": "test262.test.built-ins.proxy.has.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1547,8 +1547,8 @@
     "id": "test262.test.built-ins.proxy.isextensible.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1691,8 +1691,8 @@
     "id": "test262.test.built-ins.proxy.ownkeys.return-not-list-object-throws-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1755,8 +1755,8 @@
     "id": "test262.test.built-ins.proxy.ownkeys.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1835,8 +1835,8 @@
     "id": "test262.test.built-ins.proxy.preventextensions.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1995,8 +1995,8 @@
     "id": "test262.test.built-ins.proxy.revocable.tco-fn-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2155,8 +2155,8 @@
     "id": "test262.test.built-ins.proxy.set.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2307,8 +2307,8 @@
     "id": "test262.test.built-ins.proxy.setprototypeof.trap-is-not-callable-realm",
     "layer": "test262",
     "category": "proxy",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: $262 is not defined",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
