@@ -90,6 +90,16 @@ struct RawFeature {
     /// semantics (reflection, compareArray) run under the test262 harness.
     #[serde(default)]
     includes: Vec<String>,
+    /// test262 `flags:` frontmatter (`onlyStrict`, `noStrict`, `module`,
+    /// `async`, `generated`). The engine path honors `onlyStrict` — the
+    /// fixture is evaluated under QuickJS strict mode (`JS_EVAL_FLAG_STRICT`),
+    /// which gives the spec-mandated poison-pill behavior for
+    /// `Function.prototype.caller`/`arguments` plus the strict-only
+    /// assignment / deletion / duplicate-parameter / octal-literal / `with`
+    /// errors. Without it, `onlyStrict` fixtures run sloppy and those asserts
+    /// fail (e.g. `fn.caller` returns `null` instead of throwing `TypeError`).
+    #[serde(default)]
+    flags: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -1633,7 +1643,12 @@ impl Drop for RealmsGuard {
 /// the test262 harness (`sta.js` + `assert.js` + the fixture's `$INCLUDE`s)
 /// before the fixture, so the assert family runs with reference semantics; a
 /// thrown `Test262Error` (assert mismatch) is the single failure signal.
-fn engine_eval(js_source: &str, includes: &[String], features: &[String]) -> EngineOutcome {
+fn engine_eval(
+    js_source: &str,
+    includes: &[String],
+    features: &[String],
+    flags: &[String],
+) -> EngineOutcome {
     use rquickjs::{context::EvalOptions, ArrayBuffer, Context, Ctx, FromJs, Function, Runtime};
     // Serialize the rquickjs engine path across worker threads. Concurrent
     // `Runtime::new()` / `Context::full` / `globals().set` in the N parallel
@@ -1678,6 +1693,18 @@ fn engine_eval(js_source: &str, includes: &[String], features: &[String]) -> Eng
     let sloppy = || {
         let mut o = EvalOptions::default();
         o.strict = false;
+        o
+    };
+    // `onlyStrict` fixtures run under strict mode (QuickJS
+    // `JS_EVAL_FLAG_STRICT`): the harness prelude stays sloppy, but the
+    // fixture itself is strict-eval'd so `Function.prototype.caller`/
+    // `arguments` poison-pill, strict assignment/deletion, duplicate params,
+    // octal literals, and `with` behave per spec. Without it the engine runs
+    // every fixture sloppy and `onlyStrict` asserts fail.
+    let strict_fixture = flags.iter().any(|f| f == "onlyStrict");
+    let fixture_opts = || {
+        let mut o = EvalOptions::default();
+        o.strict = strict_fixture;
         o
     };
     let uses_done = js_source.contains("$DONE");
@@ -1772,7 +1799,7 @@ fn engine_eval(js_source: &str, includes: &[String], features: &[String]) -> Eng
             let wrapped =
                 format!("try {{\n{js_source}\n}} catch (__ds_err) {{ throw String(__ds_err); }}\n");
             if ctx
-                .eval_with_options::<(), _>(wrapped.as_str(), sloppy())
+                .eval_with_options::<(), _>(wrapped.as_str(), fixture_opts())
                 .is_err()
             {
                 let thrown = ctx.catch();
@@ -1883,7 +1910,7 @@ fn run_engine(raw: &RawFeature) -> (&'static str, String) {
         Translator::new().engine_source(&raw.fixture)
     };
     match js_source {
-        Some(s) => judge_engine(engine_eval(&s, &raw.includes, &raw.features)),
+        Some(s) => judge_engine(engine_eval(&s, &raw.includes, &raw.features, &raw.flags)),
         None => (
             "partial",
             "engine flag set but engine_source returned None".into(),

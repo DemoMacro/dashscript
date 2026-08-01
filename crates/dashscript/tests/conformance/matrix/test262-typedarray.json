@@ -2667,8 +2667,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.find.bigint.predicate-call-this-strict",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: without thisArg, predicate this is undefined Expected SameValue(«[object global]», «undefined») to be true (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2803,8 +2803,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.find.predicate-call-this-strict",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: without thisArg, predicate this is undefined Expected SameValue(«[object global]», «undefined») to be true (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2947,8 +2947,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findindex.bigint.predicate-call-this-strict",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: without thisArg, predicate this is undefined Expected SameValue(«[object global]», «undefined») to be true (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3083,8 +3083,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findindex.predicate-call-this-strict",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: without thisArg, predicate this is undefined Expected SameValue(«[object global]», «undefined») to be true (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3227,8 +3227,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlast.bigint.predicate-call-this-strict",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: without thisArg, predicate this is undefined Expected SameValue(«[object global]», «undefined») to be true (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3379,8 +3379,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlast.predicate-call-this-strict",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: without thisArg, predicate this is undefined Expected SameValue(«[object global]», «undefined») to be true (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3523,8 +3523,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlastindex.bigint.predicate-call-this-strict",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: without thisArg, predicate this is undefined Expected SameValue(«[object global]», «undefined») to be true (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3675,8 +3675,8 @@
     "id": "test262.test.built-ins.typedarray.prototype.findlastindex.predicate-call-this-strict",
     "layer": "test262",
     "category": "typedarray",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: without thisArg, predicate this is undefined Expected SameValue(«[object global]», «undefined») to be true (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

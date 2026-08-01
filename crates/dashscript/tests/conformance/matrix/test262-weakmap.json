@@ -563,8 +563,8 @@
     "id": "test262.test.built-ins.weakmap.prototype.getorinsertcomputed.check-callback-fn-args",
     "layer": "test262",
     "category": "weakmap",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«[object global]», «undefined») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

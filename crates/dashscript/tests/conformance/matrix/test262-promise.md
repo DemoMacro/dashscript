@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 573 features: **542** supported, **31** partial, **0** unsupported, **0** untested
+- 573 features: **543** supported, **30** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## promise
@@ -341,7 +341,7 @@
 | test262.test.built-ins.promise.create-resolving-functions-resolve                               | 🟢 supported | via rquickjs engine                                                                               |
 | test262.test.built-ins.promise.exec-args                                                        | 🟢 supported | via rquickjs engine                                                                               |
 | test262.test.built-ins.promise.executor-call-context-sloppy                                     | 🟢 supported | via rquickjs engine                                                                               |
-| test262.test.built-ins.promise.executor-call-context-strict                                     | 🟡 partial   | Test262Error: Test262Error: Expected SameValue(«[object global]», «undefined») to be true         |
+| test262.test.built-ins.promise.executor-call-context-strict                                     | 🟢 supported | via rquickjs engine                                                                               |
 | test262.test.built-ins.promise.executor-function-extensible                                     | 🟢 supported | via rquickjs engine                                                                               |
 | test262.test.built-ins.promise.executor-function-not-a-constructor                              | 🟢 supported | via rquickjs engine                                                                               |
 | test262.test.built-ins.promise.executor-function-property-order                                 | 🟢 supported | via rquickjs engine                                                                               |

@@ -1,57 +1,57 @@
 # DashScript Conformance Matrix
 
-- 46 features: **45** supported, **1** partial, **0** unsupported, **0** untested
+- 46 features: **46** supported, **0** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## boolean
 
-| feature                                                             | status       | detail / note                                                                                    |
-| ------------------------------------------------------------------- | ------------ | ------------------------------------------------------------------------------------------------ |
-| test262.test.built-ins.boolean.is-a-constructor                     | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.proto-from-ctor-realm                | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.constructor.s15.6.4.1_a1   | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.s15.6.3.1_a1               | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.s15.6.3.1_a2               | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.s15.6.3.1_a3               | 🟡 partial   | Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all |
-| test262.test.built-ins.boolean.prototype.s15.6.3.1_a4               | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.s15.6.4_a2                 | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.tostring.not-a-constructor | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a1_t1   | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a1_t2   | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t1   | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t2   | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t3   | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t4   | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t5   | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.valueof.not-a-constructor  | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a1_t1    | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a1_t2    | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t1    | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t2    | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t3    | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t4    | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t5    | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.1.1_a1_t1                      | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.1.1_a1_t2                      | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.1.1_a1_t3                      | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.1.1_a1_t4                      | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.1.1_a1_t5                      | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.1.1_a2                         | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.2.1_a1                         | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.2.1_a2                         | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.2.1_a3                         | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.2.1_a4                         | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.3_a1                           | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.3_a2                           | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s15.6.3_a3                           | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s9.2_a1_t1                           | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.s9.2_a2_t1                           | 🟢 supported | engine fallback after static build failure                                                       |
-| test262.test.built-ins.boolean.s9.2_a3_t1                           | 🟢 supported |                                                                                                  |
-| test262.test.built-ins.boolean.s9.2_a4_t1                           | 🟢 supported |                                                                                                  |
-| test262.test.built-ins.boolean.s9.2_a4_t3                           | 🟢 supported |                                                                                                  |
-| test262.test.built-ins.boolean.s9.2_a5_t1                           | 🟢 supported |                                                                                                  |
-| test262.test.built-ins.boolean.s9.2_a5_t3                           | 🟢 supported |                                                                                                  |
-| test262.test.built-ins.boolean.s9.2_a6_t1                           | 🟢 supported | via rquickjs engine                                                                              |
-| test262.test.built-ins.boolean.symbol-coercion                      | 🟢 supported | via rquickjs engine                                                                              |
+| feature                                                             | status       | detail / note                              |
+| ------------------------------------------------------------------- | ------------ | ------------------------------------------ |
+| test262.test.built-ins.boolean.is-a-constructor                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.proto-from-ctor-realm                | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.constructor.s15.6.4.1_a1   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.s15.6.3.1_a1               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.s15.6.3.1_a2               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.s15.6.3.1_a3               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.s15.6.3.1_a4               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.s15.6.4_a2                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.tostring.not-a-constructor | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a1_t1   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a1_t2   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t1   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t2   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t3   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t4   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.tostring.s15.6.4.2_a2_t5   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.valueof.not-a-constructor  | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a1_t1    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a1_t2    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t1    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t2    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t3    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t4    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.prototype.valueof.s15.6.4.3_a2_t5    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.1.1_a1_t1                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.1.1_a1_t2                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.1.1_a1_t3                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.1.1_a1_t4                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.1.1_a1_t5                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.1.1_a2                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.2.1_a1                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.2.1_a2                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.2.1_a3                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.2.1_a4                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.3_a1                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.3_a2                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s15.6.3_a3                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s9.2_a1_t1                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.s9.2_a2_t1                           | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.boolean.s9.2_a3_t1                           | 🟢 supported |                                            |
+| test262.test.built-ins.boolean.s9.2_a4_t1                           | 🟢 supported |                                            |
+| test262.test.built-ins.boolean.s9.2_a4_t3                           | 🟢 supported |                                            |
+| test262.test.built-ins.boolean.s9.2_a5_t1                           | 🟢 supported |                                            |
+| test262.test.built-ins.boolean.s9.2_a5_t3                           | 🟢 supported |                                            |
+| test262.test.built-ins.boolean.s9.2_a6_t1                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.boolean.symbol-coercion                      | 🟢 supported | via rquickjs engine                        |
 
 <!-- Generated by `cargo test -p dashscript --test conformance`. Do not edit by hand. -->

@@ -1,181 +1,181 @@
 # DashScript Conformance Matrix
 
-- 170 features: **168** supported, **2** partial, **0** unsupported, **0** untested
+- 170 features: **170** supported, **0** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## map
 
-| feature                                                                                                          | status       | detail / note                                                                             |
-| ---------------------------------------------------------------------------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------- |
-| test262.test.built-ins.map.bigint-number-same-value                                                              | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.constructor                                                                           | 🟢 supported |                                                                                           |
-| test262.test.built-ins.map.does-not-throw-when-set-is-not-callable                                               | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.get-set-method-failure                                                                | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.groupby.callback-arg                                                                  | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.groupby.callback-throws                                                               | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.groupby.emptylist                                                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.groupby.invalid-callback                                                              | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.groupby.invalid-iterable                                                              | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.groupby.iterator-next-throws                                                          | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.groupby.map-instance                                                                  | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.groupby.negativezero                                                                  | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.is-a-constructor                                                                      | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.iterable-calls-set                                                                    | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.iterator-close-after-set-failure                                                      | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.iterator-close-failure-after-set-failure                                              | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.iterator-is-undefined-throws                                                          | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.iterator-item-first-entry-returns-abrupt                                              | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.iterator-item-second-entry-returns-abrupt                                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.iterator-items-are-not-object                                                         | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.iterator-items-are-not-object-close-iterator                                          | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.iterator-next-failure                                                                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.iterator-value-failure                                                                | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.map-iterable                                                                          | 🟢 supported |                                                                                           |
-| test262.test.built-ins.map.map-iterable-empty-does-not-call-set                                                  | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.map-iterable-throws-when-set-is-not-callable                                          | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.map-no-iterable                                                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.map-no-iterable-does-not-call-set                                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.newtarget                                                                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.properties-of-map-instances                                                           | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.properties-of-the-map-prototype-object                                                | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.proto-from-ctor-realm                                                                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype-of-map                                                                      | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.clear.clear                                                                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.clear.clear-map                                                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.clear.context-is-not-map-object                                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.clear.context-is-not-object                                                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.clear.context-is-set-object-throws                                          | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.clear.context-is-weakmap-object-throws                                      | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.clear.map-data-list-is-preserved                                            | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.clear.not-a-constructor                                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.clear.returns-undefined                                                     | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.constructor                                                                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.delete.context-is-not-map-object                                            | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.delete.context-is-not-object                                                | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.delete.context-is-set-object-throws                                         | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.delete.context-is-weakmap-object-throws                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.delete.delete                                                               | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.delete.does-not-break-iterators                                             | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.delete.not-a-constructor                                                    | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.delete.returns-false                                                        | 🟢 supported |                                                                                           |
-| test262.test.built-ins.map.prototype.delete.returns-true-for-deleted-entry                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot                                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot-set                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot-weakmap                         | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.entries.entries                                                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.entries.not-a-constructor                                                   | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.entries.returns-iterator                                                    | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.entries.returns-iterator-empty                                              | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.entries.this-not-object-throw                                               | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.callback-parameters                                                 | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.foreach.callback-result-is-abrupt                                           | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.callback-this-non-strict                                            | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.callback-this-strict                                                | 🟡 partial   | Test262Error: Test262Error: Expected SameValue(«[object global]», «undefined») to be true |
-| test262.test.built-ins.map.prototype.foreach.deleted-values-during-foreach                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot                                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot-set                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot-weakmap                         | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.first-argument-is-not-callable                                      | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.foreach                                                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.iterates-in-key-insertion-order                                     | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.foreach.iterates-values-added-after-foreach-begins                          | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.iterates-values-deleted-then-readded                                | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.not-a-constructor                                                   | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.return-undefined                                                    | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.foreach.second-parameter-as-callback-context                                | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.foreach.this-not-object-throw                                               | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot-set                                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot-weakmap                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.get.get                                                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.get.not-a-constructor                                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.get.returns-undefined                                                       | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.get.returns-value-different-key-types                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.get.returns-value-normalized-zero-key                                       | 🟢 supported |                                                                                           |
-| test262.test.built-ins.map.prototype.get.this-not-object-throw                                                   | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsert.append-new-values                                               | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsert.append-new-values-normalizes-zero-key                           | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.getorinsert.append-value-if-key-is-not-present-different-key-types          | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot-set                         | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot-weakmap                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsert.getorinsert                                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsert.not-a-constructor                                               | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsert.returns-value-if-key-is-not-present-different-key-types         | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsert.returns-value-if-key-is-present-different-key-types             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsert.returns-value-normalized-zero-key                               | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.getorinsert.this-not-object-throw                                           | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.append-new-values                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.append-new-values-normalizes-zero-key                   | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.append-value-if-key-is-not-present-different-key-types  | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.callbackfn-throws                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.canonical-key-passed-to-callback                        | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.check-callback-fn-args                                  | 🟡 partial   | Test262Error: Test262Error: Expected SameValue(«[object global]», «undefined») to be true |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.check-state-after-callback-fn-throws                    | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.different-types-function-callbackfn-does-not-throw      | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-evaluate-callbackfn-if-key-present             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-have-mapdata-internal-slot-set                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-have-mapdata-internal-slot-weakmap             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.not-a-constructor                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.not-a-function-callbackfn-throws                        | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.overwrites-mutation-from-callbackfn                     | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-if-key-is-not-present-different-key-types | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-if-key-is-present-different-key-types     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-normalized-zero-key                       | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.getorinsertcomputed.this-not-object-throw                                   | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot-set                                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot-weakmap                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.has.has                                                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.has.normalizes-zero-key                                                     | 🟢 supported |                                                                                           |
-| test262.test.built-ins.map.prototype.has.not-a-constructor                                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.has.return-false-different-key-types                                        | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.has.return-true-different-key-types                                         | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.has.this-not-object-throw                                                   | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot                                    | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot-set                                | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot-weakmap                            | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.keys.keys                                                                   | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.keys.not-a-constructor                                                      | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.keys.returns-iterator                                                       | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.keys.returns-iterator-empty                                                 | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.keys.this-not-object-throw                                                  | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.set.append-new-values                                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.set.append-new-values-normalizes-zero-key                                   | 🟢 supported |                                                                                           |
-| test262.test.built-ins.map.prototype.set.append-new-values-return-map                                            | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot-set                                 | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot-weakmap                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.set.not-a-constructor                                                       | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.set.replaces-a-value                                                        | 🟢 supported |                                                                                           |
-| test262.test.built-ins.map.prototype.set.replaces-a-value-normalizes-zero-key                                    | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.set.replaces-a-value-returns-map                                            | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.set.set                                                                     | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.set.this-not-object-throw                                                   | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot                                    | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot-set                                | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot-weakmap                            | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.size.returns-count-of-present-values-before-after-set-clear                 | 🟢 supported |                                                                                           |
-| test262.test.built-ins.map.prototype.size.returns-count-of-present-values-before-after-set-delete                | 🟢 supported |                                                                                           |
-| test262.test.built-ins.map.prototype.size.returns-count-of-present-values-by-insertion                           | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.size.returns-count-of-present-values-by-iterable                            | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.size.size                                                                   | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.size.this-not-object-throw                                                  | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.symbol.iterator                                                             | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.symbol.iterator.not-a-constructor                                           | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.symbol.tostringtag                                                          | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot                                  | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot-set                              | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot-weakmap                          | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.values.not-a-constructor                                                    | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.values.returns-iterator                                                     | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.values.returns-iterator-empty                                               | 🟢 supported | engine fallback after static build failure                                                |
-| test262.test.built-ins.map.prototype.values.this-not-object-throw                                                | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.prototype.values.values                                                               | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.symbol.species.return-value                                                           | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.symbol.species.symbol-species                                                         | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.symbol.species.symbol-species-name                                                    | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.undefined-newtarget                                                                   | 🟢 supported | via rquickjs engine                                                                       |
-| test262.test.built-ins.map.valid-keys                                                                            | 🟢 supported | via rquickjs engine                                                                       |
+| feature                                                                                                          | status       | detail / note                              |
+| ---------------------------------------------------------------------------------------------------------------- | ------------ | ------------------------------------------ |
+| test262.test.built-ins.map.bigint-number-same-value                                                              | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.constructor                                                                           | 🟢 supported |                                            |
+| test262.test.built-ins.map.does-not-throw-when-set-is-not-callable                                               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.get-set-method-failure                                                                | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.groupby.callback-arg                                                                  | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.groupby.callback-throws                                                               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.groupby.emptylist                                                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.groupby.invalid-callback                                                              | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.groupby.invalid-iterable                                                              | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.groupby.iterator-next-throws                                                          | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.groupby.map-instance                                                                  | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.groupby.negativezero                                                                  | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.is-a-constructor                                                                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.iterable-calls-set                                                                    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.iterator-close-after-set-failure                                                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.iterator-close-failure-after-set-failure                                              | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.iterator-is-undefined-throws                                                          | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.iterator-item-first-entry-returns-abrupt                                              | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.iterator-item-second-entry-returns-abrupt                                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.iterator-items-are-not-object                                                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.iterator-items-are-not-object-close-iterator                                          | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.iterator-next-failure                                                                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.iterator-value-failure                                                                | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.map-iterable                                                                          | 🟢 supported |                                            |
+| test262.test.built-ins.map.map-iterable-empty-does-not-call-set                                                  | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.map-iterable-throws-when-set-is-not-callable                                          | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.map-no-iterable                                                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.map-no-iterable-does-not-call-set                                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.newtarget                                                                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.properties-of-map-instances                                                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.properties-of-the-map-prototype-object                                                | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.proto-from-ctor-realm                                                                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype-of-map                                                                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.clear.clear                                                                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.clear.clear-map                                                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.clear.context-is-not-map-object                                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.clear.context-is-not-object                                                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.clear.context-is-set-object-throws                                          | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.clear.context-is-weakmap-object-throws                                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.clear.map-data-list-is-preserved                                            | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.clear.not-a-constructor                                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.clear.returns-undefined                                                     | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.constructor                                                                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.delete.context-is-not-map-object                                            | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.delete.context-is-not-object                                                | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.delete.context-is-set-object-throws                                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.delete.context-is-weakmap-object-throws                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.delete.delete                                                               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.delete.does-not-break-iterators                                             | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.delete.not-a-constructor                                                    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.delete.returns-false                                                        | 🟢 supported |                                            |
+| test262.test.built-ins.map.prototype.delete.returns-true-for-deleted-entry                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot                                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot-set                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot-weakmap                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.entries.entries                                                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.entries.not-a-constructor                                                   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.entries.returns-iterator                                                    | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.entries.returns-iterator-empty                                              | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.entries.this-not-object-throw                                               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.callback-parameters                                                 | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.foreach.callback-result-is-abrupt                                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.callback-this-non-strict                                            | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.callback-this-strict                                                | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.deleted-values-during-foreach                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot                                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot-set                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.does-not-have-mapdata-internal-slot-weakmap                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.first-argument-is-not-callable                                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.foreach                                                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.iterates-in-key-insertion-order                                     | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.foreach.iterates-values-added-after-foreach-begins                          | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.iterates-values-deleted-then-readded                                | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.not-a-constructor                                                   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.return-undefined                                                    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.foreach.second-parameter-as-callback-context                                | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.foreach.this-not-object-throw                                               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot-set                                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.get.does-not-have-mapdata-internal-slot-weakmap                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.get.get                                                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.get.not-a-constructor                                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.get.returns-undefined                                                       | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.get.returns-value-different-key-types                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.get.returns-value-normalized-zero-key                                       | 🟢 supported |                                            |
+| test262.test.built-ins.map.prototype.get.this-not-object-throw                                                   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsert.append-new-values                                               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsert.append-new-values-normalizes-zero-key                           | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.getorinsert.append-value-if-key-is-not-present-different-key-types          | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot-set                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsert.does-not-have-mapdata-internal-slot-weakmap                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsert.getorinsert                                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsert.not-a-constructor                                               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsert.returns-value-if-key-is-not-present-different-key-types         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsert.returns-value-if-key-is-present-different-key-types             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsert.returns-value-normalized-zero-key                               | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.getorinsert.this-not-object-throw                                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.append-new-values                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.append-new-values-normalizes-zero-key                   | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.append-value-if-key-is-not-present-different-key-types  | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.callbackfn-throws                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.canonical-key-passed-to-callback                        | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.check-callback-fn-args                                  | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.check-state-after-callback-fn-throws                    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.different-types-function-callbackfn-does-not-throw      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-evaluate-callbackfn-if-key-present             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-have-mapdata-internal-slot-set                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.does-not-have-mapdata-internal-slot-weakmap             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.not-a-constructor                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.not-a-function-callbackfn-throws                        | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.overwrites-mutation-from-callbackfn                     | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-if-key-is-not-present-different-key-types | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-if-key-is-present-different-key-types     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.returns-value-normalized-zero-key                       | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.getorinsertcomputed.this-not-object-throw                                   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot-set                                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.has.does-not-have-mapdata-internal-slot-weakmap                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.has.has                                                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.has.normalizes-zero-key                                                     | 🟢 supported |                                            |
+| test262.test.built-ins.map.prototype.has.not-a-constructor                                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.has.return-false-different-key-types                                        | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.has.return-true-different-key-types                                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.has.this-not-object-throw                                                   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot                                    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot-set                                | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.keys.does-not-have-mapdata-internal-slot-weakmap                            | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.keys.keys                                                                   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.keys.not-a-constructor                                                      | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.keys.returns-iterator                                                       | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.keys.returns-iterator-empty                                                 | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.keys.this-not-object-throw                                                  | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.set.append-new-values                                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.set.append-new-values-normalizes-zero-key                                   | 🟢 supported |                                            |
+| test262.test.built-ins.map.prototype.set.append-new-values-return-map                                            | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot-set                                 | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.set.does-not-have-mapdata-internal-slot-weakmap                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.set.not-a-constructor                                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.set.replaces-a-value                                                        | 🟢 supported |                                            |
+| test262.test.built-ins.map.prototype.set.replaces-a-value-normalizes-zero-key                                    | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.set.replaces-a-value-returns-map                                            | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.set.set                                                                     | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.set.this-not-object-throw                                                   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot                                    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot-set                                | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.size.does-not-have-mapdata-internal-slot-weakmap                            | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.size.returns-count-of-present-values-before-after-set-clear                 | 🟢 supported |                                            |
+| test262.test.built-ins.map.prototype.size.returns-count-of-present-values-before-after-set-delete                | 🟢 supported |                                            |
+| test262.test.built-ins.map.prototype.size.returns-count-of-present-values-by-insertion                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.size.returns-count-of-present-values-by-iterable                            | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.size.size                                                                   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.size.this-not-object-throw                                                  | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.symbol.iterator                                                             | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.symbol.iterator.not-a-constructor                                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.symbol.tostringtag                                                          | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot                                  | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot-set                              | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.values.does-not-have-mapdata-internal-slot-weakmap                          | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.values.not-a-constructor                                                    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.values.returns-iterator                                                     | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.values.returns-iterator-empty                                               | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.map.prototype.values.this-not-object-throw                                                | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.values.values                                                               | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.symbol.species.return-value                                                           | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.symbol.species.symbol-species                                                         | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.symbol.species.symbol-species-name                                                    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.undefined-newtarget                                                                   | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.valid-keys                                                                            | 🟢 supported | via rquickjs engine                        |
 
 <!-- Generated by `cargo test -p dashscript --test conformance`. Do not edit by hand. -->

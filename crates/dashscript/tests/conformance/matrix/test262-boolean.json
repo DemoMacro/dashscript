@@ -43,8 +43,8 @@
     "id": "test262.test.built-ins.boolean.prototype.s15.6.3.1_a3",
     "layer": "test262",
     "category": "boolean",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

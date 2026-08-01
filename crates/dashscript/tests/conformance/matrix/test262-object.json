@@ -9075,8 +9075,8 @@
     "id": "test262.test.built-ins.object.defineproperty.15.2.3.6-4-243-2",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -11707,8 +11707,8 @@
     "id": "test262.test.built-ins.object.defineproperty.symbol-data-property-default-strict",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -11868,7 +11868,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42304) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (36960) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -11996,7 +11996,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (28632) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (42764) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -12043,8 +12043,8 @@
     "id": "test262.test.built-ins.object.freeze.frozen-object-contains-symbol-properties-strict",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16348,7 +16348,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (11348) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (35768) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17148,7 +17148,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (18784) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (10196) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17779,8 +17779,8 @@
     "id": "test262.test.built-ins.object.preventextensions.symbol-object-contains-symbol-properties-strict",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -19067,16 +19067,16 @@
     "id": "test262.test.built-ins.object.prototype.tolocalestring.primitive_this_value",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«\"object\"», «\"boolean\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.object.prototype.tolocalestring.primitive_this_value_getter",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«\"object\"», «\"boolean\"») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -20331,8 +20331,8 @@
     "id": "test262.test.built-ins.object.seal.symbol-object-contains-symbol-properties-strict",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

@@ -2211,8 +2211,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.from.bigint.mapfn-this-without-thisarg-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«[object global]», «undefined») to be true (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2427,8 +2427,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.from.mapfn-this-without-thisarg-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«[object global]», «undefined») to be true (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3219,8 +3219,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.bigint.indexed-value-ab-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3235,8 +3235,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.bigint.indexed-value-sab-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3259,8 +3259,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.bigint.key-is-not-canonical-index-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3275,8 +3275,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.bigint.key-is-not-minus-zero-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3299,8 +3299,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.bigint.key-is-not-numeric-index-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3315,8 +3315,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.bigint.key-is-out-of-bounds-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with BigInt64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3371,8 +3371,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.indexed-value-ab-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3387,8 +3387,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.indexed-value-sab-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3411,8 +3411,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.key-is-not-canonical-index-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3435,8 +3435,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.key-is-not-minus-zero-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3459,8 +3459,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.key-is-not-numeric-index-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -3475,8 +3475,8 @@
     "id": "test262.test.built-ins.typedarrayconstructors.internals.delete.key-is-out-of-bounds-strict",
     "layer": "test262",
     "category": "typedarrayconstructors",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Float64Array and makePassthrough.)",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

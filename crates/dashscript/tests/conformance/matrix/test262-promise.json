@@ -2675,8 +2675,8 @@
     "id": "test262.test.built-ins.promise.executor-call-context-strict",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«[object global]», «undefined») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

@@ -1043,8 +1043,8 @@
     "id": "test262.test.built-ins.set.prototype.foreach.this-strict",
     "layer": "test262",
     "category": "set",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: `this` is `undefined` in strict mode code Expected SameValue(«[object global]», «undefined») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

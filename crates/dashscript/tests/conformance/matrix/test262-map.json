@@ -507,8 +507,8 @@
     "id": "test262.test.built-ins.map.prototype.foreach.callback-this-strict",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«[object global]», «undefined») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -827,8 +827,8 @@
     "id": "test262.test.built-ins.map.prototype.getorinsertcomputed.check-callback-fn-args",
     "layer": "test262",
     "category": "map",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected SameValue(«[object global]», «undefined») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

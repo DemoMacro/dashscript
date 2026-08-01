@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 84 features: **80** supported, **4** partial, **0** unsupported, **0** untested
+- 84 features: **82** supported, **2** partial, **0** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## symbol
@@ -13,7 +13,7 @@
 | test262.test.built-ins.symbol.asynciterator.cross-realm                                                  | 🟢 supported | via rquickjs engine                                                                                                                      |
 | test262.test.built-ins.symbol.asynciterator.prop-desc                                                    | 🟢 supported | via rquickjs engine                                                                                                                      |
 | test262.test.built-ins.symbol.auto-boxing-non-strict                                                     | 🟢 supported | via rquickjs engine                                                                                                                      |
-| test262.test.built-ins.symbol.auto-boxing-strict                                                         | 🟡 partial   | Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all                                         |
+| test262.test.built-ins.symbol.auto-boxing-strict                                                         | 🟢 supported | via rquickjs engine                                                                                                                      |
 | test262.test.built-ins.symbol.constructor                                                                | 🟢 supported | via rquickjs engine                                                                                                                      |
 | test262.test.built-ins.symbol.desc-to-string                                                             | 🟢 supported | via rquickjs engine                                                                                                                      |
 | test262.test.built-ins.symbol.desc-to-string-symbol                                                      | 🟢 supported | via rquickjs engine                                                                                                                      |
@@ -66,7 +66,7 @@
 | test262.test.built-ins.symbol.prototype.tostring.prop-desc                                               | 🟢 supported | via rquickjs engine                                                                                                                      |
 | test262.test.built-ins.symbol.prototype.tostring.tostring                                                | 🟢 supported | via rquickjs engine                                                                                                                      |
 | test262.test.built-ins.symbol.prototype.tostring.tostring-default-attributes-non-strict                  | 🟢 supported | via rquickjs engine                                                                                                                      |
-| test262.test.built-ins.symbol.prototype.tostring.tostring-default-attributes-strict                      | 🟡 partial   | Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all                                         |
+| test262.test.built-ins.symbol.prototype.tostring.tostring-default-attributes-strict                      | 🟢 supported | via rquickjs engine                                                                                                                      |
 | test262.test.built-ins.symbol.prototype.tostring.undefined                                               | 🟢 supported | via rquickjs engine                                                                                                                      |
 | test262.test.built-ins.symbol.prototype.valueof.not-a-constructor                                        | 🟢 supported | via rquickjs engine                                                                                                                      |
 | test262.test.built-ins.symbol.prototype.valueof.prop-desc                                                | 🟢 supported | via rquickjs engine                                                                                                                      |

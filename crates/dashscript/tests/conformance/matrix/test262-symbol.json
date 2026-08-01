@@ -51,8 +51,8 @@
     "id": "test262.test.built-ins.symbol.auto-boxing-strict",
     "layer": "test262",
     "category": "symbol",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -475,8 +475,8 @@
     "id": "test262.test.built-ins.symbol.prototype.tostring.tostring-default-attributes-strict",
     "layer": "test262",
     "category": "symbol",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
