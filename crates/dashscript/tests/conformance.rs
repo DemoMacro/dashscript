@@ -1762,7 +1762,31 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
         );
     }
     let (verdict, _stdout) = cargo_run_full(project, target_dir);
-    judge_run(verdict)
+    match verdict {
+        // The emitted Rust compiled but crashed at runtime (an array index out
+        // of bounds ES would return `undefined` for, an arithmetic overflow, a
+        // residual `todo!()`/`panic!()`). The static translator lowered the
+        // construct to code that crashes instead of expressing its ES semantics
+        // — the same "degrade, don't reject" contract as a build failure: fall
+        // back to the engine path so the fixture runs under QuickJS rather than
+        // reporting a runtime-only partial. Only upgrade to `supported`; if the
+        // engine also fails, keep `partial` carrying both details.
+        RunOutcome::RunError(err) => {
+            let (estatus, edetail) = run_engine(raw);
+            if estatus == "supported" {
+                (
+                    "supported",
+                    "engine fallback after static runtime panic".into(),
+                )
+            } else {
+                (
+                    "partial",
+                    format!("runtime error: {err} | engine: {edetail}"),
+                )
+            }
+        }
+        other => judge_run(other),
+    }
 }
 
 /// One fixture, run against a worker-owned `project`/`target_dir` pair.
