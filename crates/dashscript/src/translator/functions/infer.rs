@@ -218,6 +218,13 @@ pub(super) fn infer_literal_type(expr: &Expression) -> Option<Type> {
         Expression::NewExpression(n) if matches!(&n.callee, Expression::Identifier(id) if id.name.as_str() == "RegExp") => {
             Some(parse_quote!(regress::Regex))
         }
+        // `new Temporal.<Type>(isoFields…)` → `temporal_rs::<Type>` (the type
+        // `.year`/`.toString`/… dispatch on), for the date/time types whose
+        // ISO-field constructors `temporal_new` maps. A `new
+        // Temporal.<Type>` that `temporal_new` does not lower (Instant/
+        // Duration/…) still infers its type so accessors resolve; the value
+        // stays a `todo!()` and surfaces at run, honestly.
+        Expression::NewExpression(n) => temporal_new_type(&n.callee),
         // `Temporal.<Type>.from(s)` → `temporal_rs::<Type>` (the type
         // `.toString`/`.year`/`.hour`/… dispatch on), for the five date/time
         // types sharing the `from_utf8` constructor + accessor shape.
@@ -259,5 +266,15 @@ fn temporal_from_type(expr: &Expression) -> Option<Type> {
             is_temporal_static_call(expr, "Instant", "fromEpochMilliseconds").then_some("Instant")
         })?;
     let ident = syn::Ident::new(ty, proc_macro2::Span::call_site());
+    Some(parse_quote!(temporal_rs::#ident))
+}
+
+/// `new Temporal.<Type>(…)` infers `temporal_rs::<Type>` — the type the
+/// accessors + `Display`/`PartialEq` dispatch on. Reuses
+/// `temporal_type_of_callee` so it stays in sync with `temporal_new`'s
+/// recognition of the `Temporal.<Type>` callee shape.
+fn temporal_new_type(callee: &Expression) -> Option<Type> {
+    let ty = super::super::builtins::temporal_type_of_callee(callee)?;
+    let ident = syn::Ident::new(&ty, proc_macro2::Span::call_site());
     Some(parse_quote!(temporal_rs::#ident))
 }

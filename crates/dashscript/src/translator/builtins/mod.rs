@@ -43,7 +43,9 @@ pub(in crate::translator) use math::{math_constant, math_method};
 pub(in crate::translator) use number::{number_constant, number_method, number_static};
 pub(in crate::translator) use object::object_method;
 pub(in crate::translator) use string::{string_method, string_method_on, string_static};
-pub(in crate::translator) use temporal::{temporal_method, temporal_static, TEMPORAL_TYPES};
+pub(in crate::translator) use temporal::{
+    temporal_method, temporal_new, temporal_static, temporal_type_of_callee, TEMPORAL_TYPES,
+};
 pub(in crate::translator) use typed_array::typed_array_method;
 
 use oxc_ast::ast::{Argument, Expression};

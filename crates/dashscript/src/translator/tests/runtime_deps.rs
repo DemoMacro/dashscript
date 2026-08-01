@@ -824,6 +824,68 @@ fn temporal_compare_routes_each_type_to_its_comparator() {
 }
 
 #[test]
+fn temporal_new_iso_fields_route_to_temporal_rs() {
+    // `new Temporal.<Type>(isoFields…)` → `temporal_rs::<Type>::new(…)` with
+    // each field cast (f64 -> i32/u8/u16) and trailing-missing args padded to
+    // `0` (ES ToInteger(undefined) = 0). Calendar::ISO is the ES iso8601
+    // default for the date/time types; PlainTime carries no calendar.
+    let src = "function main(): void {\n  const d = new Temporal.PlainDate(2024, 1, 1);\n  const dt = new Temporal.PlainDateTime(1976, 11, 18, 15, 23, 30);\n  const t = new Temporal.PlainTime(15, 23, 30);\n  const ym = new Temporal.PlainYearMonth(2024, 1);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_temporal(),
+        "flags needs_temporal, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains("temporal_rs::PlainDate::new")
+            && rust.contains("temporal_rs::PlainDateTime::new")
+            && rust.contains("temporal_rs::PlainTime::new")
+            && rust.contains("temporal_rs::PlainYearMonth::new"),
+        "each new routes to temporal_rs::<Type>::new, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("Calendar::ISO"),
+        "date/time types default to Calendar::ISO, got:\n{rust}"
+    );
+    assert!(
+        !rust.contains("todo!()"),
+        "new Temporal no longer degrades to todo!(), got:\n{rust}"
+    );
+    // Trailing-missing args pad to 0 (PlainDateTime has 9 ISO fields, only 6
+    // given — the missing ms/us/ns are u16; PlainTime has 6, only 3 given).
+    assert!(
+        rust.contains("0 as u16"),
+        "missing trailing fields pad to 0, got:\n{rust}"
+    );
+}
+
+#[test]
+fn temporal_new_binding_infers_type_for_accessors() {
+    // `const dt = new Temporal.PlainDateTime(…)` infers `temporal_rs::
+    // PlainDateTime`, so `dt.year` dispatches as a method call (`dt.year()`,
+    // not a field — `temporal_rs` accessors are inherent methods). Without
+    // the NewExpression inference, `dt.year` would lower as a field access
+    // and surface as E0615 at `cargo check`.
+    let src = "function main(): void {\n  const dt = new Temporal.PlainDateTime(1976, 11, 18);\n  console.log(dt.year);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_temporal(),
+        "flags needs_temporal, got deps: {deps:?}"
+    );
+    assert!(
+        rust.contains("temporal_rs::PlainDateTime::new"),
+        "new routes to PlainDateTime::new, got:\n{rust}"
+    );
+    assert!(
+        rust.contains(".year()"),
+        "dt.year dispatches as a method call, got:\n{rust}"
+    );
+}
+
+#[test]
 fn temporal_plain_date_time_from_and_time_accessors_route_through_temporal_rs() {
     // `Temporal.PlainDateTime.from(s)` → `temporal_rs::PlainDateTime::from_utf8`,
     // and `.hour`/`.minute`/`.second` on the local → the matching accessor

@@ -11,7 +11,7 @@
 //! `RangeError`/`SyntaxError`, not a bare unwrap panic) — see
 //! `RuntimeDep::Error` + `try`/`catch` in `functions/try_throw.rs`.
 
-use oxc_ast::ast::{Argument, StaticMemberExpression};
+use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
 use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
@@ -81,16 +81,16 @@ pub(in crate::translator) fn temporal_static(
             temporal_compare(
                 args,
                 ctx,
-                parse_quote!(temporal_rs::#ty::compare_iso(&__a, &__b)),
+                |a: Expr, b: Expr| parse_quote!(temporal_rs::#ty::compare_iso(&(#a), &(#b))),
             )
         }
         ("ZonedDateTime", "compare") => temporal_compare(
             args,
             ctx,
-            parse_quote!(temporal_rs::ZonedDateTime::compare_instant(&__a, &__b)),
+            |a: Expr, b: Expr| parse_quote!(temporal_rs::ZonedDateTime::compare_instant(&(#a), &(#b))),
         ),
         ("Instant" | "PlainTime", "compare") => {
-            temporal_compare(args, ctx, parse_quote!(__a.cmp(&__b)))
+            temporal_compare(args, ctx, |a: Expr, b: Expr| parse_quote!((#a).cmp(&(#b))))
         }
         // `Temporal.Instant.fromEpochMilliseconds(n)` →
         // `Instant::from_epoch_milliseconds(i64)` (a `.ts` `number` is `f64`,
@@ -205,19 +205,24 @@ fn is_string_arg(a: &Argument, ctx: &Ctx<'_>) -> bool {
     }
 }
 
-/// `Temporal.<Type>.compare(a, b)` → ES -1/0/1 (`f64`). `cmp_expr` references
-/// the bound `__a`/`__b` idents and yields a `core::cmp::Ordering` — the
-/// receiver type's `compare_iso` (ISO-field types: PlainDate/PlainDateTime/
-/// PlainYearMonth), `compare_instant` (ZonedDateTime), or `__a.cmp(&__b)` for
-/// an `Ord`-deriving scalar type (Instant, PlainTime). The two args are bound
-/// first so a plain `&__a`/`&__b` borrow works whether they are locals or
-/// inline `Temporal.<Type>.from(…)` calls. Returns `f64` (the ES `number`).
-fn temporal_compare(args: &[Argument], ctx: &Ctx<'_>, cmp_expr: Expr) -> Option<Expr> {
+/// `Temporal.<Type>.compare(a, b)` → ES -1/0/1 (`f64`). `cmp` builds the
+/// `core::cmp::Ordering` expression from the two operands — the receiver
+/// type's `compare_iso` (ISO-field types: PlainDate/PlainDateTime/
+/// PlainYearMonth), `compare_instant` (ZonedDateTime), or `.cmp(…)` for an
+/// `Ord`-deriving scalar type (Instant, PlainTime). The operands are passed
+/// by value and lowered inline (the closure wraps each in `&(…)`, so a
+/// `compare(a, a)` self-comparison borrows twice rather than moving —
+/// `temporal_rs` Temporal values are not `Copy`). Returns `f64` (the ES
+/// `number`).
+fn temporal_compare(
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+    cmp: impl Fn(Expr, Expr) -> Expr,
+) -> Option<Expr> {
     let a = translate_argument(args.first()?, ctx);
     let b = translate_argument(args.get(1)?, ctx);
+    let cmp_expr = cmp(a, b);
     Some(parse_quote!({
-        let __a = #a;
-        let __b = #b;
         match #cmp_expr {
             ::core::cmp::Ordering::Less => -1_f64,
             ::core::cmp::Ordering::Equal => 0_f64,
@@ -300,5 +305,125 @@ pub(in crate::translator) fn temporal_method(
             parse_quote!((#obj) == (#other))
         }
         _ => return None,
+    })
+}
+
+/// `new Temporal.<Type>(isoFields…)` → `temporal_rs::<Type>::new(…)`. The four
+/// date/time types whose constructors take ISO integer fields lower here; each
+/// field casts from a `.ts` `number` (`f64`), and a trailing-missing arg pads
+/// to `0` (ES `ToInteger(undefined) = 0`). PlainDate/PlainDateTime/
+/// PlainYearMonth pass `Calendar::ISO` (the ES iso8601 default); PlainYearMonth
+/// passes `None` for the optional `referenceDay` when only year/month are
+/// given. Returns `None` for any other callee/type — `Instant` is epoch-only,
+/// `ZonedDateTime` needs a time zone, `Duration` takes 10 components, and
+/// `PlainMonthDay`'s constructor needs a reference year — so they fall through
+/// to the generic path honestly.
+pub(in crate::translator) fn temporal_new(
+    callee: &Expression,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    let ty = temporal_type_of_callee(callee)?;
+    let err_rhs = ds_panic_temporal_err();
+    Some(match ty.as_str() {
+        "PlainDate" => {
+            let y = iso_field(args, 0, "i32", ctx);
+            let m = iso_field(args, 1, "u8", ctx);
+            let d = iso_field(args, 2, "u8", ctx);
+            temporal_unwrap(
+                parse_quote!(temporal_rs::PlainDate::new(#y, #m, #d, temporal_rs::Calendar::ISO)),
+                err_rhs,
+            )
+        }
+        "PlainDateTime" => {
+            let y = iso_field(args, 0, "i32", ctx);
+            let mo = iso_field(args, 1, "u8", ctx);
+            let d = iso_field(args, 2, "u8", ctx);
+            let h = iso_field(args, 3, "u8", ctx);
+            let mi = iso_field(args, 4, "u8", ctx);
+            let s = iso_field(args, 5, "u8", ctx);
+            let ms = iso_field(args, 6, "u16", ctx);
+            let us = iso_field(args, 7, "u16", ctx);
+            let ns = iso_field(args, 8, "u16", ctx);
+            temporal_unwrap(
+                parse_quote!(temporal_rs::PlainDateTime::new(
+                    #y, #mo, #d, #h, #mi, #s, #ms, #us, #ns,
+                    temporal_rs::Calendar::ISO,
+                )),
+                err_rhs,
+            )
+        }
+        "PlainTime" => {
+            let h = iso_field(args, 0, "u8", ctx);
+            let mi = iso_field(args, 1, "u8", ctx);
+            let s = iso_field(args, 2, "u8", ctx);
+            let ms = iso_field(args, 3, "u16", ctx);
+            let us = iso_field(args, 4, "u16", ctx);
+            let ns = iso_field(args, 5, "u16", ctx);
+            temporal_unwrap(
+                parse_quote!(temporal_rs::PlainTime::new(#h, #mi, #s, #ms, #us, #ns)),
+                err_rhs,
+            )
+        }
+        "PlainYearMonth" => {
+            let y = iso_field(args, 0, "i32", ctx);
+            let m = iso_field(args, 1, "u8", ctx);
+            temporal_unwrap(
+                parse_quote!(temporal_rs::PlainYearMonth::new(
+                    #y,
+                    #m,
+                    ::core::option::Option::None,
+                    temporal_rs::Calendar::ISO,
+                )),
+                err_rhs,
+            )
+        }
+        _ => return None,
+    })
+}
+
+/// The `<Type>` name of a `Temporal.<Type>` callee, or `None` if `callee` is
+/// not that shape. Used by [`temporal_new`] to dispatch `new
+/// Temporal.<Type>(…)`. Returns an owned `String` so the oxc AST's arena
+/// lifetimes stay inside this function. Exposed for `infer.rs` to give a `new
+/// Temporal.<Type>(…)` binding the matching `temporal_rs::<Type>` so accessors
+/// (`dt.year`/…) dispatch.
+pub(in crate::translator) fn temporal_type_of_callee(callee: &Expression) -> Option<String> {
+    let Expression::StaticMemberExpression(sm) = callee else {
+        return None;
+    };
+    let Expression::Identifier(id) = &sm.object else {
+        return None;
+    };
+    (id.name.as_str() == "Temporal").then(|| sm.property.name.to_string())
+}
+
+/// One ISO integer field for a `new Temporal.<Type>(…)` constructor: the arg
+/// at `idx` cast to its target integer type (`(arg) as i32`/`u8`/`u16`), or a
+/// typed `0` literal when absent — ES `ToInteger(undefined) = 0`, and the
+/// `temporal_rs` constructors require every field. The cast from a `.ts`
+/// `number` (`f64`) truncates toward zero, matching ES `ToInt32`/`ToUint8`/
+/// `ToUint16` for the non-fractional fields Temporal uses.
+fn iso_field(args: &[Argument], idx: usize, ty: &str, ctx: &Ctx<'_>) -> Expr {
+    let ty_id = syn::Ident::new(ty, Span::call_site());
+    match args.get(idx) {
+        Some(a) => {
+            let v = translate_argument(a, ctx);
+            parse_quote!((#v) as #ty_id)
+        }
+        None => parse_quote!(0 as #ty_id),
+    }
+}
+
+/// Wrap a `temporal_rs` `TemporalResult<Self>` constructor so its `Err` lowers
+/// to a `DsError` (the `ErrorKind` is the ES error class; `into_message` the
+/// text) — the shared Ok/Err match used by `temporal_new`. `err_rhs` is from
+/// [`ds_panic_temporal_err`]; `call` is the constructor expression.
+fn temporal_unwrap(call: Expr, err_rhs: Expr) -> Expr {
+    parse_quote!({
+        match #call {
+            Ok(__d) => __d,
+            Err(__err) => #err_rhs,
+        }
     })
 }

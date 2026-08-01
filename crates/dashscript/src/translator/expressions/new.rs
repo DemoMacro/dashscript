@@ -16,6 +16,16 @@ use super::{array_elem_arg, array_owned_expr};
 /// supported), so it falls through to `Map::new(…)` and surfaces as a `cargo
 /// check` error honestly.
 pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
+    // `new Temporal.<Type>(isoFields…)` → `temporal_rs::<Type>::new(…)`. The
+    // member callee `Temporal.<Type>` resolves to a Temporal ISO-field
+    // constructor (PlainDate/PlainDateTime/PlainTime/PlainYearMonth);
+    // `builtins::temporal_new` casts the fields and unwraps the Result.
+    // Intercepted before the Identifier arm and the generic `Foo::new` path
+    // (which would emit `Temporal::<Type>::new` — E0425, `Temporal` is not a
+    // Rust identifier in scope).
+    if let Some(e) = builtins::temporal_new(&n.callee, &n.arguments, ctx) {
+        return e;
+    }
     // `new RegExp("pat"[, flags])` — the ES RegExp constructor, lowered to the
     // same `__ds::regex` helper as `/pat/` literals. Intercepted before the
     // generic `Foo::new` lowering, which would emit `RegExp::new` (E0425).
