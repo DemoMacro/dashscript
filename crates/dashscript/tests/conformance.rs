@@ -856,6 +856,32 @@ var $262 = (function () {
 })();
 "#;
 
+/// `$262.AbstractModuleSource` (tc39 `source-phase-imports` proposal, ES2026).
+/// The host exposes the abstract constructor on `$262`; QuickJS-NG ships no
+/// source-phase-imports, so a fixture referencing it reads `typeof undefined`.
+/// The stub is spec-faithful, not a fake pass: an abstract constructor that
+/// throws `TypeError` on call/construct, with the built-in property descriptors
+/// the 8-fixture suite checks — `length`/`name` non-writable, the `prototype`
+/// property non-writable + non-configurable, and
+/// `prototype[Symbol.toStringTag]` as a get-only accessor returning
+/// `undefined` unless `this` carries a `[[ModuleSourceClassName]]` slot (the
+/// stub's prototype never does, matching spec steps 2-3 of
+/// get [@@toStringTag]).
+const ABSTRACT_MODULE_SOURCE_PRELUDE: &str = r#"
+(function () {
+  if (typeof $262 === 'undefined' || $262 === null) return;
+  function AbstractModuleSource() { throw new TypeError(); }
+  Object.defineProperty(AbstractModuleSource, 'length', { writable: false });
+  Object.defineProperty(AbstractModuleSource, 'name', { writable: false });
+  Object.defineProperty(AbstractModuleSource, 'prototype', { writable: false });
+  Object.defineProperty(AbstractModuleSource.prototype, Symbol.toStringTag, {
+    get: function () { return undefined; },
+    configurable: true,
+  });
+  $262.AbstractModuleSource = AbstractModuleSource;
+})();
+"#;
+
 /// `Atomics.waitAsync` polyfill. QuickJS-NG lacks it (`typeof` is `"undefined"`),
 /// so the ~100 test262 `waitAsync` fixtures fail at the first assert. Only the
 /// validation + non-blocking paths are covered (the `-agent` variants need real
@@ -1872,6 +1898,14 @@ fn engine_eval(
             // fixtures that reference it — skips the registration cost otherwise.
             if js_source.contains("ShadowRealm") {
                 sr_install(&ctx)?;
+            }
+            // $262.AbstractModuleSource (tc39 `source-phase-imports` proposal,
+            // ES2026): the host exposes the abstract constructor on `$262`.
+            // QuickJS-NG ships no source-phase-imports, so inject a spec-faithful
+            // stub (abstract ctor that throws, correct length/name/prototype
+            // descriptors) only for the fixtures that reference it.
+            if js_source.contains("AbstractModuleSource") {
+                ctx.eval_with_options::<(), _>(ABSTRACT_MODULE_SOURCE_PRELUDE, sloppy())?;
             }
             // Error.prototype.stack accessor (tc39 `error-stack-accessor` proposal):
             // QuickJS-NG has no own `stack` on `Error.prototype`, so the
