@@ -186,12 +186,13 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     // `d.year`/`d.month`/`d.hour`/… on a `Temporal.<Type>` local → the matching
     // `temporal_rs::<Type>` accessor method (Rust accessors are methods, not
     // fields; ES Temporal calendar/time fields are properties). Numeric fields
-    // cast to `f64` (a `.ts` `number` is `f64`); `inLeapYear` is a bool, no cast.
+    // cast to `f64` (a `.ts` `number` is `f64`); `inLeapYear` is a bool and
+    // `calendarId` a `&str` calendar name, so neither is cast.
     if is_temporal_local(&sm.object, ctx) {
         if let Some(m) = temporal_accessor(field_name) {
             let method = syn::Ident::new(m, Span::call_site());
             let obj = translate_expr(&sm.object, ctx);
-            return if field_name == "inLeapYear" {
+            return if field_name == "inLeapYear" || field_name == "calendarId" {
                 parse_quote!(#obj.#method())
             } else {
                 parse_quote!((#obj.#method() as f64))
@@ -484,6 +485,9 @@ fn temporal_accessor(name: &str) -> Option<&'static str> {
         "millisecond" => Some("millisecond"),
         "microsecond" => Some("microsecond"),
         "nanosecond" => Some("nanosecond"),
+        // String field — `calendarId` returns the calendar name (`&str`); the
+        // emit skips the numeric `as f64` cast (see the `calendarId` arm below).
+        "calendarId" => Some("calendar_id"),
         _ => None,
     }
 }

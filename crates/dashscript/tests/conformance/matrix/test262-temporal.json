@@ -2732,7 +2732,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (19984) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
+    "detail": "Test262Error: \nthread 'main' (19964) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
     "note": ""
   },
   {
@@ -6244,7 +6244,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (14728) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (9620) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
     "note": ""
   },
   {
@@ -8636,7 +8636,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8748,7 +8748,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9772,7 +9772,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34736) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (22884) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -12372,7 +12372,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -12476,7 +12476,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -12724,7 +12724,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -14019,8 +14019,8 @@
     "id": "test262.test.built-ins.temporal.plainmonthday.from.argument-string-calendar-case-insensitive",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:14:45: error[E0615]: attempted to take value of method `calendar_id` on type `PlainMonthDay`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error | engine: engine error: RangeError: MM-DD format is only valid with iso8601 calendar",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -17260,7 +17260,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (6004) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ba",
+    "detail": "Test262Error: \nthread 'main' (37716) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
     "note": ""
   },
   {
@@ -17459,8 +17459,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.calendar-case-insensitive",
     "layer": "test262",
     "category": "temporal",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (2304) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
     "note": ""
   },
   {
@@ -17476,7 +17476,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35844) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (12104) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -17484,7 +17484,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
@@ -17732,7 +17732,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (33720) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-1.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39972) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-1.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17899,8 +17899,8 @@
     "id": "test262.test.built-ins.temporal.plainyearmonth.from.argument-string-calendar-case-insensitive",
     "layer": "test262",
     "category": "temporal",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:14:45: error[E0615]: attempted to take value of method `calendar_id` on type `PlainYearMonth`: method, not a field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error | engine: engine error: RangeError: YYYY-MM format is only valid with iso8601 calendar",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -18444,7 +18444,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
@@ -18748,7 +18748,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (25228) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39060) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -19740,7 +19740,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -21052,7 +21052,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38880) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (12248) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
