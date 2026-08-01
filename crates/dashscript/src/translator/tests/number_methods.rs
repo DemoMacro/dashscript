@@ -56,10 +56,14 @@ fn translates_number_to_string_variable_radix() {
 }
 
 #[test]
-fn translates_number_to_string_no_arg_is_display() {
+fn translates_number_to_string_no_arg_is_number_to_string() {
+    // `(n).toString()` ≡ ES NumberToString — route through the shared
+    // `number_to_string` helper so `Infinity`/`NaN` print with their ES names
+    // (Rust `Display` would give `"inf"`/`"NaN"`-but-`"inf"`-for-`Infinity`)
+    // and large values use ES scientific form.
     let src = "function f(n: number): string { return n.toString(); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains(".to_string()"), "got:\n{rust}");
+    assert!(rust.contains("__ds::number_to_string"), "got:\n{rust}");
     assert!(!rust.contains("as u32"), "got:\n{rust}");
 }
 

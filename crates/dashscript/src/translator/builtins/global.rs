@@ -61,17 +61,25 @@ pub(in crate::translator) fn global_function(
             translate_argument(args.first()?, ctx),
             args.get(1).map(|r| translate_argument(r, ctx)),
         ),
-        // `Number(s)` parses a string; `Number(n)` passes a number through.
-        // ToNumber coercion: an empty or whitespace-only string is `0` (not
-        // NaN — `Number("")` / `Number("  ")` are both `0`); anything else
-        // parses as `f64`, NaN on a malformed string (a throw is never raised).
+        // `Number(x)` is the ES ToNumber coercion (§7.1.3). A string runs
+        // StringToNumber (§7.1.4.1): empty/whitespace → +0, else parse with
+        // NaN on malformed; `true`/`false` → 1/+0; `null` → +0; a number
+        // passes through. (A bare `undefined` arg would need NaN, but that
+        // lowering is shaped by the surrounding type system, not this arm.)
         "Number" => {
             let a = args.first()?;
-            let e = translate_argument(a, ctx);
             if matches!(a, Argument::StringLiteral(_)) || ident_string_local(a, ctx) {
-                to_number_expr(e)
+                to_number_expr(translate_argument(a, ctx))
+            } else if let Argument::BooleanLiteral(b) = a {
+                if b.value {
+                    parse_quote!(1_f64)
+                } else {
+                    parse_quote!(0_f64)
+                }
+            } else if let Argument::NullLiteral(_) = a {
+                parse_quote!(0_f64)
             } else {
-                e
+                translate_argument(a, ctx)
             }
         }
         // `Boolean(x)` → the Rust truthiness of `x` (see `bool_cast`).
@@ -115,29 +123,38 @@ pub(in crate::translator) fn to_number_expr(e: Expr) -> Expr {
         if __t.is_empty() {
             0_f64
         } else {
-            let (__sign, __body): (f64, &str) = if let Some(__r) = __t.strip_prefix('-') {
-                (-1_f64, __r)
-            } else if let Some(__r) = __t.strip_prefix('+') {
-                (1_f64, __r)
-            } else {
-                (1_f64, __t)
-            };
-            let __radix: Option<(&str, u32)> =
-                if let Some(__r) = __body.strip_prefix("0x").or_else(|| __body.strip_prefix("0X")) {
-                    Some((__r, 16))
-                } else if let Some(__r) = __body
-                    .strip_prefix("0b")
-                    .or_else(|| __body.strip_prefix("0B"))
-                {
-                    Some((__r, 2))
-                } else if let Some(__r) = __body
-                    .strip_prefix("0o")
-                    .or_else(|| __body.strip_prefix("0O"))
-                {
-                    Some((__r, 8))
+            // ES StringToNumber (§7.1.4.1): a `0x`/`0b`/`0o` integer literal
+            // is unsigned — a leading `+`/`-` makes the whole string a signed
+            // StrDecimalLiteral, never a radix literal. So `Number("+0b1")` /
+            // `Number("-0xff")` are NaN, not 1 / -255. Track whether a sign was
+            // stripped and only honor a radix prefix when none was.
+            let (__sign, __body, __signed): (f64, &str, bool) =
+                if let Some(__r) = __t.strip_prefix('-') {
+                    (-1_f64, __r, true)
+                } else if let Some(__r) = __t.strip_prefix('+') {
+                    (1_f64, __r, true)
                 } else {
-                    None
+                    (1_f64, __t, false)
                 };
+            let __radix: Option<(&str, u32)> = if __signed {
+                None
+            } else if let Some(__r) =
+                __body.strip_prefix("0x").or_else(|| __body.strip_prefix("0X"))
+            {
+                Some((__r, 16))
+            } else if let Some(__r) = __body
+                .strip_prefix("0b")
+                .or_else(|| __body.strip_prefix("0B"))
+            {
+                Some((__r, 2))
+            } else if let Some(__r) = __body
+                .strip_prefix("0o")
+                .or_else(|| __body.strip_prefix("0O"))
+            {
+                Some((__r, 8))
+            } else {
+                None
+            };
             let __val = match __radix {
                 Some((__rest, __r)) => {
                     let mut __v: f64 = 0_f64;

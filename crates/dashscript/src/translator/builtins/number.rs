@@ -37,6 +37,11 @@ pub(in crate::translator) fn number_method(
                 format!("{:.*}", __f as usize, #recv)
             })
         }
+        // `(n).toString()` (no arg) ≡ ES NumberToString — the shared
+        // `number_to_string` helper (ryu_js), which prints `Infinity`/`NaN`
+        // with their ES names and large/small values in ES scientific form.
+        // Rust's `Display` would give `"inf"` / `"100000…0"` instead.
+        "toString" if args.is_empty() => parse_quote!(crate::__ds::number_to_string(#recv)),
         // `(n).toString(radix)` → a base-`radix` integer string (radix 2-36).
         // The receiver is cast to `i64` (TS truncates the fractional part of
         // the receiver before converting); a variable radix lowers to a
@@ -103,7 +108,12 @@ pub(in crate::translator) fn number_method(
                                 "toExponential() digits must be between 0 and 100",
                             ));
                         }
-                        format!("{:.*e}", __p as usize, #recv)
+                        // ES prints `-0` without a sign: `(-0).toExponential(0)`
+                        // is `"0e+0"`. Rust's `{:.*e}` emits `"-0e0"` for `-0`,
+                        // so normalize signed zero before formatting.
+                        let __r = #recv;
+                        let __r = if __r == 0.0 { 0.0 } else { __r };
+                        format!("{:.*e}", __p as usize, __r)
                     })
                 }
                 None => parse_quote!(format!("{:e}", #recv)),

@@ -8,13 +8,6 @@ fn translates_string_method_call() {
 }
 
 #[test]
-fn translates_to_string_to_display() {
-    let src = "function f(n: number): string { return n.toString(); }";
-    let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains(".to_string()"), "got:\n{rust}");
-}
-
-#[test]
 fn translates_string_concatenation_to_format() {
     let src =
         "function greet(first: string, last: string): string { return first + \" \" + last; }";
