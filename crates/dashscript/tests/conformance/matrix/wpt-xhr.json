@@ -1,0 +1,626 @@
+[
+  {
+    "id": "wpt.xhr.abort-after-receive",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-after-send",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-after-timeout",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-during-open",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-during-readystatechange",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:3:15: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-during-unsent",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-during-upload",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `new Array()` has no static mapping — runs under the engine | `new Array()` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-event-abort",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-event-listeners",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-event-loadend",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-progress-events",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-upload-event-abort",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-upload-event-loadend",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.abort-with-error",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-and-redirects",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-and-redirects-async",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-and-redirects-async-same-origin",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-basic-allow",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:4:19: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:8:67: error[E0425]: cannot find function `get_host_info` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-basic-allow-access-control-origin-header",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-basic-allow-async",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-basic-allow-non-cors-safelisted-method",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:4:19: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:8:71: error[E0425]: cannot find function `get_host_info` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-basic-allow-non-cors-safelisted-method-async",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-basic-allow-preflight-cache",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-basic-allow-preflight-cache-invalidation-by-header",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-basic-allow-preflight-cache-invalidation-by-method",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-basic-allow-preflight-cache-timeout",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-basic-allow-star",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:3:15: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:8:72: error[E0425]: cannot find function `get_host_info` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-preflight-request-allow-headers-returns-star",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.access-control-preflight-request-header-returns-origin",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.blob-range",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.content-type-unmodified",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.cors-expose-star.sub",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.cors-upload",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-abort",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-error.sub",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-load",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-loadend",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-loadstart",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-loadstart-upload",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-progress",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-readystate-sync-open",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-readystatechange-loaded",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-timeout",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-timeout-order",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-upload-progress",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.event-upload-progress-crossorigin",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.formdata.append",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`new Date()` has no static mapping — runs under the engine | `Date` has no static mapping — the function runs under the engine | `new Date()` has no static mapping — runs under the engine | `Date` has no static mapping — the function runs under the engine | `new Date()` has no static mapping — runs under the engine | `Date` has no static mapping — the function runs under the engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | the `arguments` object is unsupported | the `arguments` object is unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.formdata.constructor",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:7:17: error[E0433]: cannot find type `FormData` in this scope: use of undeclared type `FormData`\nsrc\\main.rs:13:17: error[E0433]: cannot find type `FormData` in this scope: use of undeclared type `FormData`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.formdata.delete",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | the `arguments` object is unsupported | the `arguments` object is unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.formdata.foreach",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.formdata.get",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | the `arguments` object is unsupported | the `arguments` object is unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.formdata.has",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | the `arguments` object is unsupported | the `arguments` object is unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.formdata.iteration",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.formdata.set",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`instanceof` has no DashScript mapping (static types; no runtime type check) | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | the `arguments` object is unsupported | the `arguments` object is unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.formdata.set-blob",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`Date.<method>` has no static mapping — runs under the engine | `Date.<method>` has no static mapping — runs under the engine | `Date.<method>` has no static mapping — runs under the engine | `Date.<method>` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.getresponseheader",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.idlharness",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:25:38: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:26:17: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:26:30: error[E0425]: cannot find value `document` in this scope: not found in this scope\nsrc\\main.rs:27:17: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:27:35: error[E0425]: cannot find value `document` in this scope: not found in this scope\nsrc\\main.rs:28:17: error[E0425]: cannot find value `self_` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.json",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.over-1-meg",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.overridemimetype-done-state",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.overridemimetype-unsent-state-force-shiftjis",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.request-content-length",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.response-body-errors",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.responsetype",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.responseurl-after-abort",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.send-data-arraybuffer",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `new ArrayBuffer()` has no static mapping — runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.send-data-arraybufferview",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.send-data-es-object",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `hasOwnProperty` (prototype reflection) is unsupported | `Object.create` reflection is unsupported | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.send-data-formdata",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.send-data-sharedarraybuffer",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.send-data-string-invalid-unicode",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.send-send",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:4:22: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:7:9: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.send-usp",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.sync-no-progress",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:4:23: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:3:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.sync-no-timeout",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:3:19: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:2:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.xhr-authorization-redirect",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Promise` has no static mapping — the function runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.xhr-timeout-longtask",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.xhr.xmlhttprequest-withcredentials",
+    "layer": "wpt",
+    "category": "xhr",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  }
+]

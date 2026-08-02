@@ -1,0 +1,474 @@
+[
+  {
+    "id": "wpt.html.browsers.browsing-the-web.navigating-across-documents.refresh.subresource",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.browsers.origin.api.file-scheme-origin.tentative",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:5:24: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:6:24: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.browsers.origin.api.origin-comparison",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:14:17: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:15:19: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:16:19: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:17:17: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:18:19: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:36:20: error[E0425]: cannot find value `origin` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.browsers.origin.api.origin-from",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`Object` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.browsers.origin.api.origin-from-extendablemessageevent",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Promise` has no static mapping — the function runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `Promise` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.browsers.origin.api.origin-from-global",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:4:22: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:4:34: error[E0425]: cannot find value `global_this` in this scope: not found in this scope\nsrc\\main.rs:8:49: error[E0425]: cannot find function `get_host_info` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.browsers.origin.api.origin-from-origin",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:3:21: error[E0425]: cannot find value `urls` in this scope: not found in this scope\nsrc\\main.rs:5:38: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:6:26: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:15:20: error[E0425]: cannot find value `urls` in this scope: not found in this scope\nsrc\\main.rs:17:38: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:18:26: error[E0425]: cannot find value `origin` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.browsers.origin.api.origin-from-string",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:3:22: error[E0425]: cannot find value `urls` in this scope: not found in this scope\nsrc\\main.rs:5:61: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:8:21: error[E0425]: cannot find value `urls` in this scope: not found in this scope\nsrc\\main.rs:10:26: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:15:20: error[E0425]: cannot find value `urls` in this scope: not found in this scope\nsrc\\main.rs:17:26: error[E0425]: cannot find value `origin` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.browsers.origin.api.origin-from-url",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:3:22: error[E0425]: cannot find value `urls` in this scope: not found in this scope\nsrc\\main.rs:7:21: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:11:21: error[E0425]: cannot find value `urls` in this scope: not found in this scope\nsrc\\main.rs:13:26: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:18:20: error[E0425]: cannot find value `urls` in this scope: not found in this scope\nsrc\\main.rs:20:26: error[E0425]: cannot find value `origin` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.canvas.element.manual.imagebitmap.createimagebitmap-resolves-in-task",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Promise` has no static mapping — the function runs under the engine | `Promise.<method>` has no static mapping — runs under the engine | `Promise` has no static mapping — the function runs under the engine | `Promise.<method>` has no static mapping — runs under the engine | `Promise` has no static mapping — the function runs under the engine | `Promise.<method>` has no static mapping — runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.canvas.historical",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:5:15: error[E0425]: cannot find value `offscreen_canvas_rendering_context2_d` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.canvas.offscreen.canvas-context.2d.getcontext.options",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.cross-origin-embedder-policy.reflection-credentialless.tentative.https",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:4:11: error[E0425]: cannot find value `cross_origin_embedder_policy` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.cross-origin-embedder-policy.reflection-require-corp.tentative.https",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:4:11: error[E0425]: cannot find value `cross_origin_embedder_policy` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.cross-origin-embedder-policy.reflection-unsafe-none.tentative.https",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:4:11: error[E0425]: cannot find value `cross_origin_embedder_policy` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.dom.idlharness",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `idl_test` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.dom.self-origin",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:5:15: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:6:43: error[E0425]: cannot find value `location` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.infrastructure.safe-passing-of-structured-data.messagechannel",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`Promise` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.infrastructure.safe-passing-of-structured-data.shared-array-buffers.no-coop-coep.https",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.infrastructure.safe-passing-of-structured-data.shared-array-buffers.serialization-via-idb",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.infrastructure.safe-passing-of-structured-data.shared-array-buffers.serialization-via-notifications-api",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.import-attributes.dynamic-import-with-attributes-argument",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.json-module.charset-bom",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.json-module.invalid-content-type",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.json-module.non-object",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.json-module.repeated-imports",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.microtasks.checkpoint-importscripts",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.microtasks.evaluation-order-1-nothrow-importscripts",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `setup_test` in this scope: not found in this scope\nsrc\\main.rs:6:5: error[E0425]: cannot find function `import_scripts` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.microtasks.evaluation-order-1-throw-importscripts",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `setup_test` in this scope: not found in this scope\nsrc\\main.rs:6:5: error[E0425]: cannot find function `import_scripts` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.blob-url",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.concurrent-failed-imports",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.microtasks.basic",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Date.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Date.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.microtasks.css-import-in-worker",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Date.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.microtasks.serviceworker",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Date.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.microtasks.with-import-assertions",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Date.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.repeated-imports",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.module.top-level-await.sibling-imports-not-blocked",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.text-module.charset-bom",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | a string literal with a lone surrogate needs the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | a string literal with a lone surrogate needs the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.text-module.ignore-content-type",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.text-module.ignore-extension",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.semantics.scripting-1.the-script-element.text-module.repeated-imports",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.atob.base64",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.microtask-queuing.queue-microtask",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | the `arguments` object is unsupported | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine | `Promise.<method>` has no static mapping — runs under the engine | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.microtask-queuing.queue-microtask-exceptions",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.scripting.processing-model-2.integration-with-the-javascript-agent-formalism.atomics-wait-async.https",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `SharedArrayBuffer` has no static mapping — the function runs under the engine | `Int32Array` has no static mapping — the function runs under the engine | `Atomics.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `SharedArrayBuffer` has no static mapping — the function runs under the engine | `Int32Array` has no static mapping — the function runs under the engine | `Atomics.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.scripting.processing-model-2.integration-with-the-javascript-agent-formalism.requires-failure.https",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `Int32Array` has no static mapping — the function runs under the engine | `Atomics.<method>` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.scripting.processing-model-2.integration-with-the-javascript-agent-formalism.requires-success",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `Int32Array` has no static mapping — the function runs under the engine | `Atomics.<method>` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.scripting.reporterror",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.structured-clone.structured-clone",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`Promise` has no static mapping — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.system-state-and-capabilities.the-navigator-object.navigator",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.timers.clearinterval-from-callback",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.timers.cleartimeout-clearinterval",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.timers.evil-spec-example",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.timers.missing-timeout-setinterval",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.timers.negative-setinterval",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.timers.negative-settimeout",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:3:17: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:4:17: error[E0425]: cannot find value `assert_unreached` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0425]: cannot find function `set_timeout` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `set_timeout` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.timers.setinterval-settimeout-clamping",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.timers.type-long-setinterval",
+    "layer": "wpt",
+    "category": "html",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback",
+    "note": ""
+  },
+  {
+    "id": "wpt.html.webappapis.timers.type-long-settimeout",
+    "layer": "wpt",
+    "category": "html",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:3:17: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:4:17: error[E0425]: cannot find value `assert_unreached` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0425]: cannot find function `set_timeout` in this scope: not found in this scope\nsrc\\main.rs:4:5: error[E0425]: cannot find function `set_timeout` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  }
+]

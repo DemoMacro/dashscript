@@ -1,0 +1,778 @@
+[
+  {
+    "id": "wpt.wasm.jsapi.constructor.compile",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getPrototypeOf` reflection is unsupported | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Promise.<method>` has no static mapping — runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Promise.<method>` has no static mapping — runs under the engine | `Object.getPrototypeOf` reflection is unsupported | `Promise` has no static mapping — the function runs under the engine | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.constructor.instantiate",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Promise.<method>` has no static mapping — runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Promise.<method>` has no static mapping — runs under the engine | `Object.getPrototypeOf` reflection is unsupported | `Promise` has no static mapping — the function runs under the engine | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.constructor.instantiate-bad-imports",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.constructor.multi-value",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `Object.getPrototypeOf` reflection is unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.constructor.tostringtag",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`assert_own_property` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine | `<builtin>.prototype.<method>` reflection needs the engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Object.defineProperty` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine | `Object.defineProperty` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine | `<builtin>.prototype.<method>` reflection needs the engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Object.defineProperty` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine | `delete` has no DashScript mapping | `Symbol` has no static mapping — the function runs under the engine | `<builtin>.prototype.<method>` reflection needs the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.constructor.validate",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | `Uint16Array` has no static mapping — the function runs under the engine | `Int16Array` has no static mapping — the function runs under the engine | `Uint32Array` has no static mapping — the function runs under the engine | `Int32Array` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.exports.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.global-exports-live-bindings.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.global-exports.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `BigInt` literals are unsupported | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `BigInt` literals are unsupported | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.js-wasm-cycle.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.mutable-global-sharing.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.namespace-instance.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.reserved-import-names.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.resolve-export.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.string-builtins.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.string-constants.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.v128-tdz.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.esm-integration.wasm-import-wasm-export.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `delete` has no DashScript mapping",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.exception.basic.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `instanceof` has no DashScript mapping (static types; no runtime type check) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `Symbol` has no static mapping — the function runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.exception.constructor.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `BigInt` literals are unsupported | `Symbol` has no static mapping — the function runs under the engine | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.exception.getarg.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.exception.identity.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.exception.is.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.exception.tostring.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.function.call.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.function.constructor.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.function.table.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.function.type.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.gc.casts.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.gc.exported-object.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `Object.preventExtensions` (extensibility state) needs the engine (no static freeze tracking) | `Object.preventExtensions` (extensibility state) needs the engine (no static freeze tracking) | `Object.seal` (extensibility state) needs the engine (no static freeze tracking) | `Object.seal` (extensibility state) needs the engine (no static freeze tracking) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `<builtin>.prototype.<method>` reflection needs the engine | `<builtin>.prototype.<method>` reflection needs the engine | `<builtin>.prototype.<method>` reflection needs the engine | `<builtin>.prototype.<method>` reflection needs the engine | `WeakMap` has no static mapping — the function runs under the engine | `WeakSet` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.gc.i31.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `BigInt` literals are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.global.constructor",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getPrototypeOf` reflection is unsupported | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | object accessor properties (get/set) are unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `BigInt` literals are unsupported | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.global.tostring",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.global.type.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.global.value-get-set",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Object.create` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.global.valueof",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.idlharness",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`await` is unsupported (DashScript has no async runtime) | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.instance.constructor",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.instance.constructor-bad-imports",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.instance.constructor-caching",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.instance.exports",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.instance.tostring",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.interface",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.js-string.basic",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `instanceof` has no DashScript mapping (static types; no runtime type check) | `BigInt` literals are unsupported | `new Number()` has no static mapping — runs under the engine | `new Boolean()` has no static mapping — runs under the engine | `Symbol` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.js-string.constants",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.js-string.imports",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.jspi.js-promise-integration",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Promise` has no static mapping — the function runs under the engine | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Promise` has no static mapping — the function runs under the engine | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Promise` has no static mapping — the function runs under the engine | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime) | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime) | `new <non-identifier>(…)` has no static lowering → engine | `Proxy` has no static mapping — the function runs under the engine | `Promise.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime) | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Promise` has no static mapping — the function runs under the engine | `await` is unsupported (DashScript has no async runtime) | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Promise` has no static mapping — the function runs under the engine | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.jspi.notraps",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime) | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.jspi.rejects",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | `Promise` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `Promise.<method>` has no static mapping — runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.buffer",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.constructor",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Proxy` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | object accessor properties (get/set) are unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.constructor-shared.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | object accessor properties (get/set) are unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.constructor-types.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.grow",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.to-fixed-length-buffer",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.to-fixed-length-buffer-shared",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.to-resizable-buffer",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.to-resizable-buffer-shared",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.tostring",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.memory.type.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.module.constructor",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Object.getPrototypeOf` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `new <non-identifier>(…)` has no static lowering → engine | `Object.getPrototypeOf` reflection is unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.module.customsections",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getPrototypeOf` reflection is unsupported | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getPrototypeOf` reflection is unsupported | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | `new <non-identifier>(…)` has no static lowering → engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.module.exports",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getPrototypeOf` reflection is unsupported | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getPrototypeOf` reflection is unsupported | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.module.imports",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getPrototypeOf` reflection is unsupported | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Object.getPrototypeOf` reflection is unsupported | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.module.modulesource.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.module.tostring",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.prototypes",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `new <non-identifier>(…)` has no static lowering → engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.table.constructor",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Proxy` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | object accessor properties (get/set) are unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.table.constructor-types.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.table.get-set",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.table.grow",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.table.length",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.table.tostring",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.table.type.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.tag.constructor.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `Symbol` has no static mapping — the function runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.tag.tostring.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.jsapi.tag.type.tentative",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.serialization.memory.clone-error.tentative.https",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.serialization.module.nested-worker-success",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.serialization.module.serialization-via-idb",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.serialization.module.serialization-via-notifications-api",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new <non-identifier>(…)` has no static lowering → engine | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.abort",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.body",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.contenttype",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `Object.getPrototypeOf` reflection is unsupported | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.empty-body",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.historical",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.idlharness",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `idl_test` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.instantiatestreaming",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.instantiatestreaming-bad-imports",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.invalid-args",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`Symbol` has no static mapping — the function runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.invalid-code",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.modified-contenttype",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.origin.sub",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.rejected-arg",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.status",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.wasm_stream_compile_test",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `new <non-identifier>(…)` has no static lowering → engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `new <non-identifier>(…)` has no static lowering → engine | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.wasm.webapi.wasm_stream_instantiate_test",
+    "layer": "wpt",
+    "category": "wasm",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  }
+]

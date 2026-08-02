@@ -1,0 +1,58 @@
+[
+  {
+    "id": "wpt.urlpattern.urlpattern",
+    "layer": "wpt",
+    "category": "urlpattern",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "wpt.urlpattern.urlpattern-compare.tentative",
+    "layer": "wpt",
+    "category": "urlpattern",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "wpt.urlpattern.urlpattern-compare.tentative.https",
+    "layer": "wpt",
+    "category": "urlpattern",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "wpt.urlpattern.urlpattern-constructor",
+    "layer": "wpt",
+    "category": "urlpattern",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:7:17: error[E0433]: cannot find type `URLPattern` in this scope: use of undeclared type `URLPattern`\nsrc\\main.rs:7:33: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nsrc\\main.rs:13:17: error[E0433]: cannot find type `URLPattern` in this scope: use of undeclared type `URLPattern`\nsrc\\main.rs:13:33: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nsrc\\main.rs:19:17: error[E0433]: cannot find type `URLPattern` in this scope: use of undeclared type `URLPattern`\nsrc\\main.rs:24:9: error[E0433]: cannot find type `URLPattern` in this scope: use of undeclared type `URLPattern`",
+    "note": ""
+  },
+  {
+    "id": "wpt.urlpattern.urlpattern-generate.tentative",
+    "layer": "wpt",
+    "category": "urlpattern",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.urlpattern.urlpattern-hasregexpgroups",
+    "layer": "wpt",
+    "category": "urlpattern",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "wpt.urlpattern.urlpattern.https",
+    "layer": "wpt",
+    "category": "urlpattern",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  }
+]

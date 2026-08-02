@@ -1,0 +1,298 @@
+[
+  {
+    "id": "wpt.encoding.api-basics",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "`assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.api-invalid-label",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.api-replacement-encodings",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.api-surrogates-utf8",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.encodeinto",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | `new Array()` has no static mapping — runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new ArrayBuffer()` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.idlharness",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `idl_test` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.iso-2022-jp-decoder",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new ArrayBuffer()` has no static mapping — runs under the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.legacy-mb-schinese.gb18030.gb18030-decoder",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.legacy-mb-schinese.gbk.gbk-decoder",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:41:45: error[E0433]: cannot find `TextDecoder` in `__ds`: could not find `TextDecoder` in `__ds`\nsrc\\main.rs:42:51: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.replacement-encodings",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:4:5: error[E0425]: cannot find value `encodings_table` in this scope: not found in this scope\nsrc\\main.rs:18:10: error[E0599]: the method `for_each` exists for struct `Vec<_>`, but its trait bounds were not satisfied: method cannot be called on `Vec<_>` due to unsatisfied trait bounds\nsrc\\main.rs:19:13: error[E0425]: cannot find function `decode_test` in this scope: not found in this scope\nsrc\\main.rs:28:13: error[E0425]: cannot find function `decode_test` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.single-byte-decoder",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "`new ArrayBuffer()` has no static mapping — runs under the engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.backpressure",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "`Promise` has no static mapping — the function runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new <non-identifier>(…)` has no static lowering → engine | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.decode-attributes",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.decode-bad-chunks",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.decode-ignore-bom",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.decode-incomplete-input",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a string literal with a lone surrogate needs the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.decode-non-utf8",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | a string literal with a lone surrogate needs the engine | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.decode-split-character",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.decode-utf8",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a string literal with a lone surrogate needs the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new ArrayBuffer()` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `new ArrayBuffer()` has no static mapping — runs under the engine | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.encode-bad-chunks",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.encode-utf8",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.streams.readable-writable-properties",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "`typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-arguments",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | object accessor properties (get/set) are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-byte-order-marks",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-copy",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:14:48: error[E0433]: cannot find `TextDecoder` in `__ds`: could not find `TextDecoder` in `__ds`\nsrc\\main.rs:10:31: error[E0425]: cannot find function `create_buffer` in this scope: not found in this scope\nsrc\\main.rs:12:32: error[E0425]: cannot find function `create_buffer` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-eof",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-fatal",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `DataView` has no static mapping — the function runs under the engine | `DataView` has no static mapping — the function runs under the engine | `DataView` has no static mapping — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-fatal-single-byte",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-fatal-streaming",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a string literal with a lone surrogate needs the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-ignorebom",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-labels",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-mistakes",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-streaming",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textdecoder-utf16-surrogates",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textencoder-constructor-non-utf",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.textencoder-utf16-surrogates",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.encoding.unsupported-encodings",
+    "layer": "wpt",
+    "category": "encoding",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:9:17: error[E0425]: cannot find function `decode_test` in this scope: not found in this scope\nsrc\\main.rs:28:17: error[E0425]: cannot find function `decode_test` in this scope: not found in this scope\nsrc\\main.rs:37:17: error[E0425]: cannot find function `decode_test` in this scope: not found in this scope\nsrc\\main.rs:55:17: error[E0425]: cannot find function `decode_test` in this scope: not found in this scope\nsrc\\main.rs:65:17: error[E0425]: cannot find function `decode_test` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "note": ""
+  }
+]

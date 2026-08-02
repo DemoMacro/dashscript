@@ -1,0 +1,154 @@
+[
+  {
+    "id": "wpt.compression.compression-bad-chunks",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | `new <non-identifier>(…)` has no static lowering → engine | object accessor properties (get/set) are unsupported | `new <non-identifier>(…)` has no static lowering → engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.compression-constructor-error",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:6:16: error[E0433]: cannot find type `CompressionStream` in this scope: use of undeclared type `CompressionStream`\nsrc\\main.rs:3:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:10:56: error[E0433]: cannot find type `CompressionStream` in this scope: use of undeclared type `CompressionStream`\nsrc\\main.rs:9:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:15:16: error[E0433]: cannot find type `CompressionStream` in this scope: use of undeclared type `CompressionStream`\nsrc\\main.rs:17:21: warning: unreachable expression: unreachable expression",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.compression-including-empty-chunk",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.compression-large-flush-output",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.compression-multiple-chunks",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.compression-output-length",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.compression-stream",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "`Promise.<method>` has no static mapping — runs under the engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.compression-with-detach",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `new ArrayBuffer()` has no static mapping — runs under the engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Object.defineProperty` reflection is unsupported | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.decompression-bad-chunks",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | `new <non-identifier>(…)` has no static lowering → engine | object accessor properties (get/set) are unsupported | `new <non-identifier>(…)` has no static lowering → engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.decompression-buffersource",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "`Int16Array` has no static mapping — the function runs under the engine | `Uint16Array` has no static mapping — the function runs under the engine | `Int32Array` has no static mapping — the function runs under the engine | `Uint32Array` has no static mapping — the function runs under the engine | `Float32Array` has no static mapping — the function runs under the engine | `Float64Array` has no static mapping — the function runs under the engine | `DataView` has no static mapping — the function runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.decompression-constructor-error",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:6:16: error[E0433]: cannot find type `DecompressionStream` in this scope: use of undeclared type `DecompressionStream`\nsrc\\main.rs:3:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:10:56: error[E0433]: cannot find type `DecompressionStream` in this scope: use of undeclared type `DecompressionStream`\nsrc\\main.rs:9:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:15:16: error[E0433]: cannot find type `DecompressionStream` in this scope: use of undeclared type `DecompressionStream`\nsrc\\main.rs:17:21: warning: unreachable expression: unreachable expression",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.decompression-correct-input",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.decompression-corrupt-input",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.decompression-empty-input",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.decompression-extra-input",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.decompression-split-chunk",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.decompression-uint8array-output",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `.constructor` reflection is unsupported | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.decompression-with-detach",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `Object.defineProperty` reflection is unsupported | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.compression.idlharness.https",
+    "layer": "wpt",
+    "category": "compression",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `idl_test` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  }
+]

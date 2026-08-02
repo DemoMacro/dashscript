@@ -1,0 +1,26 @@
+[
+  {
+    "id": "wpt.hr-time.basic",
+    "layer": "wpt",
+    "category": "hr-time",
+    "status": "unsupported",
+    "detail": "`typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `Date.<method>` has no static mapping — runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `Date.<method>` has no static mapping — runs under the engine | `assert_approx_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.hr-time.idlharness",
+    "layer": "wpt",
+    "category": "hr-time",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:7:38: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0425]: cannot find function `idl_test` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.hr-time.monotonic-clock",
+    "layer": "wpt",
+    "category": "hr-time",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:4:42: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:7:20: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:8:20: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  }
+]

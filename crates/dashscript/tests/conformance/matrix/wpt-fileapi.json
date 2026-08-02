@@ -1,0 +1,290 @@
+[
+  {
+    "id": "wpt.fileapi.blob.blob-array-buffer",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.blob.blob-bytes",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.blob.blob-constructor",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "`instanceof` has no DashScript mapping (static types; no runtime type check) | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `new Date()` has no static mapping — runs under the engine | `Date` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `Symbol` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `Symbol` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `new String()` has no static mapping — runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `prototype` mutation is unsupported | `Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `delete` has no DashScript mapping | `Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | `prototype` mutation is unsupported | `Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `prototype` mutation is unsupported | `Symbol` has no static mapping — the function runs under the engine | `prototype` mutation is unsupported | `Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `delete` has no DashScript mapping | `Symbol` has no static mapping — the function runs under the engine | `BigInt` literals are unsupported | `prototype` mutation is unsupported | `BigInt` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `delete` has no DashScript mapping | `BigInt` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | `BigInt` literals are unsupported | `Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | `prototype` mutation is unsupported | `Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `delete` has no DashScript mapping | `Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | object accessor properties (get/set) are unsupported | `Symbol` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `Symbol` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `Symbol` has no static mapping — the function runs under the engine | object accessor properties (get/set) are unsupported | `Symbol` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `new String()` has no static mapping — runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `new ArrayBuffer()` has no static mapping — runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `Uint16Array` has no static mapping — the function runs under the engine | `Int16Array` has no static mapping — the function runs under the engine | `Uint32Array` has no static mapping — the function runs under the engine | `Int32Array` has no static mapping — the function runs under the engine | `Float32Array` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `Float64Array` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `BigInt64Array` has no static mapping — the function runs under the engine | `BigInt` has no static mapping — the function runs under the engine | `BigUint64Array` has no static mapping — the function runs under the engine | `BigInt` has no static mapping — the function runs under the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `Uint16Array` has no static mapping — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | object accessor properties (get/set) are unsupported | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | object accessor properties (get/set) are unsupported | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.blob.blob-constructor-detached-buffer",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `new ArrayBuffer()` has no static mapping — runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `new ArrayBuffer()` has no static mapping — runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `new ArrayBuffer()` has no static mapping — runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `new ArrayBuffer()` has no static mapping — runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.blob.blob-constructor-endings",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.blob.blob-newobject",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:13:32: error[E0433]: cannot find type `Blob` in this scope: use of undeclared type `Blob`\nsrc\\main.rs:14:34: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:15:34: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.blob.blob-slice",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `new ArrayBuffer()` has no static mapping — runs under the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.blob.blob-slice-overflow",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:10:20: error[E0433]: cannot find type `Blob` in this scope: use of undeclared type `Blob`\nsrc\\main.rs:31:20: error[E0433]: cannot find type `Blob` in this scope: use of undeclared type `Blob`\nsrc\\main.rs:52:20: error[E0433]: cannot find type `Blob` in this scope: use of undeclared type `Blob`\nsrc\\main.rs:73:20: error[E0433]: cannot find type `Blob` in this scope: use of undeclared type `Blob`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.blob.blob-stream",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `instanceof` has no DashScript mapping (static types; no runtime type check) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.blob.blob-text",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.blob.blob-textstream",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `await` is unsupported (DashScript has no async runtime) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `instanceof` has no DashScript mapping (static types; no runtime type check) | `await` is unsupported (DashScript has no async runtime) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `instanceof` has no DashScript mapping (static types; no runtime type check) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.file.file-constructor",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `instanceof` has no DashScript mapping (static types; no runtime type check) | `new String()` has no static mapping — runs under the engine | `new ArrayBuffer()` has no static mapping — runs under the engine | `Uint16Array` has no static mapping — the function runs under the engine | `Uint32Array` has no static mapping — the function runs under the engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `instanceof` has no DashScript mapping (static types; no runtime type check)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.file.file-constructor-endings",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.file.send-file-formdata",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.file.send-file-formdata-controls",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:11:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:20:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:29:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:38:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:47:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.file.send-file-formdata-punctuation",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:11:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:20:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:29:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:38:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:47:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.file.send-file-formdata-utf-8",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:53:22: error[E0425]: cannot find value `k_test_chars` in this scope: not found in this scope\nsrc\\main.rs:3:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:9:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:19:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:28:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope\nsrc\\main.rs:37:5: error[E0425]: cannot find function `form_data_post_file_upload_test` in this scope: not found in this scope",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.filereader",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "`instanceof` has no DashScript mapping (static types; no runtime type check) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.idlharness",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `idl_test` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.determining-encoding",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader-event-handler-attributes",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader-multiple-reads",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader_abort",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader_error",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader_events",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader_readasarraybuffer",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader_readasbinarystring",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader_readasdataurl",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader_readastext",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader_readastext_blob_type_charset",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader_readystate",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.reading-data-section.filereader_result",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `instanceof` has no DashScript mapping (static types; no runtime type check) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.unicode",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.url.url-format",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "`typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.url.url-with-fetch",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime) | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering)",
+    "note": ""
+  },
+  {
+    "id": "wpt.fileapi.url.url-with-xhr",
+    "layer": "wpt",
+    "category": "fileapi",
+    "status": "unsupported",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Promise` has no static mapping — the function runs under the engine | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `Promise` has no static mapping — the function runs under the engine | `Promise` has no static mapping — the function runs under the engine | `Promise.<method>` has no static mapping — runs under the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `async_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "note": ""
+  }
+]
