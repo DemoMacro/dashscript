@@ -235,24 +235,24 @@
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-larger-size",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "partial",
-    "detail": "engine error: TypeError: growable SharedArrayBuffer requires SAB allocator hooks",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-same-size",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "partial",
-    "detail": "engine error: TypeError: growable SharedArrayBuffer requires SAB allocator hooks",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-smaller-size",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "partial",
-    "detail": "engine error: TypeError: growable SharedArrayBuffer requires SAB allocator hooks",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -275,8 +275,8 @@
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.new-length-non-number",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "partial",
-    "detail": "engine error: TypeError: growable SharedArrayBuffer requires SAB allocator hooks",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -403,8 +403,8 @@
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.return-maxbytelength-growable",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "partial",
-    "detail": "engine error: TypeError: growable SharedArrayBuffer requires SAB allocator hooks",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

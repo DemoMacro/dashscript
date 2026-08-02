@@ -876,7 +876,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: TypeError: growable SharedArrayBuffer requires SAB allocator hooks",
+    "detail": "Test262Error: Test262Error: Expected a RangeError but got a Test262Error",
     "note": ""
   },
   {
@@ -1740,7 +1740,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: TypeError: growable SharedArrayBuffer requires SAB allocator hooks",
+    "detail": "Test262Error: Test262Error: Expected a RangeError to be thrown but no exception was thrown at all",
     "note": ""
   },
   {
@@ -2492,7 +2492,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: TypeError: growable SharedArrayBuffer requires SAB allocator hooks",
+    "detail": "Test262Error: Test262Error: Expected a RangeError but got a Test262Error",
     "note": ""
   },
   {

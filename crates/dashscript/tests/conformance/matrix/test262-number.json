@@ -564,7 +564,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41280) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (22884) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
