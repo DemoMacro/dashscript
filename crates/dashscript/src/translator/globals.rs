@@ -289,3 +289,60 @@ pub const ERROR_CTOR_NAMES: &[&str] = &[
 pub fn error_ctor_name(name: &str) -> Option<&'static str> {
     ERROR_CTOR_NAMES.iter().copied().find(|n| *n == name)
 }
+
+#[cfg(test)]
+mod drift {
+    //! Classify-data drift guard. The verdict a bare global name gets in
+    //! [`super::classify_expr`]'s `Identifier` arm depends on WHICH list a name
+    //! is in (engine-value → degrade, static-only → reject, harness-helper →
+    //! degrade, unmapped-new on `new` → degrade), checked in that order. A name
+    //! in two lists with contradictory semantics is an undocumented drift: the
+    //! first arm to match wins, so the verdict silently depends on list order
+    //! rather than intent. These tests pin the disjointness the comments claim.
+    use super::{
+        ENGINE_VALUE_GLOBALS, HARNESS_HELPER_GLOBALS, STATIC_ONLY_GLOBALS, UNMAPPED_NEW_GLOBALS,
+    };
+
+    fn intersect(a: &[&'static str], b: &[&'static str]) -> Vec<&'static str> {
+        a.iter().filter(|x| b.contains(x)).copied().collect()
+    }
+
+    #[test]
+    fn static_only_disjoint_from_engine_value() {
+        let overlap = intersect(STATIC_ONLY_GLOBALS, ENGINE_VALUE_GLOBALS);
+        assert!(
+            overlap.is_empty(),
+            "STATIC_ONLY_GLOBALS ∩ ENGINE_VALUE_GLOBALS = {overlap:?} (non-empty): a name in both \
+             makes a bare value reference degrade (engine wins the Identifier arm) even though the \
+             name carries a static call/new/type mapping — pick one list"
+        );
+    }
+
+    #[test]
+    fn unmapped_new_disjoint_from_engine_value() {
+        let overlap = intersect(UNMAPPED_NEW_GLOBALS, ENGINE_VALUE_GLOBALS);
+        assert!(
+            overlap.is_empty(),
+            "UNMAPPED_NEW_GLOBALS ∩ ENGINE_VALUE_GLOBALS = {overlap:?} (non-empty): a name in both \
+             gets a `new`-site degrade that the comment in `UNMAPPED_NEW_GLOBALS` says it must not \
+             carry (per-function emit-interaction risk) — pick one list"
+        );
+    }
+
+    #[test]
+    fn harness_helpers_distinct_from_globals() {
+        for (label, list) in [
+            ("STATIC_ONLY_GLOBALS", STATIC_ONLY_GLOBALS),
+            ("ENGINE_VALUE_GLOBALS", ENGINE_VALUE_GLOBALS),
+            ("UNMAPPED_NEW_GLOBALS", UNMAPPED_NEW_GLOBALS),
+        ] {
+            let overlap = intersect(HARNESS_HELPER_GLOBALS, list);
+            assert!(
+                overlap.is_empty(),
+                "HARNESS_HELPER_GLOBALS ∩ {label} = {overlap:?} (non-empty): a test262 harness \
+                 helper is never an ES global; a dual-listed name's verdict depends on Identifier \
+                 arm order, not intent"
+            );
+        }
+    }
+}
