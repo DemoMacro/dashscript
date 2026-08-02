@@ -835,8 +835,8 @@
     "id": "test262.test.built-ins.promise.allkeyed.not-a-constructor",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: isConstructor(Promise.allKeyed) must return false Expected SameValue(«true», «false») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1827,8 +1827,8 @@
     "id": "test262.test.built-ins.promise.allsettledkeyed.not-a-constructor",
     "layer": "test262",
     "category": "promise",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: isConstructor(Promise.allSettledKeyed) must return false Expected SameValue(«true», «false») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

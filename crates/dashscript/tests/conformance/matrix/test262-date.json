@@ -2819,8 +2819,8 @@
     "id": "test262.test.built-ins.date.prototype.totemporalinstant.not-a-constructor",
     "layer": "test262",
     "category": "date",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: isConstructor(Date.prototype.toTemporalInstant) must return false Expected SameValue(«true», «false») to be true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

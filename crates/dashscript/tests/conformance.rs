@@ -992,8 +992,19 @@ const ALLKEYED_PRELUDE: &str = r#"
       return promise;
     };
   }
-  if (typeof Promise.allKeyed !== 'function') Promise.allKeyed = makeKeyed(false);
-  if (typeof Promise.allSettledKeyed !== 'function') Promise.allSettledKeyed = makeKeyed(true);
+  // `Promise.allKeyed`/`allSettledKeyed` are not constructors (ECMA-262 built-in
+  // methods have no [[Construct]]). Wrapping as a concise method removes
+  // [[Construct]] — `new X()` throws TypeError, `isConstructor(X)` is false —
+  // while `this` (the SpeciesConstructor receiver) and `arguments` still pass
+  // through to the impl. `length` is preserved by the declared `(input)` param.
+  if (typeof Promise.allKeyed !== 'function') {
+    var _ak = makeKeyed(false);
+    Promise.allKeyed = ({ allKeyed(input) { return _ak.apply(this, arguments); } }).allKeyed;
+  }
+  if (typeof Promise.allSettledKeyed !== 'function') {
+    var _ask = makeKeyed(true);
+    Promise.allSettledKeyed = ({ allSettledKeyed(input) { return _ask.apply(this, arguments); } }).allSettledKeyed;
+  }
 })();
 "#;
 
@@ -1172,7 +1183,7 @@ const TEMPORAL_POLYFILL: &str = include_str!("conformance/data/vendor/temporal-p
 /// QuickJS build without `Date` degrades rather than crashes the prelude.
 const TEMPORAL_EXPOSE: &str = "\
 globalThis.Temporal = globalThis.temporal.Temporal;
-try { Date.prototype.toTemporalInstant = globalThis.temporal.toTemporalInstant; } catch (e) {}
+try { var _tti = globalThis.temporal.toTemporalInstant; Date.prototype.toTemporalInstant = ({ toTemporalInstant() { return _tti.apply(this, arguments); } }).toTemporalInstant; } catch (e) {}
 ";
 
 /// Strip the default `prototype` own property from non-constructor Temporal
