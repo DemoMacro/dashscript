@@ -216,16 +216,19 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
             )
         }
         // `.includes(x)` → Vec::contains. `.includes(x, from)` searches from
-        // index `from` (negative clamps to 0; `from >= len` → empty slice →
-        // false). `from` routes through `i64` so a negative value survives.
+        // index `from`: a negative `from` is `len + from` clamped to 0 (so
+        // `includes(x, -1)` skips the last element), `from >= len` → empty
+        // slice → false. Mirrors `indexOf`'s from-index handling.
         "includes" => {
             let needle = array_elem_arg(args.first()?, ctx);
             match args.get(1) {
                 Some(from) => {
                     let f = array_elem_arg(from, ctx);
                     parse_quote!({
-                        let __from = ((#f) as i64).max(0) as usize;
-                        #recv[__from.min(#recv.len())..].contains(&#needle)
+                        let __n = #recv.len();
+                        let __from = { let v = #f; if v < 0_f64 { (__n as f64 + v).max(0_f64) } else { v } } as usize;
+                        let __from = __from.min(__n);
+                        #recv[__from..].contains(&#needle)
                     })
                 }
                 None => parse_quote!(#recv.contains(&#needle)),
