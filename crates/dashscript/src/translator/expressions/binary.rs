@@ -10,8 +10,10 @@ use super::super::context::Ctx;
 use super::super::flavor::{expr_flavor, NumberFlavor};
 use super::bitwise_operand;
 use super::fmt_merge;
+use super::is_number_expr;
 use super::option_local_name;
 use super::translate_expr;
+use super::translate_number_to;
 
 /// Binary ops. TS `==`/`===` collapse to Rust `==` (Rust has no coercive `==`);
 /// likewise `!=`/`!==`. `**`, bitwise, shifts, `in`, `instanceof` are unmapped.
@@ -442,15 +444,25 @@ fn string_concat(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
                 }
             }
             _ => {
-                let e = translate_expr(leaf, ctx);
-                match fmt_merge::inline_arg(e) {
-                    fmt_merge::Inlined::Format { fmt: ifmt, args } => {
-                        fmt.push_str(&fmt_merge::renumber_format(&ifmt, parts.len()));
-                        parts.extend(args);
-                    }
-                    fmt_merge::Inlined::Display(e) => {
-                        fmt.push_str("{}");
-                        parts.push(e);
+                // A number leaf routes through `__ds::number_to_string` so
+                // `s + 1e21` is "1e+21" and `s + -0` is "0" — Rust `Display`
+                // gives the long integer form / "-0". Other leaves keep the
+                // inline merge (string/bool `Display` is already ES-correct).
+                if is_number_expr(leaf, ctx) {
+                    let n = translate_number_to(leaf, NumberFlavor::F64, ctx);
+                    fmt.push_str("{}");
+                    parts.push(parse_quote!(crate::__ds::number_to_string(#n)));
+                } else {
+                    let e = translate_expr(leaf, ctx);
+                    match fmt_merge::inline_arg(e) {
+                        fmt_merge::Inlined::Format { fmt: ifmt, args } => {
+                            fmt.push_str(&fmt_merge::renumber_format(&ifmt, parts.len()));
+                            parts.extend(args);
+                        }
+                        fmt_merge::Inlined::Display(e) => {
+                            fmt.push_str("{}");
+                            parts.push(e);
+                        }
                     }
                 }
             }

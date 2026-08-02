@@ -18,6 +18,20 @@ fn translates_string_concatenation_to_format() {
 }
 
 #[test]
+fn translates_string_concat_number_uses_es_tostring() {
+    // ES `"" + 1e21` is "1e+21" and `"" + -0` is "0" — a number operand in
+    // a `+` concat routes through `__ds::number_to_string`, not Rust `Display`
+    // (which gives the long integer form / "-0"). A small integer still
+    // renders correctly (ryu-js: `1.0` → "1").
+    let src = "function f(): string { return \"\" + 1e21; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("number_to_string"),
+        "string + number must ES-ToString the number, got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_string_predicate_methods() {
     let src = "function f(s: string): boolean { return s.includes(\"x\") && s.startsWith(\"a\"); }";
     let rust = Translator::new().translate(src).expect("should translate");
