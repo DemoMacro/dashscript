@@ -25,9 +25,12 @@ pub(in crate::translator) fn json_static(
         // `JSON.parse(s)` → `serde_json::Value`. ES throws `SyntaxError` on a
         // malformed string; DashScript has no implicit per-call `catch`, so a
         // parse failure yields `Value::Null` (a `throw` needs `catch_unwind`
-        // around every parse, out of scope for the inline lowering).
+        // around every parse, out of scope for the inline lowering). The arg
+        // runs through ES `ToString` first (a `number` via `number_to_string`,
+        // so `JSON.parse(-0)` sees `"0"` → `+0`, matching `ToString(-0) = "0"`;
+        // Rust `Display` would give `"-0"` → `-0`).
         "parse" => {
-            let s = translate_argument(args.first()?, ctx);
+            let s = super::global::es_to_string_arg(args.first()?, ctx);
             parse_quote!(serde_json::from_str::<serde_json::Value>(&(#s).to_string()).unwrap_or(serde_json::Value::Null))
         }
         // `JSON.stringify(x)` → a JSON `String`. ES returns `"null"` for
