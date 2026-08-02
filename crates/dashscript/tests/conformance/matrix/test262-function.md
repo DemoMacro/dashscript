@@ -160,7 +160,7 @@
 | test262.test.built-ins.function.prototype.apply.s15.3.4.3_a8_t3                               | 🟢 supported | via rquickjs engine                                                       |
 | test262.test.built-ins.function.prototype.apply.s15.3.4.3_a8_t4                               | 🟢 supported | via rquickjs engine                                                       |
 | test262.test.built-ins.function.prototype.apply.s15.3.4.3_a8_t5                               | 🟢 supported | via rquickjs engine                                                       |
-| test262.test.built-ins.function.prototype.apply.s15.3.4.3_a8_t6                               | 🟢 supported | engine fallback after static build failure                                |
+| test262.test.built-ins.function.prototype.apply.s15.3.4.3_a8_t6                               | 🟢 supported | via rquickjs engine                                                       |
 | test262.test.built-ins.function.prototype.apply.this-not-callable                             | 🟢 supported | via rquickjs engine                                                       |
 | test262.test.built-ins.function.prototype.apply.this-not-callable-realm                       | 🟢 supported | via rquickjs engine                                                       |
 | test262.test.built-ins.function.prototype.arguments.prop-desc                                 | 🟢 supported | via rquickjs engine                                                       |
@@ -305,7 +305,7 @@
 | test262.test.built-ins.function.prototype.call.s15.3.4.4_a7_t3                                | 🟢 supported | via rquickjs engine                                                       |
 | test262.test.built-ins.function.prototype.call.s15.3.4.4_a7_t4                                | 🟢 supported | via rquickjs engine                                                       |
 | test262.test.built-ins.function.prototype.call.s15.3.4.4_a7_t5                                | 🟢 supported | via rquickjs engine                                                       |
-| test262.test.built-ins.function.prototype.call.s15.3.4.4_a7_t6                                | 🟢 supported | engine fallback after static build failure                                |
+| test262.test.built-ins.function.prototype.call.s15.3.4.4_a7_t6                                | 🟢 supported | via rquickjs engine                                                       |
 | test262.test.built-ins.function.prototype.call.s15.3.4.4_a9                                   | 🟢 supported | via rquickjs engine                                                       |
 | test262.test.built-ins.function.prototype.caller-arguments.accessor-properties                | 🟢 supported | via rquickjs engine                                                       |
 | test262.test.built-ins.function.prototype.caller.prop-desc                                    | 🟢 supported | via rquickjs engine                                                       |

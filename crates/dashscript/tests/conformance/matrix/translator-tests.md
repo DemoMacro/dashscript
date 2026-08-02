@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 201 features: **200** supported, **1** partial, **0** unsupported, **0** untested
+- 201 features: **197** supported, **2** partial, **2** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## arrays
@@ -134,29 +134,29 @@
 
 ## math
 
-| feature                                         | status       | detail / note |
-| ----------------------------------------------- | ------------ | ------------- |
-| math.translates_math_atan2_to_atan2             | 🟢 supported |               |
-| math.translates_math_clz32_to_leading_zeros     | 🟢 supported |               |
-| math.translates_math_constants                  | 🟢 supported |               |
-| math.translates_math_exp_log_trig_methods       | 🟢 supported |               |
-| math.translates_math_expm1_to_exp_m1            | 🟢 supported |               |
-| math.translates_math_extra_constants            | 🟢 supported |               |
-| math.translates_math_fround_to_f32_round_trip   | 🟢 supported |               |
-| math.translates_math_hyperbolic_methods         | 🟢 supported |               |
-| math.translates_math_hypot_to_pythagoras        | 🟢 supported |               |
-| math.translates_math_imul_to_wrapping_mul       | 🟢 supported |               |
-| math.translates_math_inverse_hyperbolic_methods | 🟢 supported |               |
-| math.translates_math_inverse_trig_methods       | 🟢 supported |               |
-| math.translates_math_log1p_to_ln_1p             | 🟢 supported |               |
-| math.translates_math_log_to_ln                  | 🟢 supported |               |
-| math.translates_math_methods                    | 🟢 supported |               |
-| math.translates_math_min_and_e_constant         | 🟢 supported |               |
-| math.translates_math_round_avoids_add_half_bug  | 🟢 supported |               |
-| math.translates_math_rounding_and_root_methods  | 🟢 supported |               |
-| math.translates_math_sign_keeps_signed_zero     | 🟢 supported |               |
-| math.translates_math_sign_to_signum             | 🟢 supported |               |
-| math.translates_math_trig_and_log_methods       | 🟢 supported |               |
+| feature                                         | status       | detail / note                                                                                                                                                                 |
+| ----------------------------------------------- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| math.translates_math_atan2_to_atan2             | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_clz32_to_leading_zeros     | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_constants                  | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_exp_log_trig_methods       | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_expm1_to_exp_m1            | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_extra_constants            | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_fround_to_f32_round_trip   | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_hyperbolic_methods         | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_hypot_to_pythagoras        | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_imul_to_wrapping_mul       | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_inverse_hyperbolic_methods | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_inverse_trig_methods       | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_log1p_to_ln_1p             | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_log_to_ln                  | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_methods                    | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_min_and_e_constant         | 🟡 partial   | src\main.rs:2:12: error[E0433]: cannot find `__ds` in `crate`: could not find `__ds` in the crate root error: could not compile `probe` (bin "probe") due to 1 previous error |
+| math.translates_math_round_avoids_add_half_bug  | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_rounding_and_root_methods  | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_sign_keeps_signed_zero     | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_sign_to_signum             | 🟢 supported |                                                                                                                                                                               |
+| math.translates_math_trig_and_log_methods       | 🟢 supported |                                                                                                                                                                               |
 
 ## narrowing
 
@@ -240,33 +240,33 @@
 
 ## types
 
-| feature                                                          | status       | detail / note |
-| ---------------------------------------------------------------- | ------------ | ------------- |
-| types.translates_a_typed_function_returning_a_string             | 🟢 supported |               |
-| types.translates_default_param_supplied_wraps_some               | 🟢 supported |               |
-| types.translates_default_param_to_option_unwrap_or_and_call_none | 🟢 supported |               |
-| types.translates_discriminated_union_variant_construction        | 🟢 supported |               |
-| types.translates_enum_variant_construction                       | 🟢 supported |               |
-| types.translates_generic_function_params                         | 🟢 supported |               |
-| types.translates_hashmap_index_assign_to_insert                  | 🟢 supported |               |
-| types.translates_hashmap_index_to_get                            | 🟢 supported |               |
-| types.translates_locals_object_literal_and_field_access          | 🟢 supported |               |
-| types.translates_nullable_return_type                            | 🟢 supported |               |
-| types.translates_nullable_to_option                              | 🟢 supported |               |
-| types.translates_object_assign_to_extend                         | 🟢 supported |               |
-| types.translates_object_freeze_to_passthrough                    | 🟢 supported |               |
-| types.translates_object_from_entries_to_collect                  | 🟢 supported |               |
-| types.translates_object_get_own_property_names_to_keys           | 🟢 supported |               |
-| types.translates_object_has_own_to_contains_key                  | 🟢 supported |               |
-| types.translates_object_is_frozen_to_false                       | 🟢 supported |               |
-| types.translates_object_is_nan_equal                             | 🟢 supported |               |
-| types.translates_object_keys_to_hashmap_keys                     | 🟢 supported |               |
-| types.translates_object_literal_argument_to_struct_init          | 🟢 supported |               |
-| types.translates_object_values_to_hashmap_values                 | 🟢 supported |               |
-| types.translates_optional_field_supplied_wraps_some              | 🟢 supported |               |
-| types.translates_optional_field_to_option_and_fills_none         | 🟢 supported |               |
-| types.translates_record_computed_key_to_hashmap_entry            | 🟢 supported |               |
-| types.translates_record_to_hashmap_literal                       | 🟢 supported |               |
-| types.translates_return_object_literal_to_struct_init            | 🟢 supported |               |
+| feature                                                          | status         | detail / note                                                                                                                                                                                                                                                            |
+| ---------------------------------------------------------------- | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| types.translates_a_typed_function_returning_a_string             | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_default_param_supplied_wraps_some               | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_default_param_to_option_unwrap_or_and_call_none | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_discriminated_union_variant_construction        | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_enum_variant_construction                       | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_generic_function_params                         | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_hashmap_index_assign_to_insert                  | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_hashmap_index_to_get                            | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_locals_object_literal_and_field_access          | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_nullable_return_type                            | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_nullable_to_option                              | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_object_assign_to_extend                         | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_object_freeze_to_passthrough                    | 🔴 unsupported | `Object.freeze` (extensibility state) needs the engine (no static freeze tracking) \| `Object.seal` (extensibility state) needs the engine (no static freeze tracking) \| `Object.preventExtensions` (extensibility state) needs the engine (no static freeze tracking)  |
+| types.translates_object_from_entries_to_collect                  | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_object_get_own_property_names_to_keys           | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_object_has_own_to_contains_key                  | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_object_is_frozen_to_false                       | 🔴 unsupported | `Object.isFrozen` (extensibility state) needs the engine (no static freeze tracking) \| `Object.isSealed` (extensibility state) needs the engine (no static freeze tracking) \| `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) |
+| types.translates_object_is_nan_equal                             | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_object_keys_to_hashmap_keys                     | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_object_literal_argument_to_struct_init          | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_object_values_to_hashmap_values                 | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_optional_field_supplied_wraps_some              | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_optional_field_to_option_and_fills_none         | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_record_computed_key_to_hashmap_entry            | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_record_to_hashmap_literal                       | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_return_object_literal_to_struct_init            | 🟢 supported   |                                                                                                                                                                                                                                                                          |
 
 <!-- Generated by `cargo test -p dashscript --test conformance`. Do not edit by hand. -->

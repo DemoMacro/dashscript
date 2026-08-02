@@ -192,7 +192,7 @@
 | test262.test.built-ins.set.prototype.intersection.subclass                                                | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.intersection.subclass-receiver-methods                               | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.intersection.subclass-symbol-species                                 | 🟢 supported | via rquickjs engine                        |
-| test262.test.built-ins.set.prototype.isdisjointfrom.allows-set-like-class                                 | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.set.prototype.isdisjointfrom.allows-set-like-class                                 | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.isdisjointfrom.allows-set-like-object                                | 🟢 supported | engine fallback after static build failure |
 | test262.test.built-ins.set.prototype.isdisjointfrom.array-throws                                          | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.isdisjointfrom.builtins                                              | 🟢 supported | via rquickjs engine                        |
@@ -217,7 +217,7 @@
 | test262.test.built-ins.set.prototype.isdisjointfrom.set-like-iter-return                                  | 🟢 supported | engine fallback after static build failure |
 | test262.test.built-ins.set.prototype.isdisjointfrom.size-is-a-number                                      | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.isdisjointfrom.subclass-receiver-methods                             | 🟢 supported | engine fallback after static build failure |
-| test262.test.built-ins.set.prototype.issubsetof.allows-set-like-class                                     | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.set.prototype.issubsetof.allows-set-like-class                                     | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.issubsetof.allows-set-like-object                                    | 🟢 supported | engine fallback after static build failure |
 | test262.test.built-ins.set.prototype.issubsetof.array-throws                                              | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.issubsetof.builtins                                                  | 🟢 supported | via rquickjs engine                        |
@@ -240,7 +240,7 @@
 | test262.test.built-ins.set.prototype.issubsetof.set-like-class-order                                      | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.issubsetof.size-is-a-number                                          | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.issubsetof.subclass-receiver-methods                                 | 🟢 supported | engine fallback after static build failure |
-| test262.test.built-ins.set.prototype.issupersetof.allows-set-like-class                                   | 🟢 supported | engine fallback after static build failure |
+| test262.test.built-ins.set.prototype.issupersetof.allows-set-like-class                                   | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.issupersetof.allows-set-like-object                                  | 🟢 supported | engine fallback after static build failure |
 | test262.test.built-ins.set.prototype.issupersetof.array-throws                                            | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.set.prototype.issupersetof.builtins                                                | 🟢 supported | via rquickjs engine                        |

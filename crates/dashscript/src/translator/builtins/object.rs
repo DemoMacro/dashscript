@@ -78,16 +78,12 @@ pub(in crate::translator) fn object_method(
         "fromEntries" => {
             parse_quote!(#r.into_iter().collect::<::std::collections::HashMap<String, f64>>())
         }
-        // `Object.freeze`/`seal`/`preventExtensions` are no-ops returning the
-        // value unchanged — Rust has no runtime immutability to enforce, and a
-        // DashScript `Record` is already as strict as it gets at compile time.
-        // `.clone()` because the value is owned (`Record` is not `Copy`): a
-        // bare `#r` would move it, breaking `Object.freeze(m); …m…`.
-        "freeze" | "seal" | "preventExtensions" => parse_quote!(#r.clone()),
-        // `Object.isFrozen`/`isSealed` → `false`: DashScript never freezes a
-        // Record, so it is always mutable. `isExtensible` → `true` (likewise).
-        "isFrozen" | "isSealed" => parse_quote!(false),
-        "isExtensible" => parse_quote!(true),
+        // `Object.freeze`/`seal`/`preventExtensions`/`isFrozen`/`isSealed`/
+        // `isExtensible` are intercepted by `classify_call`, which degrades the
+        // enclosing function to the engine — a `Record` carries no runtime
+        // [[Extensible]]/attribute flag, so a static no-op (`freeze` → clone)
+        // or hardcoded (`isExtensible` → true) emit would mis-report a
+        // freeze-then-query fixture. They never reach this arm.
         _ => return None,
     })
 }

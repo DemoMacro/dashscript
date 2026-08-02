@@ -589,6 +589,22 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
         if obj.name.as_str() == "Object" && is_object_reflection {
             return reject_owned(format!("`Object.{prop}` reflection is unsupported"));
         }
+        // `Object.freeze`/`seal`/`preventExtensions` mutate, and `isFrozen`/
+        // `isSealed`/`isExtensible` query, an object's [[Extensible]]/property
+        // attribute state. A DashScript `Record`/struct carries no runtime
+        // freeze flag, so the static emit is a no-op (`freeze` → `clone`) or
+        // hardcoded (`isExtensible` → `true`) — a fixture that freezes then
+        // asserts `isExtensible` is `false` mis-reports. The engine tracks ES
+        // extensibility natively, so degrade the enclosing function.
+        let is_object_freeze = matches!(
+            prop,
+            "freeze" | "seal" | "preventExtensions" | "isFrozen" | "isSealed" | "isExtensible"
+        );
+        if obj.name.as_str() == "Object" && is_object_freeze {
+            return degrade_owned(format!(
+                "`Object.{prop}` (extensibility state) needs the engine (no static freeze tracking)"
+            ));
+        }
         // `String.raw` — the tagged-template runtime form.
         if obj.name.as_str() == "String" && prop == "raw" {
             return reject("`String.raw` (tagged template) is unsupported");

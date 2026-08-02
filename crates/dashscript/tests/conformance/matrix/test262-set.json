@@ -1484,7 +1484,7 @@
     "layer": "test262",
     "category": "set",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1684,7 +1684,7 @@
     "layer": "test262",
     "category": "set",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -1868,7 +1868,7 @@
     "layer": "test262",
     "category": "set",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

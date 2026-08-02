@@ -493,6 +493,36 @@ impl std::fmt::Debug for DsF64Key {
 }
 "#;
 
+/// ES `Math.max`/`Math.min` — differs from Rust `f64::max`/`min` on two edges:
+/// any `NaN` argument yields `NaN` (Rust returns the other operand), and
+/// `+0`/`-0` are ordered (`Math.max(-0, +0)` = `+0`, `Math.min(-0, +0)` = `-0`;
+/// Rust returns the left operand when they compare equal). Variadic `max`/`min`
+/// folds these left to right.
+pub(super) const F64_MAXMIN_HELPER: &str = r#"
+pub fn ds_f64_max(a: f64, b: f64) -> f64 {
+    if a.is_nan() || b.is_nan() {
+        ::core::f64::NAN
+    } else if a != b {
+        if a > b { a } else { b }
+    } else if a == 0.0 && (a.is_sign_positive() || b.is_sign_positive()) {
+        0.0
+    } else {
+        a
+    }
+}
+pub fn ds_f64_min(a: f64, b: f64) -> f64 {
+    if a.is_nan() || b.is_nan() {
+        ::core::f64::NAN
+    } else if a != b {
+        if a < b { a } else { b }
+    } else if a == 0.0 && (a.is_sign_negative() || b.is_sign_negative()) {
+        -0.0f64
+    } else {
+        a
+    }
+}
+"#;
+
 pub(super) const DISPLAY_HELPER: &str = r#"
 pub trait DsDisplay {
     fn ds_display(&self) -> String;

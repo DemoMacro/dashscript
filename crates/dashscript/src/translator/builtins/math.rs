@@ -92,7 +92,17 @@ pub(in crate::translator) fn math_method(
             let mut recv = math_receiver(args.first()?, ctx);
             for arg in args.iter().skip(1) {
                 let b = math_receiver(arg, ctx);
-                recv = method_call(recv, name, vec![b]);
+                // ES `Math.max`/`min` differs from Rust `f64::max`/`min` on NaN
+                // (ES yields NaN; Rust returns the other operand) and on ±0
+                // (ES: `+0` beats `-0` for max, `-0` beats `+0` for min; Rust
+                // returns the left operand when equal). Fold via the `__ds`
+                // helper. A single-arg `max`/`min` (no fold) returns the value
+                // unchanged, matching `Math.max(x) === x`.
+                recv = if name == "max" {
+                    parse_quote!(crate::__ds::ds_f64_max(#recv, #b))
+                } else {
+                    parse_quote!(crate::__ds::ds_f64_min(#recv, #b))
+                };
             }
             Some(recv)
         }

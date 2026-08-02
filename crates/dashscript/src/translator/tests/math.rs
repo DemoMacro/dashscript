@@ -6,9 +6,9 @@ fn translates_math_methods() {
         "function f(x: number): number { return Math.floor(x) + Math.max(x, 0) + Math.pow(x, 2); }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("x.floor()"), "got:\n{rust}");
-    // Math.max(x, 0) — the 0 now goes through math_receiver (literal → 0_f64)
-    // since max folds every arg through it.
-    assert!(rust.contains("x.max(0_f64)"), "got:\n{rust}");
+    // Math.max(x, 0) folds through `__ds::ds_f64_max` (ES NaN/±0 semantics),
+    // with each arg routed through math_receiver (the literal → 0_f64).
+    assert!(rust.contains("ds_f64_max"), "got:\n{rust}");
     assert!(rust.contains("x.powf(2_f64)"), "got:\n{rust}");
 }
 
@@ -174,7 +174,7 @@ fn translates_math_exp_log_trig_methods() {
 fn translates_math_min_and_e_constant() {
     let src = "function f(a: number, b: number): number { return Math.min(a, b) + Math.E; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains(".min("), "got:\n{rust}");
+    assert!(rust.contains("ds_f64_min"), "got:\n{rust}");
     assert!(rust.contains("f64::consts::E"), "got:\n{rust}");
 }
 
@@ -190,13 +190,16 @@ fn translates_math_max_min_hypot_variadic() {
         .translate("function f(): number { return Math.hypot(); }")
         .expect("should translate");
     assert!(rust.contains("0_f64"), "hypot(): {rust}");
-    // Math.max(a, b, c) folds binary f64::max left to right.
+    // Math.max(a, b, c) folds `__ds::ds_f64_max` left to right — ES semantics
+    // (NaN → NaN, `+0` beats `-0`) differ from Rust `f64::max`, so the fold
+    // routes through the helper rather than a raw method call.
     let rust = Translator::new()
         .translate(
             "function f(a: number, b: number, c: number): number { return Math.max(a, b, c); }",
         )
         .expect("should translate");
-    assert!(rust.contains("a.max(b)"), "fold: {rust}");
+    assert!(rust.contains("ds_f64_max"), "fold: {rust}");
+    assert!(!rust.contains(".max("), "no raw f64::max: {rust}");
     // Math.hypot(a) = |a| = a.powi(2).sqrt().
     let rust = Translator::new()
         .translate("function f(a: number): number { return Math.hypot(a); }")
@@ -205,6 +208,26 @@ fn translates_math_max_min_hypot_variadic() {
         rust.contains(".powi(2)") && rust.contains(".sqrt()"),
         "hypot(a): {rust}"
     );
+}
+
+#[test]
+fn translates_math_max_min_es_zero_and_nan() {
+    // ES Math.max/min differs from Rust f64::max/min on NaN (→ NaN) and ±0
+    // (max(-0,+0)=+0, min(-0,+0)=-0), so a 2-arg call folds through
+    // `__ds::ds_f64_max`/`ds_f64_min`. A single-arg call (no fold) returns
+    // the operand unchanged — no helper.
+    let max = Translator::new()
+        .translate("function f(a: number, b: number): number { return Math.max(a, b); }")
+        .expect("should translate");
+    assert!(max.contains("ds_f64_max("), "max fold: {max}");
+    let min = Translator::new()
+        .translate("function f(a: number, b: number): number { return Math.min(a, b); }")
+        .expect("should translate");
+    assert!(min.contains("ds_f64_min("), "min fold: {min}");
+    let one = Translator::new()
+        .translate("function f(a: number): number { return Math.max(a); }")
+        .expect("should translate");
+    assert!(!one.contains("ds_f64_max"), "single-arg no fold: {one}");
 }
 
 #[test]

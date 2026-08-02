@@ -11867,8 +11867,8 @@
     "id": "test262.test.built-ins.object.freeze.15.2.3.9-2-1",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (36960) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -11995,8 +11995,8 @@
     "id": "test262.test.built-ins.object.freeze.15.2.3.9-3-1",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (42764) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16236,7 +16236,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16244,7 +16244,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16252,7 +16252,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16276,7 +16276,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16284,7 +16284,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16292,7 +16292,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16300,7 +16300,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16316,7 +16316,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16332,7 +16332,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16347,8 +16347,8 @@
     "id": "test262.test.built-ins.object.isextensible.15.2.3.13-2-23",
     "layer": "test262",
     "category": "object",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (35768) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16372,7 +16372,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16380,7 +16380,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16404,7 +16404,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16412,7 +16412,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16420,7 +16420,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16428,7 +16428,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16436,7 +16436,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16548,7 +16548,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16644,7 +16644,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16652,7 +16652,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16660,7 +16660,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16668,7 +16668,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16676,7 +16676,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16700,7 +16700,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16716,7 +16716,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16724,7 +16724,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16732,7 +16732,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16740,7 +16740,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16748,7 +16748,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16756,7 +16756,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16764,7 +16764,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16772,7 +16772,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16780,7 +16780,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16788,7 +16788,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16804,7 +16804,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16812,7 +16812,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16828,7 +16828,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16836,7 +16836,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16844,7 +16844,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16852,7 +16852,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16860,7 +16860,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16900,7 +16900,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16908,7 +16908,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16916,7 +16916,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16924,7 +16924,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16932,7 +16932,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16956,7 +16956,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16972,7 +16972,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16980,7 +16980,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16988,7 +16988,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -16996,7 +16996,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17004,7 +17004,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17012,7 +17012,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17020,7 +17020,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17028,7 +17028,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17036,7 +17036,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17044,7 +17044,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17052,7 +17052,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17060,7 +17060,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17076,7 +17076,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17084,7 +17084,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17092,7 +17092,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17100,7 +17100,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17148,7 +17148,7 @@
     "layer": "test262",
     "category": "object",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (10196) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (24552) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -17172,7 +17172,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17180,7 +17180,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17188,7 +17188,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -17540,7 +17540,7 @@
     "layer": "test262",
     "category": "object",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

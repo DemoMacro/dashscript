@@ -699,25 +699,28 @@ fn translates_object_from_entries_to_collect() {
 }
 
 #[test]
-fn translates_object_freeze_to_passthrough() {
+fn translates_object_freeze_degrades_to_engine() {
+    // Object.freeze/seal/preventExtensions mutate [[Extensible]] state — a
+    // Record carries no runtime freeze flag, so the static no-op emit would
+    // mis-report `isExtensible`. The function degrades to the engine, whose
+    // `call_fn` stub keeps the JS body (Object.freeze verbatim) for QuickJS to
+    // run with real ES extensibility tracking.
     let src = "function f(m: Record<string, number>): Record<string, number> { Object.freeze(m); Object.seal(m); return Object.preventExtensions(m); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    // freeze/seal/preventExtensions are no-ops returning the value unchanged.
-    assert!(
-        !rust.contains("freeze") && !rust.contains("seal") && !rust.contains("preventExtensions"),
-        "got:\n{rust}"
-    );
+    assert!(rust.contains("call_fn"), "degrades to engine: {rust}");
+    assert!(rust.contains("Object.freeze"), "JS body verbatim: {rust}");
 }
 
 #[test]
-fn translates_object_is_frozen_to_false() {
+fn translates_object_isfrozen_degrades_to_engine() {
+    // Object.isFrozen/isSealed/isExtensible query [[Extensible]] state — the
+    // same untracked state as freeze, so the function degrades to the engine
+    // rather than emit the hardcoded false/true a freeze-then-query fixture
+    // would mis-report.
     let src = "function f(m: Record<string, number>): boolean { return Object.isFrozen(m) && Object.isSealed(m) && Object.isExtensible(m); }";
     let rust = Translator::new().translate(src).expect("should translate");
-    // A Record is never frozen/sealed (false), always extensible (true).
-    assert!(
-        rust.contains("false") && rust.contains("true"),
-        "got:\n{rust}"
-    );
+    assert!(rust.contains("call_fn"), "degrades to engine: {rust}");
+    assert!(rust.contains("Object.isFrozen"), "JS body verbatim: {rust}");
 }
 
 #[test]

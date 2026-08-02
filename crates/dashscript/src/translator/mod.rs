@@ -134,12 +134,19 @@ pub enum RuntimeDep {
     /// with no `$` (the common case) stays on the fast path — Rust's native
     /// `replace`. Pure `std` — no cargo dep.
     StringReplace,
+    /// `Math.max`/`Math.min` — ES semantics differ from Rust `f64::max`/`min`
+    /// on two edges: any `NaN` argument yields `NaN` (Rust returns the other
+    /// operand), and `+0`/`-0` are ordered (`Math.max(-0, +0)` = `+0`,
+    /// `Math.min(-0, +0)` = `-0`; Rust returns the left operand when they
+    /// compare equal). Variadic `max`/`min` folds `__ds::ds_f64_max`/
+    /// `ds_f64_min` left to right. Pure `std` — no cargo dep.
+    F64MaxMin,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 15] = [
+    const ALL: [RuntimeDep; 16] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -155,6 +162,7 @@ impl RuntimeDep {
         RuntimeDep::Assert,
         RuntimeDep::CollectionKey,
         RuntimeDep::StringReplace,
+        RuntimeDep::F64MaxMin,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -179,6 +187,7 @@ impl RuntimeDep {
             RuntimeDep::Assert => Some("__ds::assert_"),
             RuntimeDep::CollectionKey => Some("__ds::DsF64Key"),
             RuntimeDep::StringReplace => Some("__ds::ds_replace"),
+            RuntimeDep::F64MaxMin => Some("__ds::ds_f64_max"),
             RuntimeDep::Engine => None,
         }
     }
@@ -231,6 +240,7 @@ impl RuntimeDep {
             RuntimeDep::Inspect => Some(&[("ryu-js", "\"1.0\""), ("serde_json", "\"1\"")]),
             RuntimeDep::CollectionKey => None,
             RuntimeDep::StringReplace => None,
+            RuntimeDep::F64MaxMin => None,
         }
     }
 
@@ -250,6 +260,7 @@ impl RuntimeDep {
             RuntimeDep::Inspect => Some(INSPECT_HELPER),
             RuntimeDep::CollectionKey => Some(COLLECTION_KEY_HELPER),
             RuntimeDep::StringReplace => Some(STRING_REPLACE_HELPER),
+            RuntimeDep::F64MaxMin => Some(F64_MAXMIN_HELPER),
         }
     }
 }

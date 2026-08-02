@@ -875,8 +875,8 @@
     "id": "math.translates_math_min_and_e_constant",
     "layer": "translator-tests",
     "category": "math",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "src\\main.rs:2:12: error[E0433]: cannot find `__ds` in `crate`: could not find `__ds` in the crate root\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -1499,8 +1499,8 @@
     "id": "types.translates_object_freeze_to_passthrough",
     "layer": "translator-tests",
     "category": "types",
-    "status": "supported",
-    "detail": "",
+    "status": "unsupported",
+    "detail": "`Object.freeze` (extensibility state) needs the engine (no static freeze tracking) | `Object.seal` (extensibility state) needs the engine (no static freeze tracking) | `Object.preventExtensions` (extensibility state) needs the engine (no static freeze tracking)",
     "note": ""
   },
   {
@@ -1531,8 +1531,8 @@
     "id": "types.translates_object_is_frozen_to_false",
     "layer": "translator-tests",
     "category": "types",
-    "status": "supported",
-    "detail": "",
+    "status": "unsupported",
+    "detail": "`Object.isFrozen` (extensibility state) needs the engine (no static freeze tracking) | `Object.isSealed` (extensibility state) needs the engine (no static freeze tracking) | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking)",
     "note": ""
   },
   {
