@@ -47,6 +47,25 @@ fn translates_string_replace_all_to_replace() {
 }
 
 #[test]
+fn translates_string_replace_all_dollar_to_ds_helper() {
+    // A replacement carrying an ES `$` pattern (`$$`→`$`, `$&`→the match,
+    // `` $` ``→before, `$'`→after) lowers to `__ds::ds_replace_all`, which
+    // applies GetSubstitution; Rust's `str::replace` would treat `$&` literally.
+    let src = "function f(s: string): string { return s.replaceAll(\"é\", \"$&\"); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("__ds::ds_replace_all("), "got:\n{rust}");
+}
+
+#[test]
+fn translates_string_replace_dollar_to_ds_helper() {
+    // Same `$`-substitution need for the first-match `replace`.
+    let src = "function f(s: string): string { return s.replace(\"a\", \"$$\"); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("__ds::ds_replace("), "got:\n{rust}");
+    assert!(!rust.contains("ds_replace_all"), "got:\n{rust}");
+}
+
+#[test]
 fn translates_string_compound_append() {
     let src = "function f(): void { let s = \"a\"; s += \"bc\"; console.log(s); }";
     let rust = Translator::new().translate(src).expect("should translate");

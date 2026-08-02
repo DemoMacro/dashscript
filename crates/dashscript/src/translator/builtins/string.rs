@@ -49,6 +49,18 @@ fn es_trim_chars() -> Expr {
     ))
 }
 
+/// True if `arg` is a replacement string whose ES `GetSubstitution` `$` patterns
+/// (`$$`/`$&`/`` $` ``/`$'`) need expanding: a string literal containing `$`, or
+/// a non-literal (whose runtime value may contain `$`). A `$`-free literal is
+/// the fast path — Rust's `str::replace`/`replacen` treat `repl` literally,
+/// which is exactly ES semantics when no `$` is present.
+fn repl_needs_substitution(arg: &Argument) -> bool {
+    match arg {
+        Argument::StringLiteral(s) => s.value.as_str().contains('$'),
+        _ => true,
+    }
+}
+
 /// String methods whose arguments need adapting to Rust's `&str`-oriented API:
 /// `includes`/`startsWith`/`endsWith` → `contains`/`starts_with`/`ends_with`;
 /// `replace` → `replacen(.., 1)` (TS replaces the first match only); `repeat`
@@ -201,14 +213,50 @@ pub(in crate::translator) fn string_method_on(
                 parse_quote!(crate::__ds::regex_replace(#pat, #fl, #text, #b))
             } else {
                 let a = str_method_arg(args.first()?, ctx);
-                parse_quote!(#obj.replacen(#a, #b, 1))
+                if repl_needs_substitution(args.get(1)?) {
+                    // The replacement carries an ES `$` pattern (`$$`/`$&`/
+                    // `` $` ``/`$'`); Rust's `replacen` treats it literally, so
+                    // route through `ds_replace`, which applies GetSubstitution.
+                    let text: Expr = if matches!(
+                        &obj,
+                        Expr::Lit(syn::ExprLit {
+                            lit: syn::Lit::Str(_),
+                            ..
+                        })
+                    ) {
+                        obj
+                    } else {
+                        parse_quote!(#obj.as_str())
+                    };
+                    parse_quote!(crate::__ds::ds_replace(#text, #a, #b))
+                } else {
+                    parse_quote!(#obj.replacen(#a, #b, 1))
+                }
             }
         }
         // `.replaceAll(a, b)` → `replace` (all matches; TS `replace` does one).
+        // A replacement with `$` routes through `ds_replace_all` (GetSubstitution
+        // at each match); otherwise Rust's literal `replace` is exact.
         "replaceAll" => {
             let a = str_method_arg(args.first()?, ctx);
-            let b = str_method_arg(args.get(1)?, ctx);
-            parse_quote!(#obj.replace(#a, #b))
+            let b_arg = args.get(1)?;
+            let b = str_method_arg(b_arg, ctx);
+            if repl_needs_substitution(b_arg) {
+                let text: Expr = if matches!(
+                    &obj,
+                    Expr::Lit(syn::ExprLit {
+                        lit: syn::Lit::Str(_),
+                        ..
+                    })
+                ) {
+                    obj
+                } else {
+                    parse_quote!(#obj.as_str())
+                };
+                parse_quote!(crate::__ds::ds_replace_all(#text, #a, #b))
+            } else {
+                parse_quote!(#obj.replace(#a, #b))
+            }
         }
         "repeat" => {
             let n = usize_arg(args.first()?, ctx);

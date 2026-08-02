@@ -126,12 +126,20 @@ pub enum RuntimeDep {
     /// `#[derive(Clone, Copy)]` newtype implementing SameValueZero `Eq`+`Hash`
     /// (+0 === -0, NaN === NaN). Pure `std`; marker `__ds::DsF64Key`.
     CollectionKey,
+    /// A `replace`/`replaceAll` whose replacement string carries ES
+    /// `GetSubstitution` `$` patterns (`$$`→`$`, `$&`→the match, `` $` ``→before,
+    /// `$'`→after; `$n`/`$<…>` literal for a string search). Rust's
+    /// `str::replace`/`replacen` treat the replacement literally, so such a call
+    /// routes through `__ds::ds_replace`/`__ds::ds_replace_all`. A replacement
+    /// with no `$` (the common case) stays on the fast path — Rust's native
+    /// `replace`. Pure `std` — no cargo dep.
+    StringReplace,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 14] = [
+    const ALL: [RuntimeDep; 15] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -146,6 +154,7 @@ impl RuntimeDep {
         RuntimeDep::Inspect,
         RuntimeDep::Assert,
         RuntimeDep::CollectionKey,
+        RuntimeDep::StringReplace,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -169,6 +178,7 @@ impl RuntimeDep {
             // ASSERT_HELPER (each is a sibling free fn in the slice).
             RuntimeDep::Assert => Some("__ds::assert_"),
             RuntimeDep::CollectionKey => Some("__ds::DsF64Key"),
+            RuntimeDep::StringReplace => Some("__ds::ds_replace"),
             RuntimeDep::Engine => None,
         }
     }
@@ -220,6 +230,7 @@ impl RuntimeDep {
             RuntimeDep::Assert => None,
             RuntimeDep::Inspect => Some(&[("ryu-js", "\"1.0\""), ("serde_json", "\"1\"")]),
             RuntimeDep::CollectionKey => None,
+            RuntimeDep::StringReplace => None,
         }
     }
 
@@ -238,6 +249,7 @@ impl RuntimeDep {
             RuntimeDep::Assert => Some(ASSERT_HELPER),
             RuntimeDep::Inspect => Some(INSPECT_HELPER),
             RuntimeDep::CollectionKey => Some(COLLECTION_KEY_HELPER),
+            RuntimeDep::StringReplace => Some(STRING_REPLACE_HELPER),
         }
     }
 }

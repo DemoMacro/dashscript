@@ -1188,6 +1188,80 @@ pub fn regex_split(pattern: &str, flags: &str, text: &str, limit: Option<usize>)
 }
 "##;
 
+/// ES `GetSubstitution` for a literal (string) search — the `$` patterns in a
+/// `replace`/`replaceAll` replacement string. `$$`→`$`, `$&`→the matched text,
+/// `` $` ``→the text before the match, `$'`→the text after; `$n`/`$<…>` are
+/// literal (a string search carries no captures). Pushes the expanded
+/// replacement for one match at byte range `[start, end)` onto `out`. The byte
+/// offsets come from `str::find`, which always lands on a UTF-8 boundary, so the
+/// `text[..start]`/`text[end..]` slices are valid for non-BMP haystacks too.
+pub(super) const STRING_REPLACE_HELPER: &str = r##"
+fn expand_literal_replacement(repl: &str, text: &str, start: usize, end: usize, out: &mut String) {
+    let mut chars = repl.chars();
+    while let Some(c) = chars.next() {
+        if c != '$' {
+            out.push(c);
+            continue;
+        }
+        match chars.clone().next() {
+            Some('$') => { out.push('$'); chars.next(); }
+            Some('&') => { out.push_str(&text[start..end]); chars.next(); }
+            Some('`') => { out.push_str(&text[..start]); chars.next(); }
+            Some('\'') => { out.push_str(&text[end..]); chars.next(); }
+            // Lone `$` (end of replacement) or `$X` with no capture to splice —
+            // emit a literal `$`; the next char is reprocessed next iteration.
+            _ => out.push('$'),
+        }
+    }
+}
+
+/// `s.replaceAll(search, repl)` — every occurrence replaced, with `repl`'s `$`
+/// patterns expanded per ES `GetSubstitution` at each match (`` $` ``/`$'`
+/// reflect that match's position). Rust's `str::replace` treats `repl` literally,
+/// so a `$&` would survive verbatim. Empty `search` is rare; its ES semantics
+/// (a match at every code-unit boundary) fall back to Rust's literal `replace`.
+#[inline]
+pub fn ds_replace_all(haystack: &str, needle: &str, repl: &str) -> String {
+    if needle.is_empty() {
+        return haystack.replace(needle, repl);
+    }
+    let mut out = String::with_capacity(haystack.len() + repl.len());
+    let mut last = 0usize;
+    let mut search = 0usize;
+    while let Some(rel) = haystack[search..].find(needle) {
+        let start = search + rel;
+        let end = start + needle.len();
+        out.push_str(&haystack[last..start]);
+        expand_literal_replacement(repl, haystack, start, end, &mut out);
+        last = end;
+        search = end;
+    }
+    out.push_str(&haystack[last..]);
+    out
+}
+
+/// `s.replace(search, repl)` — the first occurrence only (ES replaces the first
+/// match; Rust's `replacen(.., 1)` treats `repl` literally, leaving `$&` intact).
+/// The haystack is returned unchanged on no match.
+#[inline]
+pub fn ds_replace(haystack: &str, needle: &str, repl: &str) -> String {
+    if needle.is_empty() {
+        return haystack.replacen(needle, repl, 1);
+    }
+    match haystack.find(needle) {
+        None => haystack.to_string(),
+        Some(start) => {
+            let end = start + needle.len();
+            let mut out = String::with_capacity(haystack.len() + repl.len());
+            out.push_str(&haystack[..start]);
+            expand_literal_replacement(repl, haystack, start, end, &mut out);
+            out.push_str(&haystack[end..]);
+            out
+        }
+    }
+}
+"##;
+
 /// The DashScript compat engine module, written to `src/__ds_engine.rs` and
 /// declared `mod __ds_engine;` at the crate root when a translated file uses ES
 /// dynamic reflection the static translator cannot lower. Two entry points
