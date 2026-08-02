@@ -986,11 +986,30 @@ pub fn regex(pattern: &str, flags: &str) -> Regex {
 /// An ES `String.prototype.match` / `RegExp.prototype.exec` result.
 /// `captures[0]` is the whole match; `[1..]` are the capture groups (`None`
 /// when a group did not participate). `index` is the match-start byte offset
-/// (ASCII == UTF-16 code-unit index); `input` is the haystack.
+/// (ASCII == UTF-16 code-unit index); `input` is the haystack. `groups` carries
+/// the named captures in source order (`None` when the pattern had no named
+/// groups, so ES `m.groups` is `undefined`); each entry's `Option<String>` is
+/// `None` when that group did not participate (ES `undefined`).
 pub struct DsMatch {
     pub captures: Vec<Option<String>>,
     pub index: usize,
     pub input: String,
+    pub groups: Option<Vec<(String, Option<String>)>>,
+}
+
+impl DsMatch {
+    /// `m.groups.name` — the named capture's value, or `None` if the group did
+    /// not participate (ES `undefined`). Duplicate named groups: regress'
+    /// `named_groups` already collapses duplicates to one entry preferring the
+    /// matched branch, matching ES `groups.x` semantics.
+    #[inline]
+    pub fn group_named(&self, name: &str) -> Option<String> {
+        self.groups
+            .as_ref()?
+            .iter()
+            .find(|(n, _)| n == name)
+            .and_then(|(_, v)| v.clone())
+    }
 }
 
 /// Build a `DsMatch` from one regress `Match` — shared by `regex_match`
@@ -998,14 +1017,21 @@ pub struct DsMatch {
 /// an already-compiled `Regex`). regress' `groups()` yields group 0 (the whole
 /// match) followed by the capture groups — exactly the ES `m[0]`/`m[1]`/…
 /// layout, so no manual whole-match prefix (that would shift every group).
+/// `named_groups()` yields each named group once (collapsing duplicates) with
+/// its matched range, so ES `groups.x` reflects whichever branch matched.
 #[inline]
 pub fn ds_match_from(text: &str, m: &Match) -> DsMatch {
     let captures: Vec<Option<String>> =
         m.groups().map(|g| g.map(|r| text[r].to_string())).collect();
+    let named: Vec<(String, Option<String>)> = m
+        .named_groups()
+        .map(|(name, range)| (name.to_string(), range.map(|r| text[r].to_string())))
+        .collect();
     DsMatch {
         captures,
         index: m.range().start,
         input: text.to_string(),
+        groups: if named.is_empty() { None } else { Some(named) },
     }
 }
 
@@ -1046,10 +1072,25 @@ impl std::fmt::Display for DsMatch {
         }
         write!(
             f,
-            ", index: {}, input: '{}', groups: undefined ]",
+            ", index: {}, input: '{}'",
             self.index,
             ds_inspect_str(&self.input)
-        )
+        )?;
+        match &self.groups {
+            // `groups: undefined` — the pattern had no named groups.
+            None => write!(f, ", groups: undefined ]"),
+            // Node inspects the groups object as `{ name: 'val', name2: undefined }`.
+            Some(ng) => {
+                let entries: Vec<String> = ng
+                    .iter()
+                    .map(|(n, v)| match v {
+                        Some(s) => format!("{}: '{}'", n, ds_inspect_str(s)),
+                        None => format!("{}: undefined", n),
+                    })
+                    .collect();
+                write!(f, ", groups: {{ {} }} ]", entries.join(", "))
+            }
+        }
     }
 }
 

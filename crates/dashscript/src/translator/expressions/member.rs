@@ -161,11 +161,23 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
         let obj = translate_expr(&sm.object, ctx);
         return parse_quote!((#obj.len() as f64));
     }
+    // `m.groups.name` — a named-capture access on a `.match`/`.exec` result.
+    // The outer member's object is `<match-local>.groups`; `groups` is not a
+    // Rust field on `DsMatch` (reached via `group_named`), so detect it before
+    // the generic struct-field fallback would emit a nonexistent field. ES
+    // `m.groups.name` is `string | undefined` → `Option<String>`.
+    if let Expression::StaticMemberExpression(inner) = &sm.object {
+        if inner.property.name == "groups" && is_match_local(&inner.object, ctx) {
+            let m = translate_expr(&inner.object, ctx);
+            return parse_quote!(#m.as_ref().unwrap().group_named(#field_name));
+        }
+    }
     // `m.index`/`m.input`/`m.length` on a `let m = s.match(/pat/)` result → the
     // `DsMatch` fields. Checked before the generic `.length` arm, which would
     // try `Option<DsMatch>::len()` (no such method). `index`/`length` are ES
-    // numbers (cast to `f64`); `input` is the haystack string. `groups` is
-    // left to a later phase.
+    // numbers (cast to `f64`); `input` is the haystack string. (A bare
+    // `m.groups` — the whole groups object — is not yet handled; only the
+    // `.groups.name` access above.)
     if is_match_local(&sm.object, ctx) {
         let obj = translate_expr(&sm.object, ctx);
         match field_name {

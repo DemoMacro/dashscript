@@ -651,6 +651,21 @@ fn regex_local_exec_emits_ds_match_from() {
 }
 
 #[test]
+fn regex_match_groups_name_emits_group_named() {
+    // `m.groups.name` — a named-capture access on a `.exec`/`.match` result.
+    // `groups` is not a Rust field on `DsMatch`; it is reached via `group_named`,
+    // so the access lowers to `m.as_ref().unwrap().group_named("name")` rather
+    // than a nonexistent struct field (which would fail `cargo check` with
+    // E0609). regress' `named_groups` already collapses duplicate names.
+    let src = "function main(): void {\n  const m = /(?<x>a)/.exec(\"a\");\n  assert.sameValue(m.groups.x, \"a\");\n}";
+    let rust = Translator::new().translate(src).expect("translate");
+    assert!(
+        rust.contains("group_named(\"x\")"),
+        "m.groups.x lowers to group_named, got:\n{rust}"
+    );
+}
+
+#[test]
 fn regex_local_exec_result_infers_option_ds_match() {
     // `let r = /pat/; const m = r.exec(s); m !== null` — `m` infers
     // `Option<DsMatch>` (the receiver is a regex local, not just a literal),
