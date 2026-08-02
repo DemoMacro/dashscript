@@ -216,7 +216,10 @@ pub(in crate::translator) fn number_constant(name: &str) -> Option<Expr> {
         "MAX_SAFE_INTEGER" => parse_quote!(9_007_199_254_740_991f64),
         "MAX_VALUE" => parse_quote!(::std::f64::MAX),
         "MIN_SAFE_INTEGER" => parse_quote!(-9_007_199_254_740_991f64),
-        "MIN_VALUE" => parse_quote!(::std::f64::MIN_POSITIVE),
+        // `Number.MIN_VALUE` is the smallest positive *subnormal* (5e-324),
+        // not `f64::MIN_POSITIVE` (smallest positive *normal*, 2.225e-308):
+        // `MIN_VALUE / 2` must underflow to 0, which `MIN_POSITIVE / 2` does not.
+        "MIN_VALUE" => parse_quote!(f64::from_bits(1)),
         "NaN" => parse_quote!(::std::f64::NAN),
         "NEGATIVE_INFINITY" => parse_quote!(::std::f64::NEG_INFINITY),
         "POSITIVE_INFINITY" => parse_quote!(::std::f64::INFINITY),
