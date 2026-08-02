@@ -1,0 +1,869 @@
+{
+  "_comment": "Auto-extracted from web-platform-tests/wpt by scripts/extract-wpt.mjs (WinterTC ECMA-429 §5 minimum common API scope). Each fixture wraps a WPT .any.js body verbatim in `function main(): void { … }` — test()/assert_equals stay as-is (DashScript lowers them to __ds::wpt_* static helpers). WinterTC is pure-Rust: the conformance harness runs the static path only (no engine fallback). `includes` lists the WPT harness scripts (// META: script=) the fixture depends on. DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "wpt.html.browsers.browsing-the-web.navigating-across-documents.refresh.subresource",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(() => {\n  return fetch(\"resources/refresh.py\").then(response => {\n    assert_equals(response.headers.get(\"Refresh\"), \"0;./refreshed.txt?\\u0080\\u00FF\", \"bytes got mapped to code points of the same value\");\n    assert_equals(response.url, new URL(\"resources/refresh.py\", location).href, \"Fetch API did not navigate to the Refresh URL\");\n  });\n}, \"Refresh does not affect Fetch API.\");\n\npromise_test(async t => {\n  const { promise: xhrLoaded, resolve: resolveXHRLoaded, reject: rejectXHRLoaded } = Promise.withResolvers();\n  const xhr = new XMLHttpRequest();\n  xhr.open(\"GET\", \"resources/refresh.py\");\n  xhr.addEventListener(\"load\", t.step_func(() => {\n    assert_equals(xhr.getResponseHeader(\"Refresh\"), \"0;./refreshed.txt?\\u0080\\u00FF\", \"bytes got mapped to code points of the same value\");\n    assert_equals(xhr.responseURL, new URL(\"resources/refresh.py\", location).href, \"XMLHttpRequest did not navigate to the Refresh URL\");\n    resolveXHRLoaded();\n  }));\n  xhr.addEventListener(\"error\", t.step_func(() => {\n    assert_false(true, \"XMLHttpRequest did not navigate to the Refresh URL\");\n    rejectXHRLoaded();\n  }));\n  xhr.send();\n  return xhrLoaded;\n}, \"Refresh does not affect XMLHttpRequest.\");\n\nif (self.GLOBAL.isWindow()) {\n  promise_test(async t => {\n    const { promise: imgLoaded, resolve: resolveImgLoaded, reject: rejectImgLoaded } = Promise.withResolvers();\n    const svgPath = \"resources/refresh-with-svg.py\";\n    const img = document.createElement(\"img\");\n    img.src = svgPath;\n    img.addEventListener(\"load\", () => {\n      assert_equals(img.src, new URL(svgPath, location).href, \"Image did not navigate to the Refresh URL\");\n      resolveImgLoaded();\n    });\n    img.addEventListener(\"error\", t.step_func(() => {\n      assert_false(true, \"Image did not navigate to the Refresh URL\");\n      rejectImgLoaded();\n    }));\n    document.documentElement.appendChild(img);\n    return imgLoaded;\n  }, \"Refresh does not affect Image.\");\n}\n}\nmain();\n",
+      "origin": "html/browsers/browsing-the-web/navigating-across-documents/refresh/subresource.any.js",
+      "n_tests": 3,
+      "async": true,
+      "fetch": true,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.browsers.origin.api.file-scheme-origin.tentative",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(t => {\n  const fileURL = \"file:///path/to/a/file.txt\";\n  const opaqueA = Origin.from(fileURL);\n  const opaqueB = Origin.from(fileURL);\n\n  assert_true(opaqueA.opaque);\n  assert_true(opaqueB.opaque);\n\n  assert_true(opaqueA.isSameOrigin(opaqueA), \"Opaque origin should be same-origin with itself.\");\n  assert_true(opaqueA.isSameSite(opaqueA), \"Opaque origin should be same-site with itself.\");\n  assert_false(opaqueA.isSameOrigin(opaqueB), \"Opaque origin should not be same-origin with another opaque origin.\");\n  assert_false(opaqueA.isSameSite(opaqueB), \"Opaque origin should not be same-site with another opaque origin, even if created from same URL.\");\n}, \"`Origin.from('file://')` opaque origins.\");\n}\nmain();\n",
+      "origin": "html/browsers/origin/api/file-scheme-origin.tentative.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "`Origin.from('file://')`"
+      }
+    },
+    {
+      "id": "wpt.html.browsers.origin.api.origin-comparison",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(t => {\n  const opaqueA = new Origin();\n  const opaqueB = new Origin();\n  assert_true(opaqueA.opaque);\n  assert_true(opaqueB.opaque);\n\n  assert_true(opaqueA.isSameOrigin(opaqueA), \"Opaque origin should be same-origin with itself.\");\n  assert_true(opaqueA.isSameSite(opaqueA), \"Opaque origin should be same-site with itself.\");\n  assert_false(opaqueA.isSameOrigin(opaqueB), \"Opaque origin should not be same-origin with another opaque origin.\");\n  assert_false(opaqueA.isSameSite(opaqueB), \"Opaque origin should not be same-site with another opaque origin.\");\n}, \"Comparison of `new Origin()` opaque origins.\");\n\ntest(t => {\n  const a = Origin.from(\"https://a.example\");\n  const a_a = Origin.from(\"https://a.a.example\");\n  const b_a = Origin.from(\"https://b.a.example\");\n  const b = Origin.from(\"https://b.example\");\n  const b_b = Origin.from(\"https://b.b.example\");\n\n  assert_true(a.isSameOrigin(a), \"Origin should be same-origin with itself.\");\n  assert_false(a.isSameOrigin(a_a), \"Origins with different subdomains should not be same-origin.\");\n  assert_false(a.isSameOrigin(b_a), \"Origins with different subdomains should not be same-origin.\");\n  assert_false(a.isSameOrigin(b), \"Origins with different domains should not be same-origin.\");\n  assert_false(a.isSameOrigin(b_b), \"Origins with different domains should not be same-origin.\");\n\n  assert_true(a.isSameSite(a), \"Origin should be same-site with itself.\");\n  assert_true(a.isSameSite(a_a), \"Origins with same registrable domain should be same-site.\");\n  assert_true(a.isSameSite(b_a), \"Origins with same registrable domain should be same-site.\");\n  assert_false(a.isSameSite(b), \"Origins with different registrable domains should not be same-site.\");\n  assert_false(a.isSameSite(b_b), \"Origins with different registrable domains should not be same-site.\");\n\n  assert_true(a_a.isSameSite(a), \"Origins with same registrable domain should be same-site.\");\n  assert_true(a_a.isSameSite(a_a), \"Origin should be same-site with itself.\");\n  assert_true(a_a.isSameSite(b_a), \"Origins with same registrable domain should be same-site.\");\n  assert_false(a_a.isSameSite(b), \"Origins with different registrable domains should not be same-site.\");\n  assert_false(a_a.isSameSite(b_b), \"Origins with different registrable domains should not be same-site.\");\n}, \"Comparison of tuple origins.\");\n\ntest(t => {\n  const http = Origin.from(\"http://a.example\");\n  const https = Origin.from(\"https://a.example\");\n\n  assert_false(http.isSameOrigin(https), \"http is not same-site with https\");\n  assert_false(https.isSameOrigin(http), \"https is not same-site with http\");\n\n  assert_false(http.isSameSite(https), \"http is not same-site with https\");\n  assert_false(https.isSameSite(http), \"https is not same-site with http\");\n}, \"Comparisons are schemeful.\");\n\ntest(t => {\n  const dataURL = \"data:text/plain,opaque\";\n  const opaqueA = Origin.from(dataURL);\n  const opaqueB = Origin.from(dataURL);\n  assert_true(opaqueA.opaque);\n  assert_true(opaqueB.opaque);\n\n  assert_true(opaqueA.isSameOrigin(opaqueA), \"Opaque origin should be same-origin with itself.\");\n  assert_true(opaqueA.isSameSite(opaqueA), \"Opaque origin should be same-site with itself.\");\n  assert_false(opaqueA.isSameOrigin(opaqueB), \"Opaque origin should not be same-origin with another opaque origin.\");\n  assert_false(opaqueA.isSameSite(opaqueB), \"Opaque origin should not be same-site with another opaque origin, even if created from same URL.\");\n}, \"Comparison of `Origin.from(<url-string>)` opaque origins.\");\n}\nmain();\n",
+      "origin": "html/browsers/origin/api/origin-comparison.any.js",
+      "n_tests": 4,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "`Origin` comparison"
+      }
+    },
+    {
+      "id": "wpt.html.browsers.origin.api.origin-from-extendablemessageevent",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction WorkerActivationPromise() {\n  return new Promise((resolve) => {\n    if (registration.active) {\n      resolve();\n      return;\n    }\n    self.addEventListener('activate', () => { resolve(); });\n  });\n}\n\ntest(t => {\n  const e = new ExtendableMessageEvent(\"message\", { origin: get_host_info().ORIGIN });\n  assert_throws_js(TypeError, _ => Origin.from(e));\n}, \"Constructed `ExtendableMessageEvent` objects have no real origins.\");\n\npromise_test(async t => {\n  await WorkerActivationPromise();\n\n  return new Promise(resolve => {\n    self.addEventListener(\"message\", e => {\n      const origin = Origin.from(e);\n      assert_true(!!origin);\n      assert_false(origin.opaque);\n      assert_true(origin.isSameOrigin(Origin.from(self)));\n      resolve();\n    });\n\n    self.registration.active.postMessage({ type: \"Hi\" });\n  });\n}, \"Posted `ExtendableMessageEvent` objects have origins.\");\n}\nmain();\n",
+      "origin": "html/browsers/origin/api/origin-from-extendablemessageevent.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "`Origin.from(ExtendableMessageEvent)`",
+        "global": "serviceworker"
+      }
+    },
+    {
+      "id": "wpt.html.browsers.origin.api.origin-from-global",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(t => {\n  const origin = Origin.from(globalThis);\n  assert_true(!!origin);\n  assert_false(origin.opaque, \"Origin should not be opaque.\");\n  assert_true(origin.isSameOrigin(Origin.from(get_host_info().ORIGIN)));\n}, `Origin.from(globalThis) is a tuple origin.`);\n}\nmain();\n",
+      "origin": "html/browsers/origin/api/origin-from-global.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "`Origin.from(WindowOrWorkerGlobalScope)`",
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.html.browsers.origin.api.origin-from-origin",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfor (const opaque of urls.opaque) {\n  test(t => {\n    const originFromString = Origin.from(opaque);\n    const origin = Origin.from(originFromString);\n    assert_true(!!origin);\n    assert_true(origin.opaque, \"Origin should be opaque.\");\n    assert_true(origin.isSameOrigin(originFromString));\n  }, `Origin.from(Origin.from(${JSON.stringify(opaque)})) is an opaque origin.`);\n}\n\nfor (const tuple of urls.tuple) {\n  test(t => {\n    const originFromString = Origin.from(tuple);\n    const origin = Origin.from(originFromString);\n    assert_true(!!origin);\n    assert_false(origin.opaque, \"Origin should be opaque.\");\n    assert_true(origin.isSameOrigin(originFromString));\n  }, `Origin.from(Origin.from(${JSON.stringify(tuple)})) is an tuple origin.`);\n}\n}\nmain();\n",
+      "origin": "html/browsers/origin/api/origin-from-origin.any.js",
+      "n_tests": 2,
+      "async": false,
+      "fetch": false,
+      "includes": ["resources/serializations.js"],
+      "variants": [],
+      "meta": {
+        "title": "`Origin.from(URL)`"
+      }
+    },
+    {
+      "id": "wpt.html.browsers.origin.api.origin-from-string",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfor (const invalid of urls.invalid) {\n  test(t => {\n    assert_throws_js(TypeError, _ => Origin.from(invalid));\n  }, `Origin.from(${JSON.stringify(invalid)}) throws a TypeError.`);\n}\n\nfor (const opaque of urls.opaque) {\n  test(t => {\n    const origin = Origin.from(opaque);\n    assert_true(!!origin);\n    assert_true(origin.opaque, \"Origin should be opaque.\");\n  }, `Origin.from(${JSON.stringify(opaque)}) is an opaque origin.`);\n}\n\nfor (const tuple of urls.tuple) {\n  test(t => {\n    const origin = Origin.from(tuple);\n    assert_true(!!origin);\n    assert_false(origin.opaque, \"Origin should not be opaque.\");\n  }, `Origin.from(${JSON.stringify(tuple)}) is a tuple origin.`);\n}\n}\nmain();\n",
+      "origin": "html/browsers/origin/api/origin-from-string.any.js",
+      "n_tests": 3,
+      "async": false,
+      "fetch": false,
+      "includes": ["resources/serializations.js"],
+      "variants": [],
+      "meta": {
+        "title": "`Origin.from(String)`"
+      }
+    },
+    {
+      "id": "wpt.html.browsers.origin.api.origin-from-url",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfor (const invalid of urls.invalid) {\n  test(t => {\n    assert_throws_js(TypeError, _ => Origin.from(new URL(invalid)));\n  }, `Origin.from(${JSON.stringify(invalid)}) throws a TypeError.`);\n}\n\nfor (const opaque of urls.opaque) {\n  test(t => {\n    const origin = Origin.from(new URL(opaque));\n    assert_true(!!origin);\n    assert_true(origin.opaque, \"Origin should be opaque.\");\n  }, `Origin.from(${JSON.stringify(opaque)}) is an opaque origin.`);\n}\n\nfor (const tuple of urls.tuple) {\n  test(t => {\n    const origin = Origin.from(new URL(tuple));\n    assert_true(!!origin);\n    assert_false(origin.opaque, \"Origin should not be opaque.\");\n  }, `Origin.from(${JSON.stringify(tuple)}) is a tuple origin.`);\n}\n}\nmain();\n",
+      "origin": "html/browsers/origin/api/origin-from-url.any.js",
+      "n_tests": 3,
+      "async": false,
+      "fetch": false,
+      "includes": ["resources/serializations.js"],
+      "variants": [],
+      "meta": {
+        "title": "`Origin.from(URL)`"
+      }
+    },
+    {
+      "id": "wpt.html.browsers.origin.api.origin-from",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n//\n// Invalid Inputs: `null`, `undefined`, invalid URL strings, random objects.\n//\nconst invalidInputs = [\n  null,\n  undefined,\n  1,\n  1.1,\n  true,\n  {},\n  Object,\n  Origin,\n  Origin.from,\n];\n\nfor (const invalid of invalidInputs) {\n  test(t => {\n    assert_throws_js(TypeError, _ => Origin.from(invalid));\n  }, `Origin.from(${invalid}) throws a TypeError.`);\n}\n\n// Specific object types are tested in `origin-from-*.js` in this directory.\n}\nmain();\n",
+      "origin": "html/browsers/origin/api/origin-from.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": ["resources/serializations.js"],
+      "variants": [],
+      "meta": {
+        "title": "`Origin.from()`"
+      }
+    },
+    {
+      "id": "wpt.html.canvas.element.manual.imagebitmap.createimagebitmap-resolves-in-task",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction makeWorkerImageBitmap() {\n    return makeOffscreenCanvas().then(canvas => {\n        return createImageBitmap(canvas);\n    });\n}\nvar imageSourceTypes = self.GLOBAL.isWorker() ?\n    [\n        { name: 'an OffscreenCanvas', factory: makeOffscreenCanvas },\n        { name: 'an ImageData', factory: makeImageData },\n        { name: 'an ImageBitmap', factory: makeWorkerImageBitmap },\n        { name: 'a Blob', factory: makeBlob('/images/pattern.png') },\n    ] :\n    imageSourceTypes;\n\nvar testFuncs = {\n    reject_sync: (promiseFunc, source, t) => {\n        return new Promise((resolve, reject) => {\n            let rejected = false;\n            promiseFunc(source).then(() => {\n                reject(new Error('Expected this call to reject'));\n            }, (err) => {\n                rejected = true;\n            });\n            Promise.resolve().then(() => {\n                try {\n                    assert_equals(rejected, true, 'The promise should be rejected synchronously')\n                    resolve(t);\n                } catch (err) {\n                    reject(err);\n                }\n            })\n        });\n\n    },\n    resolve_async: (promiseFunc, source, t) => {\n        return new Promise((resolve, reject) => {\n            let taskRan = false;\n            promiseFunc(source).then(() => {\n                try {\n                    assert_equals(taskRan, true, 'The promise should be resolved asynchronously')\n                    resolve(t);\n                } catch (err) {\n                    reject(err)\n                }\n            }, t.unreached_func('Expected this call to resolve'))\n            Promise.resolve().then(() => {\n                taskRan = true;\n            });\n        });\n    },\n    reject_async: (promiseFunc, source, t) => {\n        return new Promise((resolve, reject) => {\n            let taskRan = false;\n            promiseFunc(source).then(\n                t.unreached_func('Expected this call to reject'),\n                () => {\n                    try {\n                        assert_equals(taskRan, true, 'The promise should be rejected asynchronously')\n                        resolve(t);\n                    } catch (err) {\n                        reject(err)\n                    }\n                },\n            );\n            Promise.resolve().then(() => {\n                taskRan = true;\n            });\n        });\n    },\n};\n\nvar testCases = [{\n        description: 'createImageBitmap with <sourceType> source and ' +\n            'invalid cropHeight',\n        promiseTestFunction: (source) => createImageBitmap(source, 0, 0, 0, 0),\n        resolution: 'reject_sync'\n    },\n    {\n        description: 'createImageBitmap with <sourceType> source and ' +\n            'invalid resizeHeight',\n        promiseTestFunction: (source) => createImageBitmap(source, {\n            resizeWidth: 0,\n            resizeHeight: 0\n        }),\n        resolution: 'reject_sync'\n    },\n    {\n        description: 'createImageBitmap with <sourceType> source',\n        promiseTestFunction: (source) => createImageBitmap(source),\n        resolution: 'resolve_async'\n    },\n];\n\nimageSourceTypes.forEach(imageSourceType => {\n    testCases.forEach(testCase => {\n        let description = `${testCase.description.replace('<sourceType>',\n        imageSourceType.name)} should ${testCase.resolution.replace('_', ' ')}`;\n\n        promise_test(t => {\n            return imageSourceType.factory().then(source => {\n                const tester = testFuncs[testCase.resolution];\n                return tester(testCase.promiseTestFunction, source, t);\n            })\n        }, description);\n\n    });\n});\npromise_test(t => {\n    return makeBlob('data:,')().then(image => {\n        return testFuncs.reject_async((source) => createImageBitmap(source), image, t);\n    });\n}, 'Invalid Blob source should reject async');\n}\nmain();\n",
+      "origin": "html/canvas/element/manual/imagebitmap/createImageBitmap-resolves-in-task.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/media.js", "./common.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "createImageBitmap resolves in a task"
+      }
+    },
+    {
+      "id": "wpt.html.canvas.historical",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// removed in https://github.com/whatwg/html/pull/9979\ntest(() => {\n  assert_equals(OffscreenCanvasRenderingContext2D.prototype.commit, undefined);\n}, \"OffscreenCanvasRenderingContext2D.commit method is removed\");\n}\nmain();\n",
+      "origin": "html/canvas/historical.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.canvas.offscreen.canvas-context.2d.getcontext.options",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(() => {\n  const expected = [\n    \"alpha\",\n    \"colorSpace\",\n    \"colorSpace toString\",\n    \"desynchronized\",\n    \"willReadFrequently\",\n  ];\n  var actual = [];\n  const options = {\n    get alpha() {\n      actual.push(\"alpha\");\n      return true;\n    },\n    get willReadFrequently() {\n      actual.push(\"willReadFrequently\");\n      return false;\n    },\n    get desynchronized() {\n      actual.push(\"desynchronized\");\n      return false;\n    },\n    get colorSpace() {\n      actual.push(\"colorSpace\");\n      return {\n        toString() {\n          actual.push(\"colorSpace toString\");\n          return \"srgb\";\n        }\n      };\n    },\n  };\n\n  const canvas = new OffscreenCanvas(100, 50);\n  const context = canvas.getContext('2d', options);\n  assert_not_equals(context, null, \"context\");\n  assert_array_equals(actual, expected, \"order of operations (creation)\");\n  actual = [];\n  assert_equals(canvas.getContext('2d', options), context, \"cached context\");\n  // Getting the cached context does not involve the options argument at all;\n  // the context retains its existing settings, and the new options (if any)\n  // are ignored.\n  // Therefore, there is no expectation that the 'options' dictionary will be\n  // accessed again here, and we cannot predict the contents, if any, of the\n  // 'actual' array.\n});\n}\nmain();\n",
+      "origin": "html/canvas/offscreen/canvas-context/2d.getContext.options.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.cross-origin-embedder-policy.reflection-credentialless.tentative.https",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(t => assert_equals(crossOriginEmbedderPolicy, \"credentialless\"));\n}\nmain();\n",
+      "origin": "html/cross-origin-embedder-policy/reflection-credentialless.tentative.https.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker,sharedworker-module,serviceworker-module"
+      }
+    },
+    {
+      "id": "wpt.html.cross-origin-embedder-policy.reflection-require-corp.tentative.https",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(t => assert_equals(crossOriginEmbedderPolicy, \"require-corp\"));\n}\nmain();\n",
+      "origin": "html/cross-origin-embedder-policy/reflection-require-corp.tentative.https.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker,sharedworker-module,serviceworker-module"
+      }
+    },
+    {
+      "id": "wpt.html.cross-origin-embedder-policy.reflection-unsafe-none.tentative.https",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(t => assert_equals(crossOriginEmbedderPolicy, \"unsafe-none\"));\n}\nmain();\n",
+      "origin": "html/cross-origin-embedder-policy/reflection-unsafe-none.tentative.https.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker,sharedworker-module,serviceworker-module"
+      }
+    },
+    {
+      "id": "wpt.html.dom.idlharness",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\nidl_test(\n  [\"html\"],\n  [\"wai-aria\", \"dom\", \"cssom\", \"touch-events\", \"pointerevents\", \"uievents\", \"performance-timeline\"],\n  idlArray => {\n    idlArray.add_untested_idls('typedef Window WindowProxy;');\n    idlArray.add_objects({\n      WorkerLocation: ['self.location'],\n      WorkerNavigator: ['self.navigator'],\n      EventSource: ['new EventSource(\"http://invalid\")'],\n      Worker: [],\n      MessageEvent: ['new MessageEvent(\"message\", { data: 5 })'],\n      DedicatedWorkerGlobalScope: ['self'],\n      Origin: ['new Origin()'],\n    });\n  }\n);\n}\nmain();\n",
+      "origin": "html/dom/idlharness.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["/resources/WebIDLParser.js", "/resources/idlharness.js"],
+      "variants": [],
+      "meta": {
+        "global": "dedicatedworker"
+      }
+    },
+    {
+      "id": "wpt.html.dom.self-origin",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\ntest(function() {\n  assert_equals(self.origin, \"http://\" + location.host);\n}, \"self.origin should be correct\");\n}\nmain();\n",
+      "origin": "html/dom/self-origin.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.infrastructure.safe-passing-of-structured-data.messagechannel",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nrunStructuredCloneBatteryOfTests({\n  structuredClone(data, transfer) {\n    return new Promise(resolve => {\n      const channel = new MessageChannel();\n      channel.port2.onmessage = ev => resolve(ev.data.data);\n      channel.port1.postMessage({data, transfer}, transfer);\n    });\n  },\n  hasDocument : self.GLOBAL.isWindow()\n});\n}\nmain();\n",
+      "origin": "html/infrastructure/safe-passing-of-structured-data/messagechannel.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": [
+        "/common/sab.js",
+        "/html/webappapis/structured-clone/structured-clone-battery-of-tests.js",
+        "/html/webappapis/structured-clone/structured-clone-battery-of-tests-with-transferables.js",
+        "/html/webappapis/structured-clone/structured-clone-battery-of-tests-harness.js"
+      ],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.html.infrastructure.safe-passing-of-structured-data.shared-array-buffers.no-coop-coep.https",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(() => {\n  // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n  assert_equals(globalThis.SharedArrayBuffer, undefined);\n  assert_false(\"SharedArrayBuffer\" in globalThis);\n}, \"SharedArrayBuffer constructor does not exist without COOP+COEP\");\n\ntest(() => {\n  // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n  const sab = new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n  const channel = new MessageChannel();\n  assert_throws_dom(\"DataCloneError\", () => channel.port1.postMessage(sab));\n}, \"SharedArrayBuffer over MessageChannel without COOP+COEP\");\n\ntest(() => {\n  // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n  const sab = new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n  const channel = new BroadcastChannel(\"Is mir egal\");\n  assert_throws_dom(\"DataCloneError\", () => channel.postMessage(sab));\n}, \"SharedArrayBuffer over BroadcastChannel without COOP+COEP\");\n\nif (self.GLOBAL.isWindow()) {\n  test(() => {\n    // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n    const sab = new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n    assert_throws_dom(\"DataCloneError\", () => self.postMessage(sab));\n  }, \"SharedArrayBuffer over postMessage() without COOP+COEP\");\n}\n\ntest(() => {\n  assert_false(self.crossOriginIsolated);\n}, \"Bonus: self.crossOriginIsolated\");\n}\nmain();\n",
+      "origin": "html/infrastructure/safe-passing-of-structured-data/shared-array-buffers/no-coop-coep.https.any.js",
+      "n_tests": 5,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.html.infrastructure.safe-passing-of-structured-data.shared-array-buffers.serialization-via-idb",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\nasync_test(t => {\n  const openReq = createdb(t);\n\n  openReq.onupgradeneeded = e => {\n    const db = e.target.result;\n    const store = db.createObjectStore(\"store\", { keyPath: \"key\" });\n    // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n    const sab = new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n\n    assert_throws_dom(\"DataCloneError\", () => {\n      store.put({ key: 1, property: sab });\n    });\n    t.done();\n  };\n}, \"SharedArrayBuffer cloning via IndexedDB: basic case\");\n\nasync_test(t => {\n  const openReq = createdb(t);\n\n  openReq.onupgradeneeded = e => {\n    const db = e.target.result;\n    const store = db.createObjectStore(\"store\", { keyPath: \"key\" });\n    // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n    const sab = new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n\n    let getter1Called = false;\n    let getter2Called = false;\n\n    assert_throws_dom(\"DataCloneError\", () => {\n      store.put({ key: 1, property: [\n        { get x() { getter1Called = true; return 5; } },\n        sab,\n        { get x() { getter2Called = true; return 5; } }\n      ]});\n    });\n\n    assert_true(getter1Called, \"The getter before the SAB must have been called\");\n    assert_false(getter2Called, \"The getter after the SAB must not have been called\");\n    t.done();\n  };\n}, \"SharedArrayBuffer cloning via the IndexedDB: is interleaved correctly\");\n}\nmain();\n",
+      "origin": "html/infrastructure/safe-passing-of-structured-data/shared-array-buffers/serialization-via-idb.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": ["/IndexedDB/resources/support.js"],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.infrastructure.safe-passing-of-structured-data.shared-array-buffers.serialization-via-notifications-api",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\ntest(() => {\n  assert_throws_dom(\"DataCloneError\", () => {\n    // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n    const sab = new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n    new Notification(\"Bob: Hi\", { data: sab });\n  })\n}, \"SharedArrayBuffer cloning via the Notifications API's data member: basic case\");\n\ntest(() => {\n  // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n  const sab = new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n\n  let getter1Called = false;\n  let getter2Called = false;\n\n  assert_throws_dom(\"DataCloneError\", () => {\n    new Notification(\"Bob: Hi\", { data: [\n      { get x() { getter1Called = true; return 5; } },\n      sab,\n      { get x() { getter2Called = true; return 5; } }\n    ]});\n  });\n\n  assert_true(getter1Called, \"The getter before the SAB must have been called\");\n  assert_false(getter2Called, \"The getter after the SAB must not have been called\");\n}, \"SharedArrayBuffer cloning via the Notifications API's data member: is interleaved correctly\");\n}\nmain();\n",
+      "origin": "html/infrastructure/safe-passing-of-structured-data/shared-array-buffers/serialization-via-notifications-api.any.js",
+      "n_tests": 2,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.import-attributes.dynamic-import-with-attributes-argument",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async test => {\n    const result = await import(\"./export-hello.js\", { with: { } });\n    assert_equals(result.default, \"hello\");\n}, \"Dynamic import with an empty with clause should succeed\");\n\npromise_test(async test => {\n    return promise_rejects_js(test, TypeError,\n        import(\"./export-hello.js\", { with: { unsupportedAssertionKey: \"unsupportedAssertionValue\"} }),\n        \"Dynamic import with an unsupported import attribute should fail\");\n}, \"Dynamic import with an unsupported import attribute should fail\");\n\npromise_test(test => {\n    return promise_rejects_js(test, TypeError,\n        import(\"./export-hello.js\", { with: { type: \"notARealType\"} } ),\n        \"Dynamic import with an unsupported type attribute should fail\");\n}, \"Dynamic import with an unsupported type attribute should fail\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/import-attributes/dynamic-import-with-attributes-argument.any.js",
+      "n_tests": 3,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.json-module.charset-bom",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async () => {\n    const jsonModule = await import('./bom-utf-8.json', { with: { type: 'json' } });\n    assert_equals(jsonModule.default.data, 'hello');\n}, 'UTF-8 BOM should be stripped when decoding JSON module script');\n\npromise_test(async test => {\n    await promise_rejects_js(test, SyntaxError,\n        import('./bom-utf-16be.json', { with: { type: 'json' } }), 'Expected parse error from UTF-16BE BOM');\n}, 'UTF-16BE BOM should result in parse error in JSON module script');\n\npromise_test(async test => {\n    await promise_rejects_js(test, SyntaxError,\n        import('./bom-utf-16le.json', { with: { type: 'json' } }), 'Expected parse error from UTF-16LE BOM');\n}, 'UTF-16LE BOM should result in parse error in JSON module script');\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/json-module/charset-bom.any.js",
+      "n_tests": 3,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/utils.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.json-module.invalid-content-type",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst content_types = [\n  \"application/json+protobuf\",\n  \"application/json+blah\",\n  \"text/x-json\",\n  \"text/json+blah\",\n  \"application/blahjson\",\n  \"image/json\",\n  \"text+json\",\n  \"json+json\",\n  \"text/json/json+json\",\n  \"text/html;+json\",\n  \"text/html+json+xml\",\n  \"text/json/json\",\n\n  // Control Characters and Whitespace - Invalid Type\n  \"applic\\x00ation/vnd.api+json\",     // NULL in type\n  \"applic\\x09ation/vnd.api+json\",     // TAB in type\n  \"applic\\x0Aation/vnd.api+json\",     // Line Feed in type\n  \"applic\\x0Dation/vnd.api+json\",     // Carriage Return in type\n  \"applic ation/vnd.api+json\",        // SPACE in type\n  \"applic\\x7Fation/vnd.api+json\",     // DEL in type\n  \"\\x01application/vnd.api+json\",     // SOH at start of type\n  \"application\\x1F/vnd.api+json\",     // Unit Separator at end of type\n\n  // Control Characters and Whitespace - Invalid Subtype\n  \"application/vnd\\x00.api+json\",     // NULL in subtype\n  \"application/vnd\\x09.api+json\",     // TAB in subtype\n  \"application/vnd\\x0A.api+json\",     // Line Feed in subtype\n  \"application/vnd\\x0D.api+json\",     // Carriage Return in subtype\n  \"application/vnd .api+json\",        // SPACE in subtype\n  \"application/vnd\\x7F.api+json\",     // DEL in subtype\n  \"application/\\x01vnd.api+json\",     // SOH at start of subtype\n  \"application/vnd.api\\x1F+json\",     // Unit Separator before +json\n\n  // Separator Characters - Invalid Type\n  \"applic\\\"ation/vnd.api+json\",       // Double quote in type\n  \"applic(ation/vnd.api+json\",        // Left parenthesis in type\n  \"applic)ation/vnd.api+json\",        // Right parenthesis in type\n  \"applic,ation/vnd.api+json\",        // Comma in type\n  \"applic:ation/vnd.api+json\",        // Colon in type\n  \"applic;ation/vnd.api+json\",        // Semicolon in type\n  \"applic<ation/vnd.api+json\",        // Left angle bracket in type\n  \"applic>ation/vnd.api+json\",        // Right angle bracket in type\n  \"applic=ation/vnd.api+json\",        // Equals in type\n  \"applic?ation/vnd.api+json\",        // Question mark in type\n  \"applic@ation/vnd.api+json\",        // At sign in type\n  \"applic[ation/vnd.api+json\",        // Left square bracket in type\n  \"applic]ation/vnd.api+json\",        // Right square bracket in type\n  \"applic{ation/vnd.api+json\",        // Left curly brace in type\n  \"applic}ation/vnd.api+json\",        // Right curly brace in type\n\n  // Separator Characters - Invalid Subtype\n  \"application/vnd\\\"api\\\"+json\",      // Double quote in subtype\n  \"application/vnd(api+json\",         // Left parenthesis in subtype\n  \"application/vnd)api+json\",         // Right parenthesis in subtype\n  \"application/vnd,api+json\",         // Comma in subtype\n  \"application/vnd:api+json\",         // Colon in subtype\n  \"application/vnd;api+json\",         // Semicolon in subtype\n  \"application/vnd<api+json\",         // Left angle brackets in subtype\n  \"application/vnd>api+json\",         // Right angle brackets in subtype\n  \"application/vnd=api+json\",         // Equals in subtype\n  \"application/vnd?api+json\",         // Question mark in subtype\n  \"application/vnd@api+json\",         // At sign in subtype\n  \"application/vnd[api+json\",         // Left square brackets in subtype\n  \"application/vnd]api+json\",         // Right square brackets in subtype\n  \"application/vnd{api+json\",         // Left curly brace in subtype\n  \"application/vnd}api+json\",         // Right curly brace in subtype\n\n  // Non-ASCII Characters - Invalid Type\n  \"aplicación/vnd.api+json\",          // Latin small letter o with acute\n  \"申请/vnd.api+json\",                 // Chinese characters\n  \"app™lication/vnd.api+json\",        // Trade mark sign\n  \"appli€cation/vnd.api+json\",        // Euro sign\n  \"🚀application/vnd.api+json\",       // Rocket emoji\n  \"applicatioñ/vnd.api+json\",         // Latin small letter n with tilde\n\n  // Non-ASCII Characters - Invalid Subtype\n  \"application/vñd.api+json\",         // Latin small letter n with tilde\n  \"application/vnd.apí+json\",         // Latin small letter i with acute\n  \"application/vnd.api™+json\",        // Trade mark sign\n  \"application/vnd.api€+json\",        // Euro sign\n  \"application/vnd.中文+json\",         // Chinese characters\n  \"application/vnd.api🚀+json\",       // Rocket emoji\n  \"application/café.api+json\",        // Latin small letter e with acute\n\n  // Mixed Invalid Characters (Both Type and Subtype)\n  \"applic ation/vnd api+json\",        // Spaces in both\n  \"applic\\\"ation/vnd\\\"api+json\",      // Quotes in both\n  \"applic(ation/vnd(api+json\",        // Left parentheses in both\n  \"applic)ation/vnd)api+json\",        // Right parentheses in both\n  \"applic,ation/vnd,api+json\",        // Commas in both\n  \"applic=ation/vnd=api+json\",        // Equals in both\n  \"申请/中文.api+json\",                 // Chinese in both\n  \"app™/vnd€.api+json\",               // Unicode symbols in both\n  \"applic\\x00ation/vnd\\x00api+json\",  // NULL in both\n  \"applic;ation/vnd;api+json\",        // Semicolons in both\n  \"applic{ation/vnd{api+json\",        // Left curly brace in both\n  \"applic}ation/vnd}api+json\",        // Right curly brace in both\n  \"applic[ation/vnd[api+json\",        // Left square bracket in both\n  \"applic]ation/vnd]api+json\",        // Right square bracket in both\n  \"applic<ation/vnd<api+json\",        // Left angle bracket in both\n  \"applic>ation/vnd>api+json\",        // Right angle bracket in both\n\n  // Edge Cases - Type\n  \"\\\"application/vnd.api+json\",       // Quote at start of type\n  \"application\\\"/vnd.api+json\",       // Quote at end of type\n  \"application /vnd.api+json\",        // Trailing space in type\n  \"/vnd.api+json\",                    // Empty type\n  \"app\\x00lication/vnd.api+json\",     // NULL in middle of type\n\n  // Edge Cases - Subtype\n  \"application/\\\"vnd.api+json\",       // Quote at start of subtype\n  \"application/vnd.api\\\"+json\",       // Quote before +json\n  \"application/ vnd.api+json\",        // Leading space in subtype\n  \"application/vnd.api +json\",        // Space before +json\n  \"application/vnd.api+json\\\"\",       // Quote at end\n\n  // Edge Cases - Multiple Invalid Positions\n  \"\\\"application\\\"/\\\"vnd.api\\\"+json\", // Quotes in multiple positions\n  \"app(lic)ation/vnd(api)+json\",      // Parentheses in multiple positions\n  \"application\\x00/\\x00vnd.api+json\",  // NULL in both parts\n];\n\nfor (const content_type of content_types) {\n  promise_test(async test => {\n    await promise_rejects_js(test, TypeError,\n      import(`./module.json?pipe=header(Content-Type,${encodeURIComponent(content_type)})`, { with: { type: \"json\"} }),\n      `Import of a JSON module with MIME type ${content_type} should fail`);\n  }, `Try importing JSON module with MIME type ${content_type}`);\n}\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/json-module/invalid-content-type.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.json-module.non-object",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfor (const value of [null, true, false, \"string\"]) {\n  promise_test(async t => {\n    const result = await import(`./${value}.json`, { with: { type: \"json\" } });\n    assert_equals(result.default, value);\n  }, `Non-object: ${value}`);\n}\n\npromise_test(async t => {\n  const result = await import(\"./array.json\", { with: { type: \"json\" } });\n  assert_array_equals(result.default, [\"en\", \"try\"]);\n}, \"Non-object: array\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/json-module/non-object.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.json-module.repeated-imports",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async test => {\n    await promise_rejects_js(test, TypeError,\n      import(\"./module.json\"),\n      \"Dynamic import of a JSON module without a type attribute should fail\");\n\n    // This time the import should succeed because we're using the correct\n    // import even though the previous attempt with the same  specifier failed.\n    const result = await import(\"./module.json\", { with: { type: \"json\" } });\n    assert_true(result.default.test);\n}, \"Importing a specifier that previously failed due to an incorrect type attribute can succeed if the correct attribute is later given\");\n\npromise_test(async test => {\n    // Append a URL fragment to the specifier so that this is independent\n    // from the previous test.\n    const result = await import(\"./module.json#2\", { with: { type: \"json\" } });\n    assert_true(result.default.test);\n\n    await promise_rejects_js(test, TypeError,\n      import(\"./module.json#2\"),\n      \"Dynamic import should fail with the type attribute missing even if the same specifier previously succeeded\");\n}, \"Importing a specifier that previously succeeded with the correct type attribute should fail if the incorrect attribute is later given\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // Set up the server to respond with JSON first, then import with a JSON type attribute\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&content-type=application/json`, { cache: 'no-cache' });\n    const result_json = await import(`../serve-custom-response.py?key=${uuid_token}`, { with: { type: \"json\" } });\n    assert_equals(result_json.default.hello, \"world\");\n\n    // Import using the same specifier again; this time we configure the server to respond with JS\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&content-type=application/javascript`, { cache: 'no-cache' });\n    // should succeed since we're not asserting a non-JS type this time.\n    const result_js = await import(`../serve-custom-response.py?key=${uuid_token}`);\n    assert_equals(result_js.default, \"hello\");\n}, \"Two modules of different type with the same specifier can load if the server changes its responses\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // serve-custom-response.py gives us JS the first time\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&content-type=application/javascript`, { cache: 'no-cache' });\n    await promise_rejects_js(test, TypeError,\n      import(`../serve-custom-response.py?key=${uuid_token}`, { with: { type: \"json\" } }),\n      \"Dynamic import of JSON with a JS type content should fail\");\n\n    // Import using the same specifier/module type pair again; this time server returns JSON\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&content-type=application/json`, { cache: 'no-cache' });\n    // it should succeed since the failed import attempt did not create a module map entry\n    const result_json = await import(`../serve-custom-response.py?key=${uuid_token}`, { with: { type: \"json\" } });\n    assert_equals(result_json.default.hello, \"world\");\n}, \"An import should succeed even if the same specifier/module type pair previously failed due to a MIME type mismatch\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // serve-custom-response.py gives us 404 the first time\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&code=404`, { cache: 'no-cache' });\n    await promise_rejects_js(test, TypeError,\n      import(`../serve-custom-response.py?key=${uuid_token}`, { with: { type: \"json\" } }),\n      \"Dynamic import of JSON should fail with a 404 response\");\n\n    // Import using the same specifier/module type pair again; this time server returns 200\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&code=200&content-type=application/json`, { cache: 'no-cache' });\n    // it should succeed since the failed import attempt did not create a module map entry\n    const result_json = await import(`../serve-custom-response.py?key=${uuid_token}`, { with: { type: \"json\" } });\n    assert_equals(result_json.default.hello, \"world\");\n}, \"An import should succeed even if the same specifier/module type pair previously failed due to a HTTP error\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // serve-custom-response.py gives us network error the first time\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&network-error=true`, { cache: 'no-cache' });\n    await promise_rejects_js(test, TypeError,\n      import(`../serve-custom-response.py?key=${uuid_token}`, { with: { type: \"json\" } }),\n      \"Dynamic import of JSON should fail with a network error\");\n\n    // Import using the same specifier/module type pair again; this time server returns 200\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&network-error=false&code=200&content-type=application/json`, { cache: 'no-cache' });\n    // it should succeed since the failed import attempt did not create a module map entry\n    const result_json = await import(`../serve-custom-response.py?key=${uuid_token}`, { with: { type: \"json\" } });\n    assert_equals(result_json.default.hello, \"world\");\n}, \"An import should succeed even if the same specifier/module type pair previously failed due to a network error\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // serve-custom-response.py gives us JSON the first time\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&content-type=application/json`, { cache: 'no-cache' });\n    const result_json = await import(`../serve-custom-response.py?key=${uuid_token}`, { with: { type: \"json\" } });\n    assert_equals(result_json.default.hello, \"world\");\n    const visit_counter = await fetch(`../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' });\n    assert_equals(await visit_counter.text(), \"1\");\n\n    // If this were to do another fetch, the import would fail because serve-custom-response.py would give us JS this time.\n    // But, the module map entry for this specifier/module type pair already exists, so we successfully reuse the entry instead of fetching again.\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&content-type=application/javascript`, { cache: 'no-cache' });\n    const result_json_2 = await import(`../serve-custom-response.py?key=${uuid_token}`, { with: { type: \"json\" } });\n    assert_equals(result_json_2.default.hello, \"world\");\n    const visit_counter_2 = await fetch(`../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' });\n    assert_equals(await visit_counter_2.text(), \"1\");\n}, \"If an import previously succeeded for a given specifier/module type attribute pair, future uses of that pair should yield the same result\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    await fetch(`../serve-custom-response.py?key=${uuid_token}&action=set&content-type=application/json`, { cache: 'no-cache' });\n    const imports = [];\n    for (let i = 0; i < 5; i++) {\n        imports.push(import(`../serve-custom-response.py?key=${uuid_token}`, { with: { type: \"json\" } }));\n    }\n    const results = await Promise.all(imports);\n    for (const result of results) {\n        assert_equals(result.default.hello, \"world\");\n    }\n    const visit_counter = await fetch(`../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' });\n    assert_equals(await visit_counter.text(), \"1\");\n}, \"Multiple import calls with the same specifier should be joined into a single fetch\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/json-module/repeated-imports.any.js",
+      "n_tests": 8,
+      "async": true,
+      "fetch": true,
+      "includes": ["/common/utils.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.microtasks.checkpoint-importscripts",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// The `then` handlers for `Promise.resolve()` are evaluated in the first\n// microtasks checkpoint after `Promise.resolve()`.\n\n// ----------------------------------------------------------------\n// Check when microtasks checkpoint is performed around importScripts().\n\n// The expectation is: the `then` handlers are evaluated after the script\n// calling importScripts() is finished, not immediately after importScripts().\n// Although #clean-up-after-running-script is executed as a part of\n// #run-a-classic-script for importScripts()ed scripts, but at that time\n// microtasks checkpoint is NOT performed because JavaScript execution context\n// stack is not empty.\n\nself.log = [];\n\n// Microtasks should be executed before\n// #run-a-classic-script/#run-a-module-script is completed, and thus before\n// script evaluation scheduled by setTimeout().\nasync_test(t => {\n  self.addEventListener('error',\n      t.unreached_func('error event should not be fired'));\n\n  t.step_timeout(() => {\n      assert_array_equals(log, [\n          'importScripts()ed script',\n          'catch',\n          'promise'\n        ]);\n      t.done();\n    },\n    0);\n}, \"Promise resolved during importScripts()\");\n\ntry {\n  importScripts('resources/resolve-then-throw.js');\n} catch (e) {\n  self.log.push('catch');\n}\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/microtasks/checkpoint-importScripts.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.microtasks.evaluation-order-1-nothrow-importscripts",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// Spec: https://html.spec.whatwg.org/C/#run-a-classic-script\n// called from https://html.spec.whatwg.org/C/#import-scripts-into-worker-global-scope\nsetupTest(\"importScripts() queueing a microtask then throwing an exception\", [\n  \"body\",\n  \"microtask\",\n]);\n\nimportScripts('./resources/evaluation-order-1-nothrow.js');\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/microtasks/evaluation-order-1-nothrow-importScripts.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["./resources/evaluation-order-setup.js"],
+      "variants": [],
+      "meta": {
+        "global": "dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.microtasks.evaluation-order-1-throw-importscripts",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// Spec: https://html.spec.whatwg.org/C/#run-a-classic-script\n// called from https://html.spec.whatwg.org/C/#import-scripts-into-worker-global-scope\nsetupTest(\"importScripts() queueing a microtask then throwing an exception\", [\n  // Step 6 of #run-a-classic-script.\n  \"body\",\n\n  // Step 7.1.1 (\"Clean up after running script\") is no-op because JavaScript\n  // execution context stack is still non-empty immediately after\n  // importScripts() as the outer script is still executing.\n\n  // Step 7.1.2 (Rethrowing an exception) causes worker onerror.\n  \"global-error\",\n\n  // Microtask checkpoint is performed later, perhaps\n  // \"Clean up after running script\" after the outer script is finished.\n  \"microtask\",\n]);\n\nimportScripts('./resources/evaluation-order-1-throw.js');\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/microtasks/evaluation-order-1-throw-importScripts.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["./resources/evaluation-order-setup.js"],
+      "variants": [],
+      "meta": {
+        "global": "dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.blob-url",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction objectUrlFromModule(module) {\n  const blob = new Blob([module], { type: \"text/javascript\" });\n  return URL.createObjectURL(blob);\n}\n\nconst moduleText = `export const foo = \"bar\";`;\n\npromise_test(async (t) => {\n  const moduleBlobUrl = objectUrlFromModule(moduleText);\n  t.add_cleanup(() => URL.revokeObjectURL(moduleBlobUrl));\n\n  const module = await import(moduleBlobUrl);\n  assert_equals(module.foo, \"bar\");\n}, \"Blob URLs are supported in dynamic imports\");\n\npromise_test(async (t) => {\n  const moduleBlobUrl = objectUrlFromModule(moduleText);\n  t.add_cleanup(() => URL.revokeObjectURL(moduleBlobUrl));\n\n  const module1 = await import(moduleBlobUrl);\n  const module2 = await import(moduleBlobUrl);\n  assert_equals(module1, module2);\n}, \"Identical blob URLs resolve to the same module\");\n\npromise_test(async (t) => {\n  const moduleBlob = new Blob([moduleText], { type: \"text/javascript\" });\n  const moduleBlobUrl1 = URL.createObjectURL(moduleBlob);\n  const moduleBlobUrl2 = URL.createObjectURL(moduleBlob);\n  t.add_cleanup(() => {\n    URL.revokeObjectURL(moduleBlobUrl1);\n    URL.revokeObjectURL(moduleBlobUrl2);\n  });\n\n  const module1 = await import(moduleBlobUrl1);\n  const module2 = await import(moduleBlobUrl2);\n  assert_not_equals(module1, module2);\n}, \"Different blob URLs pointing to the same blob resolve to different modules\");\n\npromise_test(async (t) => {\n  const moduleBlobUrl = objectUrlFromModule(moduleText);\n  URL.revokeObjectURL(moduleBlobUrl);\n\n  await promise_rejects_js(t, TypeError, import(moduleBlobUrl));\n}, \"A revoked blob URL will not resolve\");\n\npromise_test(async () => {\n  const moduleBlobUrl = objectUrlFromModule(moduleText);\n  const module1 = await import(moduleBlobUrl);\n\n  URL.revokeObjectURL(moduleBlobUrl);\n\n  const module2 = await import(moduleBlobUrl);\n  assert_equals(module1, module2);\n}, \"A revoked blob URL will resolve if it's already in the module graph\");\n\npromise_test(async () => {\n  const moduleBlobUrl = objectUrlFromModule(moduleText);\n\n  const importPromise = import(moduleBlobUrl);\n  URL.revokeObjectURL(moduleBlobUrl);\n\n  const module = await importPromise;\n  assert_equals(module.foo, \"bar\");\n}, \"Revoking a blob URL immediately after calling import will not fail\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/module/dynamic-import/blob-url.any.js",
+      "n_tests": 6,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker,dedicatedworker-module,sharedworker-module"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.concurrent-failed-imports",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// Additional coverage for \"Don't cache HTTP errors in the module map\"\n// (https://github.com/whatwg/html/pull/10327), complementing the tests in\n// repeated-imports.any.js.\n//\n// These focus on the concurrency guarantees of the module map's\n// \"list of callbacks\" mechanism, which the spec change relies on:\n//  1. Concurrent imports of a failing module are joined into a single fetch,\n//     and every joined import rejects.\n//  2. Each joined import is notified with the result of *its own* fetch, even\n//     if a sibling import's rejection handler synchronously starts a new import\n//     of the same specifier (which, because failures are not cached, performs a\n//     fresh fetch). A joined import must never observe the internal\n//     placeholder/list value nor another fetch's result.\n\npromise_test(async test => {\n    const uuid_token = token();\n    // module-fetch-tester.py with mode=always-fail responds with an HTTP 404 to\n    // every request, and counts how many requests reached the server.\n    const url = `../../module-fetch-tester.py?key=${uuid_token}&mode=always-fail`;\n\n    // Start several imports of the same specifier concurrently. They should be\n    // joined into a single fetch via the module map, and all must reject.\n    const importPromises = [];\n    for (let i = 0; i < 5; i++) {\n        importPromises.push(import(`${url}`));\n    }\n    await Promise.all(importPromises.map((p, i) =>\n        promise_rejects_js(test, TypeError, p,\n            `concurrent import #${i + 1} of a failing module must reject`)));\n\n    // Despite five concurrent imports, the module must only have been fetched\n    // once, because they were joined into a single in-flight fetch.\n    const request_counter = await fetch(\n        `../../module-fetch-tester.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' });\n    assert_equals(await request_counter.text(), \"1\",\n        \"concurrent imports of a failing module should be joined into a single fetch\");\n}, \"Multiple concurrent imports of a failing module should all reject but only fetch once\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // module-fetch-tester.py (default mode=fail-first) fails the first request\n    // for a given key and succeeds on every subsequent request, so import #3 can\n    // be started *synchronously* from import #1's rejection handler (while\n    // draining the microtask queue), with no intervening configuration\n    // fetch/task. This reproduces the module map callback race discussed in\n    // whatwg/html#10327.\n    const url = `../../module-fetch-tester.py?key=${uuid_token}`;\n\n    // import #1 and import #2 are started in parallel, so they are joined into a\n    // single fetch. That fetch is the first request for this key, so it fails:\n    //  - Both import #1 and import #2 must reject with the result of that fetch.\n    //  - import #1's rejection handler synchronously re-imports the same\n    //    specifier (import #3). Because the failed fetch was not cached, import\n    //    #3 performs a fresh fetch, which (being the second request) succeeds.\n    //  - import #2 must still reject: it is tied to the first (failed) fetch and\n    //    must not observe the module map's list placeholder nor import #3's\n    //    successful result.\n    const import1Promise = import(`${url}`);\n    const import2Promise = import(`${url}`);\n\n    // import #2 must reject with a TypeError from the first, failed fetch.\n    const import2Check = promise_rejects_js(test, TypeError, import2Promise,\n        \"import #2 must reject with the first (failed) fetch result, not resolve \" +\n        \"with import #3's success\");\n\n    // import #1 rejects; from its rejection handler we re-import the same\n    // specifier (import #3) synchronously, which must succeed on the second request.\n    const import1Check = import1Promise.then(\n        () => assert_unreached(\"import #1 must not resolve; the first fetch failed\"),\n        () => import(`${url}`).then(ns => { // import #3\n            assert_equals(ns.default, \"hello\",\n                \"import #3 should perform a fresh fetch and succeed, since the \" +\n                \"failed fetch was not cached\");\n        }));\n\n    await Promise.all([import1Check, import2Check]);\n}, \"A joined import is notified with its own fetch result even if a sibling's \" +\n   \"rejection handler re-imports the same specifier\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/module/dynamic-import/concurrent-failed-imports.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": true,
+      "includes": ["/common/utils.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.microtasks.basic",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async t => {\n  const getCount = ticker(1000);\n\n  const importP = import(\"<invalid>\");\n  await promise_rejects_js(t, TypeError, importP, 'import() should reject');\n\n  assert_less_than(getCount(), 1000);\n}, \"import() should not drain the microtask queue if it fails during specifier resolution\");\n\npromise_test(async t => {\n  // Use Date.now() to ensure that the module is not in the module map\n  const specifier = \"./empty-module.js?\" + Date.now();\n\n  await import(specifier);\n\n  const getCount = ticker(1000);\n  await import(specifier);\n  assert_less_than(getCount(), 1000);\n}, \"import() should not drain the microtask queue when loading an already loaded module\");\n\npromise_test(async t => {\n  // Use Date.now() to ensure that the module is not in the module map\n  const specifier = \"./empty-module.js?\" + Date.now();\n\n  const getCount = ticker(1e6);\n  await import(specifier);\n  assert_equals(getCount(), 1e6);\n}, \"import() should drain the microtask queue when fetching a new module\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/module/dynamic-import/microtasks/basic.any.js",
+      "n_tests": 3,
+      "async": true,
+      "fetch": false,
+      "includes": ["ticker.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.microtasks.css-import-in-worker",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async t => {\n  // Use Date.now() to ensure that the module is not in the module map\n  const specifier = \"./empty-module.css?\" + Date.now();\n\n  const getCount = ticker(1000);\n\n  const importP = import(specifier, { with: { type: \"css\" } });\n  await promise_rejects_js(t, TypeError, importP, 'import() should reject');\n\n  assert_less_than(getCount(), 1000);\n}, \"import() should not drain the microtask queue if it fails because of the 'type: css' attribute in a worker\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/module/dynamic-import/microtasks/css-import-in-worker.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["ticker.js"],
+      "variants": [],
+      "meta": {
+        "global": "dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.microtasks.serviceworker",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async t => {\n  // Use Date.now() to ensure that the module is not in the module map\n  const specifier = \"./empty-module.js?\" + Date.now();\n\n  const getCount = ticker(1000);\n\n  const importP = import(specifier);\n  await promise_rejects_js(t, TypeError, importP, 'import() should reject');\n\n  assert_less_than(getCount(), 1000);\n}, \"import() should not drain the microtask queue if it fails because it's used in a ServiceWorker\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/module/dynamic-import/microtasks/serviceworker.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["ticker.js"],
+      "variants": [],
+      "meta": {
+        "global": "serviceworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.microtasks.with-import-assertions",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async t => {\n  // Use Date.now() to ensure that the module is not in the module map\n  const specifier = \"./empty-module.js?\" + Date.now();\n\n  const getCount = ticker(1000);\n\n  const importP = import(specifier, { with: { type: \"<invalid>\" } });\n  await promise_rejects_js(t, TypeError, importP, 'import() should reject');\n\n  assert_less_than(getCount(), 1000);\n}, \"import() should not drain the microtask queue if it fails while validating the 'type' attribute\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/module/dynamic-import/microtasks/with-import-assertions.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["ticker.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.module.dynamic-import.repeated-imports",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async test => {\n    const uuid_token = token();\n    // Set up the server to respond with JSON first\n    await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=set&content-type=application/json`, { cache: 'no-cache' });\n    await promise_rejects_js(test, TypeError,\n        import(`../../serve-custom-response.py?key=${uuid_token}`),\n      \"Dynamic import of JS with a JSON type response should fail\");\n    let request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' })\n    assert_equals(await request_counter.text(), \"1\");\n\n    // Import using the same specifier/type pair again; this time server still responds with JSON\n    await promise_rejects_js(test, TypeError,\n        import(`../../serve-custom-response.py?key=${uuid_token}`),\n        \"Dynamic import of JS with a JSON type response should fail again\");\n    // the server should have been contacted again because the failed import attempt did not create a module map entry\n    request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' })\n    assert_equals(await request_counter.text(), \"2\");\n\n    // Import using the same specifier/type pair again; this time we get JS\n    await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=set&content-type=application/javascript`, { cache: 'no-cache' });\n    // it should succeed since the failed import attempt did not create a module map entry\n    const result_js = await import(`../../serve-custom-response.py?key=${uuid_token}`);\n    assert_equals(result_js.default, \"hello\");\n    request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' })\n    assert_equals(await request_counter.text(), \"3\");\n\n    // Import using the same specifier/type pair again; this time server should not be contacted\n    // because the module map entry should already exist.\n    const result_js_2 = await import(`../../serve-custom-response.py?key=${uuid_token}`);\n    assert_equals(result_js_2.default, \"hello\");\n    request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' })\n    assert_equals(await request_counter.text(), \"3\");\n}, \"An import should succeed even if the same specifier/type attribute pair previously failed due to a MIME type mismatch\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // Set up the server to respond with network error first\n    await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=set&network-error=true`, { cache: 'no-cache' });\n    await promise_rejects_js(test, TypeError,\n        import(`../../serve-custom-response.py?key=${uuid_token}`),\n        \"Dynamic import should fail with a network error\");\n    let request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' })\n    // some browsers may request multiple times on network error\n    assert_not_equals(await request_counter.text(), \"0\");\n    await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=reset-stat`, { cache: 'no-cache' });\n\n    // Then set up the server to respond with 404\n    await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=set&network-error=false&code=404`, { cache: 'no-cache' });\n    await promise_rejects_js(test, TypeError,\n        import(`../../serve-custom-response.py?key=${uuid_token}`),\n        \"Dynamic import should fail with a 404 response\");\n    request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' })\n    assert_equals(await request_counter.text(), \"1\");\n\n    // Import using the same specifier again; this time server still responds with 404\n    await promise_rejects_js(test, TypeError,\n        import(`../../serve-custom-response.py?key=${uuid_token}`),\n        \"Dynamic import should fail again with a 404 response\");\n    request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' })\n    // the server should have been contacted again because the failed import attempt did not create a module map entry\n    assert_equals(await request_counter.text(), \"2\");\n\n    // Import using the same specifier again; this time we configure the server to respond with 200\n    await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=set&code=200`, { cache: 'no-cache' });\n    // it should succeed since the failed import attempt did not create a module map entry\n    const result_js = await import(`../../serve-custom-response.py?key=${uuid_token}`);\n    assert_equals(result_js.default, \"hello\");\n    request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' })\n    assert_equals(await request_counter.text(), \"3\");\n\n    // Import using the same specifier again; this time server should not be contacted\n    // because the module map entry should already exist.\n    const result_js_2 = await import(`../../serve-custom-response.py?key=${uuid_token}`);\n    assert_equals(result_js_2.default, \"hello\");\n    request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' })\n    assert_equals(await request_counter.text(), \"3\");\n}, \"An import should succeed even if the same specifier/type pair previously failed due to a network error (e.g. 404)\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=set&code=200`, { cache: 'no-cache' });\n    for (let i = 0; i < 5; i++) {\n        const result_js = await import(`../../serve-custom-response.py?key=${uuid_token}`);\n        assert_equals(result_js.default, \"hello\",\n          `JS module should load successfully on attempt ${i + 1}`);\n    }\n    const request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' });\n    const statText = await request_counter.text();\n    assert_equals(statText, '1', 'Import should only be fetched once for multiple imports');\n}, \"Multiple imports in sequence with the same specifier/type pair should only fetch the module once\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=set&code=200`, { cache: 'no-cache' });\n    const importPromises = [];\n    for (let i = 0; i < 5; i++) {\n        importPromises.push(import(`../../serve-custom-response.py?key=${uuid_token}`));\n    }\n    const results = await Promise.all(importPromises);\n    results.forEach((result_js, index) => {\n        assert_equals(result_js.default, \"hello\",\n          `JS module should load successfully on attempt ${index + 1}`);\n    });\n    const request_counter = await fetch(`../../serve-custom-response.py?key=${uuid_token}&action=stat`, { cache: 'no-cache' });\n    const statText = await request_counter.text();\n    assert_equals(statText, '1', 'Import should only be fetched once for multiple concurrent imports');\n}, \"Multiple concurrent imports with the same specifier/type pair should only fetch the module once\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/module/dynamic-import/repeated-imports.any.js",
+      "n_tests": 4,
+      "async": true,
+      "fetch": true,
+      "includes": ["/common/utils.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.module.top-level-await.sibling-imports-not-blocked",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async t => {\n  const { checkMicrotask } = await import(\"./sibling-imports-not-blocked__microtask__parent.js\");\n\n  assert_equals(checkMicrotask, \"PASS\");\n}, \"Async modules only scheduling microtasks don't block execution of sibling modules\");\n\npromise_test(async t => {\n  const { checkTask } = await import(\"./sibling-imports-not-blocked__task__parent.js\");\n\n  assert_equals(checkTask, \"PASS\");\n}, \"Async modules scheduling tasks don't block execution of sibling modules\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/module/top-level-await/sibling-imports-not-blocked.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.text-module.charset-bom",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async () => {\n    const jsonModule = await import('./bom-utf-8.txt', { with: { type: 'text' } });\n    assert_equals(jsonModule.default, 'text file\\n');\n}, 'UTF-8 BOM should be stripped when decoding text module script');\n\npromise_test(async () => {\n    const jsonModule = await import('./bom-utf-16be.txt', { with: { type: 'text' } });\n    assert_equals(jsonModule.default, '��\\x00t\\x00e\\x00x\\x00t\\x00 \\x00f\\x00i\\x00l\\x00e\\x00\\n');\n}, 'UTF-16BE with BOM should be parsed as UTF-8');\n\npromise_test(async () => {\n    const jsonModule = await import('./bom-utf-16le.txt', { with: { type: 'text' } });\n    assert_equals(jsonModule.default, '��t\\x00e\\x00x\\x00t\\x00 \\x00f\\x00i\\x00l\\x00e\\x00\\n\\x00');\n}, 'UTF-16LE with BOM should be parsed as UTF-8');\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/text-module/charset-bom.any.js",
+      "n_tests": 3,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/utils.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.text-module.ignore-content-type",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst content_types = [\n  \"\",\n  \"text\",\n  \"text/plain\",\n  \"text/json\",\n  \"application/json\",\n  \"text/html+json\",\n  \"image/svg+json\",\n  \"text/json;boundary=something\",\n  \"text/json;foo=bar\",\n  \"text/json;+json\",\n  \"text/html+xml+json\",\n\n  \"application/json+protobuf\",\n  \"application/json+blah\",\n  \"text/x-json\",\n  \"text/json+blah\",\n  \"application/blahjson\",\n  \"image/json\",\n  \"text+json\",\n  \"json+json\",\n  \"text/json/json+json\",\n  \"text/html;+json\",\n  \"text/html+json+xml\",\n  \"text/json/json\",\n\n  // Control Characters and Whitespace - Invalid Type\n  \"applic\\x09ation/vnd.api+json\",     // TAB in type\n  \"applic\\x0Aation/vnd.api+json\",     // Line Feed in type\n  \"applic\\x0Dation/vnd.api+json\",     // Carriage Return in type\n  \"applic ation/vnd.api+json\",        // SPACE in type\n  \"applic\\x7Fation/vnd.api+json\",     // DEL in type\n  \"\\x01application/vnd.api+json\",     // SOH at start of type\n  \"application\\x1F/vnd.api+json\",     // Unit Separator at end of type\n\n  // Control Characters and Whitespace - Invalid Subtype\n  \"application/vnd\\x09.api+json\",     // TAB in subtype\n  \"application/vnd\\x0A.api+json\",     // Line Feed in subtype\n  \"application/vnd\\x0D.api+json\",     // Carriage Return in subtype\n  \"application/vnd .api+json\",        // SPACE in subtype\n  \"application/vnd\\x7F.api+json\",     // DEL in subtype\n  \"application/\\x01vnd.api+json\",     // SOH at start of subtype\n  \"application/vnd.api\\x1F+json\",     // Unit Separator before +json\n\n  // Separator Characters - Invalid Type\n  \"applic\\\"ation/vnd.api+json\",       // Double quote in type\n  \"applic(ation/vnd.api+json\",        // Left parenthesis in type\n  \"applic)ation/vnd.api+json\",        // Right parenthesis in type\n  \"applic,ation/vnd.api+json\",        // Comma in type\n  \"applic:ation/vnd.api+json\",        // Colon in type\n  \"applic;ation/vnd.api+json\",        // Semicolon in type\n  \"applic<ation/vnd.api+json\",        // Left angle bracket in type\n  \"applic>ation/vnd.api+json\",        // Right angle bracket in type\n  \"applic=ation/vnd.api+json\",        // Equals in type\n  \"applic?ation/vnd.api+json\",        // Question mark in type\n  \"applic@ation/vnd.api+json\",        // At sign in type\n  \"applic[ation/vnd.api+json\",        // Left square bracket in type\n  \"applic]ation/vnd.api+json\",        // Right square bracket in type\n  \"applic{ation/vnd.api+json\",        // Left curly brace in type\n  \"applic}ation/vnd.api+json\",        // Right curly brace in type\n\n  // Separator Characters - Invalid Subtype\n  \"application/vnd\\\"api\\\"+json\",      // Double quote in subtype\n  \"application/vnd(api+json\",         // Left parenthesis in subtype\n  \"application/vnd)api+json\",         // Right parenthesis in subtype\n  \"application/vnd,api+json\",         // Comma in subtype\n  \"application/vnd:api+json\",         // Colon in subtype\n  \"application/vnd;api+json\",         // Semicolon in subtype\n  \"application/vnd<api+json\",         // Left angle brackets in subtype\n  \"application/vnd>api+json\",         // Right angle brackets in subtype\n  \"application/vnd=api+json\",         // Equals in subtype\n  \"application/vnd?api+json\",         // Question mark in subtype\n  \"application/vnd@api+json\",         // At sign in subtype\n  \"application/vnd[api+json\",         // Left square brackets in subtype\n  \"application/vnd]api+json\",         // Right square brackets in subtype\n  \"application/vnd{api+json\",         // Left curly brace in subtype\n  \"application/vnd}api+json\",         // Right curly brace in subtype\n\n  // Non-ASCII Characters - Invalid Type\n  \"aplicación/vnd.api+json\",          // Latin small letter o with acute\n  \"申请/vnd.api+json\",                 // Chinese characters\n  \"app™lication/vnd.api+json\",        // Trade mark sign\n  \"appli€cation/vnd.api+json\",        // Euro sign\n  \"🚀application/vnd.api+json\",       // Rocket emoji\n  \"applicatioñ/vnd.api+json\",         // Latin small letter n with tilde\n\n  // Non-ASCII Characters - Invalid Subtype\n  \"application/vñd.api+json\",         // Latin small letter n with tilde\n  \"application/vnd.apí+json\",         // Latin small letter i with acute\n  \"application/vnd.api™+json\",        // Trade mark sign\n  \"application/vnd.api€+json\",        // Euro sign\n  \"application/vnd.中文+json\",         // Chinese characters\n  \"application/vnd.api🚀+json\",       // Rocket emoji\n  \"application/café.api+json\",        // Latin small letter e with acute\n\n  // Mixed Invalid Characters (Both Type and Subtype)\n  \"applic ation/vnd api+json\",        // Spaces in both\n  \"applic\\\"ation/vnd\\\"api+json\",      // Quotes in both\n  \"applic(ation/vnd(api+json\",        // Left parentheses in both\n  \"applic)ation/vnd)api+json\",        // Right parentheses in both\n  \"applic,ation/vnd,api+json\",        // Commas in both\n  \"applic=ation/vnd=api+json\",        // Equals in both\n  \"申请/中文.api+json\",                 // Chinese in both\n  \"app™/vnd€.api+json\",               // Unicode symbols in both\n  \"applic;ation/vnd;api+json\",        // Semicolons in both\n  \"applic{ation/vnd{api+json\",        // Left curly brace in both\n  \"applic}ation/vnd}api+json\",        // Right curly brace in both\n  \"applic[ation/vnd[api+json\",        // Left square bracket in both\n  \"applic]ation/vnd]api+json\",        // Right square bracket in both\n  \"applic<ation/vnd<api+json\",        // Left angle bracket in both\n  \"applic>ation/vnd>api+json\",        // Right angle bracket in both\n\n  // Edge Cases - Type\n  \"\\\"application/vnd.api+json\",       // Quote at start of type\n  \"application\\\"/vnd.api+json\",       // Quote at end of type\n  \"application /vnd.api+json\",        // Trailing space in type\n  \"/vnd.api+json\",                    // Empty type\n\n  // Edge Cases - Subtype\n  \"application/\\\"vnd.api+json\",       // Quote at start of subtype\n  \"application/vnd.api\\\"+json\",       // Quote before +json\n  \"application/ vnd.api+json\",        // Leading space in subtype\n  \"application/vnd.api +json\",        // Space before +json\n  \"application/vnd.api+json\\\"\",       // Quote at end\n\n  // Edge Cases - Multiple Invalid Positions\n  \"\\\"application\\\"/\\\"vnd.api\\\"+json\", // Quotes in multiple positions\n  \"app(lic)ation/vnd(api)+json\",      // Parentheses in multiple positions\n];\n\nfor (const content_type of content_types) {\n  promise_test(async test => {\n    const enc_content_type = encodeURIComponent(content_type.replaceAll(',', '\\\\,').replaceAll(')', '\\\\)'));\n    await import(`./file.txt?pipe=header(Content-Type,${enc_content_type})`, { with: { type: \"text\" } });\n  }, `Import of a text module with MIME type ${content_type} should succeed`);\n}\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/text-module/ignore-content-type.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.text-module.ignore-extension",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfor (const name of [\"file\", \"file.js\", \"file.json\", \"file.txt\"]) {\n  promise_test(async t => {\n    const result = await import(`./${name}`, { with: { type: \"text\" } });\n    assert_equals(result.default, \"text file\\n\");\n  }, `Extension: ${name}`);\n}\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/text-module/ignore-extension.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.semantics.scripting-1.the-script-element.text-module.repeated-imports",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async test => {\n    await promise_rejects_js(test, TypeError,\n      import(\"./file.txt\"),\n      \"Dynamic import of a text module without a type attribute should fail\");\n\n    // This time the import should succeed because we're using the correct\n    // import even though the previous attempt with the same  specifier failed.\n    const result = await import(\"./file.txt\", { with: { type: \"text\" } });\n    assert_equals(result.default, \"text file\\n\");\n}, \"Importing a specifier that previously failed due to an incorrect type attribute can succeed if the correct attribute is later given\");\n\npromise_test(async test => {\n    // Append a URL fragment to the specifier so that this is independent\n    // from the previous test.\n    const result = await import(\"./file.txt#2\", { with: { type: \"text\" } });\n    assert_equals(result.default, \"text file\\n\");\n\n    await promise_rejects_js(test, TypeError,\n      import(\"./file.txt#2\"),\n      \"Dynamic import should fail with the type attribute missing even if the same specifier previously succeeded\");\n}, \"Importing a specifier that previously succeeded with the correct type attribute should fail if the incorrect attribute is later given\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // serve-text-then-js.py gives us text the first time\n    const result_text = await import(`./serve-text-then-js.py?key=${uuid_token}`, { with: { type: \"text\" } });\n    assert_equals(result_text.default, \"hello\");\n\n    // Import using the same specifier again; this time we get JS, which\n    // should succeed since we're not asserting a non-JS type this time.\n    const result_js = await import(`./serve-text-then-js.py?key=${uuid_token}`);\n    assert_equals(result_js.default, \"world\");\n}, \"Two modules of different type with the same specifier can load if the server changes its responses (first text, then JS)\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // serve-text-then-js.py gives us text the first time\n    await promise_rejects_js(test, TypeError,\n      import(`./serve-text-then-js.py?key=${uuid_token}`),\n      \"Dynamic import of text without a type attribute should fail\");\n\n    // Import using the same specifier/module type pair again; this time we get JS.\n    // The import should succeed because the previous failure did not create a\n    // module map entry, so the module is fetched again.\n    const result_js = await import(`./serve-text-then-js.py?key=${uuid_token}`);\n    assert_equals(result_js.default, \"world\");\n}, \"An import should succeed even if the same specifier/type attribute pair previously failed due to a MIME type mismatch\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // serve-text-then-js.py gives us text the first time\n    const result_text = await import(`./serve-text-then-js.py?key=${uuid_token}`, { with: { type: \"text\" } });\n    assert_equals(result_text.default, \"hello\");\n\n    // If this were to do another fetch, the import would fail because\n    // serve-text-then-js.py would give us JS this time. But, the module map\n    // entry for this specifier/module type pair already exists, so we\n    // successfully reuse the entry instead of fetching again.\n    const result_text_2 = await import(`./serve-text-then-js.py?key=${uuid_token}`, { with: { type: \"text\" } });\n    assert_equals(result_text_2.default, \"hello\");\n}, \"If an import previously succeeded for a given specifier/type attribute pair, future uses of that pair should yield the same result\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // serve-js-then-text.py gives us JS the first time\n    const result_js = await import(`./serve-js-then-text.py?key=${uuid_token}`);\n    assert_equals(result_js.default, \"world\");\n\n    // Import using the same specifier again; this time we get text.\n    const result_text = await import(`./serve-js-then-text.py?key=${uuid_token}`, { with: { type: \"text\" } });\n    assert_equals(result_text.default, \"hello\");\n}, \"Two modules of different type with the same specifier can load if the server changes its responses (first JS, then text)\");\n\npromise_test(async test => {\n    const uuid_token = token();\n    // serve-js-then-text.py gives us JS the first time\n    const result_js = await import(`./serve-js-then-text.py?key=${uuid_token}`);\n    assert_equals(result_js.default, \"world\");\n\n    // If this were to do another fetch, the import would fail because\n    // serve-js-then-text.py would give us text this time. But, the module map\n    // entry for this specifier/module type pair already exists, so we\n    // successfully reuse the entry instead of fetching again.\n    const result_js_2 = await import(`./serve-js-then-text.py?key=${uuid_token}`);\n    assert_equals(result_js_2.default, \"world\");\n}, \"If an import previously succeeded for a given specifier with no type attribute, future uses of the same values should yield the same result\");\n}\nmain();\n",
+      "origin": "html/semantics/scripting-1/the-script-element/text-module/repeated-imports.any.js",
+      "n_tests": 7,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/utils.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.webappapis.atob.base64",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n/**\n * btoa() as defined by the HTML5 spec, which mostly just references RFC4648.\n */\nfunction mybtoa(s) {\n    // String conversion as required by WebIDL.\n    s = String(s);\n\n    // \"The btoa() method must throw an INVALID_CHARACTER_ERR exception if the\n    // method's first argument contains any character whose code point is\n    // greater than U+00FF.\"\n    for (var i = 0; i < s.length; i++) {\n        if (s.charCodeAt(i) > 255) {\n            return \"INVALID_CHARACTER_ERR\";\n        }\n    }\n\n    var out = \"\";\n    for (var i = 0; i < s.length; i += 3) {\n        var groupsOfSix = [undefined, undefined, undefined, undefined];\n        groupsOfSix[0] = s.charCodeAt(i) >> 2;\n        groupsOfSix[1] = (s.charCodeAt(i) & 0x03) << 4;\n        if (s.length > i + 1) {\n            groupsOfSix[1] |= s.charCodeAt(i + 1) >> 4;\n            groupsOfSix[2] = (s.charCodeAt(i + 1) & 0x0f) << 2;\n        }\n        if (s.length > i + 2) {\n            groupsOfSix[2] |= s.charCodeAt(i + 2) >> 6;\n            groupsOfSix[3] = s.charCodeAt(i + 2) & 0x3f;\n        }\n        for (var j = 0; j < groupsOfSix.length; j++) {\n            if (typeof groupsOfSix[j] == \"undefined\") {\n                out += \"=\";\n            } else {\n                out += btoaLookup(groupsOfSix[j]);\n            }\n        }\n    }\n    return out;\n}\n\n/**\n * Lookup table for mybtoa(), which converts a six-bit number into the\n * corresponding ASCII character.\n */\nfunction btoaLookup(idx) {\n    if (idx < 26) {\n        return String.fromCharCode(idx + 'A'.charCodeAt(0));\n    }\n    if (idx < 52) {\n        return String.fromCharCode(idx - 26 + 'a'.charCodeAt(0));\n    }\n    if (idx < 62) {\n        return String.fromCharCode(idx - 52 + '0'.charCodeAt(0));\n    }\n    if (idx == 62) {\n        return '+';\n    }\n    if (idx == 63) {\n        return '/';\n    }\n    // Throw INVALID_CHARACTER_ERR exception here -- won't be hit in the tests.\n}\n\nfunction btoaException(input) {\n    input = String(input);\n    for (var i = 0; i < input.length; i++) {\n        if (input.charCodeAt(i) > 255) {\n            return true;\n        }\n    }\n    return false;\n}\n\nfunction testBtoa(input) {\n    // \"The btoa() method must throw an INVALID_CHARACTER_ERR exception if the\n    // method's first argument contains any character whose code point is\n    // greater than U+00FF.\"\n    var normalizedInput = String(input);\n    for (var i = 0; i < normalizedInput.length; i++) {\n        if (normalizedInput.charCodeAt(i) > 255) {\n            assert_throws_dom(\"InvalidCharacterError\", function() { btoa(input); },\n                \"Code unit \" + i + \" has value \" + normalizedInput.charCodeAt(i) + \", which is greater than 255\");\n            return;\n        }\n    }\n    assert_equals(btoa(input), mybtoa(input));\n    assert_equals(atob(btoa(input)), String(input), \"atob(btoa(input)) must be the same as String(input)\");\n}\n\nvar tests = [\"עברית\", \"\", \"ab\", \"abc\", \"abcd\", \"abcde\",\n    // This one is thrown in because IE9 seems to fail atob(btoa()) on it.  Or\n    // possibly to fail btoa().  I actually can't tell what's happening here,\n    // but it doesn't hurt.\n    \"\\xff\\xff\\xc0\",\n    // Is your DOM implementation binary-safe?\n    \"\\0a\", \"a\\0b\",\n    // WebIDL tests.\n    undefined, null, 7, 12, 1.5, true, false, NaN, +Infinity, -Infinity, 0, -0,\n    {toString: function() { return \"foo\" }},\n];\nfor (var i = 0; i < 258; i++) {\n    tests.push(String.fromCharCode(i));\n}\ntests.push(String.fromCharCode(10000));\ntests.push(String.fromCharCode(65534));\ntests.push(String.fromCharCode(65535));\n\n// This is supposed to be U+10000.\ntests.push(String.fromCharCode(0xd800, 0xdc00));\ntests = tests.map(\n    function(elem) {\n        var expected = mybtoa(elem);\n        if (expected === \"INVALID_CHARACTER_ERR\") {\n            return [\"btoa(\"  + format_value(elem) + \") must raise INVALID_CHARACTER_ERR\", elem];\n        }\n        return [\"btoa(\" + format_value(elem) + \") == \" + format_value(mybtoa(elem)), elem];\n    }\n);\n\nvar everything = \"\";\nfor (var i = 0; i < 256; i++) {\n    everything += String.fromCharCode(i);\n}\ntests.push([\"btoa(first 256 code points concatenated)\", everything]);\n\ngenerate_tests(testBtoa, tests);\n\npromise_test(() => fetch_json(\"../../../fetch/data-urls/resources/base64.json\").then(runAtobTests), \"atob() setup.\");\n\nconst idlTests = [\n  [undefined, null],\n  [null, [158, 233, 101]],\n  [7, null],\n  [12, [215]],\n  [1.5, null],\n  [true, [182, 187]],\n  [false, null],\n  [NaN, [53, 163]],\n  [+Infinity, [34, 119, 226, 158, 43, 114]],\n  [-Infinity, null],\n  [0, null],\n  [-0, null],\n  [{toString: function() { return \"foo\" }}, [126, 138]],\n  [{toString: function() { return \"abcd\" }}, [105, 183, 29]]\n];\n\nfunction runAtobTests(tests) {\n  const allTests = tests.concat(idlTests);\n  for(let i = 0; i < allTests.length; i++) {\n    const input = allTests[i][0],\n          output = allTests[i][1];\n    test(() => {\n      if(output === null) {\n        assert_throws_dom(\"InvalidCharacterError\", () => globalThis.atob(input));\n      } else {\n        const result = globalThis.atob(input);\n        for(let ii = 0; ii < output.length; ii++) {\n          assert_equals(result.charCodeAt(ii), output[ii]);\n        }\n      }\n    }, \"atob(\" + format_value(input) + \")\");\n  }\n}\n}\nmain();\n",
+      "origin": "html/webappapis/atob/base64.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker"
+      }
+    },
+    {
+      "id": "wpt.html.webappapis.microtask-queuing.queue-microtask-exceptions",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\nsetup({\n  allow_uncaught_exception: true\n});\n\nasync_test(t => {\n  const error = new Error(\"boo\");\n  self.addEventListener(\"error\", t.step_func_done(ev => {\n    assert_equals(ev.error, error);\n  }));\n\n  queueMicrotask(() => { throw error; });\n}, \"It rethrows exceptions\");\n}\nmain();\n",
+      "origin": "html/webappapis/microtask-queuing/queue-microtask-exceptions.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.html.webappapis.microtask-queuing.queue-microtask",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\ntest(() => {\n  assert_equals(typeof queueMicrotask, \"function\");\n}, \"It exists and is a function\");\n\ntest(() => {\n  assert_throws_js(TypeError, () => queueMicrotask(), \"no argument\");\n  assert_throws_js(TypeError, () => queueMicrotask(undefined), \"undefined\");\n  assert_throws_js(TypeError, () => queueMicrotask(null), \"null\");\n  assert_throws_js(TypeError, () => queueMicrotask(0), \"0\");\n  assert_throws_js(TypeError, () => queueMicrotask({ handleEvent() { } }), \"an event handler object\");\n  assert_throws_js(TypeError, () => queueMicrotask(\"window.x = 5;\"), \"a string\");\n}, \"It throws when given non-functions\");\n\nasync_test(t => {\n  let called = false;\n  queueMicrotask(t.step_func_done(() => {\n    called = true;\n  }));\n  assert_false(called);\n}, \"It calls the callback asynchronously\");\n\nasync_test(t => {\n  queueMicrotask(t.step_func_done(function () { // note: intentionally not an arrow function\n    assert_array_equals(arguments, []);\n  }), \"x\", \"y\");\n}, \"It does not pass any arguments\");\n\nasync_test(t => {\n  const happenings = [];\n  Promise.resolve().then(() => happenings.push(\"a\"));\n  queueMicrotask(() => happenings.push(\"b\"));\n  Promise.reject().catch(() => happenings.push(\"c\"));\n  queueMicrotask(t.step_func_done(() => {\n    assert_array_equals(happenings, [\"a\", \"b\", \"c\"]);\n  }));\n}, \"It interleaves with promises as expected\");\n}\nmain();\n",
+      "origin": "html/webappapis/microtask-queuing/queue-microtask.any.js",
+      "n_tests": 5,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.html.webappapis.scripting.processing-model-2.integration-with-the-javascript-agent-formalism.atomics-wait-async.https",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async () => {\n  const sab = new SharedArrayBuffer(64);\n  const ta = new Int32Array(sab);\n\n  const waitAsyncObj = Atomics.waitAsync(ta, 0, 0, 10);\n  assert_equals(waitAsyncObj.async, true);\n  const v = await waitAsyncObj.value;\n  assert_equals(v, \"timed-out\");\n}, `Atomics.waitAsync timeout in a ${self.constructor.name}`);\n\npromise_test(async () => {\n  const sab = new SharedArrayBuffer(64);\n  const ta = new Int32Array(sab);\n\n  const waitAsyncObj = Atomics.waitAsync(ta, 0, 0);\n  assert_equals(waitAsyncObj.async, true);\n\n  const worker = new Worker(\"resources/notify-worker.js\");\n  worker.postMessage(sab);\n\n  const v = await waitAsyncObj.value;\n  assert_equals(v, \"ok\");\n}, `Atomics.waitAsync notification in a ${self.constructor.name}`);\n}\nmain();\n",
+      "origin": "html/webappapis/scripting/processing-model-2/integration-with-the-javascript-agent-formalism/atomics-wait-async.https.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker"
+      }
+    },
+    {
+      "id": "wpt.html.webappapis.scripting.processing-model-2.integration-with-the-javascript-agent-formalism.requires-failure.https",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(() => {\n  // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n  const sab = new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n  const ta = new Int32Array(sab);\n\n  assert_throws_js(TypeError, () => {\n    Atomics.wait(ta, 0, 0, 10);\n  });\n}, `[[CanBlock]] in a ${self.constructor.name}`);\n}\nmain();\n",
+      "origin": "html/webappapis/scripting/processing-model-2/integration-with-the-javascript-agent-formalism/requires-failure.https.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,serviceworker"
+      }
+    },
+    {
+      "id": "wpt.html.webappapis.scripting.processing-model-2.integration-with-the-javascript-agent-formalism.requires-success",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(() => {\n  // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n  const sab = new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n  const ta = new Int32Array(sab);\n\n  assert_equals(Atomics.wait(ta, 0, 0, 10), \"timed-out\");\n}, `[[CanBlock]] in a ${self.constructor.name}`);\n}\nmain();\n",
+      "origin": "html/webappapis/scripting/processing-model-2/integration-with-the-javascript-agent-formalism/requires-success.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "dedicatedworker,sharedworker"
+      }
+    },
+    {
+      "id": "wpt.html.webappapis.scripting.reporterror",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nsetup({ allow_uncaught_exception:true });\n\n[\n  1,\n  new TypeError(),\n  undefined\n].forEach(throwable => {\n  test(t => {\n    let happened = false;\n    self.addEventListener(\"error\", t.step_func(e => {\n      assert_true(e.message !== \"\");\n      assert_equals(e.filename, new URL(\"reporterror.any.js\", location.href).href);\n      assert_greater_than(e.lineno, 0);\n      assert_greater_than(e.colno, 0);\n      assert_equals(e.error, throwable);\n      happened = true;\n    }), { once:true });\n    self.reportError(throwable);\n    assert_true(happened);\n  }, `self.reportError(${throwable})`);\n});\n\ntest(() => {\n  assert_throws_js(TypeError, () => self.reportError());\n}, `self.reportError() (without arguments) throws`);\n\ntest(() => {\n  // Workaround for https://github.com/web-platform-tests/wpt/issues/32105\n  let invoked = false;\n  self.reportError({\n    get name() {\n      invoked = true;\n      assert_unreached('get name')\n    },\n    get message() {\n      invoked = true;\n      assert_unreached('get message');\n    },\n    get fileName() {\n      invoked = true;\n      assert_unreached('get fileName');\n    },\n    get lineNumber() {\n      invoked = true;\n      assert_unreached('get lineNumber');\n    }\n  });\n  assert_false(invoked);\n}, `self.reportError() doesn't invoke getters`);\n}\nmain();\n",
+      "origin": "html/webappapis/scripting/reporterror.any.js",
+      "n_tests": 3,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.webappapis.structured-clone.structured-clone",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nrunStructuredCloneBatteryOfTests({\n  structuredClone: (obj, transfer) => {\n    return new Promise(resolve => {\n      resolve(self.structuredClone(obj, { transfer }));\n    });\n  },\n  hasDocument: typeof document !== \"undefined\",\n});\n}\nmain();\n",
+      "origin": "html/webappapis/structured-clone/structured-clone.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": [
+        "/common/sab.js",
+        "/html/webappapis/structured-clone/structured-clone-battery-of-tests.js",
+        "/html/webappapis/structured-clone/structured-clone-battery-of-tests-with-transferables.js",
+        "/html/webappapis/structured-clone/structured-clone-battery-of-tests-harness.js"
+      ],
+      "variants": [],
+      "meta": {
+        "title": "structuredClone() tests"
+      }
+    },
+    {
+      "id": "wpt.html.webappapis.system-state-and-capabilities.the-navigator-object.navigator",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar compatibilityMode;\n  if (navigator.userAgent.includes(\"Chrome\")) {\n    compatibilityMode = \"Chrome\";\n  } else if (navigator.userAgent.includes(\"WebKit\")) {\n    compatibilityMode = \"WebKit\";\n  } else {\n    compatibilityMode = \"Gecko\";\n  }\n\n  test(function() {\n    assert_equals(navigator.appCodeName, \"Mozilla\");\n  }, \"appCodeName\");\n\n  test(function() {\n    assert_equals(navigator.appName, \"Netscape\");\n  }, \"appName\");\n\n  test(function() {\n    assert_equals(typeof navigator.appVersion, \"string\",\n                  \"navigator.appVersion should be a string\");\n  }, \"appVersion\");\n\n  test(function() {\n    assert_equals(typeof navigator.platform, \"string\",\n                  \"navigator.platform should be a string\");\n  }, \"platform\");\n\n  test(function() {\n    assert_equals(navigator.product, \"Gecko\");\n  }, \"product\");\n\n  test(function() {\n    if (\"window\" in self) {\n      if (compatibilityMode == \"Gecko\") {\n        assert_equals(navigator.productSub, \"20100101\");\n      } else {\n        assert_equals(navigator.productSub, \"20030107\");\n      }\n    } else {\n      assert_false(\"productSub\" in navigator);\n    }\n  }, \"productSub\");\n\n  test(function() {\n    assert_equals(typeof navigator.userAgent, \"string\",\n                  \"navigator.userAgent should be a string\");\n  }, \"userAgent type\");\n\n  async_test(function() {\n    var request = new XMLHttpRequest();\n    request.onload = this.step_func_done(function() {\n      assert_equals(\"User-Agent: \" + navigator.userAgent + \"\\n\",\n                    request.response,\n                    \"userAgent should return the value sent in the \" +\n                    \"User-Agent header\");\n    });\n    request.open(\"GET\", \"/xhr/resources/inspect-headers.py?\" +\n                        \"filter_name=User-Agent\");\n    request.send();\n  }, \"userAgent value\");\n\n  test(function() {\n    if (\"window\" in self) {\n      if (compatibilityMode == \"Chrome\") {\n        assert_equals(navigator.vendor, \"Google Inc.\");\n      } else if (compatibilityMode == \"WebKit\") {\n        assert_equals(navigator.vendor, \"Apple Computer, Inc.\");\n      } else {\n        assert_equals(navigator.vendor, \"\");\n      }\n    } else {\n      assert_false(\"vendor\" in navigator);\n    }\n  }, \"vendor\");\n\n  test(function() {\n    if (\"window\" in self) {\n      assert_equals(navigator.vendorSub, \"\");\n    } else {\n      assert_false(\"vendorSub\" in navigator);\n    }\n  }, \"vendorSub\");\n\n  // \"If the navigator compatibility mode is Gecko, then the user agent must\n  // also support the following partial interface\" (taintEnabled() and oscpu)\n  // See https://www.w3.org/Bugs/Public/show_bug.cgi?id=22555 and\n  // https://www.w3.org/Bugs/Public/show_bug.cgi?id=27820\n\n  test(function() {\n    if (\"window\" in self && compatibilityMode == \"Gecko\") {\n      assert_false(navigator.taintEnabled());\n    } else {\n      assert_false(\"taintEnabled\" in navigator);\n    }\n  }, \"taintEnabled\");\n\n  test(function() {\n    if (\"window\" in self && compatibilityMode == \"Gecko\") {\n      assert_equals(typeof navigator.oscpu, \"string\",\n                    \"navigator.oscpu should be a string\");\n    } else {\n      assert_false(\"oscpu\" in navigator);\n    }\n  }, \"oscpu\");\n\ndone()\n}\nmain();\n",
+      "origin": "html/webappapis/system-state-and-capabilities/the-navigator-object/navigator.any.js",
+      "n_tests": 12,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.webappapis.timers.clearinterval-from-callback",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test((t) => {\n  let wasPreviouslyCalled = false;\n\n  const handle = setInterval(\n    t.step_func(() => {\n      if (!wasPreviouslyCalled) {\n        wasPreviouslyCalled = true;\n\n        clearInterval(handle);\n\n        // Make the test succeed after the callback would've run next.\n        setInterval(t.step_func_done(), 750);\n      } else {\n        assert_unreached();\n      }\n    }),\n    500\n  );\n}, \"Clearing an interval from the callback should still clear it.\");\n}\nmain();\n",
+      "origin": "html/webappapis/timers/clearinterval-from-callback.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.webappapis.timers.cleartimeout-clearinterval",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test((t) => {\n  const handle = setTimeout(\n    t.step_func(() => {\n      assert_unreached(\"Timeout was not canceled\");\n    }),\n    0\n  );\n\n  clearInterval(handle);\n\n  setTimeout(() => {\n    t.done();\n  }, 100);\n}, \"Clear timeout with clearInterval\");\n\nasync_test((t) => {\n  const handle = setInterval(\n    t.step_func(() => {\n      assert_unreached(\"Interval was not canceled\");\n    }),\n    0\n  );\n\n  clearTimeout(handle);\n\n  setTimeout(() => {\n    t.done();\n  }, 100);\n}, \"Clear interval with clearTimeout\");\n}\nmain();\n",
+      "origin": "html/webappapis/timers/cleartimeout-clearinterval.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.webappapis.timers.evil-spec-example",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar t = async_test(\"Interaction of setTimeout and WebIDL\")\nfunction finishTest() {\n  assert_equals(log, \"ONE TWO \")\n  t.done()\n}\nvar log = '';\nfunction logger(s) { log += s + ' '; }\n\nsetTimeout({ toString: function () {\n  setTimeout(\"logger('ONE')\", 100);\n  return \"logger('TWO'); t.step(finishTest)\";\n} }, 100);\n}\nmain();\n",
+      "origin": "html/webappapis/timers/evil-spec-example.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.webappapis.timers.missing-timeout-setinterval",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction timeout_trampoline(t, timeout, message) {\n  t.step_timeout(function() {\n    // Yield in case we managed to be called before the second interval callback.\n    t.step_timeout(function() {\n      assert_unreached(message);\n    }, timeout);\n  }, timeout);\n}\n\nasync_test(function(t) {\n  let ctr = 0;\n  let h = setInterval(t.step_func(function() {\n    if (++ctr == 2) {\n      clearInterval(h);\n      t.done();\n      return;\n    }\n  }) /* no interval */);\n\n  timeout_trampoline(t, 100, \"Expected setInterval callback to be called two times\");\n}, \"Calling setInterval with no interval should be the same as if called with 0 interval\");\n\nasync_test(function(t) {\n  let ctr = 0;\n  let h = setInterval(t.step_func(function() {\n    if (++ctr == 2) {\n      clearInterval(h);\n      t.done();\n      return;\n    }\n  }),  undefined);\n\n  timeout_trampoline(t, 100, \"Expected setInterval callback to be called two times\");\n}, \"Calling setInterval with undefined interval should be the same as if called with 0 interval\");\n}\nmain();\n",
+      "origin": "html/webappapis/timers/missing-timeout-setinterval.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.webappapis.timers.negative-setinterval",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nsetup({ single_test: true });\nvar i = 0;\nvar interval;\nfunction next() {\n  i++;\n  if (i === 20) {\n    clearInterval(interval);\n    done();\n  }\n}\nsetTimeout(assert_unreached, 1000);\ninterval = setInterval(next, -100);\n}\nmain();\n",
+      "origin": "html/webappapis/timers/negative-setinterval.any.js",
+      "n_tests": 0,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.webappapis.timers.negative-settimeout",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nsetup({ single_test: true });\nsetTimeout(done, -100);\nsetTimeout(assert_unreached, 10);\n}\nmain();\n",
+      "origin": "html/webappapis/timers/negative-settimeout.any.js",
+      "n_tests": 0,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.webappapis.timers.setinterval-settimeout-clamping",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(t => {\n  let done = false;\n  const id = setInterval(() => {\n    done = true;\n  }, 0);\n  t.add_cleanup(() => clearInterval(id));\n\n  setTimeout(t.step_func(() => {\n    assert_true(done);\n    t.done();\n  }), 0);\n}, \"setInterval(0) before setTimeout(0)\");\n\nasync_test(t => {\n  let done = false;\n  setTimeout(() => {\n    done = true;\n  }, 0);\n\n  const id = setInterval(t.step_func(() => {\n    assert_true(done);\n    t.done();\n  }), 0);\n  t.add_cleanup(() => clearInterval(id));\n}, \"setTimeout(0) before setInterval(0)\");\n}\nmain();\n",
+      "origin": "html/webappapis/timers/setinterval-settimeout-clamping.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "setTimeout and setInterval sequencing is correct even with 0 timeout",
+        "spec": "https://html.spec.whatwg.org/#run-steps-after-a-timeout"
+      }
+    },
+    {
+      "id": "wpt.html.webappapis.timers.type-long-setinterval",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nsetup({ single_test: true });\nvar interval;\nfunction next() {\n  clearInterval(interval);\n  done();\n}\ninterval = setInterval(next, Math.pow(2, 32));\nsetTimeout(assert_unreached, 100);\n}\nmain();\n",
+      "origin": "html/webappapis/timers/type-long-setinterval.any.js",
+      "n_tests": 0,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.html.webappapis.timers.type-long-settimeout",
+      "category": "html",
+      "source": "wpt",
+      "fixture": "function main(): void {\nsetup({ single_test: true });\nsetTimeout(done, Math.pow(2, 32));\nsetTimeout(assert_unreached, 100);\n}\nmain();\n",
+      "origin": "html/webappapis/timers/type-long-settimeout.any.js",
+      "n_tests": 0,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    }
+  ]
+}

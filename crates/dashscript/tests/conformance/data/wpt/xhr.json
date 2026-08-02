@@ -1,0 +1,1143 @@
+{
+  "_comment": "Auto-extracted from web-platform-tests/wpt by scripts/extract-wpt.mjs (WinterTC ECMA-429 §5 minimum common API scope). Each fixture wraps a WPT .any.js body verbatim in `function main(): void { … }` — test()/assert_equals stay as-is (DashScript lowers them to __ds::wpt_* static helpers). WinterTC is pure-Rust: the conformance harness runs the static path only (no engine fallback). `includes` lists the WPT harness scripts (// META: script=) the fixture depends on. DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "wpt.xhr.abort-after-receive",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\n\n      test.step(function() {\n        var client = new XMLHttpRequest();\n\n        client.onreadystatechange = test.step_func(function() {\n          if (client.readyState == 4) {\n            // abort should not cause the \"abort\" event to fire\n\n            client.abort();\n\n            assert_equals(client.readyState, 0);\n\n            test.step_timeout(function(){ // use a timeout to catch any implementation that might queue an abort event for later - just in case\n              test.done()\n            }, 200);\n          }\n        });\n\n        client.onabort = test.step_func(function () {\n            // this should not fire!\n\n            assert_unreached(\"abort() should not cause the abort event to fire\");\n        });\n\n        client.open(\"GET\", \"resources/well-formed.xml\", true);\n        client.send(null);\n      });\n}\nmain();\n",
+      "origin": "xhr/abort-after-receive.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: abort() after successful receive should not fire \"abort\" event"
+      }
+    },
+    {
+      "id": "wpt.xhr.abort-after-send",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test()\n      test.step(function() {\n        var client = new XMLHttpRequest(),\n            control_flag = false;\n        prepare_xhr_for_event_order_test(client);\n        client.addEventListener(\"readystatechange\", test.step_func(function() {\n          if(client.readyState == 4) {\n            control_flag = true\n            if (self.GLOBAL.isWindow()) {\n              assert_equals(client.responseXML, null)\n            }\n            assert_equals(client.responseText, \"\")\n            assert_equals(client.status, 0)\n            assert_equals(client.statusText, \"\")\n            assert_equals(client.getAllResponseHeaders(), \"\")\n            assert_equals(client.getResponseHeader('Content-Type'), null)\n          }\n        }))\n        client.open(\"GET\", \"resources/well-formed.xml\", true)\n        client.send(null)\n        client.abort()\n        assert_true(control_flag)\n        assert_equals(client.readyState, 0)\n        assert_xhr_event_order_matches([1, \"loadstart(0,0,false)\", 4, \"abort(0,0,false)\", \"loadend(0,0,false)\"])\n        test.done()\n      })\n}\nmain();\n",
+      "origin": "xhr/abort-after-send.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/xmlhttprequest-event-order.js"],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: abort() after send()"
+      }
+    },
+    {
+      "id": "wpt.xhr.abort-after-timeout",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\n\n    test.step(function() {\n        // timeout is 100ms\n        // the download would otherwise take 1000ms\n        // we check after 300ms to make sure abort does not fire an \"abort\" event\n\n        var timeoutFired = false;\n\n        var client = new XMLHttpRequest();\n\n        assert_true('timeout' in client, 'xhr.timeout is not supported in this user agent');\n\n        client.timeout = 100;\n\n        test.step_timeout(() => {\n            assert_true(timeoutFired);\n\n            // abort should not cause the \"abort\" event to fire\n            client.abort();\n\n            test.step_timeout(() => { // use a timeout to catch any implementation that might queue an abort event for later - just in case\n              test.done()\n            }, 200);\n\n            assert_equals(client.readyState, 0);\n        }, 300);\n\n        client.ontimeout = function () {\n            timeoutFired = true;\n        };\n\n        client.onabort = test.step_func(function () {\n            // this should not fire!\n\n            assert_unreached(\"abort() should not cause the abort event to fire\");\n        });\n\n        client.open(\"GET\", \"/common/blank.html?pipe=trickle(d1)\", true);\n        client.send(null);\n    });\n}\nmain();\n",
+      "origin": "xhr/abort-after-timeout.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: abort() after a timeout should not fire \"abort\" event"
+      }
+    },
+    {
+      "id": "wpt.xhr.abort-during-open",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test(\"XMLHttpRequest: abort() during OPEN\");\ntest.step(function() {\n  var client = new XMLHttpRequest()\n  client.open(\"GET\", \"...\")\n  client.onreadystatechange = function() {\n    test.step(function() {\n      assert_unreached()\n    })\n  }\n  assert_equals(client.readyState, 1, \"before abort()\")\n  assert_equals(client.status, 0)\n  assert_equals(client.statusText, \"\")\n  client.abort()\n  assert_equals(client.readyState, 1, \"after abort()\")\n  assert_equals(client.status, 0)\n  assert_equals(client.statusText, \"\")\n})\ntest.done()\n}\nmain();\n",
+      "origin": "xhr/abort-during-open.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.abort-during-readystatechange",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\nsetup({ single_test: true });\n\nconst xhr = new XMLHttpRequest();\n\n// In jsdom's implementation, this would cause a crash, as after firing readystatechange for HEADERS_RECEIVED, it would\n// try to manipulate internal state. But that internal state got cleared during abort(). So jsdom needed to be modified\n// to check if that internal state had gone away as a result of firing readystatechange, and if so, bail out.\n\nxhr.addEventListener(\"readystatechange\", () => {\n  if (xhr.readyState === xhr.HEADERS_RECEIVED) {\n    xhr.abort();\n  } else if (xhr.readyState === xhr.DONE) {\n    done();\n  }\n});\n\nxhr.open(\"GET\", \"/common/blank.html\");\nxhr.send();\n}\nmain();\n",
+      "origin": "xhr/abort-during-readystatechange.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.abort-during-unsent",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test()\n      test.step(function() {\n        var client = new XMLHttpRequest()\n        client.onreadystatechange = function() {\n          test.step(function() {\n            assert_unreached()\n          })\n        }\n        assert_equals(client.readyState, 0)\n        assert_equals(client.status, 0)\n        assert_equals(client.statusText, \"\")\n        client.abort()\n        assert_equals(client.readyState, 0)\n        assert_equals(client.status, 0)\n        assert_equals(client.statusText, \"\")\n      })\n      test.done()\n}\nmain();\n",
+      "origin": "xhr/abort-during-unsent.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: abort() during UNSENT"
+      }
+    },
+    {
+      "id": "wpt.xhr.abort-during-upload",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test()\n      test.step(function() {\n        var client = new XMLHttpRequest()\n        prepare_xhr_for_event_order_test(client);\n        client.open(\"POST\", \"resources/delay.py?ms=1000\")\n        client.addEventListener(\"loadend\", function(e) {\n          test.step(function() {\n            assert_xhr_event_order_matches([1, \"loadstart(0,0,false)\", \"upload.loadstart(0,9999,true)\", 4, \"upload.abort(0,0,false)\", \"upload.loadend(0,0,false)\", \"abort(0,0,false)\", \"loadend(0,0,false)\"]);\n            test.done()\n          })\n        });\n        client.send((new Array(10000)).join('a'))\n        client.abort()\n      })\n}\nmain();\n",
+      "origin": "xhr/abort-during-upload.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/xmlhttprequest-event-order.js"],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: abort() while sending data"
+      }
+    },
+    {
+      "id": "wpt.xhr.abort-event-abort",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test()\n\n        test.step(function()\n        {\n            var xhr = new XMLHttpRequest()\n\n            xhr.onreadystatechange = function()\n            {\n                test.step(function()\n                {\n                    if (xhr.readyState == 1)\n                    {\n                        xhr.abort();\n                        assert_equals(xhr.readyState, 1, \"abort() cannot change readyState when readyState is 1 and send() flag is unset\")\n                    }\n                });\n            };\n\n            xhr.onabort = function(e)\n            {\n                test.step(function()\n                {\n                    assert_unreached('when abort() is called, state is OPENED with the send() flag being unset, must not fire abort event per spec')\n                });\n            };\n\n            xhr.open(\"GET\", \"./resources/content.py\", true); // This should cause a readystatechange event that calls abort()\n            xhr.send() // should not throw since abort() was a no-op\n            test.done()\n        });\n}\nmain();\n",
+      "origin": "xhr/abort-event-abort.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: The abort() method: do not fire abort event in OPENED state when send() flag is unset."
+      }
+    },
+    {
+      "id": "wpt.xhr.abort-event-listeners",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test()\n      test.step(function() {\n        var client = new XMLHttpRequest(),\n            test = function() {}\n        client.onreadystatechange = test\n        client.open(\"GET\", \"resources/well-formed.xml\")\n        client.send(null)\n        client.abort()\n        assert_equals(client.onreadystatechange, test)\n      })\n      test.done()\n}\nmain();\n",
+      "origin": "xhr/abort-event-listeners.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: abort() should not reset event listeners"
+      }
+    },
+    {
+      "id": "wpt.xhr.abort-event-loadend",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test(function(test)\n        {\n            var xhr = new XMLHttpRequest();\n\n            xhr.onloadstart = function()\n            {\n                test.step(function()\n                {\n                    if (xhr.readyState == 1)\n                    {\n                        xhr.abort();\n                    }\n                });\n            };\n\n            xhr.onloadend = function(e)\n            {\n                test.step(function()\n                {\n                    assert_true(e instanceof ProgressEvent);\n                    assert_equals(e.type, \"loadend\");\n                    test.done();\n                });\n            };\n\n            xhr.open(\"GET\", \"resources/content.py\", true);\n            xhr.send();\n        });\n}\nmain();\n",
+      "origin": "xhr/abort-event-loadend.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: The abort() method: Fire a progress event named loadend"
+      }
+    },
+    {
+      "id": "wpt.xhr.abort-progress-events",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// Test for https://bugzilla.mozilla.org/show_bug.cgi?id=1851832\n// Ensures that readystatechange and progress events don't fire when the\n// state is UNSENT, as required by the spec.\n\nasync_test(t => {\n  const xhr = new XMLHttpRequest();\n  let eventsFiredInUnsent = false;\n\n  // Monitor for events firing in UNSENT state\n  xhr.addEventListener('readystatechange', t.step_func(() => {\n    if (xhr.readyState === XMLHttpRequest.UNSENT) {\n      eventsFiredInUnsent = true;\n    }\n  }));\n\n  xhr.addEventListener('progress', t.step_func(() => {\n    if (xhr.readyState === XMLHttpRequest.UNSENT) {\n      eventsFiredInUnsent = true;\n    }\n  }));\n\n  // Start a request and immediately abort it\n  xhr.open('GET', 'resources/pass.txt');\n  xhr.send();\n  xhr.abort();\n\n  // The spec says when abort() is called on a DONE request, state changes\n  // to UNSENT and no readystatechange event is dispatched. Progress events\n  // should also not fire in UNSENT state.\n  assert_equals(xhr.readyState, XMLHttpRequest.UNSENT,\n                'State should be UNSENT immediately after abort');\n\n  // Give time for any progress timer callbacks that might have been queued\n  t.step_timeout(() => {\n    assert_false(eventsFiredInUnsent,\n                 'No events should fire when state is UNSENT');\n    t.done();\n  }, 200);\n}, 'Events must not fire when state is UNSENT after abort()');\n\nasync_test(t => {\n  const xhr = new XMLHttpRequest();\n  let callCount = 0;\n\n  // Calling open/abort in a readystatechange handler can trigger\n  // a scenario where the progress timer callback is queued but then\n  // the state becomes UNSENT. This should not cause assertions or crashes.\n  xhr.addEventListener('readystatechange', t.step_func(e => {\n    // Limit recursion to prevent infinite loop\n    if (callCount++ < 5) {\n      e.currentTarget.open('GET', 'resources/pass.txt');\n      e.currentTarget.abort();\n    }\n  }));\n\n  xhr.open('GET', 'resources/pass.txt');\n  xhr.send();\n\n  // Allow time for the test to complete\n  t.step_timeout(() => {\n    assert_true(callCount > 0, 'readystatechange handler should have been called');\n    t.done();\n  }, 200);\n}, 'Calling open/abort in readystatechange should not crash');\n}\nmain();\n",
+      "origin": "xhr/abort-progress-events.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: abort() and progress timer race condition"
+      }
+    },
+    {
+      "id": "wpt.xhr.abort-upload-event-abort",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test(\"XMLHttpRequest: The abort() method: Fire a progress event named abort on the XMLHttpRequestUpload object\");\n\n        test.step(function()\n        {\n            var xhr = new XMLHttpRequest();\n\n            xhr.onloadstart = function()\n            {\n                test.step(function()\n                {\n                    if (xhr.readyState == 1)\n                    {\n                        xhr.abort();\n                    }\n                });\n            };\n\n            xhr.upload.onabort = function(e)\n            {\n                test.step(function()\n                {\n                    assert_true(e instanceof ProgressEvent);\n                    assert_equals(e.type, \"abort\");\n                    assert_equals(e.target, xhr.upload);\n                    test.done();\n                });\n            };\n\n            xhr.open(\"POST\", \"./resources/content.py\", true);\n            xhr.send(\"Test Message\");\n        });\n}\nmain();\n",
+      "origin": "xhr/abort-upload-event-abort.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.abort-upload-event-loadend",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test(\"XMLHttpRequest: The abort() method: Fire a progress event named loadend on the XMLHttpRequestUpload object\");\n\n        test.step(function()\n        {\n            var xhr = new XMLHttpRequest();\n\n            xhr.onloadstart = function()\n            {\n                test.step(function ()\n                {\n                    if (xhr.readyState == 1)\n                    {\n                        xhr.abort();\n                    }\n                });\n            };\n\n            xhr.upload.onloadend = function(e)\n            {\n                test.step(function()\n                {\n                    assert_true(e instanceof ProgressEvent);\n                    assert_equals(e.type, \"loadend\");\n                    assert_equals(e.target, xhr.upload);\n                    test.done();\n                });\n            };\n\n            xhr.open(\"POST\", \"./resources/content.py\", true);\n            xhr.send(\"Test Message\");\n        });\n}\nmain();\n",
+      "origin": "xhr/abort-upload-event-loadend.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.abort-with-error",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\nconst test_runner = async_test();\n\ntest_runner.step(() => {\n  const client = new XMLHttpRequest();\n\n  client.open(\"GET\", \"invalid-protocol://example.com\", true);\n  client.onabort = test_runner.step_func(() => {\n    test_runner.done();\n  });\n\n  client.send(null);\n  client.abort();\n});\n}\nmain();\n",
+      "origin": "xhr/abort-with-error.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: abort() still works when error thrown internally"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-and-redirects-async-same-origin",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction runTest(test, path, credentials, expectSuccess) {\n      const xhr = new XMLHttpRequest();\n      xhr.withCredentials = credentials;\n      xhr.open(\"GET\", \"resources/redirect.py?location=\" + get_host_info().HTTP_REMOTE_ORIGIN + path, true);\n\n      xhr.onload = test.step_func_done(function() {\n        assert_true(expectSuccess);\n        assert_equals(xhr.responseText, \"PASS: Cross-domain access allowed.\");\n      });\n      xhr.onerror = test.step_func_done(function() {\n        assert_false(expectSuccess);\n        assert_equals(xhr.status, 0);\n      });\n      xhr.send(null);\n    }\n\n    const withoutCredentials = false;\n    const withCredentials = true;\n    const succeeds = true;\n    const fails = false;\n\n    // Test simple same origin requests that receive cross origin redirects.\n\n    // The redirect response passes the access check.\n    async_test(t => {\n      runTest(t, \"/xhr/resources/access-control-basic-allow-star.py\",\n          withoutCredentials, succeeds)\n    }, \"Request without credentials is redirected to a cross-origin response with Access-Control-Allow-Origin=* (with star)\");\n\n    // The redirect response fails the access check because credentials were sent.\n    async_test(t => {\n      runTest(t, \"/xhr/resources/access-control-basic-allow-star.py\",\n          withCredentials, fails)\n    }, \"Request with credentials is redirected to a cross-origin response with Access-Control-Allow-Origin=* (with star)\");\n\n    // The redirect response passes the access check.\n    async_test(t => {\n      runTest(t, \"/xhr/resources/access-control-basic-allow.py\",\n          withoutCredentials, succeeds)\n    }, \"Request without credentials is redirected to a cross-origin response with a specific Access-Control-Allow-Origin\");\n\n    // The redirect response passes the access check.\n    async_test(t => {\n      runTest(t, \"/xhr/resources/access-control-basic-allow.py\",\n          withCredentials, succeeds)\n    }, \"Request with credentials is redirected to a cross-origin response with a specific Access-Control-Allow-Origin\");\n\n    // forbidding credentials. The redirect response passes the access check.\n    async_test(t => {\n      runTest(t, \"/xhr/resources/access-control-basic-allow-no-credentials.py\",\n          withoutCredentials, succeeds)\n    }, \"Request without credentials is redirected to a cross-origin response with a specific Access-Control-Allow-Origin (no credentials)\");\n\n    // forbidding credentials. The redirect response fails the access check.\n    async_test(t => {\n      runTest(t, \"/xhr/resources/access-control-basic-allow-no-credentials.py\",\n          withCredentials, fails)\n    }, \"Request with credentials is redirected to a cross-origin response with a specific Access-Control-Allow-Origin (no credentials)\");\n}\nmain();\n",
+      "origin": "xhr/access-control-and-redirects-async-same-origin.any.js",
+      "n_tests": 6,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Tests that asynchronous XMLHttpRequests handle redirects according to the CORS standard."
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-and-redirects-async",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction runTest(test, destination, parameters, customHeader, local, expectSuccess) {\n      const xhr = new XMLHttpRequest();\n      const url = (local ? get_host_info().HTTP_ORIGIN : get_host_info().HTTP_REMOTE_ORIGIN) +\n        \"/xhr/resources/redirect-cors.py?location=\" + destination + \"&\" +  parameters;\n\n      xhr.open(\"GET\", url, true);\n\n      if (customHeader)\n        xhr.setRequestHeader(\"x-test\", \"test\");\n\n      xhr.onload = test.step_func_done(function() {\n        assert_true(expectSuccess);\n        assert_true(xhr.responseText.startsWith(\"PASS\"));\n      });\n      xhr.onerror = test.step_func_done(function() {\n        assert_false(expectSuccess);\n        assert_equals(xhr.status, 0);\n      });\n      xhr.send();\n    }\n\n    const withCustomHeader = true;\n    const withoutCustomHeader = false;\n    const local = true;\n    const remote = false;\n    const succeeds = true;\n    const fails = false;\n\n    // Test simple cross origin requests that receive redirects.\n\n    // The redirect response fails the access check because the redirect lacks a CORS header.\n    async_test(t => {\n      runTest(t, get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow-star.py\", \"\",\n          withoutCustomHeader, remote, fails)\n    }, \"Request is redirected without CORS headers to a response with Access-Control-Allow-Origin=*\");\n\n    // The redirect response passes the access check.\n    async_test(t => {\n      runTest(t, get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow-star.py\", \"allow_origin=true\",\n          withoutCustomHeader, remote, succeeds)\n    }, \"Request is redirected to a response with Access-Control-Allow-Origin=*\");\n\n    // The redirect response fails the access check because user info was sent.\n    async_test(t => {\n      runTest(t, get_host_info().HTTP_REMOTE_ORIGIN.replace(\"http://\", \"http://username:password@\") +\n          \"/xhr/resources/access-control-basic-allow-star.py\", \"allow_origin=true\",\n          withoutCustomHeader, remote, fails)\n    }, \"Request with user info is redirected to a response with Access-Control-Allow-Origin=*\");\n\n    // The redirect response fails the access check because the URL scheme is unsupported.\n    async_test(t => {\n      runTest(t, \"foo://bar.cgi\", \"allow_origin=true\", withoutCustomHeader, remote, fails)\n    }, \"Request is redirect to a bad URL\");\n\n    // The preflighted redirect response fails the access check because of preflighting.\n    async_test(t => {\n      runTest(t, get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow-star.py\",\n          \"allow_origin=true&redirect_preflight=true\", withCustomHeader, remote, fails)\n    }, \"Preflighted request is redirected to a response with Access-Control-Allow-Origin=*\");\n\n    // The preflighted redirect response fails the access check after successful preflighting.\n    async_test(t => {\n      runTest(t, get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow-star.py\",\n          \"allow_origin=true&allow_header=x-test&redirect_preflight=true\",\n          withCustomHeader, remote, fails)\n    }, \"Preflighted request is redirected to a response with Access-Control-Allow-Origin=* and header allowed\");\n\n    // The same-origin redirect response passes the access check.\n    async_test(t => {\n      runTest(t, get_host_info().HTTP_ORIGIN + \"/xhr/resources/pass.txt\",\n          \"\", withCustomHeader, local, succeeds)\n    }, \"Request is redirected to a same-origin resource file\");\n}\nmain();\n",
+      "origin": "xhr/access-control-and-redirects-async.any.js",
+      "n_tests": 7,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Tests that asynchronous XMLHttpRequests handle redirects according to the CORS standard."
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-and-redirects",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction runSync(test, url)\n    {\n      const xhr = new XMLHttpRequest();\n      xhr.open(\"GET\", url, false);\n      xhr.send();\n      assert_equals(xhr.responseText, \"PASS: Cross-domain access allowed.\");\n      test.done();\n    }\n    function runAsync(test, url)\n    {\n      const xhr = new XMLHttpRequest();\n      xhr.open(\"GET\", url, true);\n      xhr.onload = test.step_func_done(function() {\n        assert_equals(xhr.responseText, \"PASS: Cross-domain access allowed.\");\n      });\n      xhr.onerror = test.unreached_func(\"Network error\");\n      xhr.send();\n      test.done();\n    }\n    test(t => {\n      runSync(t, \"resources/redirect-cors.py?location=\" + get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow.py\")\n    }, \"Local sync redirect to remote origin\");\n    async_test(t => {\n      runAsync(t, \"resources/redirect-cors.py?location=\" + get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow.py\")\n    }, \"Local async redirect to remote origin\");\n    test(t => {\n      runSync(t, get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/redirect-cors.py?location=\" + get_host_info().HTTP_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow.py&allow_origin=true\")\n    }, \"Remote sync redirect to local origin\");\n    async_test(t => {\n      runAsync(t, get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/redirect-cors.py?location=\" + get_host_info().HTTP_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow.py&allow_origin=true\")\n    }, \"Remote async redirect to local origin\");\n    test(t => {\n      runSync(t, get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/redirect-cors.py?location=\" + get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow.py&allow_origin=true\")\n    }, \"Remote sync redirect to same remote origin\");\n    async_test(t => {\n      runAsync(t, get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/redirect-cors.py?location=\" + get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow.py&allow_origin=true\")\n    }, \"Remote async redirect to same remote origin\");\n}\nmain();\n",
+      "origin": "xhr/access-control-and-redirects.any.js",
+      "n_tests": 6,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Tests that redirects between origins are allowed when access control is involved."
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-basic-allow-access-control-origin-header",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(function(test) {\n      const xhr = new XMLHttpRequest;\n\n      xhr.open(\"GET\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-origin-header.py\", false);\n      xhr.send();\n\n      assert_equals(xhr.responseText, \"PASS: Cross-domain access allowed.\\n\" +\n          \"HTTP_ORIGIN: \" + get_host_info().HTTP_ORIGIN);\n      test.done();\n    }, \"Access control test with origin header\");\n}\nmain();\n",
+      "origin": "xhr/access-control-basic-allow-access-control-origin-header.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Access control test with origin header"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-basic-allow-async",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(function(test) {\n      const xhr = new XMLHttpRequest;\n\n      xhr.onreadystatechange = test.step_func(function() {\n        if (xhr.readyState == xhr.DONE) {\n          assert_equals(xhr.responseText, \"PASS: Cross-domain access allowed.\");\n          test.done();\n        }\n      });\n\n      xhr.onerror = test.unreached_func(\"FAIL: Network error.\");\n\n      xhr.open(\"GET\", get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/access-control-basic-allow.py\", true);\n      xhr.send();\n    }, \"Basic async cross-origin XHR request\");\n}\nmain();\n",
+      "origin": "xhr/access-control-basic-allow-async.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Testing a basic asynchronous CORS XHR request."
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-basic-allow-non-cors-safelisted-method-async",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test((test) => {\n      const xhr = new XMLHttpRequest;\n\n      xhr.onload = test.step_func_done(() => {\n        assert_equals(xhr.responseText, \"PASS: Cross-domain access allowed.\\nPASS: PUT data received\");\n      });\n\n      xhr.onerror = test.unreached_func(\"Unexpected error.\");\n\n      xhr.open(\"PUT\", get_host_info().HTTP_REMOTE_ORIGIN +\n          \"/xhr/resources/access-control-basic-put-allow.py\");\n      xhr.setRequestHeader(\"Content-Type\", \"text/plain; charset=UTF-8\");\n      xhr.send(\"PASS: PUT data received\");\n    }, \"Allow async PUT request\");\n}\nmain();\n",
+      "origin": "xhr/access-control-basic-allow-non-cors-safelisted-method-async.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Tests cross-origin async request with non-CORS-safelisted method"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-basic-allow-non-cors-safelisted-method",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n      const xhr = new XMLHttpRequest;\n\n      xhr.open(\"PUT\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-put-allow.py\", false);\n\n      xhr.setRequestHeader(\"Content-Type\", \"text/plain; charset=UTF-8\");\n\n      xhr.send(\"PASS: PUT data received\");\n\n      assert_equals(xhr.responseText, \"PASS: Cross-domain access allowed.\\nPASS: PUT data received\");\n    }, \"Allow PUT request\");\n}\nmain();\n",
+      "origin": "xhr/access-control-basic-allow-non-cors-safelisted-method.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Tests cross-origin request with non-CORS-safelisted method"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-basic-allow-preflight-cache-invalidation-by-header",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst uuid = token();\n    const xhr = new XMLHttpRequest;\n\n    async_test(function(test) {\n      xhr.onerror = test.unreached_func(\"FAIL: Network error.\");\n      xhr.onload = test.step_func(function() {\n        // Token reset.  We can start the test now.\n        assert_equals(xhr.responseText, \"PASS\");\n        firstRequest();\n      });\n\n      xhr.open(\"GET\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/reset-token.py?token=\" + uuid, true);\n      xhr.send();\n\n      function firstRequest() {\n        xhr.onload = test.step_func(function() {\n          assert_equals(xhr.responseText, \"PASS: First PUT request.\");\n          secondRequest();\n        });\n        xhr.open(\"PUT\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-preflight-cache-invalidation.py?token=\" + uuid, true);\n        xhr.send();\n      }\n\n      function secondRequest() {\n        xhr.onload = test.step_func(function() {\n          assert_equals(xhr.responseText, \"PASS: Second OPTIONS request was sent.\");\n          test.done();\n        });\n        // Send a header not included in the inital cache.\n        xhr.open(\"PUT\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-preflight-cache-invalidation.py?token=\" + uuid, true);\n        xhr.setRequestHeader(\"x-test\", \"headerValue\");\n        xhr.send();\n      }\n    }, \"Preflight cache should be invalidated in presence of custom header\");\n}\nmain();\n",
+      "origin": "xhr/access-control-basic-allow-preflight-cache-invalidation-by-header.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js", "/common/utils.js"],
+      "variants": [],
+      "meta": {
+        "title": "Preflight cache should be invalidated in presence of custom header"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-basic-allow-preflight-cache-invalidation-by-method",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst uuid = token();\n    const xhr = new XMLHttpRequest;\n\n    async_test(function(test) {\n      xhr.onerror = test.unreached_func(\"FAIL: Network error.\");\n      xhr.onload = test.step_func(function() {\n        // Token reset.  We can start the test now.\n        assert_equals(xhr.responseText, \"PASS\");\n        firstRequest();\n      });\n\n      xhr.open(\"GET\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/reset-token.py?token=\" + uuid, true);\n      xhr.send();\n\n      function firstRequest() {\n        xhr.onload = test.step_func(function() {\n          assert_equals(xhr.responseText, \"PASS: First PUT request.\");\n          secondRequest();\n        });\n        xhr.open(\"PUT\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-preflight-cache-invalidation.py?token=\" + uuid, true);\n        xhr.send();\n      }\n\n      function secondRequest() {\n        xhr.onload = test.step_func(function() {\n          assert_equals(xhr.responseText, \"PASS: Second OPTIONS request was sent.\");\n          test.done();\n        });\n        // Send a header not included in the inital cache.\n        xhr.open(\"XMETHOD\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-preflight-cache-invalidation.py?token=\" + uuid, true);\n        xhr.send();\n      }\n    }, \"Preflight cache should be invalidated by changed method\");\n}\nmain();\n",
+      "origin": "xhr/access-control-basic-allow-preflight-cache-invalidation-by-method.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js", "/common/utils.js"],
+      "variants": [],
+      "meta": {
+        "title": "Preflight cache should be invalidated by changed method"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-basic-allow-preflight-cache-timeout",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst uuid = token();\n    let xhr = new XMLHttpRequest;\n\n    async_test(function(test) {\n      xhr.onerror = test.unreached_func(\"FAIL: Network error.\");\n      xhr.onload = test.step_func(function() {\n        // Token reset.  We can start the test now.\n        assert_equals(xhr.responseText, \"PASS\");\n        firstRequest();\n      });\n\n      xhr.open(\"GET\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/reset-token.py?token=\" + uuid, true);\n      xhr.send();\n\n      function firstRequest() {\n        xhr.onload = test.step_func(function() {\n          assert_equals(xhr.responseText, \"PASS: First PUT request.\");\n          step_timeout(secondRequest, 3000); // 3 seconds\n        });\n        xhr.open(\"PUT\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-preflight-cache-timeout.py?token=\" + uuid, true);\n        xhr.send();\n      }\n\n      function secondRequest() {\n        xhr.onload = test.step_func(function() {\n          assert_equals(xhr.responseText, \"PASS: Second OPTIONS request was sent.\");\n          test.done();\n        });\n        xhr.open(\"PUT\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-preflight-cache-timeout.py?token=\" + uuid, true);\n        xhr.send();\n      }\n    }, \"Preflight cache should be invalidated on timeout\");\n}\nmain();\n",
+      "origin": "xhr/access-control-basic-allow-preflight-cache-timeout.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js", "/common/utils.js"],
+      "variants": [],
+      "meta": {
+        "title": "Preflight cache should be invalidated on timeout",
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-basic-allow-preflight-cache",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst uuid = token();\n\n    async_test(function(test) {\n      const xhr = new XMLHttpRequest;\n      xhr.onerror = test.unreached_func(\"FAIL: Network error.\");\n      xhr.onload = test.step_func(function() {\n        // Token reset.  We can start the test now.\n        assert_equals(xhr.responseText, \"PASS\");\n        firstRequest();\n      });\n\n      xhr.open(\"GET\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/reset-token.py?token=\" + uuid, true);\n      xhr.send();\n\n      function firstRequest() {\n        xhr.onload = test.step_func(function() {\n          assert_equals(xhr.responseText, \"PASS: First PUT request.\");\n          secondRequest();\n        });\n        xhr.open(\"PUT\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-preflight-cache.py?token=\" + uuid, true);\n        xhr.send();\n      }\n\n      function secondRequest() {\n        xhr.onload = test.step_func_done(function() {\n          assert_equals(xhr.responseText, \"PASS: Second PUT request. Preflight worked.\");\n        });\n        xhr.open(\"PUT\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-preflight-cache.py?token=\" + uuid, true);\n        xhr.send();\n      }\n    }, \"Preflight cache should allow second request\");\n}\nmain();\n",
+      "origin": "xhr/access-control-basic-allow-preflight-cache.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js", "/common/utils.js"],
+      "variants": [],
+      "meta": {
+        "title": "Preflight cache should allow second request without preflight OPTIONS request"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-basic-allow-star",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst xhr = new XMLHttpRequest;\n\n    test(function(test) {\n      xhr.open(\"GET\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-allow-star.py\", false);\n\n      xhr.send();\n\n      assert_equals(xhr.responseText, \"PASS: Cross-domain access allowed.\");\n    }, \"Allow star\");\n}\nmain();\n",
+      "origin": "xhr/access-control-basic-allow-star.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Tests \"*\" setting for Access-Control-Allow-Origin header"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-basic-allow",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n      const xhr = new XMLHttpRequest;\n\n      xhr.open(\"GET\", get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/access-control-basic-allow.py\", false);\n\n      xhr.send();\n\n      assert_equals(xhr.responseText, \"PASS: Cross-domain access allowed.\");\n    }, \"Allow basic\");\n}\nmain();\n",
+      "origin": "xhr/access-control-basic-allow.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Tests CORS with Access-Control-Allow-Origin header"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-preflight-request-allow-headers-returns-star",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\nasync_test(t => {\n  const xhr = new XMLHttpRequest();\n\n  xhr.open(\"GET\", corsURL(\"resources/access-control-preflight-request-allow-headers-returns-star.py\"));\n\n  xhr.setRequestHeader(\"X-Test\", \"foobar\");\n\n  xhr.onerror = t.unreached_func(\"Error occurred.\");\n\n  xhr.onload = t.step_func_done(() => {\n    assert_equals(xhr.status, 200);\n    assert_equals(xhr.responseText, \"PASS\");\n  });\n\n  xhr.send();\n});\n\nfunction corsURL(path) {\n  const url = new URL(path, location.href);\n  url.hostname = get_host_info().REMOTE_HOST;\n  return url.href;\n}\n}\nmain();\n",
+      "origin": "xhr/access-control-preflight-request-allow-headers-returns-star.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Access-Control-Allow-Headers supports *"
+      }
+    },
+    {
+      "id": "wpt.xhr.access-control-preflight-request-header-returns-origin",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\nasync_test(t => {\n  const xhr = new XMLHttpRequest();\n\n  xhr.open(\"GET\", corsURL(\"resources/access-control-preflight-request-header-returns-origin.py\"));\n\n  xhr.setRequestHeader(\"X-Test\", \"foobar\");\n\n  xhr.onerror = t.unreached_func(\"Error occurred.\");\n\n  xhr.onload = t.step_func_done(() => {\n    assert_equals(xhr.status, 200);\n    assert_equals(xhr.responseText, \"PASS\");\n  });\n\n  xhr.send();\n});\n\nfunction corsURL(path) {\n  const url = new URL(path, location.href);\n  url.hostname = get_host_info().REMOTE_HOST;\n  return url.href;\n}\n}\nmain();\n",
+      "origin": "xhr/access-control-preflight-request-header-returns-origin.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Access-Control-Request-Origin accept different origin between preflight and actual request"
+      }
+    },
+    {
+      "id": "wpt.xhr.blob-range",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// See also /fetch/range/blob.any.js\n\nconst supportedBlobRange = [\n  {\n    name: \"A simple blob range request.\",\n    data: [\"A simple Hello, World! example\"],\n    type: \"text/plain\",\n    range: \"bytes=9-21\",\n    content_length: 13,\n    content_range: \"bytes 9-21/30\",\n    result: \"Hello, World!\",\n  },\n  {\n    name: \"A blob range request with no type.\",\n    data: [\"A simple Hello, World! example\"],\n    type: undefined,\n    range: \"bytes=9-21\",\n    content_length: 13,\n    content_range: \"bytes 9-21/30\",\n    result: \"Hello, World!\",\n  },\n  {\n    name: \"A blob range request with no end.\",\n    data: [\"Range with no end\"],\n    type: \"text/plain\",\n    range: \"bytes=11-\",\n    content_length: 6,\n    content_range: \"bytes 11-16/17\",\n    result: \"no end\",\n  },\n  {\n    name: \"A blob range request with no start.\",\n    data: [\"Range with no start\"],\n    type: \"text/plain\",\n    range: \"bytes=-8\",\n    content_length: 8,\n    content_range: \"bytes 11-18/19\",\n    result: \"no start\",\n  },\n  {\n    name: \"A simple blob range request with whitespace.\",\n    data: [\"A simple Hello, World! example\"],\n    type: \"text/plain\",\n    range: \"bytes= \\t9-21\",\n    content_length: 13,\n    content_range: \"bytes 9-21/30\",\n    result: \"Hello, World!\",\n  },\n  {\n    name: \"Blob content with short content and a large range end\",\n    data: [\"Not much here\"],\n    type: \"text/plain\",\n    range: \"bytes=4-100000000000\",\n    content_length: 9,\n    content_range: \"bytes 4-12/13\",\n    result: \"much here\",\n  },\n  {\n    name: \"Blob content with short content and a range end matching content length\",\n    data: [\"Not much here\"],\n    type: \"text/plain\",\n    range: \"bytes=4-13\",\n    content_length: 9,\n    content_range: \"bytes 4-12/13\",\n    result: \"much here\",\n  },\n  {\n    name: \"Blob range with whitespace before and after hyphen\",\n    data: [\"Valid whitespace #1\"],\n    type: \"text/plain\",\n    range: \"bytes=5 - 10\",\n    content_length: 6,\n    content_range: \"bytes 5-10/19\",\n    result: \" white\",\n  },\n  {\n    name: \"Blob range with whitespace after hyphen\",\n    data: [\"Valid whitespace #2\"],\n    type: \"text/plain\",\n    range: \"bytes=-\\t 5\",\n    content_length: 5,\n    content_range: \"bytes 14-18/19\",\n    result: \"ce #2\",\n  },\n  {\n    name: \"Blob range with whitespace around equals sign\",\n    data: [\"Valid whitespace #3\"],\n    type: \"text/plain\",\n    range: \"bytes \\t =\\t 6-\",\n    content_length: 13,\n    content_range: \"bytes 6-18/19\",\n    result: \"whitespace #3\",\n  },\n];\n\nconst unsupportedBlobRange = [\n  {\n    name: \"Blob range with no value\",\n    data: [\"Blob range should have a value\"],\n    type: \"text/plain\",\n    range: \"\",\n  },\n  {\n    name: \"Blob range with incorrect range header\",\n    data: [\"A\"],\n    type: \"text/plain\",\n    range: \"byte=0-\"\n  },\n  {\n    name: \"Blob range with incorrect range header #2\",\n    data: [\"A\"],\n    type: \"text/plain\",\n    range: \"bytes\"\n  },\n  {\n    name: \"Blob range with incorrect range header #3\",\n    data: [\"A\"],\n    type: \"text/plain\",\n    range: \"bytes\\t \\t\"\n  },\n  {\n    name: \"Blob range request with multiple range values\",\n    data: [\"Multiple ranges are not currently supported\"],\n    type: \"text/plain\",\n    range: \"bytes=0-5,15-\",\n  },\n  {\n    name: \"Blob range request with multiple range values and whitespace\",\n    data: [\"Multiple ranges are not currently supported\"],\n    type: \"text/plain\",\n    range: \"bytes=0-5, 15-\",\n  },\n  {\n    name: \"Blob range request with trailing comma\",\n    data: [\"Range with invalid trailing comma\"],\n    type: \"text/plain\",\n    range: \"bytes=0-5,\",\n  },\n  {\n    name: \"Blob range with no start or end\",\n    data: [\"Range with no start or end\"],\n    type: \"text/plain\",\n    range: \"bytes=-\",\n  },\n  {\n    name: \"Blob range request with short range end\",\n    data: [\"Range end should be greater than range start\"],\n    type: \"text/plain\",\n    range: \"bytes=10-5\",\n  },\n  {\n    name: \"Blob range start should be an ASCII digit\",\n    data: [\"Range start must be an ASCII digit\"],\n    type: \"text/plain\",\n    range: \"bytes=x-5\",\n  },\n  {\n    name: \"Blob range should have a dash\",\n    data: [\"Blob range should have a dash\"],\n    type: \"text/plain\",\n    range: \"bytes=5\",\n  },\n  {\n    name: \"Blob range end should be an ASCII digit\",\n    data: [\"Range end must be an ASCII digit\"],\n    type: \"text/plain\",\n    range: \"bytes=5-x\",\n  },\n  {\n    name: \"Blob range should include '-'\",\n    data: [\"Range end must include '-'\"],\n    type: \"text/plain\",\n    range: \"bytes=x\",\n  },\n  {\n    name: \"Blob range should include '='\",\n    data: [\"Range end must include '='\"],\n    type: \"text/plain\",\n    range: \"bytes 5-\",\n  },\n  {\n    name: \"Blob range should include 'bytes='\",\n    data: [\"Range end must include 'bytes='\"],\n    type: \"text/plain\",\n    range: \"5-\",\n  },\n  {\n    name: \"Blob content with short content and a large range start\",\n    data: [\"Not much here\"],\n    type: \"text/plain\",\n    range: \"bytes=100000-\",\n  },\n  {\n    name: \"Blob content with short content and a range start matching the content length\",\n    data: [\"Not much here\"],\n    type: \"text/plain\",\n    range: \"bytes=13-\",\n  },\n];\n\nsupportedBlobRange.forEach(({ name, data, type, range, content_length, content_range, result }) => {\n  promise_test(async t => {\n    const blob = new Blob(data, { \"type\" : type });\n    const blobURL = URL.createObjectURL(blob);\n    t.add_cleanup(() => URL.revokeObjectURL(blobURL));\n    const xhr = new XMLHttpRequest();\n    xhr.open(\"GET\", blobURL);\n    xhr.responseType = \"text\";\n    xhr.setRequestHeader(\"Range\", range);\n    await new Promise(resolve => {\n      xhr.onloadend = resolve;\n      xhr.send();\n    });\n    assert_equals(xhr.status, 206, \"HTTP status is 206\");\n    assert_equals(xhr.getResponseHeader(\"Content-Type\"), type || \"\", \"Content-Type is \" + xhr.getResponseHeader(\"Content-Type\"));\n    assert_equals(xhr.getResponseHeader(\"Content-Length\"), content_length.toString(), \"Content-Length is \" + xhr.getResponseHeader(\"Content-Length\"));\n    assert_equals(xhr.getResponseHeader(\"Content-Range\"), content_range, \"Content-Range is \" + xhr.getResponseHeader(\"Content-Range\"));\n    assert_equals(xhr.responseText, result, \"Response's body is correct\");\n    const all = xhr.getAllResponseHeaders().toLowerCase();\n    assert_true(all.includes(`content-type: ${type || \"\"}`), \"Expected Content-Type in getAllResponseHeaders()\");\n    assert_true(all.includes(`content-length: ${content_length}`), \"Expected Content-Length in getAllResponseHeaders()\");\n    assert_true(all.includes(`content-range: ${content_range}`), \"Expected Content-Range in getAllResponseHeaders()\")\n  }, name);\n});\n\nunsupportedBlobRange.forEach(({ name, data, type, range }) => {\n  promise_test(t => {\n    const blob = new Blob(data, { \"type\" : type });\n    const blobURL = URL.createObjectURL(blob);\n    t.add_cleanup(() => URL.revokeObjectURL(blobURL));\n\n    const xhr = new XMLHttpRequest();\n    xhr.open(\"GET\", blobURL, false);\n    xhr.setRequestHeader(\"Range\", range);\n    assert_throws_dom(\"NetworkError\", () => xhr.send());\n\n    xhr.open(\"GET\", blobURL);\n    xhr.setRequestHeader(\"Range\", range);\n    xhr.responseType = \"text\";\n    return new Promise((resolve, reject) => {\n      xhr.onload = reject;\n      xhr.onerror = resolve;\n      xhr.send();\n    });\n  }, name);\n});\n}\nmain();\n",
+      "origin": "xhr/blob-range.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.content-type-unmodified",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\nasync_test(t => {\n  const xhr = new XMLHttpRequest();\n\n  xhr.open(\"POST\", \"resources/echo-content-type.py\");\n  xhr.setRequestHeader(\"content-type\", \"application/json; charset=UTF-8\");\n\n  xhr.onerror = t.unreached_func(\"Error occurred.\");\n\n  xhr.onload = t.step_func_done(() => {\n    assert_equals(xhr.status, 200);\n    assert_equals(xhr.responseText, \"application/json; charset=UTF-8\");\n  });\n  xhr.send(\"{ \\\"x\\\":\\\"a\\\"}\");\n});\n}\nmain();\n",
+      "origin": "xhr/content-type-unmodified.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.cors-expose-star.sub",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst url = \"http://{{host}}:{{ports[http][1]}}\" + dirname(location.pathname) + \"resources/top.txt\",\n      sharedHeaders = \"?pipe=header(Access-Control-Expose-Headers,*)|header(Test,X)|header(*,whoa)|\"\n\nasync_test(function() {\n  const headers = \"header(Access-Control-Allow-Origin,*)\"\n  var client = new XMLHttpRequest();\n  client.open(\"GET\", url + sharedHeaders + headers);\n  client.send();\n  client.onreadystatechange = this.step_func(function () {\n    if (this.readyState == this.HEADERS_RECEIVED) {\n      assert_equals(client.getResponseHeader(\"test\"), \"X\");\n      assert_equals(client.getResponseHeader(\"set-cookie\"), null);\n      assert_equals(client.getResponseHeader(\"*\"), \"whoa\");\n      this.done();\n    }\n  });\n}, \"Basic Access-Control-Expose-Headers: * support\")\n\nasync_test(function() {\n  const origin = location.origin, // assuming an ASCII origin\n        headers = \"header(Access-Control-Allow-Origin,\" + origin + \")|header(Access-Control-Allow-Credentials,true)\"\n  var client = new XMLHttpRequest();\n  client.open(\"GET\", url + sharedHeaders + headers);\n  client.withCredentials = true;\n  client.send();\n  client.onreadystatechange = this.step_func(function () {\n    if (this.readyState == this.HEADERS_RECEIVED) {\n      assert_equals(client.getResponseHeader(\"content-type\"), \"text/plain\"); // safelisted\n      assert_equals(client.getResponseHeader(\"test\"), null);\n      assert_equals(client.getResponseHeader(\"set-cookie\"), null);\n      assert_equals(client.getResponseHeader(\"*\"), \"whoa\");\n      this.done();\n    }\n  });\n}, \"* for credentialed fetches only matches literally\")\n\nasync_test(function() {\n  const headers =  \"header(Access-Control-Allow-Origin,*)|header(Access-Control-Expose-Headers,set-cookie\\\\,*)\"\n  var client = new XMLHttpRequest();\n  client.open(\"GET\", url + sharedHeaders + headers);\n  client.send();\n  client.onreadystatechange = this.step_func(function () {\n    if (this.readyState == this.HEADERS_RECEIVED) {\n      assert_equals(client.getResponseHeader(\"test\"), \"X\");\n      assert_equals(client.getResponseHeader(\"set-cookie\"), null);\n      assert_equals(client.getResponseHeader(\"*\"), \"whoa\");\n      this.done();\n    }\n  });\n}, \"* can be one of several values\")\n}\nmain();\n",
+      "origin": "xhr/cors-expose-star.sub.any.js",
+      "n_tests": 3,
+      "async": true,
+      "fetch": false,
+      "includes": ["../fetch/api/resources/utils.js"],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.cors-upload",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\nfunction testCorsFormDataUpload(description, path, method, form, headers, withCredentials) {\n  const test = async_test(description);\n  const client = new XMLHttpRequest();\n  const url = corsURL(path);\n\n  client.open(method, url, true);\n  client.withCredentials = withCredentials;\n  for (const key of Object.keys(headers)) {\n    client.setRequestHeader(key, headers[key]);\n  }\n\n  client.send(form);\n\n  client.onload = () => {\n    test.step(() => {\n      assert_equals(client.status, 200);\n      assert_regexp_match(client.responseText, /Content-Disposition: form-data/);\n\n      for (const key of form.keys()) {\n        assert_regexp_match(client.responseText, new RegExp(key));\n        assert_regexp_match(client.responseText, new RegExp(form.get(key)));\n      }\n    });\n    test.done();\n  };\n}\n\nfunction corsURL(path) {\n  const url = new URL(path, location.href);\n  url.hostname = get_host_info().REMOTE_HOST;\n  return url.href;\n}\n\nconst form = new FormData();\nform.append(\"key\", \"value\");\n\ntestCorsFormDataUpload(\n  \"Cross-Origin POST FormData body but no preflight\",\n  \"resources/echo-content-cors.py\",\n  \"POST\",\n  form,\n  {},\n  false\n);\n\ntestCorsFormDataUpload(\n  \"Cross-Origin POST with preflight and FormData body\",\n  \"resources/echo-content-cors.py\",\n  \"POST\",\n  form,\n  {\n    Authorization: \"Bearer access-token\"\n  },\n  true\n);\n}\nmain();\n",
+      "origin": "xhr/cors-upload.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "Cross-Origin POST with preflight and FormData body should send body"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-abort",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function () {\n  var client = new XMLHttpRequest();\n  client.onabort = test.step_func(function () {\n    test.done();\n  });\n  client.open(\"GET\", \"resources/well-formed.xml\");\n  client.send(null);\n  client.abort();\n  test.step_timeout(() => {\n    assert_unreached(\"onabort not called after 4 ms\");\n  }, 4);\n});\n}\nmain();\n",
+      "origin": "xhr/event-abort.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: abort event"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-error.sub",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(function(t) {\n  var client = new XMLHttpRequest();\n  client.onerror = t.step_func(function (e) {\n    assert_true(e instanceof ProgressEvent);\n    assert_equals(e.type, \"error\");\n    t.done();\n  });\n\n  client.open('GET', 'http://nonexistent.{{host}}:{{ports[http][0]}}');\n  client.send('null');\n}, 'onerror should be called');\n\nasync_test((t) => {\n  const xhr = new XMLHttpRequest();\n  xhr.open('GET', 'resources/bad-chunk-encoding.py');\n  xhr.addEventListener('load', t.unreached_func('load'));\n  xhr.addEventListener('error', t.step_func((e) => {\n    assert_equals(e.loaded, 0, 'loaded');\n    assert_equals(e.total, 0, 'total');\n  }));\n  xhr.addEventListener('loadend', t.step_func_done((e) => {\n    assert_equals(e.loaded, 0, 'loaded');\n    assert_equals(e.total, 0, 'total');\n  }));\n  xhr.send();\n}, 'error while reading body should report zeros for loaded and total');\n}\nmain();\n",
+      "origin": "xhr/event-error.sub.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest Test: event - error"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-load",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function () {\n  var client = new XMLHttpRequest();\n  client.onload = test.step_func(function (e) {\n    assert_true(e instanceof ProgressEvent);\n    assert_equals(e.type, \"load\");\n    assert_equals(client.readyState, 4);\n    test.done();\n  });\n  client.onreadystatechange = test.step_func(function () {\n    if (client.readyState !== 4) return;\n\n    test.step_timeout(() => {\n      assert_unreached(\"Didn't get load event within 4ms of readystatechange==4\");\n    }, 4);\n  });\n  client.open(\"GET\", \"resources/well-formed.xml\");\n  client.send(null);\n});\n}\nmain();\n",
+      "origin": "xhr/event-load.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: The send() method: Fire an event named load (synchronous flag is unset)"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-loadend",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function () {\n  var client = new XMLHttpRequest();\n  client.onloadend = test.step_func(function (e) {\n    assert_true(e instanceof ProgressEvent);\n    assert_equals(e.type, \"loadend\");\n    test.done();\n  });\n  client.onreadystatechange = function () {\n    if (client.readyState !== 4) return;\n    test.step_timeout(() => {\n      assert_unreached(\"onloadend not called after 100 ms\");\n    }, 100);\n  };\n  client.open(\"GET\", \"resources/well-formed.xml\");\n  client.send(null);\n});\n}\nmain();\n",
+      "origin": "xhr/event-loadend.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: loadend event"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-loadstart-upload",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function () {\n  var client = new XMLHttpRequest();\n  client.upload.onloadstart = test.step_func(function (e) {\n    assert_true(e instanceof ProgressEvent);\n    assert_equals(e.total, 7, 'upload.onloadstart: event.total');\n    assert_equals(e.loaded, 0, 'upload.onloadstart: event.loaded');\n    assert_equals(e.type, \"loadstart\");\n    test.done();\n  });\n  client.onreadystatechange = test.step_func(function () {\n    if (client.readyState === 4)\n      assert_unreached(\"onloadstart not called.\");\n  });\n  client.open(\"POST\", \"resources/trickle.py?ms=5&count=8\");\n  client.send('foo=bar');\n});\n}\nmain();\n",
+      "origin": "xhr/event-loadstart-upload.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: The send() method: Fire a progress event named loadstart on upload object (synchronous flag is unset)"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-loadstart",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function () {\n  var client = new XMLHttpRequest();\n  client.onloadstart = test.step_func(function (e) {\n    assert_true(e instanceof ProgressEvent);\n    assert_equals(e.type, \"loadstart\");\n    assert_equals(client.readyState, 1);\n    test.done();\n  });\n  test.step_timeout(function () {\n    assert_unreached(\"onloadstart not called after 500 ms\");\n  }, 500);\n  client.open(\"GET\", \"resources/well-formed.xml\");\n  client.send(null);\n});\n}\nmain();\n",
+      "origin": "xhr/event-loadstart.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: loadstart event"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-progress",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function () {\n  var client = new XMLHttpRequest();\n  client.onprogress = test.step_func(function (e) {\n    assert_true(e instanceof ProgressEvent);\n    assert_equals(e.type, \"progress\");\n    test.done();\n  });\n  client.onreadystatechange = test.step_func(function () {\n    if (client.readyState === 4)\n      assert_unreached(\"onprogress not called.\");\n  });\n  client.open(\"GET\", \"resources/trickle.py?count=4&delay=150\");\n  client.send(null);\n});\n}\nmain();\n",
+      "origin": "xhr/event-progress.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: The send() method: Fire a progress event named progress (synchronous flag is unset)",
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-readystate-sync-open",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst title = \"XMLHttpRequest: open() call fires sync readystate event\";\n\ntest(function () {\n  var client = new XMLHttpRequest()\n  var eventsFired = []\n  client.onreadystatechange = function () {\n    eventsFired.push(client.readyState)\n  }\n  client.open('GET', \"...\", false)\n  assert_array_equals(eventsFired, [1])\n}, title + ' (sync)');\n\ntest(function () {\n  var client = new XMLHttpRequest()\n  var eventsFired = []\n  client.onreadystatechange = function () {\n    eventsFired.push(client.readyState)\n  }\n  client.open('GET', \"...\", true)\n  assert_array_equals(eventsFired, [1])\n}, title + ' (async)');\n}\nmain();\n",
+      "origin": "xhr/event-readystate-sync-open.any.js",
+      "n_tests": 2,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: open() call fires sync readystate event"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-readystatechange-loaded",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\n\ntest.step(function () {\n    var client = new XMLHttpRequest();\n    var countedLoading = 0;\n\n    client.onreadystatechange = test.step_func(function () {\n        if (client.readyState === 3) {\n            countedLoading += 1;\n        }\n\n        if (client.readyState === 4) {\n            assert_greater_than(countedLoading, 1, \"LOADING state change may be emitted multiple times\");\n\n            test.done();\n        }\n    });\n\n    client.open(\"GET\", \"resources/trickle.py?count=10\"); // default timeout in trickle.py is 1/2 sec, so this request will take 5 seconds to complete\n    client.send(null);\n});\n}\nmain();\n",
+      "origin": "xhr/event-readystatechange-loaded.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: the LOADING state change may be emitted multiple times"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-timeout-order",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function () {\n    var xhr = new XMLHttpRequest();\n    prepare_xhr_for_event_order_test(xhr);\n    xhr.addEventListener(\"loadend\", function () {\n        test.step(function () {\n            assert_xhr_event_order_matches([1, \"loadstart(0,0,false)\", \"upload.loadstart(0,12,true)\", 4, \"upload.timeout(0,0,false)\", \"upload.loadend(0,0,false)\", \"timeout(0,0,false)\", \"loadend(0,0,false)\"]);\n            test.done();\n        });\n    });\n\n    xhr.timeout = 5;\n    xhr.open(\"POST\", \"resources/delay.py?ms=20000\");\n    xhr.send(\"Test Message\");\n    test.step_timeout(() => {\n        assert_unreached(\"ontimeout not called.\");\n    }, 2000);\n});\n}\nmain();\n",
+      "origin": "xhr/event-timeout-order.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/xmlhttprequest-event-order.js"],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: event - timeout (order of events)"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-timeout",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function () {\n  var client = new XMLHttpRequest();\n  client.ontimeout = function () {\n    test.step(function () {\n      assert_equals(client.readyState, 4);\n      test.done();\n    });\n  };\n  client.timeout = 5;\n  client.open(\"GET\", \"resources/delay.py?ms=20000\");\n  client.send(null);\n  test.step_timeout(() => {\n    assert_unreached(\"ontimeout not called.\");\n  }, 1000);\n});\n}\nmain();\n",
+      "origin": "xhr/event-timeout.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: timeout event"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-upload-progress-crossorigin",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst remote = get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/corsenabled.py\",\n  redirect = \"resources/redirect.py?code=307&location=\" + remote;\n\n[remote, redirect].forEach(url => {\n  async_test(test => {\n    const client = new XMLHttpRequest();\n    client.upload.onprogress = test.step_func_done()\n    client.onload = test.unreached_func()\n    client.open(\"POST\", url)\n    client.send(\"On time: \" + url)\n  }, \"Upload events registered on time (\" + url + \")\");\n});\n\n[remote, redirect].forEach(url => {\n  async_test(test => {\n    const client = new XMLHttpRequest();\n    client.onload = test.step_func_done();\n    client.open(\"POST\", url);\n    client.send(\"Too late: \" + url);\n    client.upload.onloadstart = test.unreached_func(); // registered too late\n    client.upload.onprogress = test.unreached_func(); // registered too late\n  }, \"Upload events registered too late (\" + url + \")\");\n});\n}\nmain();\n",
+      "origin": "xhr/event-upload-progress-crossorigin.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: upload progress event for cross-origin requests"
+      }
+    },
+    {
+      "id": "wpt.xhr.event-upload-progress",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst remote = get_host_info().HTTP_REMOTE_ORIGIN + \"/xhr/resources/corsenabled.py\",\n  redirect = \"resources/redirect.py?code=307&location=\" + remote;\n\n[remote, redirect].forEach(url => {\n  async_test(test => {\n    const client = new XMLHttpRequest();\n    const data = \"On time: \" + url;\n    client.upload.onprogress = test.step_func_done(e => {\n      assert_true(e.lengthComputable);\n      assert_equals(e.total, data.length);\n    });\n    client.onload = test.unreached_func();\n    client.open(\"POST\", url);\n    client.send(data);\n  }, \"Upload events registered on time (\" + url + \")\");\n});\n\n[remote, redirect].forEach(url => {\n  async_test(test => {\n    const client = new XMLHttpRequest();\n    client.onload = test.step_func_done();\n    client.open(\"POST\", url);\n    client.send(\"Too late: \" + url);\n    client.upload.onloadstart = test.unreached_func(); // registered too late\n    client.upload.onprogress = test.unreached_func(); // registered too late\n  }, \"Upload events registered too late (\" + url + \")\");\n});\n}\nmain();\n",
+      "origin": "xhr/event-upload-progress.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: upload progress event"
+      }
+    },
+    {
+      "id": "wpt.xhr.formdata.append",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n        assert_equals(create_formdata(['key', 'value1']).get('key'), \"value1\");\n    }, 'testFormDataAppend1');\n    test(function() {\n        assert_equals(create_formdata(['key', 'value2'], ['key', 'value1']).get('key'), \"value2\");\n    }, 'testFormDataAppend2');\n    test(function() {\n        assert_equals(create_formdata(['key', undefined]).get('key'), \"undefined\");\n    }, 'testFormDataAppendUndefined1');\n    test(function() {\n        assert_equals(create_formdata(['key', undefined], ['key', 'value1']).get('key'), \"undefined\");\n    }, 'testFormDataAppendUndefined2');\n    test(function() {\n        assert_equals(create_formdata(['key', null]).get('key'), \"null\");\n    }, 'testFormDataAppendNull1');\n    test(function() {\n        assert_equals(create_formdata(['key', null], ['key', 'value1']).get('key'), \"null\");\n    }, 'testFormDataAppendNull2');\n    test(function() {\n        var before = new Date(new Date().getTime() - 2000).getTime(); // two seconds ago, in case there's clock drift\n        var fd = create_formdata(['key', new Blob(), 'blank.txt']).get('key');\n        assert_equals(fd.name, \"blank.txt\");\n        assert_equals(fd.type, \"\");\n        assert_equals(fd.size, 0);\n        assert_greater_than_equal(fd.lastModified, before);\n        assert_less_than_equal(fd.lastModified, new Date().getTime());\n    }, 'testFormDataAppendEmptyBlob');\n\n    function create_formdata() {\n        var fd = new FormData();\n        for (var i = 0; i < arguments.length; i++) {\n            fd.append.apply(fd, arguments[i]);\n        };\n        return fd;\n    }\n}\nmain();\n",
+      "origin": "xhr/formdata/append.any.js",
+      "n_tests": 7,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FormData.append"
+      }
+    },
+    {
+      "id": "wpt.xhr.formdata.constructor",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(() => {\n  assert_throws_js(TypeError, () => { new FormData(null); });\n  assert_throws_js(TypeError, () => { new FormData(\"string\"); });\n}, \"Constructors should throw a type error\");\n}\nmain();\n",
+      "origin": "xhr/formdata/constructor.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FormData: constructor"
+      }
+    },
+    {
+      "id": "wpt.xhr.formdata.delete",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n        var fd = create_formdata(['key', 'value1'], ['key', 'value2']);\n        fd.delete('key');\n        assert_equals(fd.get('key'), null);\n    }, 'testFormDataDelete');\n    test(function() {\n        var fd = create_formdata(['key', 'value1'], ['key', 'value2']);\n        fd.delete('nil');\n        assert_equals(fd.get('key'), 'value1');\n    }, 'testFormDataDeleteNonExistentKey');\n    test(function() {\n        var fd = create_formdata(['key1', 'value1'], ['key2', 'value2']);\n        fd.delete('key1');\n        assert_equals(fd.get('key1'), null);\n        assert_equals(fd.get('key2'), 'value2');\n    }, 'testFormDataDeleteOtherKey');\n\n    function create_formdata() {\n        var fd = new FormData();\n        for (var i = 0; i < arguments.length; i++) {\n            fd.append.apply(fd, arguments[i]);\n        };\n        return fd;\n    }\n}\nmain();\n",
+      "origin": "xhr/formdata/delete.any.js",
+      "n_tests": 3,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FormData: delete"
+      }
+    },
+    {
+      "id": "wpt.xhr.formdata.foreach",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar fd = new FormData();\n    fd.append('n1', 'v1');\n    fd.append('n2', 'v2');\n    fd.append('n3', 'v3');\n    fd.append('n1', 'v4');\n    fd.append('n2', 'v5');\n    fd.append('n3', 'v6');\n    fd.delete('n2');\n\n    var file = new File(['hello'], \"hello.txt\");\n    fd.append('f1', file);\n\n    var expected_keys = ['n1', 'n3', 'n1', 'n3', 'f1'];\n    var expected_values = ['v1', 'v3', 'v4', 'v6', file];\n    test(function() {\n        var mykeys = [], myvalues = [];\n        for(var entry of fd) {\n            assert_equals(entry.length, 2,\n                          'Default iterator should yield key/value pairs');\n            mykeys.push(entry[0]);\n            myvalues.push(entry[1]);\n        }\n        assert_array_equals(mykeys, expected_keys,\n                            'Default iterator should see duplicate keys');\n        assert_array_equals(myvalues, expected_values,\n                            'Default iterator should see non-deleted values');\n    }, 'Iterator should return duplicate keys and non-deleted values');\n    test(function() {\n        var mykeys = [], myvalues = [];\n        for(var entry of fd.entries()) {\n            assert_equals(entry.length, 2,\n                          'entries() iterator should yield key/value pairs');\n            mykeys.push(entry[0]);\n            myvalues.push(entry[1]);\n        }\n        assert_array_equals(mykeys, expected_keys,\n                            'entries() iterator should see duplicate keys');\n        assert_array_equals(myvalues, expected_values,\n                            'entries() iterator should see non-deleted values');\n    }, 'Entries iterator should return duplicate keys and non-deleted values');\n    test(function() {\n        var mykeys = [];\n        for(var entry of fd.keys())\n            mykeys.push(entry);\n        assert_array_equals(mykeys, expected_keys,\n                            'keys() iterator should see duplicate keys');\n    }, 'Keys iterator should return duplicates');\n    test(function() {\n        var myvalues = [];\n        for(var entry of fd.values())\n            myvalues.push(entry);\n        assert_array_equals(myvalues, expected_values,\n                            'values() iterator should see non-deleted values');\n    }, 'Values iterator should return non-deleted values');\n}\nmain();\n",
+      "origin": "xhr/formdata/foreach.any.js",
+      "n_tests": 4,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FormData: foreach"
+      }
+    },
+    {
+      "id": "wpt.xhr.formdata.get",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n        assert_equals(create_formdata(['key', 'value1'], ['key', 'value2']).get('key'), \"value1\");\n    }, 'testFormDataGet');\n    test(function() {\n        assert_equals(create_formdata(['key', 'value1'], ['key', 'value2']).get('nil'), null);\n    }, 'testFormDataGetNull1');\n    test(function() {\n        assert_equals(create_formdata().get('key'), null);\n    }, 'testFormDataGetNull2');\n    test(function() {\n        assert_array_equals(create_formdata(['key', 'value1'], ['key', 'value2']).getAll('key'), [\"value1\", \"value2\"]);\n    }, 'testFormDataGetAll');\n    test(function() {\n        assert_array_equals(create_formdata(['key', 'value1'], ['key', 'value2']).getAll('nil'), []);\n    }, 'testFormDataGetAllEmpty1');\n    test(function() {\n        assert_array_equals(create_formdata().getAll('key'), []);\n    }, 'testFormDataGetAllEmpty2');\n\n    function create_formdata() {\n        var fd = new FormData();\n        for (var i = 0; i < arguments.length; i++) {\n            fd.append.apply(fd, arguments[i]);\n        };\n        return fd;\n    }\n}\nmain();\n",
+      "origin": "xhr/formdata/get.any.js",
+      "n_tests": 6,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FormData: get and getAll"
+      }
+    },
+    {
+      "id": "wpt.xhr.formdata.has",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n        assert_equals(create_formdata(['key', 'value1'], ['key', 'value2']).has('key'), true);\n    }, 'testFormDataHas');\n    test(function() {\n        assert_equals(create_formdata(['key', 'value1'], ['key', 'value2']).has('nil'), false);\n    }, 'testFormDataHasEmpty1');\n    test(function() {\n        assert_equals(create_formdata().has('key'), false);\n    }, 'testFormDataHasEmpty2');\n\n    function create_formdata() {\n        var fd = new FormData();\n        for (var i = 0; i < arguments.length; i++) {\n            fd.append.apply(fd, arguments[i]);\n        };\n        return fd;\n    }\n}\nmain();\n",
+      "origin": "xhr/formdata/has.any.js",
+      "n_tests": 3,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FormData: has"
+      }
+    },
+    {
+      "id": "wpt.xhr.formdata.iteration",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// These are tests for next()'s behavior as specified in\n// https://webidl.spec.whatwg.org/#es-iterator-prototype-object\n\n\"use strict\";\n\nfunction createFormData(input) {\n    const formData = new FormData();\n\n    for (const [name, value] of input) {\n        formData.append(name, value);\n    }\n\n    return formData;\n}\n\ntest(() => {\n    const formData = createFormData([[\"foo\", \"0\"],\n                                     [\"baz\", \"1\"],\n                                     [\"BAR\", \"2\"]]);\n    const actualKeys = [];\n    const actualValues = [];\n    for (const [name, value] of formData) {\n        actualKeys.push(name);\n        actualValues.push(value);\n        formData.delete(\"baz\");\n    }\n    assert_array_equals(actualKeys, [\"foo\", \"BAR\"]);\n    assert_array_equals(actualValues, [\"0\", \"2\"]);\n}, \"Iteration skips elements removed while iterating\");\n\ntest(() => {\n    const formData = createFormData([[\"foo\", \"0\"],\n                                     [\"baz\", \"1\"],\n                                     [\"BAR\", \"2\"],\n                                     [\"quux\", \"3\"]]);\n    const actualKeys = [];\n    const actualValues = [];\n    for (const [name, value] of formData) {\n        actualKeys.push(name);\n        actualValues.push(value);\n        if (name === \"baz\")\n            formData.delete(\"foo\");\n    }\n    assert_array_equals(actualKeys, [\"foo\", \"baz\", \"quux\"]);\n    assert_array_equals(actualValues, [\"0\", \"1\", \"3\"]);\n}, \"Removing elements already iterated over causes an element to be skipped during iteration\");\n\ntest(() => {\n    const formData = createFormData([[\"foo\", \"0\"],\n                                     [\"baz\", \"1\"],\n                                     [\"BAR\", \"2\"],\n                                     [\"quux\", \"3\"]]);\n    const actualKeys = [];\n    const actualValues = [];\n    for (const [name, value] of formData) {\n        actualKeys.push(name);\n        actualValues.push(value);\n        if (name === \"baz\")\n            formData.append(\"X-yZ\", \"4\");\n    }\n    assert_array_equals(actualKeys, [\"foo\", \"baz\", \"BAR\", \"quux\", \"X-yZ\"]);\n    assert_array_equals(actualValues, [\"0\", \"1\", \"2\", \"3\", \"4\"]);\n}, \"Appending a value pair during iteration causes it to be reached during iteration\");\n}\nmain();\n",
+      "origin": "xhr/formdata/iteration.any.js",
+      "n_tests": 3,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FormData: changes to entry list during iteration"
+      }
+    },
+    {
+      "id": "wpt.xhr.formdata.set-blob",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\nconst formData = new FormData();\n\ntest(() => {\n  const value = new Blob();\n  formData.set(\"blob-1\", value);\n  const blob1 = formData.get(\"blob-1\");\n  assert_not_equals(blob1, value);\n  assert_equals(blob1.constructor.name, \"File\");\n  assert_equals(blob1.name, \"blob\");\n  assert_equals(blob1.type, \"\");\n  assert_equals(formData.get(\"blob-1\") === formData.get(\"blob-1\"), true, \"should return the same value when get the same blob entry from FormData\");\n  assert_less_than(Math.abs(blob1.lastModified - Date.now()), 200, \"lastModified should be now\");\n}, \"blob without type\");\n\ntest(() => {\n  const value = new Blob([], { type: \"text/plain\" });\n  formData.set(\"blob-2\", value);\n  const blob2 = formData.get(\"blob-2\");\n  assert_not_equals(blob2, value);\n  assert_equals(blob2.constructor.name, \"File\");\n  assert_equals(blob2.name, \"blob\");\n  assert_equals(blob2.type, \"text/plain\");\n  assert_less_than(Math.abs(blob2.lastModified - Date.now()), 200, \"lastModified should be now\");\n}, \"blob with type\");\n\ntest(() => {\n  const value = new Blob();\n  formData.set(\"blob-3\", value, \"custom name\");\n  const blob3 = formData.get(\"blob-3\");\n  assert_not_equals(blob3, value);\n  assert_equals(blob3.constructor.name, \"File\");\n  assert_equals(blob3.name, \"custom name\");\n  assert_equals(blob3.type, \"\");\n  assert_less_than(Math.abs(blob3.lastModified - Date.now()), 200, \"lastModified should be now\");\n}, \"blob with custom name\");\n\ntest(() => {\n  const value = new File([], \"name\");\n  formData.set(\"file-1\", value);\n  const file1 = formData.get(\"file-1\");\n  assert_equals(file1, value);\n  assert_equals(file1.constructor.name, \"File\");\n  assert_equals(file1.name, \"name\");\n  assert_equals(file1.type, \"\");\n  assert_less_than(Math.abs(file1.lastModified - Date.now()), 200, \"lastModified should be now\");\n}, \"file without lastModified or custom name\");\n\ntest(() => {\n  const value = new File([], \"name\", { lastModified: 123 });\n  formData.set(\"file-2\", value, \"custom name\");\n  const file2 = formData.get(\"file-2\");\n  assert_not_equals(file2, value);\n  assert_equals(file2.constructor.name, \"File\");\n  assert_equals(file2.name, \"custom name\");\n  assert_equals(file2.type, \"\");\n  assert_equals(file2.lastModified, 123, \"lastModified should be 123\");\n}, \"file with lastModified and custom name\");\n}\nmain();\n",
+      "origin": "xhr/formdata/set-blob.any.js",
+      "n_tests": 5,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "formData.set(blob) and formData.set(file)"
+      }
+    },
+    {
+      "id": "wpt.xhr.formdata.set",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n        assert_equals(create_formdata(['key', 'value1']).get('key'), \"value1\");\n    }, 'testFormDataSet1');\n    test(function() {\n        assert_equals(create_formdata(['key', 'value2'], ['key', 'value1']).get('key'), \"value1\");\n    }, 'testFormDataSet2');\n    test(function() {\n        assert_equals(create_formdata(['key', undefined]).get('key'), \"undefined\");\n    }, 'testFormDataSetUndefined1');\n    test(function() {\n        assert_equals(create_formdata(['key', undefined], ['key', 'value1']).get('key'), \"value1\");\n    }, 'testFormDataSetUndefined2');\n    test(function() {\n        assert_equals(create_formdata(['key', null]).get('key'), \"null\");\n    }, 'testFormDataSetNull1');\n    test(function() {\n        assert_equals(create_formdata(['key', null], ['key', 'value1']).get('key'), \"value1\");\n    }, 'testFormDataSetNull2');\n    test(function() {\n        var fd = new FormData();\n        fd.set('key', new Blob([]), 'blank.txt');\n        var file = fd.get('key');\n\n        assert_true(file instanceof File);\n        assert_equals(file.name, 'blank.txt');\n    }, 'testFormDataSetEmptyBlob');\n\n    function create_formdata() {\n        var fd = new FormData();\n        for (var i = 0; i < arguments.length; i++) {\n            fd.set.apply(fd, arguments[i]);\n        };\n        return fd;\n    }\n}\nmain();\n",
+      "origin": "xhr/formdata/set.any.js",
+      "n_tests": 7,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FormData: set"
+      }
+    },
+    {
+      "id": "wpt.xhr.getresponseheader",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n[\n  [\"content-length\", \"0\", \"header-content-length\"],\n  [\"content-length\", \"0, 0\", \"header-content-length-twice\"],\n  [\"double-trouble\", \", \", \"headers-double-empty\"],\n  [\"foo-test\", \"1, 2, 3\", \"headers-basic\"],\n  [\"heya\", \", \\u000B\\u000C, 1, , , 2\", \"headers-some-are-empty\"],\n  [\"www-authenticate\", \"1, 2, 3, 4\", \"headers-www-authenticate\"],\n].forEach(testValues => {\n  async_test(t => {\n    const client = new XMLHttpRequest();\n    client.onload = t.step_func_done(() => {\n      assert_equals(client.getResponseHeader(testValues[0]), testValues[1]);\n    });\n    client.onerror = t.unreached_func(\"unexpected error\");\n    client.open(\"GET\", \"resources/\" + testValues[2] + \".asis\");\n    client.send();\n  }, \"getResponseHeader('\" + testValues[0] + \"') expects \" + testValues[1]);\n});\n}\nmain();\n",
+      "origin": "xhr/getresponseheader.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.idlharness",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nidl_test(\n  ['xhr'],\n  ['dom', 'html'],\n  idl_array => {\n    idl_array.add_objects({\n      XMLHttpRequest: ['new XMLHttpRequest()'],\n      XMLHttpRequestUpload: ['(new XMLHttpRequest()).upload'],\n      FormData: ['new FormData()'],\n      ProgressEvent: ['new ProgressEvent(\"type\")'],\n    });\n    if (self.Window) {\n      self.form = document.createElement('form');\n      self.submitter = document.createElement('button');\n      self.form.appendChild(self.submitter);\n      idl_array.add_objects({\n        FormData: [\n          'new FormData(form)',\n          'new FormData(form, submitter)'\n        ],\n      });\n    }\n  }\n);\n}\nmain();\n",
+      "origin": "xhr/idlharness.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["/resources/WebIDLParser.js", "/resources/idlharness.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker",
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.xhr.json",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// See also /fetch/api/response/json.any.js\n\nasync_test(t => {\n  const xhr = new XMLHttpRequest();\n  xhr.responseType = \"json\";\n  xhr.open(\"GET\", `data:,\\uFEFF{ \"b\": 1, \"a\": 2, \"b\": 3 }`);\n  xhr.send();\n  xhr.onload = t.step_func_done(() => {\n    assert_array_equals(Object.keys(xhr.response), [\"b\", \"a\"]);\n    assert_equals(xhr.response.a, 2);\n    assert_equals(xhr.response.b, 3);\n  });\n}, \"Ensure the correct JSON parser is used\");\n\nasync_test(t => {\n  const client = new XMLHttpRequest();\n  client.responseType = 'json';\n  client.open(\"GET\", \"resources/utf16-bom.json\");\n  client.send();\n  client.onload = t.step_func_done(() => {\n    assert_equals(client.response, null);\n  });\n}, \"Ensure UTF-16 results in an error\");\n}\nmain();\n",
+      "origin": "xhr/json.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.over-1-meg",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\nasync_test(t => {\n  const xhr = new XMLHttpRequest();\n  xhr.open(\"GET\", \"./resources/over-1-meg.txt\");\n\n  xhr.addEventListener(\"load\", t.step_func_done(() => {\n    const result = xhr.responseText;\n    const desiredResult = \"abcd\".repeat(290000);\n\n    assert_equals(result.length, desiredResult.length); // to avoid large diffs if they are lengthwise different\n    assert_equals(result, desiredResult);\n  }));\n\n  xhr.send();\n});\n}\nmain();\n",
+      "origin": "xhr/over-1-meg.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.overridemimetype-done-state",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// META title= XMLHttpRequest: overrideMimeType() in DONE state</title>\n\n/**\n * Spec: <https://xhr.spec.whatwg.org/#the-overridemimetype()-method>; data-tested-assertations=\"/following::ol/li[1]\"\n */\nvar test = async_test();\nvar client = new XMLHttpRequest();\nclient.onreadystatechange = test.step_func( function() {\n  if (client.readyState !== 4) return;\n  var text = client.responseText;\n  assert_not_equals(text, \"\");\n  assert_throws_dom(\"InvalidStateError\", function() { client.overrideMimeType('application/xml;charset=Shift-JIS'); });\n  if (GLOBAL.isWindow()) {\n    assert_equals(client.responseXML, null);\n  }\n  assert_equals(client.responseText, text);\n  test.done();\n});\nclient.open(\"GET\", \"resources/status.py?type=\"+encodeURIComponent('text/plain;charset=iso-8859-1')+'&content=%3Cmsg%3E%83%65%83%58%83%67%3C%2Fmsg%3E');\nclient.send();\n}\nmain();\n",
+      "origin": "xhr/overridemimetype-done-state.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.overridemimetype-unsent-state-force-shiftjis",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(t => {\n  const client = new XMLHttpRequest();\n  client.overrideMimeType('text/plain;charset=Shift-JIS');\n  client.onreadystatechange = t.step_func(() => {\n    if (client.readyState === 4) {\n      assert_equals( client.responseText, 'テスト' );\n      t.done();\n    }\n  });\n  client.open(\"GET\", \"resources/status.py?type=\"+encodeURIComponent('text/html;charset=iso-8859-1')+'&content=%83%65%83%58%83%67');\n  client.send( '' );\n}, \"XMLHttpRequest: overrideMimeType() in unsent state, enforcing Shift-JIS encoding\");\n}\nmain();\n",
+      "origin": "xhr/overridemimetype-unsent-state-force-shiftjis.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.request-content-length",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(test => {\n  const client = new XMLHttpRequest();\n  const data = \"This is 22 bytes long.\";\n  let happened = false;\n  client.upload.onprogress = test.step_func(e => {\n    assert_true(e.lengthComputable);\n    assert_equals(e.total, data.length);\n    happened = true;\n  });\n  client.onload = test.step_func_done(() => {\n    assert_true(happened);\n    assert_true(client.responseText.includes(`Content-Length: ${data.length}`));\n  });\n  client.onerror = test.unreached_func();\n  client.open(\"POST\", \"resources/echo-headers.py\");\n  client.send(data);\n}, \"Uploads need to set the Content-Length header\");\n\nasync_test(test => {\n  const client = new XMLHttpRequest();\n  const data = \"blah\";\n  const url = URL.createObjectURL(new Blob([data]));\n  client.open(\"GET\", url);\n  client.send();\n  client.onload = test.step_func_done(e => {\n    assert_true(e.lengthComputable);\n    assert_equals(e.total, data.length);\n    assert_equals(e.loaded, data.length);\n    assert_equals(client.responseText, data);\n    assert_equals(client.getResponseHeader(\"Content-Length\"), String(data.length));\n  });\n}, \"Fetched blob: URLs set the Content-Length header\");\n}\nmain();\n",
+      "origin": "xhr/request-content-length.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.response-body-errors",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// This will transmit two chunks TEST_CHUNK and then garbage, which should result in an error.\nconst url = \"/fetch/api/resources/bad-chunk-encoding.py?ms=1&count=2\";\n\ntest(() => {\n  client = new XMLHttpRequest();\n  client.open(\"GET\", url, false);\n  assert_throws_dom(\"NetworkError\", () => client.send());\n}, \"Synchronous XMLHttpRequest should throw on bad chunk\");\n\nasync_test(t => {\n  client = new XMLHttpRequest();\n  client.open(\"GET\", url, true);\n  client.onreadystatechange = t.step_func(() => {\n    if (client.readyState === 3) {\n      assert_true(client.responseText.indexOf(\"TEST_CHUNK\") !== -1);\n    }\n  });\n  client.onerror = t.step_func_done(() => {\n    assert_equals(client.responseText, \"\");\n  });\n  client.onload = t.unreached_func();\n  client.send();\n}, \"Asynchronous XMLHttpRequest should clear response on bad chunk\");\n}\nmain();\n",
+      "origin": "xhr/response-body-errors.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.responsetype",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n/**\n * Author: Mathias Bynens <http://mathiasbynens.be/>\n * Author: Ms2ger <mailto:Ms2ger@gmail.com>\n *\n * Spec: <https://xhr.spec.whatwg.org/#the-responsetype-attribute>\n */\ntest(function() {\n  var xhr = new XMLHttpRequest();\n  assert_equals(xhr.responseType, '');\n}, 'Initial value of responseType');\n\nvar types = ['', 'json', 'document', 'arraybuffer', 'blob', 'text', \"nosuchtype\"];\n\nfunction isIgnoredType(type) {\n  if (type == \"nosuchtype\") {\n    return true;\n  }\n\n  if (type != \"document\") {\n    return false;\n  }\n\n  // \"document\" is ignored only on workers.\n  return GLOBAL.isWorker();\n}\n\nfunction expectedType(type) {\n  if (!isIgnoredType(type)) {\n    return type;\n  }\n\n  return \"\";\n}\n\ntypes.forEach(function(type) {\n  test(function() {\n    var xhr = new XMLHttpRequest();\n    xhr.responseType = type;\n    assert_equals(xhr.responseType, expectedType(type));\n  }, 'Set responseType to ' + format_value(type) + ' when readyState is UNSENT.');\n\n  test(function() {\n    var xhr = new XMLHttpRequest();\n    xhr.open('get', '/');\n    xhr.responseType = type;\n    assert_equals(xhr.responseType, expectedType(type));\n  }, 'Set responseType to ' + format_value(type) + ' when readyState is OPENED.');\n\n  async_test(function() {\n    var xhr = new XMLHttpRequest();\n    xhr.open('get', '/');\n    xhr.onreadystatechange = this.step_func(function() {\n      if (xhr.readyState === XMLHttpRequest.HEADERS_RECEIVED) {\n        xhr.responseType = type;\n        assert_equals(xhr.responseType, expectedType(type));\n        this.done();\n      }\n    });\n    xhr.send();\n  }, 'Set responseType to ' + format_value(type) + ' when readyState is HEADERS_RECEIVED.');\n\n  async_test(function() {\n    var xhr = new XMLHttpRequest();\n    xhr.open('get', '/');\n    xhr.onreadystatechange = this.step_func(function() {\n      if (xhr.readyState === XMLHttpRequest.LOADING) {\n        if (isIgnoredType(type)) {\n          xhr.responseType = type;\n        } else {\n          assert_throws_dom(\"InvalidStateError\", function() {\n            xhr.responseType = type;\n          });\n        }\n        assert_equals(xhr.responseType, \"\");\n        this.done();\n      }\n    });\n    xhr.send();\n  }, 'Set responseType to ' + format_value(type) + ' when readyState is LOADING.');\n\n  async_test(function() {\n    var xhr = new XMLHttpRequest();\n    xhr.open('get', '/');\n    xhr.onreadystatechange = this.step_func(function() {\n      if (xhr.readyState === XMLHttpRequest.DONE) {\n        var text = xhr.responseText;\n        assert_not_equals(text, \"\");\n        if (isIgnoredType(type)) {\n          xhr.responseType = type;\n        } else {\n          assert_throws_dom(\"InvalidStateError\", function() {\n            xhr.responseType = type;\n          });\n        }\n        assert_equals(xhr.responseType, \"\");\n        assert_equals(xhr.responseText, text);\n        this.done();\n      }\n    });\n    xhr.send();\n  }, 'Set responseType to ' + format_value(type) + ' when readyState is DONE.');\n\n  // Note: the case of setting responseType first, and then calling synchronous\n  // open(), is tested in open-method-responsetype-set-sync.htm.\n  test(function() {\n    var xhr = new XMLHttpRequest();\n    xhr.open('get', '/', false);\n    if (GLOBAL.isWorker() || isIgnoredType(type)) {\n      // Setting responseType on workers is valid even for a sync XHR.\n      xhr.responseType = type;\n      assert_equals(xhr.responseType, expectedType(type));\n    } else {\n      assert_throws_dom(\"InvalidAccessError\", function() {\n        xhr.responseType = type;\n      });\n    }\n  }, 'Set responseType to ' + format_value(type) + ' when readyState is OPENED and the sync flag is set.');\n\n  test(function() {\n    var xhr = new XMLHttpRequest();\n    xhr.open('get', '/', false);\n    xhr.send();\n    assert_equals(xhr.readyState, XMLHttpRequest.DONE);\n    if (isIgnoredType(type)) {\n      xhr.responseType = type;\n    } else {\n      assert_throws_dom(\"InvalidStateError\", function() {\n        xhr.responseType = type;\n      });\n    }\n    assert_equals(xhr.responseType, \"\");\n  }, 'Set responseType to ' + format_value(type) + ' when readyState is DONE and the sync flag is set.');\n});\n}\nmain();\n",
+      "origin": "xhr/responsetype.any.js",
+      "n_tests": 8,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest.responseType"
+      }
+    },
+    {
+      "id": "wpt.xhr.responseurl-after-abort",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// https://xhr.spec.whatwg.org/#the-abort()-method\n// abort() sets the response to a network error, both via the request error steps (step 2) and\n// when the state is already done (step 3). A network error's URL is null, so responseURL must\n// return the empty string, just like status is 0 and getAllResponseHeaders() is \"\".\n\nconst url = \"resources/well-formed.xml\";\n\nfunction assertNetworkError(client) {\n  assert_equals(client.status, 0, \"status\");\n  assert_equals(client.statusText, \"\", \"statusText\");\n  assert_equals(client.getAllResponseHeaders(), \"\", \"getAllResponseHeaders()\");\n  assert_equals(client.responseURL, \"\", \"responseURL\");\n}\n\nasync_test(test => {\n  const client = new XMLHttpRequest();\n  client.onreadystatechange = test.step_func(() => {\n    if (client.readyState !== 2)\n      return;\n    assert_equals(client.status, 200);\n    assert_not_equals(client.responseURL, \"\", \"responseURL before abort()\");\n    client.abort();\n    assertNetworkError(client);\n  });\n  client.onloadend = test.step_func_done(() => {\n    assertNetworkError(client);\n  });\n  client.open(\"GET\", url);\n  client.send(null);\n}, \"abort() during HEADERS_RECEIVED clears responseURL\");\n\nasync_test(test => {\n  const client = new XMLHttpRequest();\n  let aborted = false;\n  client.onreadystatechange = test.step_func(() => {\n    if (client.readyState !== 3 || aborted)\n      return;\n    aborted = true;\n    assert_equals(client.status, 200);\n    assert_not_equals(client.responseURL, \"\", \"responseURL before abort()\");\n    client.abort();\n    assertNetworkError(client);\n  });\n  client.onloadend = test.step_func_done(() => {\n    assert_true(aborted, \"reached LOADING\");\n    assertNetworkError(client);\n  });\n  client.open(\"GET\", url);\n  client.send(null);\n}, \"abort() during LOADING clears responseURL\");\n\nasync_test(test => {\n  const client = new XMLHttpRequest();\n  client.onload = test.step_func_done(() => {\n    assert_equals(client.readyState, 4);\n    assert_not_equals(client.responseURL, \"\", \"responseURL before abort()\");\n    client.abort();\n    assert_equals(client.readyState, 0);\n    assertNetworkError(client);\n  });\n  client.open(\"GET\", url);\n  client.send(null);\n}, \"abort() during DONE clears responseURL (async)\");\n\ntest(() => {\n  const client = new XMLHttpRequest();\n  client.open(\"GET\", url, false);\n  client.send(null);\n  assert_equals(client.readyState, 4);\n  assert_not_equals(client.responseURL, \"\", \"responseURL before abort()\");\n  client.abort();\n  assert_equals(client.readyState, 0);\n  assertNetworkError(client);\n}, \"abort() during DONE clears responseURL (sync)\");\n\nasync_test(test => {\n  const client = new XMLHttpRequest();\n  client.open(\"GET\", url);\n  client.send(null);\n  client.abort();\n  assertNetworkError(client);\n  // A reused XMLHttpRequest must report the new response's URL, not the aborted one.\n  client.onload = test.step_func_done(() => {\n    assert_equals(client.status, 200);\n    assert_equals(client.responseURL, new URL(url + \"?reused\", location.href).href);\n  });\n  client.open(\"GET\", url + \"?reused\");\n  client.send(null);\n}, \"responseURL reflects the new response after abort() and reuse\");\n}\nmain();\n",
+      "origin": "xhr/responseurl-after-abort.any.js",
+      "n_tests": 5,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest: responseURL is the empty string after abort()"
+      }
+    },
+    {
+      "id": "wpt.xhr.send-data-arraybuffer",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function()\n{\n    var xhr = new XMLHttpRequest();\n    var buf = new ArrayBuffer(5);\n    var arr = new Uint8Array(buf);\n    arr[0] = 0x48;\n    arr[1] = 0x65;\n    arr[2] = 0x6c;\n    arr[3] = 0x6c;\n    arr[4] = 0x6f;\n\n    xhr.onreadystatechange = function()\n    {\n        if (xhr.readyState == 4)\n        {\n            test.step(function()\n            {\n                assert_equals(xhr.status, 200);\n                assert_equals(xhr.response, \"Hello\");\n\n                test.done();\n            });\n        }\n    };\n\n    xhr.open(\"POST\", \"./resources/content.py\", true);\n    xhr.send(buf);\n});\n}\nmain();\n",
+      "origin": "xhr/send-data-arraybuffer.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest.send(arraybuffer)"
+      }
+    },
+    {
+      "id": "wpt.xhr.send-data-arraybufferview",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function()\n{\n    var str = \"Hello\";\n    var bytes = str.split(\"\").map(function(ch) { return ch.charCodeAt(0); });\n    var xhr = new XMLHttpRequest();\n    var arr = new Uint8Array(bytes);\n\n    xhr.onload = test.step_func_done(function() {\n        assert_equals(xhr.status, 200);\n        assert_equals(xhr.response, str);\n    });\n\n    xhr.open(\"POST\", \"./resources/content.py\", true);\n    xhr.send(arr);\n});\n}\nmain();\n",
+      "origin": "xhr/send-data-arraybufferview.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest.send(arraybufferview)"
+      }
+    },
+    {
+      "id": "wpt.xhr.send-data-es-object",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction do_test(obj, expected, name) {\n  var test = async_test(name)\n  test.step(function() {\n    var client = new XMLHttpRequest()\n    client.onload = test.step_func(function () {\n      assert_equals(client.responseText, expected)\n      test.done()\n    });\n    client.open('POST', 'resources/content.py')\n    if (expected.exception) {\n      if (expected.exception.identity) {\n        assert_throws_exactly(expected.exception.identity,\n                              function(){client.send(obj)})\n      } else {\n        assert_throws_js(expected.exception.ctor,\n                         function(){client.send(obj)})\n      }\n      test.done()\n    } else {\n      client.send(obj)\n    }\n  });\n}\n\ndo_test({}, '[object Object]', 'sending a plain empty object')\ndo_test(Math, '[object Math]', 'sending the ES Math object')\ndo_test(new XMLHttpRequest, '[object XMLHttpRequest]', 'sending a new XHR instance')\ndo_test(new ReadableStream, '[object ReadableStream]', 'sending a new ReadableStream instance')\ndo_test({toString:function(){}}, 'undefined', 'sending object that stringifies to undefined')\ndo_test({toString:function(){return null}}, 'null', 'sending object that stringifies to null')\nvar ancestor = {toString: function(){\n  var ar=[]\n  for (var prop in this) {\n    if (this.hasOwnProperty(prop)) {\n      ar.push(prop+'='+this[prop])\n    }\n  };\n  return ar.join('&')\n}};\n\nvar myObj = Object.create(ancestor, {foo:{value:1, enumerable: true},  bar:{value:'foo', enumerable:true}})\ndo_test(myObj, 'foo=1&bar=foo', 'object that stringifies to query string')\n\nvar myFakeJSON = {a:'a', b:'b', toString:function(){ return JSON.stringify(this, function(key, val){ return key ==='toString'?undefined:val; }) }}\ndo_test(myFakeJSON, '{\"a\":\"a\",\"b\":\"b\"}', 'object that stringifies to JSON string')\n\nvar myFakeDoc1 = {valueOf:function(){return document}}\ndo_test(myFakeDoc1, '[object Object]', 'object whose valueOf() returns a document - ignore valueOf(), stringify')\n\nvar myFakeDoc2 = {toString:function(){return document}}\nvar expectedError = self.GLOBAL.isWorker() ? ReferenceError : TypeError;\ndo_test(myFakeDoc2, {exception: { ctor: expectedError } }, 'object whose toString() returns a document, expected to throw')\n\nvar err = {name:'FooError', message:'bar'};\nvar myThrower = {toString:function(){throw err;}};\ndo_test(myThrower, {exception: { identity: err }}, 'object whose toString() throws, expected to throw')\n}\nmain();\n",
+      "origin": "xhr/send-data-es-object.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest.send(ES object)"
+      }
+    },
+    {
+      "id": "wpt.xhr.send-data-formdata",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar test = async_test();\ntest.step(function()\n{\n    var xhr = new XMLHttpRequest();\n    var form = new FormData();\n    form.append(\"id\", \"0\");\n    form.append(\"value\", \"zero\");\n\n    xhr.onreadystatechange = test.step_func(() => {\n        if (xhr.readyState == 4) {\n            assert_equals(xhr.status, 200);\n            assert_equals(xhr.response, \"id:0;value:zero;\");\n            test.done();\n        }\n    });\n\n    xhr.open(\"POST\", \"./resources/form.py\", true);\n    xhr.send(form);\n});\n}\nmain();\n",
+      "origin": "xhr/send-data-formdata.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest.send(formdata)"
+      }
+    },
+    {
+      "id": "wpt.xhr.send-data-sharedarraybuffer",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(() => {\n    const xhr = new XMLHttpRequest();\n    // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n    const buf = new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n\n    xhr.open(\"POST\", \"./resources/content.py\", true);\n    assert_throws_js(TypeError, function() {\n        xhr.send(buf)\n    });\n}, \"sending a SharedArrayBuffer\");\n\n[\"Int8Array\", \"Uint8Array\", \"Uint8ClampedArray\", \"Int16Array\", \"Uint16Array\",\n \"Int32Array\", \"Uint32Array\", \"BigInt64Array\", \"BigUint64Array\",\n \"Float16Array\", \"Float32Array\", \"Float64Array\", \"DataView\"].forEach((type) => {\n    test(() => {\n        const xhr = new XMLHttpRequest();\n        // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n        const arr = new self[type](new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer);\n\n        xhr.open(\"POST\", \"./resources/content.py\", true);\n        assert_throws_js(TypeError, function() {\n            xhr.send(arr)\n        });\n    }, `sending a ${type} backed by a SharedArrayBuffer`);\n});\n}\nmain();\n",
+      "origin": "xhr/send-data-sharedarraybuffer.any.js",
+      "n_tests": 2,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest.send(sharedarraybuffer)"
+      }
+    },
+    {
+      "id": "wpt.xhr.send-data-string-invalid-unicode",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst LEFT_SURROGATE = '\\ud83d';\nconst RIGHT_SURROGATE = '\\udc94';\n\n// Unmatched surrogates should be replaced with the unicode replacement\n// character, 0xFFFD. '$' in these templates is replaced with one of\n// LEFT_SURROGATE or RIGHT_SURROGATE according to the test.\nconst TEMPLATES = {\n  '$': [239, 191, 189],\n  '$ab': [239, 191, 189, 97, 98],\n  'a$b': [97, 239, 191, 189, 98],\n  'ab$': [97, 98, 239, 191, 189],\n};\n\nfor (const surrogate of [LEFT_SURROGATE, RIGHT_SURROGATE]) {\n  for (const [template, expected] of Object.entries(TEMPLATES)) {\n    const invalidString = template.replace('$', surrogate);\n    const printableString = template.replace(\n        '$', '\\\\u{' + surrogate.charCodeAt(0).toString(16) + '}');\n    async_test(t => {\n      xhrSendStringAndCheckResponseBody(t, invalidString, expected);\n    }, `invalid unicode '${printableString}' should be fixed with ` +\n               `replacement character`);\n  }\n}\n\n// For the sake of completeness, verify that matched surrogates work.\nasync_test(t => {\n  xhrSendStringAndCheckResponseBody(t, LEFT_SURROGATE + RIGHT_SURROGATE,\n                                    [240, 159, 146, 148]);\n}, 'valid unicode should be sent correctly');\n\nfunction xhrSendStringAndCheckResponseBody(t, string, expected) {\n  const xhr = new XMLHttpRequest();\n  xhr.responseType = 'arraybuffer';\n  xhr.onload = t.step_func(() => {\n    assert_equals(xhr.status, 200, 'status should be 200');\n    const actualBody = new Uint8Array(xhr.response);\n    assert_array_equals(actualBody, expected, 'content should match');\n    t.done();\n  });\n  xhr.onerror = t.unreached_func('no error should occur');\n  xhr.open('POST', 'resources/content.py', true);\n  xhr.send(string);\n}\n}\nmain();\n",
+      "origin": "xhr/send-data-string-invalid-unicode.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "XMLHttpRequest.send(invalidUnicodeString)"
+      }
+    },
+    {
+      "id": "wpt.xhr.send-send",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n  var client = new XMLHttpRequest()\n  client.open(\"GET\", \"resources/well-formed.xml\")\n  client.send(null)\n  assert_throws_dom(\"InvalidStateError\", function() { client.send(null) })\n  client.abort()\n}, \"XMLHttpRequest: send() - send()\");\n}\nmain();\n",
+      "origin": "xhr/send-send.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.send-usp",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst NUM_TESTS = 128;\n\nfunction encode(n) {\n  if (n === 0x20) {\n    return \"\\x2B\";\n  }\n\n  if (n === 0x2A || n === 0x2D || n === 0x2E ||\n      (0x30 <= n && n <= 0x39) || (0x41 <= n && n <= 0x5A) ||\n      n === 0x5F || (0x61 <= n && n <= 0x7A)) {\n    return String.fromCharCode(n);\n  }\n\n  var s = n.toString(16).toUpperCase();\n  return \"%\" + (s.length === 2 ? s : '0' + s);\n}\n\n  var tests = [];\n  var overall_test = async_test(\"Overall fetch with URLSearchParams\");\n  for (var i = 0; i < NUM_TESTS; i++) {\n    // Multiple subtests so that failures can be fine-grained\n    tests[i] = async_test(\"XMLHttpRequest.send(URLSearchParams) (\" + i + \")\");\n  }\n\n  // We use a single XHR since this test tends to time out\n  // with 128 consecutive fetches when run in parallel\n  // with many other WPT tests.\n  var x = new XMLHttpRequest();\n  x.onload = overall_test.step_func(function() {\n    var response_split = x.response.split(\"&\");\n    overall_test.done();\n    for (var i = 0; i < NUM_TESTS; i++) {\n      tests[i].step(function() {\n        assert_equals(response_split[i], \"a\" + i + \"=\"+encode(i));\n        tests[i].done();\n      });\n    }\n  });\n  x.onerror = overall_test.unreached_func();\n\n  x.open(\"POST\", \"resources/content.py\");\n  var usp = new URLSearchParams();\n  for (var i = 0; i < NUM_TESTS; i++) {\n    usp.append(\"a\" + i, String.fromCharCode(i));\n  }\n  x.send(usp)\n}\nmain();\n",
+      "origin": "xhr/send-usp.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.sync-no-progress",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(t => {\n  let xhr = new XMLHttpRequest();\n  let loadEventFired = false;\n  xhr.onprogress = t.unreached_func('progress event should not be fired');\n  xhr.onload = () => {\n    loadEventFired = true;\n  };\n  xhr.open('GET', 'resources/trickle.py?count=4&delay=150', false);\n  xhr.send();\n  // Check the load event as a sanity check that the test is working.\n  assert_true(loadEventFired, 'load event should have fired');\n}, 'progress event should not be fired by sync XHR');\n}\nmain();\n",
+      "origin": "xhr/sync-no-progress.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.xhr.sync-no-timeout",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// This is a regression test for https://crbug.com/844268, when a timeout of 10\n// seconds was applied to XHR in Chrome. There should be no timeout unless the\n// \"timeout\" parameter is set on the object.\ntest(t => {\n  let xhr = new XMLHttpRequest();\n\n  // For practical reasons, we can't wait forever. 12 seconds is long enough to\n  // reliably reproduce the bug in Chrome.\n  xhr.open('GET', 'resources/trickle.py?ms=1000&count=12', false);\n\n  // The test will fail if this throws.\n  xhr.send();\n}, 'Sync XHR should not have a timeout');\n}\nmain();\n",
+      "origin": "xhr/sync-no-timeout.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker,sharedworker",
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.xhr.xhr-authorization-redirect",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst authorizationValue = \"Basic \" + btoa(\"user:pass\");\nfunction getAuthorizationHeaderValue(url)\n{\n  var client = new XMLHttpRequest();\n  client.open(\"GET\", url, false);\n  client.setRequestHeader(\"Authorization\", authorizationValue);\n  const promise = new Promise(resolve => client.onloadend = () => resolve(client.responseText));\n  client.send();\n  return promise;\n}\n\npromise_test(async test => {\n  const result = await getAuthorizationHeaderValue(\"/fetch/api/resources/dump-authorization-header.py\");\n  assert_equals(result, authorizationValue);\n}, \"getAuthorizationHeaderValue - no redirection\");\n\npromise_test(async test => {\n  const result = await getAuthorizationHeaderValue(\"/fetch/api/resources/redirect.py?location=\" + encodeURIComponent(\"/fetch/api/resources/dump-authorization-header.py\"));\n  assert_equals(result, authorizationValue);\n}, \"getAuthorizationHeaderValue - same origin redirection\");\n\npromise_test(async (test) => {\n  const result = await getAuthorizationHeaderValue(get_host_info().HTTP_REMOTE_ORIGIN + \"/fetch/api/resources/redirect.py?allow_headers=Authorization&location=\" + encodeURIComponent(get_host_info().HTTP_ORIGIN + \"/fetch/api/resources/dump-authorization-header.py\"));\n  assert_equals(result, \"none\");\n}, \"getAuthorizationHeaderValue - cross origin redirection\");\n}\nmain();\n",
+      "origin": "xhr/xhr-authorization-redirect.any.js",
+      "n_tests": 3,
+      "async": true,
+      "fetch": false,
+      "includes": ["/common/get-host-info.sub.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,sharedworker,dedicatedworker"
+      }
+    },
+    {
+      "id": "wpt.xhr.xhr-timeout-longtask",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(function() {\n  var client = new XMLHttpRequest();\n  client.open(\"GET\", \"resources/delay.py?ms=100\", true);\n\n  client.timeout = 150;\n  client.ontimeout = this.step_func(assert_unreached);\n  client.onloadend = () => this.done();\n\n  client.send();\n\n  const start = performance.now();\n  while (performance.now() - start < 200) { }\n}, \"Long tasks should not trigger load timeout\")\n}\nmain();\n",
+      "origin": "xhr/xhr-timeout-longtask.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.xhr.xmlhttprequest-withcredentials",
+      "category": "xhr",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n  var client = new XMLHttpRequest()\n  assert_false(client.withCredentials, \"withCredentials defaults to false\")\n  client.withCredentials = true\n  assert_true(client.withCredentials, \"is true after setting\")\n}, \"default value is false, set value is true\")\n\ntest(function() {\n  var client = new XMLHttpRequest()\n  client.open(\"GET\", \"resources/delay.py?ms=1000\", true)\n  client.withCredentials = true\n  assert_true(client.withCredentials, \"set in OPEN state\")\n}, \"can also be set in OPEN state\")\n\ntest(function() {\n  var client = new XMLHttpRequest()\n  client.open(\"GET\", \"resources/delay.py?ms=1000\", false)\n  client.withCredentials = true\n  assert_true(client.withCredentials, \"set in OPEN state\")\n}, \"setting on synchronous XHR\")\n\nasync_test(function() {\n  var client = new XMLHttpRequest()\n  client.open(\"GET\", \"resources/delay.py?ms=1000\")\n  client.send()\n  assert_throws_dom(\"InvalidStateError\", function() { client.withCredentials = true })\n  client.onreadystatechange = this.step_func(function() {\n    assert_throws_dom(\"InvalidStateError\", function() { client.withCredentials = true })\n    if (client.readyState === 4) {\n      this.done()\n    }\n  })\n}, \"setting withCredentials when not in UNSENT, OPENED state (asynchronous)\")\n\ntest(function() {\n  var client = new XMLHttpRequest()\n  client.open(\"GET\", \"resources/delay.py?ms=1000\", false)\n  client.send();\n  assert_throws_dom(\"InvalidStateError\", function() { client.withCredentials = true })\n}, \"setting withCredentials when in DONE state (synchronous)\")\n}\nmain();\n",
+      "origin": "xhr/XMLHttpRequest-withCredentials.any.js",
+      "n_tests": 5,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    }
+  ]
+}

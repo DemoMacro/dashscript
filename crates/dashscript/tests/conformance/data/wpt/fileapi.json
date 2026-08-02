@@ -1,0 +1,541 @@
+{
+  "_comment": "Auto-extracted from web-platform-tests/wpt by scripts/extract-wpt.mjs (WinterTC ECMA-429 §5 minimum common API scope). Each fixture wraps a WPT .any.js body verbatim in `function main(): void { … }` — test()/assert_equals stay as-is (DashScript lowers them to __ds::wpt_* static helpers). WinterTC is pure-Rust: the conformance harness runs the static path only (no engine fallback). `includes` lists the WPT harness scripts (// META: script=) the fixture depends on. DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "wpt.fileapi.blob.blob-array-buffer",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\npromise_test(async () => {\n  const input_arr = new TextEncoder().encode(\"PASS\");\n  const blob = new Blob([input_arr]);\n  const array_buffer = await blob.arrayBuffer();\n  assert_true(array_buffer instanceof ArrayBuffer);\n  assert_equals_typed_array(new Uint8Array(array_buffer), input_arr);\n}, \"Blob.arrayBuffer()\")\n\npromise_test(async () => {\n  const input_arr = new TextEncoder().encode(\"\");\n  const blob = new Blob([input_arr]);\n  const array_buffer = await blob.arrayBuffer();\n  assert_true(array_buffer instanceof ArrayBuffer);\n  assert_equals_typed_array(new Uint8Array(array_buffer), input_arr);\n}, \"Blob.arrayBuffer() empty Blob data\")\n\npromise_test(async () => {\n  const input_arr = new TextEncoder().encode(\"\\u08B8\\u000a\");\n  const blob = new Blob([input_arr]);\n  const array_buffer = await blob.arrayBuffer();\n  assert_equals_typed_array(new Uint8Array(array_buffer), input_arr);\n}, \"Blob.arrayBuffer() non-ascii input\")\n\npromise_test(async () => {\n  const input_arr = [8, 241, 48, 123, 151];\n  const typed_arr = new Uint8Array(input_arr);\n  const blob = new Blob([typed_arr]);\n  const array_buffer = await blob.arrayBuffer();\n  assert_equals_typed_array(new Uint8Array(array_buffer), typed_arr);\n}, \"Blob.arrayBuffer() non-unicode input\")\n\npromise_test(async () => {\n  const input_arr = new TextEncoder().encode(\"PASS\");\n  const blob = new Blob([input_arr]);\n  const array_buffer_results = await Promise.all([blob.arrayBuffer(),\n      blob.arrayBuffer(), blob.arrayBuffer()]);\n  for (let array_buffer of array_buffer_results) {\n    assert_true(array_buffer instanceof ArrayBuffer);\n    assert_equals_typed_array(new Uint8Array(array_buffer), input_arr);\n  }\n}, \"Blob.arrayBuffer() concurrent reads\")\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-array-buffer.any.js",
+      "n_tests": 5,
+      "async": true,
+      "fetch": false,
+      "includes": ["../support/Blob.js"],
+      "variants": [],
+      "meta": {
+        "title": "Blob Array Buffer"
+      }
+    },
+    {
+      "id": "wpt.fileapi.blob.blob-bytes",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\npromise_test(async () => {\n  const input_arr = new TextEncoder().encode(\"PASS\");\n  const blob = new Blob([input_arr]);\n  const uint8array = await blob.bytes();\n  assert_true(uint8array instanceof Uint8Array);\n  assert_equals_typed_array(uint8array, input_arr);\n}, \"Blob.bytes()\")\n\npromise_test(async () => {\n  const input_arr = new TextEncoder().encode(\"\");\n  const blob = new Blob([input_arr]);\n  const uint8array = await blob.bytes();\n  assert_true(uint8array instanceof Uint8Array);\n  assert_equals_typed_array(uint8array, input_arr);\n}, \"Blob.bytes() empty Blob data\")\n\npromise_test(async () => {\n  const input_arr = new TextEncoder().encode(\"\\u08B8\\u000a\");\n  const blob = new Blob([input_arr]);\n  const uint8array = await blob.bytes();\n  assert_equals_typed_array(uint8array, input_arr);\n}, \"Blob.bytes() non-ascii input\")\n\npromise_test(async () => {\n  const input_arr = [8, 241, 48, 123, 151];\n  const typed_arr = new Uint8Array(input_arr);\n  const blob = new Blob([typed_arr]);\n  const uint8array = await blob.bytes();\n  assert_equals_typed_array(uint8array, typed_arr);\n}, \"Blob.bytes() non-unicode input\")\n\npromise_test(async () => {\n  const input_arr = new TextEncoder().encode(\"PASS\");\n  const blob = new Blob([input_arr]);\n  const uint8array_results = await Promise.all([blob.bytes(),\n      blob.bytes(), blob.bytes()]);\n  for (let uint8array of uint8array_results) {\n    assert_true(uint8array instanceof Uint8Array);\n    assert_equals_typed_array(uint8array, input_arr);\n  }\n}, \"Blob.bytes() concurrent reads\")\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-bytes.any.js",
+      "n_tests": 5,
+      "async": true,
+      "fetch": false,
+      "includes": ["../support/Blob.js"],
+      "variants": [],
+      "meta": {
+        "title": "Blob bytes()"
+      }
+    },
+    {
+      "id": "wpt.fileapi.blob.blob-constructor-detached-buffer",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nfunction detachBuffer(buffer) {\n  // Transfer the buffer to detach it. Works in both window and worker contexts.\n  new MessageChannel().port1.postMessage(buffer, [buffer]);\n}\n\ntest_blob(function() {\n  const buffer = new ArrayBuffer(4);\n  const view = new Uint8Array(buffer);\n  view[0] = 0x41;\n  view[1] = 0x42;\n  view[2] = 0x43;\n  view[3] = 0x44;\n  detachBuffer(buffer);\n  return new Blob([view]);\n}, {\n  expected: '',\n  type: '',\n  desc: 'Blob from a detached ArrayBufferView should be empty'\n});\n\ntest_blob(function() {\n  const buffer = new ArrayBuffer(4);\n  const view = new Uint8Array(buffer, 1, 2); // offset=1, length=2\n  view[0] = 0x41;\n  view[1] = 0x42;\n  detachBuffer(buffer);\n  return new Blob([view]);\n}, {\n  expected: '',\n  type: '',\n  desc: 'Blob from a detached ArrayBufferView with offset should be empty'\n});\n\ntest_blob(function() {\n  const buffer = new ArrayBuffer(4);\n  detachBuffer(buffer);\n  return new Blob([buffer]);\n}, {\n  expected: '',\n  type: '',\n  desc: 'Blob from a detached ArrayBuffer should be empty'\n});\n\ntest_blob(function() {\n  const buffer = new ArrayBuffer(4);\n  const view = new Uint8Array(buffer);\n  view[0] = 0x41;\n  detachBuffer(buffer);\n  // Mix detached view with a string\n  return new Blob([view, 'hello']);\n}, {\n  expected: 'hello',\n  type: '',\n  desc: 'Blob from a detached ArrayBufferView mixed with string, detached part ignored'\n});\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-constructor-detached-buffer.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["../support/Blob.js"],
+      "variants": [],
+      "meta": {
+        "title": "Blob constructor with detached ArrayBuffer/ArrayBufferView"
+      }
+    },
+    {
+      "id": "wpt.fileapi.blob.blob-constructor-endings",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n[\n  'transparent',\n  'native'\n].forEach(value => test(t => {\n  assert_class_string(new Blob([], {endings: value}), 'Blob',\n                      `Constructor should allow \"${value}\" endings`);\n}, `Valid \"endings\" value: ${JSON.stringify(value)}`));\n\n[\n  null,\n  '',\n  'invalidEnumValue',\n  'Transparent',\n  'NATIVE',\n  0,\n  {}\n].forEach(value => test(t => {\n  assert_throws_js(TypeError, () => new Blob([], {endings: value}),\n                   'Blob constructor should throw');\n}, `Invalid \"endings\" value: ${JSON.stringify(value)}`));\n\ntest(t => {\n  const test_error = {name: 'test'};\n  assert_throws_exactly(\n    test_error,\n    () => new Blob([], { get endings() { throw test_error; }}),\n    'Blob constructor should propagate exceptions from \"endings\" property');\n}, 'Exception propagation from options');\n\ntest(t => {\n  let got = false;\n  new Blob([], { get endings() { got = true; } });\n  assert_true(got, 'The \"endings\" property was accessed during construction.');\n}, 'The \"endings\" options property is used');\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-constructor-endings.any.js",
+      "n_tests": 4,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "Blob constructor: endings option"
+      }
+    },
+    {
+      "id": "wpt.fileapi.blob.blob-constructor",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\ntest(function() {\n  assert_true(\"Blob\" in globalThis, \"globalThis should have a Blob property.\");\n  assert_equals(Blob.length, 0, \"Blob.length should be 0.\");\n  assert_true(Blob instanceof Function, \"Blob should be a function.\");\n}, \"Blob interface object\");\n\n// Step 1.\ntest(function() {\n  var blob = new Blob();\n  assert_true(blob instanceof Blob);\n  assert_equals(String(blob), '[object Blob]');\n  assert_equals(blob.size, 0);\n  assert_equals(blob.type, \"\");\n}, \"Blob constructor with no arguments\");\ntest(function() {\n  assert_throws_js(TypeError, function() { var blob = Blob(); });\n}, \"Blob constructor with no arguments, without 'new'\");\ntest(function() {\n  var blob = new Blob;\n  assert_true(blob instanceof Blob);\n  assert_equals(blob.size, 0);\n  assert_equals(blob.type, \"\");\n}, \"Blob constructor without brackets\");\ntest(function() {\n  var blob = new Blob(undefined);\n  assert_true(blob instanceof Blob);\n  assert_equals(String(blob), '[object Blob]');\n  assert_equals(blob.size, 0);\n  assert_equals(blob.type, \"\");\n}, \"Blob constructor with undefined as first argument\");\n\n// blobParts argument (WebIDL).\ntest(function() {\n  var args = [\n    null,\n    true,\n    false,\n    0,\n    1,\n    1.5,\n    \"FAIL\",\n    new Date(),\n    new RegExp(),\n    {},\n    { 0: \"FAIL\", length: 1 },\n  ];\n  args.forEach(function(arg) {\n    assert_throws_js(TypeError, function() {\n      new Blob(arg);\n    }, \"Should throw for argument \" + format_value(arg) + \".\");\n  });\n}, \"Passing non-objects, Dates and RegExps for blobParts should throw a TypeError.\");\n\ntest_blob(function() {\n  return new Blob({\n    [Symbol.iterator]: Array.prototype[Symbol.iterator],\n  });\n}, {\n  expected: \"\",\n  type: \"\",\n  desc: \"A plain object with @@iterator should be treated as a sequence for the blobParts argument.\"\n});\ntest(t => {\n  const blob = new Blob({\n    [Symbol.iterator]() {\n      var i = 0;\n      return {next: () => [\n        {done:false, value:'ab'},\n        {done:false, value:'cde'},\n        {done:true}\n      ][i++]\n      };\n    }\n  });\n  assert_equals(blob.size, 5, 'Custom @@iterator should be treated as a sequence');\n}, \"A plain object with custom @@iterator should be treated as a sequence for the blobParts argument.\");\ntest_blob(function() {\n  return new Blob({\n    [Symbol.iterator]: Array.prototype[Symbol.iterator],\n    0: \"PASS\",\n    length: 1\n  });\n}, {\n  expected: \"PASS\",\n  type: \"\",\n  desc: \"A plain object with @@iterator and a length property should be treated as a sequence for the blobParts argument.\"\n});\ntest_blob(function() {\n  return new Blob(new String(\"xyz\"));\n}, {\n  expected: \"xyz\",\n  type: \"\",\n  desc: \"A String object should be treated as a sequence for the blobParts argument.\"\n});\ntest_blob(function() {\n  return new Blob(new Uint8Array([1, 2, 3]));\n}, {\n  expected: \"123\",\n  type: \"\",\n  desc: \"A Uint8Array object should be treated as a sequence for the blobParts argument.\"\n});\n\ntest(function() {\n  assert_throws_js(TypeError, function() { new Blob(true) });\n}, \"blobParts not an object: boolean\");\n\ntest(function() {\n  Boolean.prototype[Symbol.iterator] = () => [\"FAIL\"][Symbol.iterator]()\n  this.add_cleanup(function() { delete Boolean.prototype[Symbol.iterator] });\n  assert_throws_js(TypeError, function() { new Blob(true) });\n}, \"blobParts not an object: boolean with Boolean.prototype[Symbol.iterator]\");\n\ntest(function() {\n  assert_throws_js(TypeError, function() { new Blob(\"fail\") });\n}, \"blobParts not an object: string\");\n\ntest(function() {\n  const original = String.prototype[Symbol.iterator];\n  String.prototype[Symbol.iterator] = () => [\"FAIL\"][Symbol.iterator]()\n  this.add_cleanup(function() { String.prototype[Symbol.iterator] = original });\n  assert_throws_js(TypeError, function() { new Blob(\"fail\") });\n}, \"blobParts not an object: string with String.prototype[Symbol.iterator]\");\n\ntest(function() {\n  assert_throws_js(TypeError, function() { new Blob(7) });\n}, \"blobParts not an object: number\");\n\ntest(function() {\n  Number.prototype[Symbol.iterator] = () => [\"FAIL\"][Symbol.iterator]()\n  this.add_cleanup(function() { delete Number.prototype[Symbol.iterator] });\n  assert_throws_js(TypeError, function() { new Blob(7) });\n}, \"blobParts not an object: number with Number.prototype[Symbol.iterator]\");\n\ntest(function() {\n  assert_throws_js(TypeError, function() { new Blob(7n) });\n}, \"blobParts not an object: BigInt\");\n\ntest(function() {\n  BigInt.prototype[Symbol.iterator] = () => [\"FAIL\"][Symbol.iterator]()\n  this.add_cleanup(function() { delete BigInt.prototype[Symbol.iterator] });\n  assert_throws_js(TypeError, function() { new Blob(7n) });\n}, \"blobParts not an object: BigInt with BigInt.prototype[Symbol.iterator]\");\n\ntest(function() {\n  const symbol = Symbol();\n  assert_throws_js(TypeError, function() { new Blob(symbol) });\n}, \"blobParts not an object: Symbol\");\n\ntest(function() {\n  const symbol = Symbol();\n  Symbol.prototype[Symbol.iterator] = () => [\"FAIL\"][Symbol.iterator]()\n  this.add_cleanup(function() { delete Symbol.prototype[Symbol.iterator] });\n  assert_throws_js(TypeError, function() { new Blob(symbol) });\n}, \"blobParts not an object: Symbol with Symbol.prototype[Symbol.iterator]\");\n\nvar test_error = {\n  name: \"test\",\n  message: \"test error\",\n};\n\ntest(function() {\n  var obj = {\n    [Symbol.iterator]: Array.prototype[Symbol.iterator],\n    get length() { throw test_error; }\n  };\n  assert_throws_exactly(test_error, function() {\n    new Blob(obj);\n  });\n}, \"The length getter should be invoked and any exceptions should be propagated.\");\n\ntest(function() {\n  assert_throws_exactly(test_error, function() {\n    var obj = {\n      [Symbol.iterator]: Array.prototype[Symbol.iterator],\n      length: {\n        valueOf: null,\n        toString: function() { throw test_error; }\n      }\n    };\n    new Blob(obj);\n  });\n  assert_throws_exactly(test_error, function() {\n    var obj = {\n      [Symbol.iterator]: Array.prototype[Symbol.iterator],\n      length: { valueOf: function() { throw test_error; } }\n    };\n    new Blob(obj);\n  });\n}, \"ToUint32 should be applied to the length and any exceptions should be propagated.\");\n\ntest(function() {\n  var received = [];\n  var obj = {\n    get [Symbol.iterator]() {\n      received.push(\"Symbol.iterator\");\n      return Array.prototype[Symbol.iterator];\n    },\n    get length() {\n      received.push(\"length getter\");\n      return {\n        valueOf: function() {\n          received.push(\"length valueOf\");\n          return 3;\n        }\n      };\n    },\n    get 0() {\n      received.push(\"0 getter\");\n      return {\n        toString: function() {\n          received.push(\"0 toString\");\n          return \"a\";\n        }\n      };\n    },\n    get 1() {\n      received.push(\"1 getter\");\n      throw test_error;\n    },\n    get 2() {\n      received.push(\"2 getter\");\n      assert_unreached(\"Should not call the getter for 2 if the getter for 1 threw.\");\n    }\n  };\n  assert_throws_exactly(test_error, function() {\n    new Blob(obj);\n  });\n  assert_array_equals(received, [\n    \"Symbol.iterator\",\n    \"length getter\",\n    \"length valueOf\",\n    \"0 getter\",\n    \"0 toString\",\n    \"length getter\",\n    \"length valueOf\",\n    \"1 getter\",\n  ]);\n}, \"Getters and value conversions should happen in order until an exception is thrown.\");\n\n// XXX should add tests edge cases of ToLength(length)\n\ntest(function() {\n  assert_throws_exactly(test_error, function() {\n    new Blob([{ toString: function() { throw test_error; } }]);\n  }, \"Throwing toString\");\n  assert_throws_exactly(test_error, function() {\n    new Blob([{ toString: undefined, valueOf: function() { throw test_error; } }]);\n  }, \"Throwing valueOf\");\n  assert_throws_exactly(test_error, function() {\n    new Blob([{\n      toString: function() { throw test_error; },\n      valueOf: function() { assert_unreached(\"Should not call valueOf if toString is present.\"); }\n    }]);\n  }, \"Throwing toString and valueOf\");\n  assert_throws_js(TypeError, function() {\n    new Blob([{toString: null, valueOf: null}]);\n  }, \"Null toString and valueOf\");\n}, \"ToString should be called on elements of the blobParts array and any exceptions should be propagated.\");\n\ntest_blob(function() {\n  var arr = [\n    { toString: function() { arr.pop(); return \"PASS\"; } },\n    { toString: function() { assert_unreached(\"Should have removed the second element of the array rather than called toString() on it.\"); } }\n  ];\n  return new Blob(arr);\n}, {\n  expected: \"PASS\",\n  type: \"\",\n  desc: \"Changes to the blobParts array should be reflected in the returned Blob (pop).\"\n});\n\ntest_blob(function() {\n  var arr = [\n    {\n      toString: function() {\n        if (arr.length === 3) {\n          return \"A\";\n        }\n        arr.unshift({\n          toString: function() {\n            assert_unreached(\"Should only access index 0 once.\");\n          }\n        });\n        return \"P\";\n      }\n    },\n    {\n      toString: function() {\n        return \"SS\";\n      }\n    }\n  ];\n  return new Blob(arr);\n}, {\n  expected: \"PASS\",\n  type: \"\",\n  desc: \"Changes to the blobParts array should be reflected in the returned Blob (unshift).\"\n});\n\ntest_blob(function() {\n  // https://www.w3.org/Bugs/Public/show_bug.cgi?id=17652\n  return new Blob([\n    null,\n    undefined,\n    true,\n    false,\n    0,\n    1,\n    new String(\"stringobject\"),\n    [],\n    ['x', 'y'],\n    {},\n    { 0: \"FAIL\", length: 1 },\n    { toString: function() { return \"stringA\"; } },\n    { toString: undefined, valueOf: function() { return \"stringB\"; } },\n    { valueOf: function() { assert_unreached(\"Should not call valueOf if toString is present on the prototype.\"); } }\n  ]);\n}, {\n  expected: \"nullundefinedtruefalse01stringobjectx,y[object Object][object Object]stringAstringB[object Object]\",\n  type: \"\",\n  desc: \"ToString should be called on elements of the blobParts array.\"\n});\n\ntest_blob(function() {\n  return new Blob([\n    new ArrayBuffer(8)\n  ]);\n}, {\n  expected: \"\\0\\0\\0\\0\\0\\0\\0\\0\",\n  type: \"\",\n  desc: \"ArrayBuffer elements of the blobParts array should be supported.\"\n});\n\ntest_blob(function() {\n  return new Blob([\n    new Uint8Array([0x50, 0x41, 0x53, 0x53]),\n    new Int8Array([0x50, 0x41, 0x53, 0x53]),\n    new Uint16Array([0x4150, 0x5353]),\n    new Int16Array([0x4150, 0x5353]),\n    new Uint32Array([0x53534150]),\n    new Int32Array([0x53534150]),\n    new Float32Array([0xD341500000])\n  ]);\n}, {\n  expected: \"PASSPASSPASSPASSPASSPASSPASS\",\n  type: \"\",\n  desc: \"Passing typed arrays as elements of the blobParts array should work.\"\n});\ntest_blob(function() {\n  return new Blob([\n    new Float16Array([2.65625, 58.59375])\n  ]);\n}, {\n  expected: \"PASS\",\n  type: \"\",\n  desc: \"Passing a Float16Array as element of the blobParts array should work.\"\n});\ntest_blob(function() {\n  return new Blob([\n    // 0x535 3415053534150\n    // 0x535 = 0b010100110101 -> Sign = +, Exponent = 1333 - 1023 = 310\n    // 0x13415053534150 * 2**(-52)\n    // ==> 0x13415053534150 * 2**258 = 2510297372767036725005267563121821874921913208671273727396467555337665343087229079989707079680\n    new Float64Array([2510297372767036725005267563121821874921913208671273727396467555337665343087229079989707079680])\n  ]);\n}, {\n  expected: \"PASSPASS\",\n  type: \"\",\n  desc: \"Passing a Float64Array as element of the blobParts array should work.\"\n});\n\ntest_blob(function() {\n  return new Blob([\n    new BigInt64Array([BigInt(\"0x5353415053534150\")]),\n    new BigUint64Array([BigInt(\"0x5353415053534150\")])\n  ]);\n}, {\n  expected: \"PASSPASSPASSPASS\",\n  type: \"\",\n  desc: \"Passing BigInt typed arrays as elements of the blobParts array should work.\"\n});\n\nvar t_ports = async_test(\"Passing a FrozenArray as the blobParts array should work (FrozenArray<MessagePort>).\");\nt_ports.step(function() {\n    var channel = new MessageChannel();\n    channel.port2.onmessage = this.step_func(function(e) {\n        var b_ports = new Blob(e.ports);\n        assert_equals(b_ports.size, \"[object MessagePort]\".length);\n        this.done();\n    });\n    var channel2 = new MessageChannel();\n    channel.port1.postMessage('', [channel2.port1]);\n});\n\ntest_blob(function() {\n  var blob = new Blob(['foo']);\n  return new Blob([blob, blob]);\n}, {\n  expected: \"foofoo\",\n  type: \"\",\n  desc: \"Array with two blobs\"\n});\n\ntest_blob_binary(function() {\n  var view = new Uint8Array([0, 255, 0]);\n  return new Blob([view.buffer, view.buffer]);\n}, {\n  expected: [0, 255, 0, 0, 255, 0],\n  type: \"\",\n  desc: \"Array with two buffers\"\n});\n\ntest_blob_binary(function() {\n  var view = new Uint8Array([0, 255, 0, 4]);\n  var blob = new Blob([view, view]);\n  assert_equals(blob.size, 8);\n  var view1 = new Uint16Array(view.buffer, 2);\n  return new Blob([view1, view.buffer, view1]);\n}, {\n  expected: [0, 4, 0, 255, 0, 4, 0, 4],\n  type: \"\",\n  desc: \"Array with two bufferviews\"\n});\n\ntest_blob(function() {\n  var view = new Uint8Array([0]);\n  var blob = new Blob([\"fo\"]);\n  return new Blob([view.buffer, blob, \"foo\"]);\n}, {\n  expected: \"\\0fofoo\",\n  type: \"\",\n  desc: \"Array with mixed types\"\n});\n\ntest(function() {\n  const accessed = [];\n  const stringified = [];\n\n  new Blob([], {\n    get type() { accessed.push('type'); },\n    get endings() { accessed.push('endings'); }\n  });\n  new Blob([], {\n    type: { toString: () => { stringified.push('type'); return ''; } },\n    endings: { toString: () => { stringified.push('endings'); return 'transparent'; } }\n  });\n  assert_array_equals(accessed, ['endings', 'type']);\n  assert_array_equals(stringified, ['endings', 'type']);\n}, \"options properties should be accessed in lexicographic order.\");\n\ntest(function() {\n  assert_throws_exactly(test_error, function() {\n    new Blob(\n      [{ toString: function() { throw test_error } }],\n      {\n        get type() { assert_unreached(\"type getter should not be called.\"); }\n      }\n    );\n  });\n}, \"Arguments should be evaluated from left to right.\");\n\n[\n  null,\n  undefined,\n  {},\n  { unrecognized: true },\n  /regex/,\n  function() {}\n].forEach(function(arg, idx) {\n  test_blob(function() {\n    return new Blob([], arg);\n  }, {\n    expected: \"\",\n    type: \"\",\n    desc: \"Passing \" + format_value(arg) + \" (index \" + idx + \") for options should use the defaults.\"\n  });\n  test_blob(function() {\n    return new Blob([\"\\na\\r\\nb\\n\\rc\\r\"], arg);\n  }, {\n    expected: \"\\na\\r\\nb\\n\\rc\\r\",\n    type: \"\",\n    desc: \"Passing \" + format_value(arg) + \" (index \" + idx + \") for options should use the defaults (with newlines).\"\n  });\n});\n\n[\n  123,\n  123.4,\n  true,\n  'abc'\n].forEach(arg => {\n  test(t => {\n    assert_throws_js(TypeError, () => new Blob([], arg),\n                     'Blob constructor should throw with invalid property bag');\n  }, `Passing ${JSON.stringify(arg)} for options should throw`);\n});\n\nvar type_tests = [\n  // blobParts, type, expected type\n  [[], '', ''],\n  [[], 'a', 'a'],\n  [[], 'A', 'a'],\n  [[], 'text/html', 'text/html'],\n  [[], 'TEXT/HTML', 'text/html'],\n  [[], 'text/plain;charset=utf-8', 'text/plain;charset=utf-8'],\n  [[], '\\u00E5', ''],\n  [[], '\\uD801\\uDC7E', ''], // U+1047E\n  [[], ' image/gif ', ' image/gif '],\n  [[], '\\timage/gif\\t', ''],\n  [[], 'image/gif;\\u007f', ''],\n  [[], '\\u0130mage/gif', ''], // uppercase i with dot\n  [[], '\\u0131mage/gif', ''], // lowercase dotless i\n  [[], 'image/gif\\u0000', ''],\n  // check that type isn't changed based on sniffing\n  [[0x3C, 0x48, 0x54, 0x4D, 0x4C, 0x3E], 'unknown/unknown', 'unknown/unknown'], // \"<HTML>\"\n  [[0x00, 0xFF], 'text/plain', 'text/plain'],\n  [[0x47, 0x49, 0x46, 0x38, 0x39, 0x61], 'image/png', 'image/png'], // \"GIF89a\"\n];\n\ntype_tests.forEach(function(t) {\n  test(function() {\n    var arr = new Uint8Array([t[0]]).buffer;\n    var b = new Blob([arr], {type:t[1]});\n    assert_equals(b.type, t[2]);\n  }, \"Blob with type \" + format_value(t[1]));\n});\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-constructor.any.js",
+      "n_tests": 26,
+      "async": true,
+      "fetch": false,
+      "includes": ["../support/Blob.js"],
+      "variants": [],
+      "meta": {
+        "title": "Blob constructor"
+      }
+    },
+    {
+      "id": "wpt.fileapi.blob.blob-newobject",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\n['stream', 'text', 'arrayBuffer', 'bytes'].forEach(method => {\n  test(() => {\n    const blob = new Blob(['PASS']);\n    const a = blob[method]();\n    const b = blob[method]();\n    assert_not_equals(a, b, `Blob.${method}() must return a new object`);\n  }, `Blob.${method}() returns [NewObject]`);\n});\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-newobject.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "Blob methods return new objects ([NewObject])",
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.fileapi.blob.blob-slice-overflow",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nvar text = '';\n\nfor (var i = 0; i < 2000; ++i) {\n  text += 'A';\n}\n\ntest(function() {\n  var blob = new Blob([text]);\n  var sliceBlob = blob.slice(-1, blob.size);\n  assert_equals(sliceBlob.size, 1, \"Blob slice size\");\n}, \"slice start is negative, relativeStart will be max((size + start), 0)\");\n\ntest(function() {\n  var blob = new Blob([text]);\n  var sliceBlob = blob.slice(blob.size + 1, blob.size);\n  assert_equals(sliceBlob.size, 0, \"Blob slice size\");\n}, \"slice start is greater than blob size, relativeStart will be min(start, size)\");\n\ntest(function() {\n  var blob = new Blob([text]);\n  var sliceBlob = blob.slice(blob.size - 2, -1);\n  assert_equals(sliceBlob.size, 1, \"Blob slice size\");\n}, \"slice end is negative, relativeEnd will be max((size + end), 0)\");\n\ntest(function() {\n  var blob = new Blob([text]);\n  var sliceBlob = blob.slice(blob.size - 2, blob.size + 999);\n  assert_equals(sliceBlob.size, 2, \"Blob slice size\");\n}, \"slice end is greater than blob size, relativeEnd will be min(end, size)\");\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-slice-overflow.any.js",
+      "n_tests": 4,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "Blob slice overflow"
+      }
+    },
+    {
+      "id": "wpt.fileapi.blob.blob-slice",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\ntest_blob(function() {\n  var blobTemp = new Blob([\"PASS\"]);\n  return blobTemp.slice();\n}, {\n  expected: \"PASS\",\n  type: \"\",\n  desc: \"no-argument Blob slice\"\n});\n\ntest(function() {\n  var blob1 = new Blob([\"squiggle\"]);\n  var blob2 = new Blob([\"steak\"], {type: \"content/type\"});\n\n  test_blob(() => blob1,\n  {\n    expected: \"squiggle\",\n    type: \"\",\n    desc: \"blob1.\"\n  });\n\n  test_blob(() => blob2,\n  {\n    expected: \"steak\",\n    type: \"content/type\",\n    desc: \"blob2.\"\n  });\n\n  test_blob(function() {\n    var blob = new Blob([\"abcd\"]);\n    return blob.slice(undefined, undefined, \"content/type\");\n  }, {\n    expected: \"abcd\",\n    type: \"content/type\",\n    desc: \"undefined start/end Blob slice\"\n  });\n\n  test_blob(function() {\n    var blob = new Blob([\"abcd\"]);\n    return blob.slice(undefined, 2, \"content/type\");\n  }, {\n    expected: \"ab\",\n    type: \"content/type\",\n    desc: \"undefined start Blob slice\"\n  });\n\n  test_blob(function() {\n    var blob = new Blob([\"abcd\"]);\n    return blob.slice(2, undefined, \"content/type\");\n  }, {\n    expected: \"cd\",\n    type: \"content/type\",\n    desc: \"undefined end Blob slice\"\n  });\n\n  test_blob(function() {\n    return new Blob().slice(0,0,null);\n  }, {\n    expected: \"\",\n    type: \"null\",\n    desc: \"null type Blob slice\"\n  });\n\n  test_blob(function() {\n    return new Blob().slice(0,0,undefined);\n  }, {\n    expected: \"\",\n    type: \"\",\n    desc: \"undefined type Blob slice\"\n  });\n\n  test_blob(function() {\n    return new Blob().slice(0,0);\n  }, {\n    expected: \"\",\n    type: \"\",\n    desc: \"no type Blob slice\"\n  });\n\n  var arrayBuffer = new ArrayBuffer(16);\n  var int8View = new Int8Array(arrayBuffer);\n  for (var i = 0; i < 16; i++) {\n    int8View[i] = i + 65;\n  }\n\n  var testData = [\n    [\n      [\"PASSSTRING\"],\n      [{start:  -6, contents: \"STRING\"},\n       {start: -12, contents: \"PASSSTRING\"},\n       {start:   4, contents: \"STRING\"},\n       {start:  12, contents: \"\"},\n       {start: 0, end:  -6, contents: \"PASS\"},\n       {start: 0, end: -12, contents: \"\"},\n       {start: 0, end:   4, contents: \"PASS\"},\n       {start: 0, end:  12, contents: \"PASSSTRING\"},\n       {start: 7, end:   4, contents: \"\"}]\n    ],\n\n    // Test double start/end values\n    [\n      [\"abcd\"],\n      [{start: 0.5, contents: \"abcd\"},\n       {start: 1.5, contents: \"cd\"},\n       {start: 2.5, contents: \"cd\"},\n       {start: 3.5, contents: \"\"},\n       {start: 0,   end: 0.5, contents: \"\"},\n       {start: 0,   end: 1.5, contents: \"ab\"},\n       {start: 0,   end: 2.5, contents: \"ab\"},\n       {start: 0,   end: 3.5, contents: \"abcd\"},\n       {start: 1.5, end: 2.5, contents: \"\"},\n       {start: 1.5, end: 3.5, contents: \"cd\"}]\n    ],\n\n    // Test 3 strings\n    [\n      [\"foo\", \"bar\", \"baz\"],\n      [{start:  0, end:  9, contents: \"foobarbaz\"},\n       {start:  0, end:  3, contents: \"foo\"},\n       {start:  3, end:  9, contents: \"barbaz\"},\n       {start:  6, end:  9, contents: \"baz\"},\n       {start:  6, end: 12, contents: \"baz\"},\n       {start:  0, end:  9, contents: \"foobarbaz\"},\n       {start:  0, end: 11, contents: \"foobarbaz\"},\n       {start: 10, end: 15, contents: \"\"}]\n    ],\n\n    // Test string, Blob, string\n    [\n      [\"foo\", blob1, \"baz\"],\n      [{start:  0, end:  3, contents: \"foo\"},\n       {start:  3, end: 11, contents: \"squiggle\"},\n       {start:  2, end:  4, contents: \"os\"},\n       {start: 10, end: 12, contents: \"eb\"}]\n    ],\n\n    // Test blob, string, blob\n    [\n      [blob1, \"foo\", blob1],\n      [{start:  0, end:  8, contents: \"squiggle\"},\n       {start:  7, end:  9, contents: \"ef\"},\n       {start: 10, end: 12, contents: \"os\"},\n       {start:  1, end:  4, contents: \"qui\"},\n       {start: 12, end: 15, contents: \"qui\"},\n       {start: 40, end: 60, contents: \"\"}]\n    ],\n\n    // Test blobs all the way down\n    [\n      [blob2, blob1, blob2],\n      [{start: 0,  end:  5, contents: \"steak\"},\n       {start: 5,  end: 13, contents: \"squiggle\"},\n       {start: 13, end: 18, contents: \"steak\"},\n       {start:  1, end:  3, contents: \"te\"},\n       {start:  6, end: 10, contents: \"quig\"}]\n    ],\n\n    // Test an ArrayBufferView\n    [\n      [int8View, blob1, \"foo\"],\n      [{start:  0, end:  8, contents: \"ABCDEFGH\"},\n       {start:  8, end: 18, contents: \"IJKLMNOPsq\"},\n       {start: 17, end: 20, contents: \"qui\"},\n       {start:  4, end: 12, contents: \"EFGHIJKL\"}]\n    ],\n\n    // Test a partial ArrayBufferView\n    [\n      [new Uint8Array(arrayBuffer, 3, 5), blob1, \"foo\"],\n      [{start:  0, end:  8, contents: \"DEFGHsqu\"},\n       {start:  8, end: 18, contents: \"igglefoo\"},\n       {start:  4, end: 12, contents: \"Hsquiggl\"}]\n    ],\n\n    // Test type coercion of a number\n    [\n      [3, int8View, \"foo\"],\n      [{start:  0, end:  8, contents: \"3ABCDEFG\"},\n       {start:  8, end: 18, contents: \"HIJKLMNOPf\"},\n       {start: 17, end: 21, contents: \"foo\"},\n       {start:  4, end: 12, contents: \"DEFGHIJK\"}]\n    ],\n\n    [\n      [(new Uint8Array([0, 255, 0])).buffer,\n       new Blob(['abcd']),\n       'efgh',\n       'ijklmnopqrstuvwxyz'],\n      [{start:  1, end:  4, contents: \"\\uFFFD\\u0000a\"},\n       {start:  4, end:  8, contents: \"bcde\"},\n       {start:  8, end: 12, contents: \"fghi\"},\n       {start:  1, end: 12, contents: \"\\uFFFD\\u0000abcdefghi\"}]\n    ]\n  ];\n\n  testData.forEach(function(data, i) {\n    var blobs = data[0];\n    var tests = data[1];\n    tests.forEach(function(expectations, j) {\n      test(function() {\n        var blob = new Blob(blobs);\n        assert_true(blob instanceof Blob);\n        assert_false(blob instanceof File);\n\n        test_blob(function() {\n          return expectations.end === undefined\n                 ? blob.slice(expectations.start)\n                 : blob.slice(expectations.start, expectations.end);\n        }, {\n          expected: expectations.contents,\n          type: \"\",\n          desc: \"Slicing test: slice (\" + i + \",\" + j + \").\"\n        });\n      }, \"Slicing test (\" + i + \",\" + j + \").\");\n    });\n  });\n}, \"Slices\");\n\nvar invalidTypes = [\n  \"\\xFF\",\n  \"te\\x09xt/plain\",\n  \"te\\x00xt/plain\",\n  \"te\\x1Fxt/plain\",\n  \"te\\x7Fxt/plain\"\n];\ninvalidTypes.forEach(function(type) {\n  test_blob(function() {\n    var blob = new Blob([\"PASS\"]);\n    return blob.slice(0, 4, type);\n  }, {\n    expected: \"PASS\",\n    type: \"\",\n    desc: \"Invalid contentType (\" + format_value(type) + \")\"\n  });\n});\n\nvar validTypes = [\n  \"te(xt/plain\",\n  \"te)xt/plain\",\n  \"te<xt/plain\",\n  \"te>xt/plain\",\n  \"te@xt/plain\",\n  \"te,xt/plain\",\n  \"te;xt/plain\",\n  \"te:xt/plain\",\n  \"te\\\\xt/plain\",\n  \"te\\\"xt/plain\",\n  \"te/xt/plain\",\n  \"te[xt/plain\",\n  \"te]xt/plain\",\n  \"te?xt/plain\",\n  \"te=xt/plain\",\n  \"te{xt/plain\",\n  \"te}xt/plain\",\n  \"te\\x20xt/plain\",\n  \"TEXT/PLAIN\",\n  \"text/plain;charset = UTF-8\",\n  \"text/plain;charset=UTF-8\"\n];\nvalidTypes.forEach(function(type) {\n  test_blob(function() {\n    var blob = new Blob([\"PASS\"]);\n    return blob.slice(0, 4, type);\n  }, {\n    expected: \"PASS\",\n    type: type.toLowerCase(),\n    desc: \"Valid contentType (\" + format_value(type) + \")\"\n  });\n});\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-slice.any.js",
+      "n_tests": 2,
+      "async": false,
+      "fetch": false,
+      "includes": ["../support/Blob.js"],
+      "variants": [],
+      "meta": {
+        "title": "Blob slice"
+      }
+    },
+    {
+      "id": "wpt.fileapi.blob.blob-stream",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\n// Helper function that triggers garbage collection while reading a chunk\n// if perform_gc is true.\nasync function read_and_gc(reader, perform_gc) {\n  // Passing Uint8Array for byte streams; non-byte streams will simply ignore it\n  const read_promise = reader.read(new Uint8Array(64));\n  if (perform_gc) {\n    await garbageCollect();\n  }\n  return read_promise;\n}\n\n// Takes in a ReadableStream and reads from it until it is done, returning\n// an array that contains the results of each read operation. If perform_gc\n// is true, garbage collection is triggered while reading every chunk.\nasync function read_all_chunks(stream, { perform_gc = false, mode } = {}) {\n  assert_true(stream instanceof ReadableStream);\n  assert_true('getReader' in stream);\n  const reader = stream.getReader({ mode });\n\n  assert_true('read' in reader);\n  let read_value = await read_and_gc(reader, perform_gc);\n\n  let out = [];\n  let i = 0;\n  while (!read_value.done) {\n    for (let val of read_value.value) {\n      out[i++] = val;\n    }\n    read_value = await read_and_gc(reader, perform_gc);\n  }\n  return out;\n}\n\npromise_test(async () => {\n  const blob = new Blob([\"PASS\"]);\n  const stream = blob.stream();\n  const chunks = await read_all_chunks(stream);\n  for (let [index, value] of chunks.entries()) {\n    assert_equals(value, \"PASS\".charCodeAt(index));\n  }\n}, \"Blob.stream()\")\n\npromise_test(async () => {\n  const blob = new Blob();\n  const stream = blob.stream();\n  const chunks = await read_all_chunks(stream);\n  assert_array_equals(chunks, []);\n}, \"Blob.stream() empty Blob\")\n\npromise_test(async () => {\n  const input_arr = [8, 241, 48, 123, 151];\n  const typed_arr = new Uint8Array(input_arr);\n  const blob = new Blob([typed_arr]);\n  const stream = blob.stream();\n  const chunks = await read_all_chunks(stream);\n  assert_array_equals(chunks, input_arr);\n}, \"Blob.stream() non-unicode input\")\n\npromise_test(async() => {\n  const input_arr = [8, 241, 48, 123, 151];\n  const typed_arr = new Uint8Array(input_arr);\n  let blob = new Blob([typed_arr]);\n  const stream = blob.stream();\n  blob = null;\n  await garbageCollect();\n  const chunks = await read_all_chunks(stream, { perform_gc: true });\n  assert_array_equals(chunks, input_arr);\n}, \"Blob.stream() garbage collection of blob shouldn't break stream \" +\n      \"consumption\")\n\npromise_test(async() => {\n  const input_arr = [8, 241, 48, 123, 151];\n  const typed_arr = new Uint8Array(input_arr);\n  let blob = new Blob([typed_arr]);\n  const chunksPromise = read_all_chunks(blob.stream());\n  // It somehow matters to do GC here instead of doing `perform_gc: true`\n  await garbageCollect();\n  assert_array_equals(await chunksPromise, input_arr);\n}, \"Blob.stream() garbage collection of stream shouldn't break stream \" +\n      \"consumption\")\n\npromise_test(async () => {\n  const input_arr = [8, 241, 48, 123, 151];\n  const typed_arr = new Uint8Array(input_arr);\n  let blob = new Blob([typed_arr]);\n  const stream = blob.stream();\n  const chunks = await read_all_chunks(stream, { mode: \"byob\" });\n  assert_array_equals(chunks, input_arr);\n}, \"Reading Blob.stream() with BYOB reader\")\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-stream.any.js",
+      "n_tests": 6,
+      "async": true,
+      "fetch": false,
+      "includes": ["../support/Blob.js", "/common/gc.js"],
+      "variants": [],
+      "meta": {
+        "title": "Blob Stream"
+      }
+    },
+    {
+      "id": "wpt.fileapi.blob.blob-text",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\npromise_test(async () => {\n  const blob = new Blob([\"PASS\"]);\n  const text = await blob.text();\n  assert_equals(text, \"PASS\");\n}, \"Blob.text()\")\n\npromise_test(async () => {\n  const blob = new Blob();\n  const text = await blob.text();\n  assert_equals(text, \"\");\n}, \"Blob.text() empty blob data\")\n\npromise_test(async () => {\n  const blob = new Blob([\"P\", \"A\", \"SS\"]);\n  const text = await blob.text();\n  assert_equals(text, \"PASS\");\n}, \"Blob.text() multi-element array in constructor\")\n\npromise_test(async () => {\n  const non_unicode = \"\\u0061\\u030A\";\n  const input_arr = new TextEncoder().encode(non_unicode);\n  const blob = new Blob([input_arr]);\n  const text = await blob.text();\n  assert_equals(text, non_unicode);\n}, \"Blob.text() non-unicode\")\n\npromise_test(async () => {\n  const blob = new Blob([\"PASS\"], { type: \"text/plain;charset=utf-16le\" });\n  const text = await blob.text();\n  assert_equals(text, \"PASS\");\n}, \"Blob.text() different charset param in type option\")\n\npromise_test(async () => {\n  const non_unicode = \"\\u0061\\u030A\";\n  const input_arr = new TextEncoder().encode(non_unicode);\n  const blob = new Blob([input_arr], { type: \"text/plain;charset=utf-16le\" });\n  const text = await blob.text();\n  assert_equals(text, non_unicode);\n}, \"Blob.text() different charset param with non-ascii input\")\n\npromise_test(async () => {\n  const input_arr = new Uint8Array([192, 193, 245, 246, 247, 248, 249, 250, 251,\n      252, 253, 254, 255]);\n  const blob = new Blob([input_arr]);\n  const text = await blob.text();\n  assert_equals(text, \"\\ufffd\\ufffd\\ufffd\\ufffd\\ufffd\\ufffd\\ufffd\\ufffd\\ufffd\" +\n      \"\\ufffd\\ufffd\\ufffd\\ufffd\");\n}, \"Blob.text() invalid utf-8 input\")\n\npromise_test(async () => {\n  const input_arr = new Uint8Array([192, 193, 245, 246, 247, 248, 249, 250, 251,\n      252, 253, 254, 255]);\n  const blob = new Blob([input_arr]);\n  const text_results = await Promise.all([blob.text(), blob.text(),\n      blob.text()]);\n  for (let text of text_results) {\n    assert_equals(text, \"\\ufffd\\ufffd\\ufffd\\ufffd\\ufffd\\ufffd\\ufffd\\ufffd\\ufffd\" +\n        \"\\ufffd\\ufffd\\ufffd\\ufffd\");\n  }\n}, \"Blob.text() concurrent reads\")\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-text.any.js",
+      "n_tests": 8,
+      "async": true,
+      "fetch": false,
+      "includes": ["../support/Blob.js"],
+      "variants": [],
+      "meta": {
+        "title": "Blob Text"
+      }
+    },
+    {
+      "id": "wpt.fileapi.blob.blob-textstream",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nasync function readAllChunks(stream) {\n  const reader = stream.getReader();\n  const chunks = [];\n  while (true) {\n    const {done, value} = await reader.read();\n    if (done) {\n      break;\n    }\n    chunks.push(value);\n  }\n  return chunks;\n}\n\ntest(() => {\n  assert_true('textStream' in Blob.prototype, \"textStream exists on Blob.prototype\");\n  assert_equals(typeof Blob.prototype.textStream, \"function\", \"Blob.prototype.textStream is a function\");\n}, \"textStream method existence\");\n\npromise_test(async () => {\n  const blob = new Blob([\"hello world\"]);\n  const stream = blob.textStream();\n  assert_true(stream instanceof ReadableStream, \"textStream() returns a ReadableStream\");\n\n  const chunks = await readAllChunks(stream);\n  assert_greater_than(chunks.length, 0);\n  for (const chunk of chunks) {\n    assert_equals(typeof chunk, \"string\", \"each chunk should be a string\");\n  }\n  assert_equals(chunks.join(\"\"), \"hello world\", \"concatenated chunks match the blob content\");\n}, \"Blob.textStream() basic functionality\");\n\npromise_test(async () => {\n  const blob = new Blob();\n  const stream = blob.textStream();\n  assert_true(stream instanceof ReadableStream);\n  const chunks = await readAllChunks(stream);\n  assert_equals(chunks.length, 0, \"no chunks should be read from empty blob textStream\");\n}, \"Blob.textStream() with empty blob\");\n\npromise_test(async () => {\n  const blob = new Blob([\"hello \", \"world\"]);\n  const stream = blob.textStream();\n  const chunks = await readAllChunks(stream);\n  assert_equals(chunks.join(\"\"), \"hello world\");\n}, \"Blob.textStream() with multi-part blob\");\n\npromise_test(async () => {\n  const buffer = new Uint8Array([0x68, 0x00, 0x65, 0x00, 0x6c, 0x00, 0x6c, 0x00, 0x6f, 0x00]); // \"hello\" in UTF-16LE\n  const blob = new Blob([buffer], {\n    type: \"text/plain; charset=utf-16le\"\n  });\n  const stream = blob.textStream();\n  const chunks = await readAllChunks(stream);\n  assert_equals(chunks.join(\"\"), \"h\\0e\\0l\\0l\\0o\\0\", \"ignores charset=utf-16le type parameter\");\n}, \"Blob.textStream() ignores type charset (UTF-16LE)\");\n\npromise_test(async () => {\n  const blob = new Blob([new TextEncoder().encode(\"hello\")], {\n    type: \"text/plain; charset=invalid-charset\"\n  });\n  const stream = blob.textStream();\n  const chunks = await readAllChunks(stream);\n  assert_equals(chunks.join(\"\"), \"hello\", \"ignores invalid-charset type parameter and decodes as UTF-8\");\n}, \"Blob.textStream() ignores invalid type charset (invalid-charset)\");\n\npromise_test(async () => {\n  const blob = new Blob([new TextEncoder().encode(\"é\")], {\n    type: \"text/plain; charset=iso-8859-1\"\n  });\n  const stream = blob.textStream();\n  const chunks = await readAllChunks(stream);\n  assert_equals(chunks.join(\"\"), \"é\", \"ignores charset=iso-8859-1 type parameter and decodes as UTF-8\");\n}, \"Blob.textStream() ignores type charset (iso-8859-1)\");\n\npromise_test(async () => {\n  const blob = new Blob([\"hello\"]);\n  const stream1 = blob.textStream();\n  const stream2 = blob.textStream();\n  assert_not_equals(stream1, stream2, \"multiple calls return new streams\");\n\n  const chunks1 = await readAllChunks(stream1);\n  const chunks2 = await readAllChunks(stream2);\n  assert_equals(chunks1.join(\"\"), \"hello\");\n  assert_equals(chunks2.join(\"\"), \"hello\");\n}, \"Blob.textStream() can be called multiple times\");\n}\nmain();\n",
+      "origin": "FileAPI/blob/Blob-textStream.any.js",
+      "n_tests": 8,
+      "async": true,
+      "fetch": false,
+      "includes": ["../support/Blob.js"],
+      "variants": [],
+      "meta": {
+        "title": "Blob textStream",
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.fileapi.file.file-constructor-endings",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n[\n  'transparent',\n  'native'\n].forEach(value => test(t => {\n  assert_class_string(new File([], \"name\", {endings: value}), 'File',\n                      `Constructor should allow \"${value}\" endings`);\n}, `Valid \"endings\" value: ${JSON.stringify(value)}`));\n\n[\n  null,\n  '',\n  'invalidEnumValue',\n  'Transparent',\n  'NATIVE',\n  0,\n  {}\n].forEach(value => test(t => {\n  assert_throws_js(TypeError, () => new File([], \"name\", {endings: value}),\n                   'File constructor should throw');\n}, `Invalid \"endings\" value: ${JSON.stringify(value)}`));\n\ntest(t => {\n  const test_error = {name: 'test'};\n  assert_throws_exactly(\n    test_error,\n    () => new File([], \"name\", { get endings() { throw test_error; }}),\n    'File constructor should propagate exceptions from \"endings\" property');\n}, 'Exception propagation from options');\n\ntest(t => {\n  let got = false;\n  new File([], \"name\", { get endings() { got = true; } });\n  assert_true(got, 'The \"endings\" property was accessed during construction.');\n}, 'The \"endings\" options property is used');\n}\nmain();\n",
+      "origin": "FileAPI/file/File-constructor-endings.any.js",
+      "n_tests": 4,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "File constructor: endings option"
+      }
+    },
+    {
+      "id": "wpt.fileapi.file.file-constructor",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst to_string_obj = { toString: () => 'a string' };\nconst to_string_throws = { toString: () => { throw new Error('expected'); } };\n\ntest(function() {\n  assert_true(\"File\" in globalThis, \"globalThis should have a File property.\");\n}, \"File interface object exists\");\n\ntest(t => {\n  assert_throws_js(TypeError, () => new File(),\n                   'Bits argument is required');\n  assert_throws_js(TypeError, () => new File([]),\n                   'Name argument is required');\n}, 'Required arguments');\n\nfunction test_first_argument(arg1, expectedSize, testName) {\n  test(function() {\n    var file = new File(arg1, \"dummy\");\n    assert_true(file instanceof File);\n    assert_equals(file.name, \"dummy\");\n    assert_equals(file.size, expectedSize);\n    assert_equals(file.type, \"\");\n    // assert_false(file.isClosed); XXX: File.isClosed doesn't seem to be implemented\n    assert_not_equals(file.lastModified, \"\");\n  }, testName);\n}\n\ntest_first_argument([], 0, \"empty fileBits\");\ntest_first_argument([\"bits\"], 4, \"DOMString fileBits\");\ntest_first_argument([\"𝓽𝓮𝔁𝓽\"], 16, \"Unicode DOMString fileBits\");\ntest_first_argument([new String('string object')], 13, \"String object fileBits\");\ntest_first_argument([new Blob()], 0, \"Empty Blob fileBits\");\ntest_first_argument([new Blob([\"bits\"])], 4, \"Blob fileBits\");\ntest_first_argument([new File([], 'world.txt')], 0, \"Empty File fileBits\");\ntest_first_argument([new File([\"bits\"], 'world.txt')], 4, \"File fileBits\");\ntest_first_argument([new ArrayBuffer(8)], 8, \"ArrayBuffer fileBits\");\ntest_first_argument([new Uint8Array([0x50, 0x41, 0x53, 0x53])], 4, \"Typed array fileBits\");\ntest_first_argument([\"bits\", new Blob([\"bits\"]), new Blob(), new Uint8Array([0x50, 0x41]),\n                     new Uint16Array([0x5353]), new Uint32Array([0x53534150])], 16, \"Various fileBits\");\ntest_first_argument([12], 2, \"Number in fileBits\");\ntest_first_argument([[1,2,3]], 5, \"Array in fileBits\");\ntest_first_argument([{}], 15, \"Object in fileBits\"); // \"[object Object]\"\nif (globalThis.document !== undefined) {\n  test_first_argument([document.body], 24, \"HTMLBodyElement in fileBits\"); // \"[object HTMLBodyElement]\"\n}\ntest_first_argument([to_string_obj], 8, \"Object with toString in fileBits\");\ntest_first_argument({[Symbol.iterator]() {\n  let i = 0;\n  return {next: () => [\n    {done:false, value:'ab'},\n    {done:false, value:'cde'},\n    {done:true}\n  ][i++]};\n}}, 5, 'Custom @@iterator');\n\n[\n  'hello',\n  0,\n  null\n].forEach(arg => {\n  test(t => {\n    assert_throws_js(TypeError, () => new File(arg, 'world.html'),\n                     'Constructor should throw for invalid bits argument');\n  }, `Invalid bits argument: ${JSON.stringify(arg)}`);\n});\n\ntest(t => {\n  assert_throws_js(Error, () => new File([to_string_throws], 'name.txt'),\n                   'Constructor should propagate exceptions');\n}, 'Bits argument: object that throws');\n\n\nfunction test_second_argument(arg2, expectedFileName, testName) {\n  test(function() {\n    var file = new File([\"bits\"], arg2);\n    assert_true(file instanceof File);\n    assert_equals(file.name, expectedFileName);\n  }, testName);\n}\n\ntest_second_argument(\"dummy\", \"dummy\", \"Using fileName\");\ntest_second_argument(\"dummy/foo\", \"dummy/foo\",\n                     \"No replacement when using special character in fileName\");\ntest_second_argument(null, \"null\", \"Using null fileName\");\ntest_second_argument(1, \"1\", \"Using number fileName\");\ntest_second_argument('', '', \"Using empty string fileName\");\nif (globalThis.document !== undefined) {\n  test_second_argument(document.body, '[object HTMLBodyElement]', \"Using object fileName\");\n}\n\n// testing the third argument\n[\n  {type: 'text/plain', expected: 'text/plain'},\n  {type: 'text/plain;charset=UTF-8', expected: 'text/plain;charset=utf-8'},\n  {type: 'TEXT/PLAIN', expected: 'text/plain'},\n  {type: '𝓽𝓮𝔁𝓽/𝔭𝔩𝔞𝔦𝔫', expected: ''},\n  {type: 'ascii/nonprintable\\u001F', expected: ''},\n  {type: 'ascii/nonprintable\\u007F', expected: ''},\n  {type: 'nonascii\\u00EE', expected: ''},\n  {type: 'nonascii\\u1234', expected: ''},\n  {type: 'nonparsable', expected: 'nonparsable'}\n].forEach(testCase => {\n  test(t => {\n    var file = new File([\"bits\"], \"dummy\", { type: testCase.type});\n    assert_true(file instanceof File);\n    assert_equals(file.type, testCase.expected);\n  }, `Using type in File constructor: ${testCase.type}`);\n});\ntest(function() {\n  var file = new File([\"bits\"], \"dummy\", { lastModified: 42 });\n  assert_true(file instanceof File);\n  assert_equals(file.lastModified, 42);\n}, \"Using lastModified\");\ntest(function() {\n  var file = new File([\"bits\"], \"dummy\", { name: \"foo\" });\n  assert_true(file instanceof File);\n  assert_equals(file.name, \"dummy\");\n}, \"Misusing name\");\ntest(function() {\n  var file = new File([\"bits\"], \"dummy\", { unknownKey: \"value\" });\n  assert_true(file instanceof File);\n  assert_equals(file.name, \"dummy\");\n}, \"Unknown properties are ignored\");\n\n[\n  123,\n  123.4,\n  true,\n  'abc'\n].forEach(arg => {\n  test(t => {\n    assert_throws_js(TypeError, () => new File(['bits'], 'name.txt', arg),\n                     'Constructor should throw for invalid property bag type');\n  }, `Invalid property bag: ${JSON.stringify(arg)}`);\n});\n\n[\n  null,\n  undefined,\n  [1,2,3],\n  /regex/,\n  function() {}\n].forEach(arg => {\n  test(t => {\n    assert_equals(new File(['bits'], 'name.txt', arg).size, 4,\n                  'Constructor should accept object-ish property bag type');\n  }, `Unusual but valid property bag: ${arg}`);\n});\n\ntest(t => {\n  assert_throws_js(Error,\n                   () => new File(['bits'], 'name.txt', {type: to_string_throws}),\n                   'Constructor should propagate exceptions');\n}, 'Property bag propagates exceptions');\n}\nmain();\n",
+      "origin": "FileAPI/file/File-constructor.any.js",
+      "n_tests": 13,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "File constructor"
+      }
+    },
+    {
+      "id": "wpt.fileapi.file.send-file-formdata-controls",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-NUL-[\\0].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-BS-[\\b].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-VT-[\\v].txt\",\n  });\n\n  // These have characters that undergo processing in name=,\n  // filename=, and/or value; formDataPostFileUploadTest postprocesses\n  // expectedEncodedBaseName for these internally.\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-LF-[\\n].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-LF-CR-[\\n\\r].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-CR-[\\r].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-CR-LF-[\\r\\n].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-HT-[\\t].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-FF-[\\f].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-DEL-[\\x7F].txt\",\n  });\n\n  // The rest should be passed through unmodified:\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-ESC-[\\x1B].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-SPACE-[ ].txt\",\n  });\n}\nmain();\n",
+      "origin": "FileAPI/file/send-file-formdata-controls.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["../support/send-file-formdata-helper.js"],
+      "variants": [],
+      "meta": {
+        "title": "FormData: FormData: Upload files named using controls"
+      }
+    },
+    {
+      "id": "wpt.fileapi.file.send-file-formdata-punctuation",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\n  // These have characters that undergo processing in name=,\n  // filename=, and/or value; formDataPostFileUploadTest postprocesses\n  // expectedEncodedBaseName for these internally.\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-QUOTATION-MARK-[\\x22].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: '\"file-for-upload-in-form-double-quoted.txt\"',\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-REVERSE-SOLIDUS-[\\\\].txt\",\n  });\n\n  // The rest should be passed through unmodified:\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-EXCLAMATION-MARK-[!].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-DOLLAR-SIGN-[$].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-PERCENT-SIGN-[%].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-AMPERSAND-[&].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-APOSTROPHE-['].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-LEFT-PARENTHESIS-[(].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-RIGHT-PARENTHESIS-[)].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-ASTERISK-[*].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-PLUS-SIGN-[+].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-COMMA-[,].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-FULL-STOP-[.].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-SOLIDUS-[/].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-COLON-[:].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-SEMICOLON-[;].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-EQUALS-SIGN-[=].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-QUESTION-MARK-[?].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-CIRCUMFLEX-ACCENT-[^].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-LEFT-SQUARE-BRACKET-[[].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-RIGHT-SQUARE-BRACKET-[]].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-LEFT-CURLY-BRACKET-[{].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-VERTICAL-LINE-[|].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-RIGHT-CURLY-BRACKET-[}].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form-TILDE-[~].txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"'file-for-upload-in-form-single-quoted.txt'\",\n  });\n}\nmain();\n",
+      "origin": "FileAPI/file/send-file-formdata-punctuation.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["../support/send-file-formdata-helper.js"],
+      "variants": [],
+      "meta": {
+        "title": "FormData: FormData: Upload files named using punctuation"
+      }
+    },
+    {
+      "id": "wpt.fileapi.file.send-file-formdata-utf-8",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form.txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"x-user-defined\",\n    fileBaseName: \"file-for-upload-in-form-\\uF7F0\\uF793\\uF783\\uF7A0.txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"windows-1252\",\n    fileBaseName: \"file-for-upload-in-form-â˜ºðŸ˜‚.txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"JIS X 0201 and JIS X 0208\",\n    fileBaseName: \"file-for-upload-in-form-★星★.txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"Unicode\",\n    fileBaseName: \"file-for-upload-in-form-☺😂.txt\",\n  });\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"Unicode\",\n    fileBaseName: `file-for-upload-in-form-${kTestChars}.txt`,\n  });\n}\nmain();\n",
+      "origin": "FileAPI/file/send-file-formdata-utf-8.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["../support/send-file-formdata-helper.js"],
+      "variants": [],
+      "meta": {
+        "title": "FormData: FormData: Upload files in UTF-8 fetch()"
+      }
+    },
+    {
+      "id": "wpt.fileapi.file.send-file-formdata",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\"use strict\";\n\n  formDataPostFileUploadTest({\n    fileNameSource: \"ASCII\",\n    fileBaseName: \"file-for-upload-in-form.txt\",\n  });\n}\nmain();\n",
+      "origin": "FileAPI/file/send-file-formdata.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["../support/send-file-formdata-helper.js"],
+      "variants": [],
+      "meta": {
+        "title": "FormData: Upload ASCII-named file in UTF-8 form"
+      }
+    },
+    {
+      "id": "wpt.fileapi.filereader",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\ntest(function () {\n  assert_true(\n    \"FileReader\" in globalThis,\n    \"globalThis should have a FileReader property.\",\n  );\n}, \"FileReader interface object\");\n\ntest(function () {\n  var fileReader = new FileReader();\n  assert_true(fileReader instanceof FileReader);\n}, \"no-argument FileReader constructor\");\n\nvar t_abort = async_test(\"FileReader States -- abort\");\nt_abort.step(function () {\n  var fileReader = new FileReader();\n  assert_equals(fileReader.readyState, 0);\n  assert_equals(fileReader.readyState, FileReader.EMPTY);\n\n  var blob = new Blob();\n  fileReader.readAsArrayBuffer(blob);\n  assert_equals(fileReader.readyState, 1);\n  assert_equals(fileReader.readyState, FileReader.LOADING);\n\n  fileReader.onabort = this.step_func(function (e) {\n    assert_equals(fileReader.readyState, 2);\n    assert_equals(fileReader.readyState, FileReader.DONE);\n    t_abort.done();\n  });\n  fileReader.abort();\n  fileReader.onabort = this.unreached_func(\"abort event should fire sync\");\n});\n\nvar t_event = async_test(\"FileReader States -- events\");\nt_event.step(function () {\n  var fileReader = new FileReader();\n\n  var blob = new Blob();\n  fileReader.readAsArrayBuffer(blob);\n\n  fileReader.onloadstart = this.step_func(function (e) {\n    assert_equals(fileReader.readyState, 1);\n    assert_equals(fileReader.readyState, FileReader.LOADING);\n  });\n\n  fileReader.onprogress = this.step_func(function (e) {\n    assert_equals(fileReader.readyState, 1);\n    assert_equals(fileReader.readyState, FileReader.LOADING);\n  });\n\n  fileReader.onloadend = this.step_func(function (e) {\n    assert_equals(fileReader.readyState, 2);\n    assert_equals(fileReader.readyState, FileReader.DONE);\n    t_event.done();\n  });\n});\n}\nmain();\n",
+      "origin": "FileAPI/fileReader.any.js",
+      "n_tests": 4,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileReader States"
+      }
+    },
+    {
+      "id": "wpt.fileapi.idlharness",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\n// https://w3c.github.io/FileAPI/\n\nidl_test(\n  ['FileAPI'],\n  ['dom', 'html', 'url'],\n  idl_array => {\n    idl_array.add_objects({\n      Blob: ['new Blob([\"TEST\"])'],\n      File: ['new File([\"myFileBits\"], \"myFileName\")'],\n      FileReader: ['new FileReader()']\n    });\n  }\n);\n}\nmain();\n",
+      "origin": "FileAPI/idlharness.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["/resources/WebIDLParser.js", "/resources/idlharness.js"],
+      "variants": [],
+      "meta": {
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.determining-encoding",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar t = async_test(\"Blob Determing Encoding with encoding argument\");\nt.step(function() {\n    // string 'hello'\n    var data = [0xFE,0xFF,0x00,0x68,0x00,0x65,0x00,0x6C,0x00,0x6C,0x00,0x6F];\n    var blob = new Blob([new Uint8Array(data)]);\n    var reader = new FileReader();\n\n    reader.onloadend = t.step_func_done (function(event) {\n        assert_equals(this.result, \"hello\", \"The FileReader should read the ArrayBuffer through UTF-16BE.\")\n    }, reader);\n\n    reader.readAsText(blob, \"UTF-16BE\");\n});\n\nvar t = async_test(\"Blob Determing Encoding with type attribute\");\nt.step(function() {\n    var data = [0xFE,0xFF,0x00,0x68,0x00,0x65,0x00,0x6C,0x00,0x6C,0x00,0x6F];\n    var blob = new Blob([new Uint8Array(data)], {type:\"text/plain;charset=UTF-16BE\"});\n    var reader = new FileReader();\n\n    reader.onloadend = t.step_func_done (function(event) {\n        assert_equals(this.result, \"hello\", \"The FileReader should read the ArrayBuffer through UTF-16BE.\")\n    }, reader);\n\n    reader.readAsText(blob);\n});\n\n\nvar t = async_test(\"Blob Determing Encoding with UTF-8 BOM\");\nt.step(function() {\n    var data = [0xEF,0xBB,0xBF,0x68,0x65,0x6C,0x6C,0xC3,0xB6];\n    var blob = new Blob([new Uint8Array(data)]);\n    var reader = new FileReader();\n\n    reader.onloadend = t.step_func_done (function(event) {\n        assert_equals(this.result, \"hellö\", \"The FileReader should read the blob with UTF-8.\");\n    }, reader);\n\n    reader.readAsText(blob);\n});\n\nvar t = async_test(\"Blob Determing Encoding without anything implying charset.\");\nt.step(function() {\n    var data = [0x68,0x65,0x6C,0x6C,0xC3,0xB6];\n    var blob = new Blob([new Uint8Array(data)]);\n    var reader = new FileReader();\n\n    reader.onloadend = t.step_func_done (function(event) {\n        assert_equals(this.result, \"hellö\", \"The FileReader should read the blob by default with UTF-8.\");\n    }, reader);\n\n    reader.readAsText(blob);\n});\n\nvar t = async_test(\"Blob Determing Encoding with UTF-16BE BOM\");\nt.step(function() {\n    var data = [0xFE,0xFF,0x00,0x68,0x00,0x65,0x00,0x6C,0x00,0x6C,0x00,0x6F];\n    var blob = new Blob([new Uint8Array(data)]);\n    var reader = new FileReader();\n\n    reader.onloadend = t.step_func_done (function(event) {\n        assert_equals(this.result, \"hello\", \"The FileReader should read the ArrayBuffer through UTF-16BE.\");\n    }, reader);\n\n    reader.readAsText(blob);\n});\n\nvar t = async_test(\"Blob Determing Encoding with UTF-16LE BOM\");\nt.step(function() {\n    var data = [0xFF,0xFE,0x68,0x00,0x65,0x00,0x6C,0x00,0x6C,0x00,0x6F,0x00];\n    var blob = new Blob([new Uint8Array(data)]);\n    var reader = new FileReader();\n\n    reader.onloadend = t.step_func_done (function(event) {\n        assert_equals(this.result, \"hello\", \"The FileReader should read the ArrayBuffer through UTF-16LE.\");\n    }, reader);\n\n    reader.readAsText(blob);\n});\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/Determining-Encoding.any.js",
+      "n_tests": 6,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileAPI Test: Blob Determining Encoding"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader-event-handler-attributes",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar attributes = [\n  \"onloadstart\",\n  \"onprogress\",\n  \"onload\",\n  \"onabort\",\n  \"onerror\",\n  \"onloadend\",\n];\nattributes.forEach(function(a) {\n  test(function() {\n    var reader = new FileReader();\n    assert_equals(reader[a], null,\n                  \"event handler attribute should initially be null\");\n  }, \"FileReader.\" + a + \": initial value\");\n});\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/FileReader-event-handler-attributes.any.js",
+      "n_tests": 1,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileReader event handler attributes"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader-multiple-reads",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n  var blob_1 = new Blob(['TEST000000001'])\n  var blob_2 = new Blob(['TEST000000002'])\n  var reader = new FileReader();\n  reader.readAsText(blob_1)\n  assert_equals(reader.readyState, FileReader.LOADING, \"readyState Must be LOADING\")\n  assert_throws_dom(\"InvalidStateError\", function () {\n    reader.readAsText(blob_2)\n  })\n}, 'test FileReader InvalidStateError exception for readAsText');\n\ntest(function() {\n  var blob_1 = new Blob(['TEST000000001'])\n  var blob_2 = new Blob(['TEST000000002'])\n  var reader = new FileReader();\n  reader.readAsDataURL(blob_1)\n  assert_equals(reader.readyState, FileReader.LOADING, \"readyState Must be LOADING\")\n  assert_throws_dom(\"InvalidStateError\", function () {\n    reader.readAsDataURL(blob_2)\n  })\n}, 'test FileReader InvalidStateError exception for readAsDataURL');\n\ntest(function() {\n  var blob_1 = new Blob(['TEST000000001'])\n  var blob_2 = new Blob(['TEST000000002'])\n  var reader = new FileReader();\n  reader.readAsArrayBuffer(blob_1)\n  assert_equals(reader.readyState, FileReader.LOADING, \"readyState Must be LOADING\")\n  assert_throws_dom(\"InvalidStateError\", function () {\n    reader.readAsArrayBuffer(blob_2)\n  })\n}, 'test FileReader InvalidStateError exception for readAsArrayBuffer');\n\nasync_test(function() {\n  var blob_1 = new Blob(['TEST000000001'])\n  var blob_2 = new Blob(['TEST000000002'])\n  var reader = new FileReader();\n  var triggered = false;\n  reader.onloadstart = this.step_func_done(function() {\n    assert_false(triggered, \"Only one loadstart event should be dispatched\");\n    triggered = true;\n    assert_equals(reader.readyState, FileReader.LOADING,\n                  \"readyState must be LOADING\")\n    assert_throws_dom(\"InvalidStateError\", function () {\n      reader.readAsArrayBuffer(blob_2)\n    })\n  });\n  reader.readAsArrayBuffer(blob_1)\n  assert_equals(reader.readyState, FileReader.LOADING, \"readyState Must be LOADING\")\n}, 'test FileReader InvalidStateError exception in onloadstart event for readAsArrayBuffer');\n\nasync_test(function() {\n  var blob_1 = new Blob(['TEST000000001'])\n  var blob_2 = new Blob(['TEST000000002'])\n  var reader = new FileReader();\n  reader.onloadend = this.step_func_done(function() {\n    assert_equals(reader.readyState, FileReader.DONE,\n                  \"readyState must be DONE\")\n    reader.readAsArrayBuffer(blob_2)\n    assert_equals(reader.readyState, FileReader.LOADING, \"readyState Must be LOADING\")\n  });\n  reader.readAsArrayBuffer(blob_1)\n  assert_equals(reader.readyState, FileReader.LOADING, \"readyState Must be LOADING\")\n}, 'test FileReader no InvalidStateError exception in loadend event handler for readAsArrayBuffer');\n\nasync_test(function() {\n  var blob_1 = new Blob([new Uint8Array(0x414141)]);\n  var blob_2 = new Blob(['TEST000000002']);\n  var reader = new FileReader();\n  reader.onloadstart = this.step_func(function() {\n    reader.abort();\n    reader.onloadstart = null;\n    reader.onloadend = this.step_func_done(function() {\n      assert_equals('TEST000000002', reader.result);\n    });\n    reader.readAsText(blob_2);\n  });\n  reader.readAsText(blob_1);\n}, 'test abort and restart in onloadstart event for readAsText');\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/FileReader-multiple-reads.any.js",
+      "n_tests": 6,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileReader: starting new reads while one is in progress"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader_abort",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n      var readerNoRead = new FileReader();\n      readerNoRead.abort();\n      assert_equals(readerNoRead.readyState, readerNoRead.EMPTY);\n      assert_equals(readerNoRead.result, null);\n    }, \"Aborting before read\");\n\n    promise_test(t => {\n        var blob = new Blob([\"TEST THE ABORT METHOD\"]);\n        var readerAbort = new FileReader();\n\n        var eventWatcher = new EventWatcher(t, readerAbort,\n            ['abort', 'loadstart', 'loadend', 'error', 'load']);\n\n        // EventWatcher doesn't let us inspect the state after the abort event,\n        // so add an extra event handler for that.\n        readerAbort.addEventListener('abort', t.step_func(e => {\n              assert_equals(readerAbort.readyState, readerAbort.DONE);\n          }));\n\n        readerAbort.readAsText(blob);\n        return eventWatcher.wait_for('loadstart')\n          .then(() => {\n              assert_equals(readerAbort.readyState, readerAbort.LOADING);\n              // 'abort' and 'loadend' events are dispatched synchronously, so\n              // call wait_for before calling abort.\n              var nextEvent = eventWatcher.wait_for(['abort', 'loadend']);\n              readerAbort.abort();\n              return nextEvent;\n            })\n          .then(() => {\n              // https://www.w3.org/Bugs/Public/show_bug.cgi?id=24401\n              assert_equals(readerAbort.result, null);\n              assert_equals(readerAbort.readyState, readerAbort.DONE);\n            });\n      }, \"Aborting after read\");\n\n    promise_test(t => {\n        var reader = new FileReader();\n\n        var eventWatcher = new EventWatcher(t, reader,\n            ['abort', 'loadstart', 'loadend', 'error', 'load']);\n\n        // First read: run to completion so the reader reaches the DONE state.\n        reader.readAsText(new Blob([\"first read\"]));\n        return eventWatcher.wait_for('loadstart')\n          .then(() => eventWatcher.wait_for('load'))\n          .then(() => eventWatcher.wait_for('loadend'))\n          .then(() => {\n              assert_equals(reader.readyState, reader.DONE);\n\n              // Reuse the same reader for a second read and abort it while it is\n              // still LOADING. 'abort' and 'loadend' are dispatched synchronously,\n              // so call wait_for before calling abort.\n              reader.readAsText(new Blob([\"second read\"]));\n              assert_equals(reader.readyState, reader.LOADING);\n              var nextEvent = eventWatcher.wait_for(['abort', 'loadend']);\n              reader.abort();\n              return nextEvent;\n            })\n          .then(() => {\n              assert_equals(reader.result, null);\n              assert_equals(reader.readyState, reader.DONE);\n            });\n      }, \"Aborting a reused reader after a previous read completed\");\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/filereader_abort.any.js",
+      "n_tests": 3,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileAPI Test: filereader_abort"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader_error",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(function() {\n      var blob = new Blob([\"TEST THE ERROR ATTRIBUTE AND ERROR EVENT\"]);\n      var reader = new FileReader();\n      assert_equals(reader.error, null, \"The error is null when no error occurred\");\n\n      reader.onload = this.step_func(function(evt) {\n        assert_unreached(\"Should not dispatch the load event\");\n      });\n\n      reader.onloadend = this.step_func(function(evt) {\n        assert_equals(reader.result, null, \"The result is null\");\n        this.done();\n      });\n\n      reader.readAsText(blob);\n      reader.abort();\n    });\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/filereader_error.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileAPI Test: filereader_error"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader_events",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\npromise_test(async t => {\n  var reader = new FileReader();\n  var eventWatcher = new EventWatcher(t, reader, ['loadstart', 'progress', 'abort', 'error', 'load', 'loadend']);\n  reader.readAsText(new Blob([]));\n  await eventWatcher.wait_for('loadstart');\n  // No progress event for an empty blob, as no data is loaded.\n  await eventWatcher.wait_for('load');\n  await eventWatcher.wait_for('loadend');\n}, 'events are dispatched in the correct order for an empty blob');\n\npromise_test(async t => {\n  var reader = new FileReader();\n  var eventWatcher = new EventWatcher(t, reader, ['loadstart', 'progress', 'abort', 'error', 'load', 'loadend']);\n  reader.readAsText(new Blob(['a']));\n  await eventWatcher.wait_for('loadstart');\n  await eventWatcher.wait_for('progress');\n  await eventWatcher.wait_for('load');\n  await eventWatcher.wait_for('loadend');\n}, 'events are dispatched in the correct order for a non-empty blob');\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/filereader_events.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader_readasarraybuffer",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(function() {\n      var blob = new Blob([\"TEST\"]);\n      var reader = new FileReader();\n\n      reader.onload = this.step_func(function(evt) {\n        assert_equals(reader.result.byteLength, 4, \"The byteLength is 4\");\n        assert_true(reader.result instanceof ArrayBuffer, \"The result is instanceof ArrayBuffer\");\n        assert_array_equals(new Uint8Array(reader.result), [84, 69, 83, 84]);\n        assert_equals(reader.readyState, reader.DONE);\n        this.done();\n      });\n\n      reader.onloadstart = this.step_func(function(evt) {\n        assert_equals(reader.readyState, reader.LOADING);\n      });\n\n      reader.onprogress = this.step_func(function(evt) {\n        assert_equals(reader.readyState, reader.LOADING);\n      });\n\n      reader.readAsArrayBuffer(blob);\n    });\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/filereader_readAsArrayBuffer.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileAPI Test: filereader_readAsArrayBuffer"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader_readasbinarystring",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(t => {\n  const blob = new Blob([\"σ\"]);\n  const reader = new FileReader();\n\n  reader.onload = t.step_func_done(() => {\n    assert_equals(typeof reader.result, \"string\", \"The result is string\");\n    assert_equals(reader.result.length, 2, \"The result length is 2\");\n    assert_equals(reader.result, \"\\xcf\\x83\", \"The result is \\xcf\\x83\");\n    assert_equals(reader.readyState, reader.DONE);\n  });\n\n  reader.onloadstart = t.step_func(() => {\n    assert_equals(reader.readyState, reader.LOADING);\n  });\n\n  reader.onprogress = t.step_func(() => {\n    assert_equals(reader.readyState, reader.LOADING);\n  });\n\n  reader.readAsBinaryString(blob);\n});\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/filereader_readAsBinaryString.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileAPI Test: filereader_readAsBinaryString"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader_readasdataurl",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(function(testCase) {\n  var blob = new Blob([\"TEST\"]);\n  var reader = new FileReader();\n\n  reader.onload = this.step_func(function(evt) {\n    assert_equals(reader.readyState, reader.DONE);\n    testCase.done();\n  });\n  reader.onloadstart = this.step_func(function(evt) {\n    assert_equals(reader.readyState, reader.LOADING);\n  });\n  reader.onprogress = this.step_func(function(evt) {\n    assert_equals(reader.readyState, reader.LOADING);\n  });\n\n  reader.readAsDataURL(blob);\n}, 'FileReader readyState during readAsDataURL');\n\nasync_test(function(testCase) {\n  var blob = new Blob([\"TEST\"], { type: 'text/plain' });\n  var reader = new FileReader();\n\n  reader.onload = this.step_func(function() {\n    assert_equals(reader.result, \"data:text/plain;base64,VEVTVA==\");\n    testCase.done();\n  });\n  reader.readAsDataURL(blob);\n}, 'readAsDataURL result for Blob with specified MIME type');\n\nasync_test(function(testCase) {\n  var blob = new Blob([\"TEST\"]);\n  var reader = new FileReader();\n\n  reader.onload = this.step_func(function() {\n    assert_equals(reader.result,\n                  \"data:application/octet-stream;base64,VEVTVA==\");\n    testCase.done();\n  });\n  reader.readAsDataURL(blob);\n}, 'readAsDataURL result for Blob with unspecified MIME type');\n\nasync_test(function(testCase) {\n  var blob = new Blob([]);\n  var reader = new FileReader();\n\n  reader.onload = this.step_func(function() {\n    assert_equals(reader.result,\n                  \"data:application/octet-stream;base64,\");\n    testCase.done();\n  });\n  reader.readAsDataURL(blob);\n}, 'readAsDataURL result for empty Blob');\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/filereader_readAsDataURL.any.js",
+      "n_tests": 4,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileAPI Test: FileReader.readAsDataURL"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader_readastext",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(function() {\n      var blob = new Blob([\"TEST\"]);\n      var reader = new FileReader();\n\n      reader.onload = this.step_func(function(evt) {\n        assert_equals(typeof reader.result, \"string\", \"The result is typeof string\");\n        assert_equals(reader.result, \"TEST\", \"The result is TEST\");\n        this.done();\n      });\n\n      reader.onloadstart = this.step_func(function(evt) {\n        assert_equals(reader.readyState, reader.LOADING, \"The readyState\");\n      });\n\n      reader.onprogress = this.step_func(function(evt) {\n        assert_equals(reader.readyState, reader.LOADING);\n      });\n\n      reader.readAsText(blob);\n    }, \"readAsText should correctly read UTF-8.\");\n\n    async_test(function() {\n      var blob = new Blob([\"TEST\"]);\n      var reader = new FileReader();\n      var reader_UTF16 = new FileReader();\n      reader_UTF16.onload = this.step_func(function(evt) {\n        // \"TEST\" in UTF-8 is 0x54 0x45 0x53 0x54.\n        // Decoded as utf-16 (little-endian), we get 0x4554 0x5453.\n        assert_equals(reader_UTF16.readyState, reader.DONE, \"The readyState\");\n        assert_equals(reader_UTF16.result, \"\\u4554\\u5453\", \"The result is not TEST\");\n        this.done();\n      });\n      reader_UTF16.readAsText(blob, \"UTF-16\");\n    }, \"readAsText should correctly read UTF-16.\");\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/filereader_readAsText.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileAPI Test: filereader_readAsText"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader_readastext_blob_type_charset",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// Per the File API \"read as text\" algorithm, the encoding is determined in this\n// order: (1) the explicit `encoding` argument if it is a supported encoding;\n// (2) otherwise, if the blob's `type` has a `charset` parameter, that charset;\n// (3) otherwise UTF-8. These tests exercise step (2) with BOM-free data so that\n// the charset parameter is the only thing that can select the right decoder\n// (i.e. they are not accidentally satisfied by BOM sniffing).\n\nasync_test(function() {\n    // 0x80 is the Euro sign (U+20AC) in windows-1252. As UTF-8 it is a lone\n    // continuation byte and decodes to U+FFFD.\n    var blob = new Blob([new Uint8Array([0x80])], { type: \"text/plain;charset=windows-1252\" });\n    var reader = new FileReader();\n\n    reader.onloadend = this.step_func_done(function() {\n        assert_equals(reader.result, \"€\",\n            \"readAsText should honor the windows-1252 charset from the Blob type and decode 0x80 as U+20AC, not UTF-8 U+FFFD.\");\n    });\n\n    reader.readAsText(blob);\n}, \"readAsText() uses the charset parameter of the Blob's type (windows-1252)\");\n\nasync_test(function() {\n    // \"héllo\" in windows-1252: 0xE9 is 'é'. As UTF-8, the lone 0xE9 is an\n    // invalid lead byte and decodes to U+FFFD.\n    var blob = new Blob([new Uint8Array([0x68, 0xE9, 0x6C, 0x6C, 0x6F])], { type: \"text/plain;charset=windows-1252\" });\n    var reader = new FileReader();\n\n    reader.onloadend = this.step_func_done(function() {\n        assert_equals(reader.result, \"héllo\",\n            \"readAsText should decode the body using the windows-1252 charset declared in the Blob type.\");\n    });\n\n    reader.readAsText(blob);\n}, \"readAsText() decodes a windows-1252 Blob body using the type's charset\");\n\nasync_test(function() {\n    // An explicit encoding argument must still win over the Blob type charset\n    // (step 1 of the algorithm). This already works in WebKit and guards against\n    // a fix that over-corrects by always preferring the type charset.\n    var blob = new Blob([new Uint8Array([0x80])], { type: \"text/plain;charset=UTF-8\" });\n    var reader = new FileReader();\n\n    reader.onloadend = this.step_func_done(function() {\n        assert_equals(reader.result, \"€\",\n            \"An explicit encoding argument takes precedence over the Blob type's charset.\");\n    });\n\n    reader.readAsText(blob, \"windows-1252\");\n}, \"readAsText() encoding argument overrides the Blob type's charset\");\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/filereader_readAsText_blob_type_charset.any.js",
+      "n_tests": 3,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileAPI Test: readAsText uses the Blob type's charset when no encoding argument is given"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader_readystate",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nasync_test(function() {\n      var blob = new Blob([\"THIS TEST THE READYSTATE WHEN READ BLOB\"]);\n      var reader = new FileReader();\n\n      assert_equals(reader.readyState, reader.EMPTY);\n\n      reader.onloadstart = this.step_func(function(evt) {\n        assert_equals(reader.readyState, reader.LOADING);\n      });\n\n      reader.onloadend = this.step_func(function(evt) {\n        assert_equals(reader.readyState, reader.DONE);\n        this.done();\n      });\n\n      reader.readAsDataURL(blob);\n    });\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/filereader_readystate.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileAPI Test: filereader_readystate"
+      }
+    },
+    {
+      "id": "wpt.fileapi.reading-data-section.filereader_result",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nvar blob, blob2;\n    setup(function() {\n      blob = new Blob([\"This test the result attribute\"]);\n      blob2 = new Blob([\"This is a second blob\"]);\n    });\n\n    async_test(function() {\n      var readText = new FileReader();\n      assert_equals(readText.result, null);\n\n      readText.onloadend = this.step_func(function(evt) {\n        assert_equals(typeof readText.result, \"string\", \"The result type is string\");\n        assert_equals(readText.result, \"This test the result attribute\", \"The result is correct\");\n        this.done();\n      });\n\n      readText.readAsText(blob);\n    }, \"readAsText\");\n\n    async_test(function() {\n      var readDataURL = new FileReader();\n      assert_equals(readDataURL.result, null);\n\n      readDataURL.onloadend = this.step_func(function(evt) {\n        assert_equals(typeof readDataURL.result, \"string\", \"The result type is string\");\n        assert_true(readDataURL.result.indexOf(\"VGhpcyB0ZXN0IHRoZSByZXN1bHQgYXR0cmlidXRl\") != -1, \"return the right base64 string\");\n        this.done();\n      });\n\n      readDataURL.readAsDataURL(blob);\n    }, \"readAsDataURL\");\n\n    async_test(function() {\n      var readArrayBuffer = new FileReader();\n      assert_equals(readArrayBuffer.result, null);\n\n      readArrayBuffer.onloadend = this.step_func(function(evt) {\n        assert_true(readArrayBuffer.result instanceof ArrayBuffer, \"The result is instanceof ArrayBuffer\");\n        this.done();\n      });\n\n      readArrayBuffer.readAsArrayBuffer(blob);\n    }, \"readAsArrayBuffer\");\n\n    async_test(function() {\n      var readBinaryString = new FileReader();\n      assert_equals(readBinaryString.result, null);\n\n      readBinaryString.onloadend = this.step_func(function(evt) {\n        assert_equals(typeof readBinaryString.result, \"string\", \"The result type is string\");\n        assert_equals(readBinaryString.result, \"This test the result attribute\", \"The result is correct\");\n        this.done();\n      });\n\n      readBinaryString.readAsBinaryString(blob);\n    }, \"readAsBinaryString\");\n\n\n    for (let event of ['loadstart', 'progress']) {\n      for (let method of ['readAsText', 'readAsDataURL', 'readAsArrayBuffer', 'readAsBinaryString']) {\n        promise_test(async function(t) {\n          var reader = new FileReader();\n          assert_equals(reader.result, null, 'result is null before read');\n\n          var eventWatcher = new EventWatcher(t, reader,\n              [event, 'loadend']);\n\n          reader[method](blob);\n          assert_equals(reader.result, null, 'result is null after first read call');\n          await eventWatcher.wait_for(event);\n          assert_equals(reader.result, null, 'result is null during event');\n          await eventWatcher.wait_for('loadend');\n          assert_not_equals(reader.result, null);\n          reader[method](blob);\n          assert_equals(reader.result, null, 'result is null after second read call');\n          await eventWatcher.wait_for(event);\n          assert_equals(reader.result, null, 'result is null during second read event');\n        }, 'result is null during \"' + event + '\" event for ' + method);\n      }\n    }\n}\nmain();\n",
+      "origin": "FileAPI/reading-data-section/filereader_result.any.js",
+      "n_tests": 5,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "FileAPI Test: filereader_result"
+      }
+    },
+    {
+      "id": "wpt.fileapi.unicode",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nconst OMICRON_WITH_OXIA = '\\u1F79'; // NFC normalized to U+3CC\nconst CONTAINS_UNPAIRED_SURROGATES = 'abc\\uDC00def\\uD800ghi';\nconst REPLACED = 'abc\\uFFFDdef\\uFFFDghi';\n\npromise_test(async t => {\n  const blob = new Blob([OMICRON_WITH_OXIA]);\n  const result = await blob.text();\n  assert_equals(result, OMICRON_WITH_OXIA, 'String should not be normalized');\n}, 'Test that strings are not NFC normalized by Blob constructor');\n\npromise_test(async t => {\n  const file = new File([OMICRON_WITH_OXIA], 'name');\n  const result = await file.text();\n  assert_equals(result, OMICRON_WITH_OXIA, 'String should not be normalized');\n}, 'Test that strings are not NFC normalized by File constructor');\n\npromise_test(async t => {\n  const blob = new Blob([CONTAINS_UNPAIRED_SURROGATES]);\n  const result = await blob.text();\n  assert_equals(result, REPLACED, 'Unpaired surrogates should be replaced.');\n}, 'Test that unpaired surrogates are replaced by Blob constructor');\n\npromise_test(async t => {\n  const file = new File([CONTAINS_UNPAIRED_SURROGATES], 'name');\n  const result = await file.text();\n  assert_equals(result, REPLACED, 'Unpaired surrogates should be replaced.');\n}, 'Test that unpaired surrogates are replaced by File constructor');\n}\nmain();\n",
+      "origin": "FileAPI/unicode.any.js",
+      "n_tests": 4,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "title": "Blob/Unicode interaction: normalization and encoding"
+      }
+    },
+    {
+      "id": "wpt.fileapi.url.url-format",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nconst blob = new Blob(['test']);\nconst file = new File(['test'], 'name');\n\ntest(t => {\n  const url_count = 5000;\n  let list = [];\n\n  t.add_cleanup(() => {\n    for (let url of list) {\n      URL.revokeObjectURL(url);\n    }\n  });\n\n  for (let i = 0; i < url_count; ++i)\n    list.push(URL.createObjectURL(blob));\n\n  list.sort();\n\n  for (let i = 1; i < list.length; ++i)\n    assert_not_equals(list[i], list[i-1], 'generated Blob URLs should be unique');\n}, 'Generated Blob URLs are unique');\n\ntest(() => {\n  const url = URL.createObjectURL(blob);\n  assert_equals(typeof url, 'string');\n  assert_true(url.startsWith('blob:'));\n}, 'Blob URL starts with \"blob:\"');\n\ntest(() => {\n  const url = URL.createObjectURL(file);\n  assert_equals(typeof url, 'string');\n  assert_true(url.startsWith('blob:'));\n}, 'Blob URL starts with \"blob:\" for Files');\n\ntest(() => {\n  const url = URL.createObjectURL(blob);\n  assert_equals(new URL(url).origin, location.origin);\n  if (location.origin !== 'null') {\n    assert_true(url.includes(location.origin));\n    assert_true(url.startsWith('blob:' + location.protocol));\n  }\n}, 'Origin of Blob URL matches our origin');\n\ntest(() => {\n  const url = URL.createObjectURL(blob);\n  const url_record = new URL(url);\n  assert_equals(url_record.protocol, 'blob:');\n  assert_equals(url_record.origin, location.origin);\n  assert_equals(url_record.host, '', 'host should be an empty string');\n  assert_equals(url_record.port, '', 'port should be an empty string');\n  const uuid_path_re = /\\/[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;\n  assert_true(uuid_path_re.test(url_record.pathname), 'Path must end with a valid UUID');\n  if (location.origin !== 'null') {\n    const nested_url = new URL(url_record.pathname);\n    assert_equals(nested_url.origin, location.origin);\n    assert_equals(nested_url.pathname.search(uuid_path_re), 0, 'Path must be a valid UUID');\n    assert_true(url.includes(location.origin));\n    assert_true(url.startsWith('blob:' + location.protocol));\n  }\n}, 'Blob URL parses correctly');\n\ntest(() => {\n  const url = URL.createObjectURL(file);\n  assert_equals(new URL(url).origin, location.origin);\n  if (location.origin !== 'null') {\n    assert_true(url.includes(location.origin));\n    assert_true(url.startsWith('blob:' + location.protocol));\n  }\n}, 'Origin of Blob URL matches our origin for Files');\n}\nmain();\n",
+      "origin": "FileAPI/url/url-format.any.js",
+      "n_tests": 7,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.fileapi.url.url-with-fetch",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction fetch_should_succeed(test, request) {\n  return fetch(request).then(response => response.text());\n}\n\nfunction fetch_should_fail(test, url, method = 'GET') {\n  return promise_rejects_js(test, TypeError, fetch(url, {method: method}));\n}\n\nfetch_tests('fetch', fetch_should_succeed, fetch_should_fail);\n\npromise_test(t => {\n  const blob_contents = 'test blob contents';\n  const blob_type = 'image/png';\n  const blob = new Blob([blob_contents], {type: blob_type});\n  const url = URL.createObjectURL(blob);\n\n  return fetch(url).then(response => {\n    assert_equals(response.headers.get('Content-Type'), blob_type);\n  });\n}, 'fetch should return Content-Type from Blob');\n\npromise_test(t => {\n  const blob_contents = 'test blob contents';\n  const blob = new Blob([blob_contents]);\n  const url = URL.createObjectURL(blob);\n  const request = new Request(url);\n\n  // Revoke the object URL.  Request should take a reference to the blob as\n  // soon as it receives it in open(), so the request succeeds even though we\n  // revoke the URL before calling fetch().\n  URL.revokeObjectURL(url);\n\n  return fetch_should_succeed(t, request).then(text => {\n    assert_equals(text, blob_contents);\n  });\n}, 'Revoke blob URL after creating Request, will fetch');\n\npromise_test(async t => {\n  const blob_contents = 'test blob contents';\n  const blob = new Blob([blob_contents]);\n  const url = URL.createObjectURL(blob);\n  let request = new Request(url);\n\n  // Revoke the object URL.  Request should take a reference to the blob as\n  // soon as it receives it in open(), so the request succeeds even though we\n  // revoke the URL before calling fetch().\n  URL.revokeObjectURL(url);\n\n  request = request.clone();\n  await garbageCollect();\n\n  const text = await fetch_should_succeed(t, request);\n  assert_equals(text, blob_contents);\n}, 'Revoke blob URL after creating Request, then clone Request, will fetch');\n\npromise_test(function(t) {\n  const blob_contents = 'test blob contents';\n  const blob = new Blob([blob_contents]);\n  const url = URL.createObjectURL(blob);\n\n  const result = fetch_should_succeed(t, url).then(text => {\n    assert_equals(text, blob_contents);\n  });\n\n  // Revoke the object URL. fetch should have already resolved the blob URL.\n  URL.revokeObjectURL(url);\n\n  return result;\n}, 'Revoke blob URL after calling fetch, fetch should succeed');\n}\nmain();\n",
+      "origin": "FileAPI/url/url-with-fetch.any.js",
+      "n_tests": 4,
+      "async": true,
+      "fetch": true,
+      "includes": ["resources/fetch-tests.js", "/common/gc.js"],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.fileapi.url.url-with-xhr",
+      "category": "fileapi",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction xhr_should_succeed(test, url) {\n  return new Promise((resolve, reject) => {\n    const xhr = new XMLHttpRequest();\n    xhr.open('GET', url);\n    xhr.onload = test.step_func(() => {\n      assert_equals(xhr.status, 200);\n      assert_equals(xhr.statusText, 'OK');\n      resolve(xhr.response);\n    });\n    xhr.onerror = () => reject('Got unexpected error event');\n    xhr.send();\n  });\n}\n\nfunction xhr_should_fail(test, url, method = 'GET') {\n  const xhr = new XMLHttpRequest();\n  xhr.open(method, url);\n  const result1 = new Promise((resolve, reject) => {\n    xhr.onload = () => reject('Got unexpected load event');\n    xhr.onerror = resolve;\n  });\n  const result2 = new Promise(resolve => {\n    xhr.onreadystatechange = test.step_func(() => {\n      if (xhr.readyState !== xhr.DONE) return;\n      assert_equals(xhr.status, 0);\n      resolve();\n    });\n  });\n  xhr.send();\n  return Promise.all([result1, result2]);\n}\n\nfetch_tests('XHR', xhr_should_succeed, xhr_should_fail);\n\nasync_test(t => {\n  const blob_contents = 'test blob contents';\n  const blob_type = 'image/png';\n  const blob = new Blob([blob_contents], {type: blob_type});\n  const url = URL.createObjectURL(blob);\n  const xhr = new XMLHttpRequest();\n  xhr.open('GET', url);\n  xhr.onloadend = t.step_func_done(() => {\n    assert_equals(xhr.getResponseHeader('Content-Type'), blob_type);\n  });\n  xhr.send();\n}, 'XHR should return Content-Type from Blob');\n\nasync_test(t => {\n  const blob_contents = 'test blob contents';\n  const blob = new Blob([blob_contents]);\n  const url = URL.createObjectURL(blob);\n  const xhr = new XMLHttpRequest();\n  xhr.open('GET', url);\n\n  // Revoke the object URL.  XHR should take a reference to the blob as soon as\n  // it receives it in open(), so the request succeeds even though we revoke the\n  // URL before calling send().\n  URL.revokeObjectURL(url);\n\n  xhr.onload = t.step_func_done(() => {\n    assert_equals(xhr.response, blob_contents);\n  });\n  xhr.onerror = t.unreached_func('Got unexpected error event');\n\n  xhr.send();\n}, 'Revoke blob URL after open(), will fetch');\n}\nmain();\n",
+      "origin": "FileAPI/url/url-with-xhr.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/fetch-tests.js"],
+      "variants": [],
+      "meta": {}
+    }
+  ]
+}

@@ -1,0 +1,110 @@
+{
+  "_comment": "Auto-extracted from web-platform-tests/wpt by scripts/extract-wpt.mjs (WinterTC ECMA-429 §5 minimum common API scope). Each fixture wraps a WPT .any.js body verbatim in `function main(): void { … }` — test()/assert_equals stay as-is (DashScript lowers them to __ds::wpt_* static helpers). WinterTC is pure-Rust: the conformance harness runs the static path only (no engine fallback). `includes` lists the WPT harness scripts (// META: script=) the fixture depends on. DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "wpt.urlpattern.urlpattern-compare.tentative",
+      "category": "urlpattern",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\n}\nmain();\n",
+      "origin": "urlpattern/urlpattern-compare.tentative.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["resources/urlpattern-compare-tests.tentative.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.urlpattern.urlpattern-compare.tentative.https",
+      "category": "urlpattern",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\n}\nmain();\n",
+      "origin": "urlpattern/urlpattern-compare.tentative.https.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["resources/urlpattern-compare-tests.tentative.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.urlpattern.urlpattern-constructor",
+      "category": "urlpattern",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(() => {\n  assert_throws_js(TypeError, () => { new URLPattern(new URL('https://example.org/%(')); } );\n  assert_throws_js(TypeError, () => { new URLPattern(new URL('https://example.org/%((')); } );\n  assert_throws_js(TypeError, () => { new URLPattern('(\\\\'); } );\n}, `Test unclosed token`);\n\ntest(() => {\n  new URLPattern(undefined, undefined);\n}, `Test constructor with undefined`);\n}\nmain();\n",
+      "origin": "urlpattern/urlpattern-constructor.any.js",
+      "n_tests": 2,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.urlpattern.urlpattern-generate.tentative",
+      "category": "urlpattern",
+      "source": "wpt",
+      "fixture": "function main(): void {\nfunction runTests(data) {\n  for (let entry of data) {\n    test(function () {\n      const pattern = new URLPattern(entry.pattern);\n\n      if (entry.expected === null) {\n        assert_throws_js(TypeError, _ => pattern.generate(entry.component, entry.groups),\n                         'generate() should fail with TypeError');\n        return;\n      }\n\n      const result = pattern.generate(entry.component, entry.groups);\n      assert_equals(result, entry.expected);\n    }, `Pattern: ${JSON.stringify(entry.pattern)} ` +\n    `Component: ${entry.component} ` +\n    `Groups: ${JSON.stringify(entry.groups)}`);\n  }\n}\n\npromise_test(async function () {\n  const response = await fetch('resources/urlpattern-generate-test-data.json');\n  const data = await response.json();\n  runTests(data);\n}, 'Loading data...');\n}\nmain();\n",
+      "origin": "urlpattern/urlpattern-generate.tentative.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": true,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.urlpattern.urlpattern-hasregexpgroups",
+      "category": "urlpattern",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\n}\nmain();\n",
+      "origin": "urlpattern/urlpattern-hasregexpgroups.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["resources/urlpattern-hasregexpgroups-tests.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.urlpattern.urlpattern",
+      "category": "urlpattern",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\n}\nmain();\n",
+      "origin": "urlpattern/urlpattern.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["resources/urlpatterntests.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.urlpattern.urlpattern.https",
+      "category": "urlpattern",
+      "source": "wpt",
+      "fixture": "function main(): void {\n\n}\nmain();\n",
+      "origin": "urlpattern/urlpattern.https.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["resources/urlpatterntests.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    }
+  ]
+}

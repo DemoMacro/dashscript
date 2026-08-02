@@ -1,0 +1,47 @@
+{
+  "_comment": "Auto-extracted from web-platform-tests/wpt by scripts/extract-wpt.mjs (WinterTC ECMA-429 §5 minimum common API scope). Each fixture wraps a WPT .any.js body verbatim in `function main(): void { … }` — test()/assert_equals stay as-is (DashScript lowers them to __ds::wpt_* static helpers). WinterTC is pure-Rust: the conformance harness runs the static path only (no engine fallback). `includes` lists the WPT harness scripts (// META: script=) the fixture depends on. DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "wpt.hr-time.basic",
+      "category": "hr-time",
+      "source": "wpt",
+      "fixture": "function main(): void {\ntest(function() {\n  assert_true((self.performance !== undefined), \"self.performance exists\");\n  assert_equals(typeof self.performance, \"object\", \"self.performance is an object\");\n  assert_equals((typeof self.performance.now), \"function\", \"self.performance.now() is a function\");\n  assert_equals(typeof self.performance.now(), \"number\", \"self.performance.now() returns a number\");\n}, \"self.performance.now() is a function that returns a number\");\n\ntest(function() {\n  assert_true(self.performance.now() > 0);\n}, \"self.performance.now() returns a positive number\");\n\ntest(function() {\n    var now1 = self.performance.now();\n    var now2 = self.performance.now();\n    assert_true((now2-now1) >= 0);\n  }, \"self.performance.now() difference is not negative\");\n\nasync_test(function() {\n  // Check whether the performance.now() method is close to Date() within 30ms (due to inaccuracies)\n  var initial_hrt = self.performance.now();\n  var initial_date = Date.now();\n  this.step_timeout(function() {\n    var final_hrt = self.performance.now();\n    var final_date = Date.now();\n    assert_approx_equals(final_hrt - initial_hrt, final_date - initial_date, 30, 'High resolution time value increased by approximately the same amount as time from date object');\n    this.done();\n  }, 2000);\n}, 'High resolution time has approximately the right relative magnitude');\n\ntest(function() {\n  var didHandle = false;\n  self.performance.addEventListener(\"testEvent\", function() {\n    didHandle = true;\n  }, { once: true} );\n  self.performance.dispatchEvent(new Event(\"testEvent\"));\n  assert_true(didHandle, \"Performance extends EventTarget, so event dispatching should work.\");\n}, \"Performance interface extends EventTarget.\");\n}\nmain();\n",
+      "origin": "hr-time/basic.any.js",
+      "n_tests": 5,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    },
+    {
+      "id": "wpt.hr-time.idlharness",
+      "category": "hr-time",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\n// https://w3c.github.io/hr-time/\n\nidl_test(\n  ['hr-time'],\n  ['html', 'dom'],\n  async idl_array => {\n    if (self.GLOBAL.isWorker()) {\n      idl_array.add_objects({ WorkerGlobalScope: ['self'] });\n    } else {\n      idl_array.add_objects({ Window: ['self'] });\n    }\n    idl_array.add_objects({\n      Performance: ['performance'],\n    });\n  }\n);\n}\nmain();\n",
+      "origin": "hr-time/idlharness.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["/resources/WebIDLParser.js", "/resources/idlharness.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker",
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.hr-time.monotonic-clock",
+      "category": "hr-time",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// The time values returned when calling the now method MUST be monotonically increasing and not subject to system clock adjustments or system clock skew.\ntest(function() {\n  assert_true(self.performance.now() > 0, \"self.performance.now() returns positive numbers\");\n}, \"self.performance.now() returns a positive number\");\n\n// The difference between any two chronologically recorded time values returned from the now method MUST never be negative.\ntest(function() {\n    var now1 = self.performance.now();\n    var now2 = self.performance.now();\n    assert_true((now2-now1) >= 0, \"self.performance.now() difference is not negative\");\n  },\n  \"self.performance.now() difference is not negative\"\n);\n}\nmain();\n",
+      "origin": "hr-time/monotonic-clock.any.js",
+      "n_tests": 2,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {}
+    }
+  ]
+}

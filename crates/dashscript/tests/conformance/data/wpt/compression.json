@@ -1,0 +1,311 @@
+{
+  "_comment": "Auto-extracted from web-platform-tests/wpt by scripts/extract-wpt.mjs (WinterTC ECMA-429 §5 minimum common API scope). Each fixture wraps a WPT .any.js body verbatim in `function main(): void { … }` — test()/assert_equals stay as-is (DashScript lowers them to __ds::wpt_* static helpers). WinterTC is pure-Rust: the conformance harness runs the static path only (no engine fallback). `includes` lists the WPT harness scripts (// META: script=) the fixture depends on. DO NOT edit by hand.",
+  "features": [
+    {
+      "id": "wpt.compression.compression-bad-chunks",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nconst badChunks = [\n  {\n    name: 'undefined',\n    value: undefined\n  },\n  {\n    name: 'null',\n    value: null\n  },\n  {\n    name: 'numeric',\n    value: 3.14\n  },\n  {\n    name: 'object, not BufferSource',\n    value: {}\n  },\n  {\n    name: 'array',\n    value: [65]\n  },\n  {\n    name: 'SharedArrayBuffer',\n    // Use a getter to postpone construction so that all tests don't fail where\n    // SharedArrayBuffer is not yet implemented.\n    get value() {\n      // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n      return new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n    }\n  },\n  {\n    name: 'shared Uint8Array',\n    get value() {\n      // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n      return new Uint8Array(new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer)\n    }\n  },\n];\n\nfor (const format of formats) {\n  for (const chunk of badChunks) {\n    promise_test(async t => {\n      const cs = new CompressionStream(format);\n      const reader = cs.readable.getReader();\n      const writer = cs.writable.getWriter();\n      const writePromise = writer.write(chunk.value);\n      const readPromise = reader.read();\n      await promise_rejects_js(t, TypeError, writePromise, 'write should reject');\n      await promise_rejects_js(t, TypeError, readPromise, 'read should reject');\n    }, `chunk of type ${chunk.name} should error the stream for ${format}`);\n  }\n}\n}\nmain();\n",
+      "origin": "compression/compression-bad-chunks.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/formats.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.compression-constructor-error",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\ntest(t => {\n  assert_throws_js(TypeError, () => new CompressionStream('a'), 'constructor should throw');\n}, '\"a\" should cause the constructor to throw');\n\ntest(t => {\n  assert_throws_js(TypeError, () => new CompressionStream(), 'constructor should throw');\n}, 'no input should cause the constructor to throw');\n\ntest(t => {\n  assert_throws_js(Error, () => new CompressionStream({ toString() { throw Error(); } }), 'constructor should throw');\n}, 'non-string input should cause the constructor to throw');\n}\nmain();\n",
+      "origin": "compression/compression-constructor-error.any.js",
+      "n_tests": 3,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.compression-including-empty-chunk",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\n// This test asserts that compressing '' doesn't affect the compressed data.\n// Example: compressing ['Hello', '', 'Hello'] results in 'HelloHello'\n\nasync function compressChunkList(chunkList, format) {\n  const cs = new CompressionStream(format);\n  const writer = cs.writable.getWriter();\n  for (const chunk of chunkList) {\n    const chunkByte = new TextEncoder().encode(chunk);\n    writer.write(chunkByte);\n  }\n  const closePromise = writer.close();\n  const out = [];\n  const reader = cs.readable.getReader();\n  let totalSize = 0;\n  while (true) {\n    const { value, done } = await reader.read();\n    if (done)\n      break;\n    out.push(value);\n    totalSize += value.byteLength;\n  }\n  await closePromise;\n  const concatenated = new Uint8Array(totalSize);\n  let offset = 0;\n  for (const array of out) {\n    concatenated.set(array, offset);\n    offset += array.byteLength;\n  }\n  return concatenated;\n}\n\nconst chunkLists = [\n  ['', 'Hello', 'Hello'],\n  ['Hello', '', 'Hello'],\n  ['Hello', 'Hello', '']\n];\nconst expectedValue = new TextEncoder().encode('HelloHello');\n\nfor (const format of formats) {\n  for (const chunkList of chunkLists) {\n    promise_test(async t => {\n      const compressedData = await compressChunkList(chunkList, format);\n      const decompressedData = await decompressDataOrPako(compressedData, format);\n      // check that we got the same result as our original string\n      assert_array_equals(expectedValue, decompressedData, 'value should match');\n    }, `the result of compressing [${chunkList}] with ${format} should be 'HelloHello'`);\n  }\n}\n}\nmain();\n",
+      "origin": "compression/compression-including-empty-chunk.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [
+        "third_party/pako/pako_inflate.min.js",
+        "resources/decompress.js",
+        "resources/formats.js"
+      ],
+      "variants": [],
+      "meta": {
+        "global": "window,worker",
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.compression.compression-large-flush-output",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\n// This test verifies that a large flush output will not truncate the\n// final results.\n\nasync function compressData(chunk, format) {\n  const cs = new CompressionStream(format);\n  const writer = cs.writable.getWriter();\n  writer.write(chunk);\n  writer.close();\n  return await concatenateStream(cs.readable);\n}\n\n// JSON-encoded array of 10 thousands numbers (\"[0,1,2,...]\"). This produces 48_891 bytes of data.\nconst fullData = new TextEncoder().encode(JSON.stringify(Array.from({ length: 10_000 }, (_, i) => i)));\nconst data = fullData.subarray(0, 35_579);\nconst expectedValue = data;\n\nfor (const format of formats) {\n  promise_test(async t => {\n    const compressedData = await compressData(data, format);\n    const decompressedData = await decompressDataOrPako(compressedData, format);\n    // check that we got the same result as our original string\n    assert_array_equals(decompressedData, expectedValue, 'value should match');\n  }, `${format} compression with large flush output`);\n}\n}\nmain();\n",
+      "origin": "compression/compression-large-flush-output.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [
+        "third_party/pako/pako_inflate.min.js",
+        "resources/concatenate-stream.js",
+        "resources/decompress.js",
+        "resources/formats.js"
+      ],
+      "variants": [],
+      "meta": {
+        "global": "window,worker",
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.compression.compression-multiple-chunks",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\n// This test asserts that compressing multiple chunks should work.\n\n// Example: ('Hello', 3) => TextEncoder().encode('HelloHelloHello')\nfunction makeExpectedChunk(input, numberOfChunks) {\n  const expectedChunk = input.repeat(numberOfChunks);\n  return new TextEncoder().encode(expectedChunk);\n}\n\n// Example: ('Hello', 3, 'deflate') => compress ['Hello', 'Hello', Hello']\nasync function compressMultipleChunks(input, numberOfChunks, format) {\n  const cs = new CompressionStream(format);\n  const writer = cs.writable.getWriter();\n  const chunk = new TextEncoder().encode(input);\n  for (let i = 0; i < numberOfChunks; ++i) {\n    writer.write(chunk);\n  }\n  const closePromise = writer.close();\n  const out = [];\n  const reader = cs.readable.getReader();\n  let totalSize = 0;\n  while (true) {\n    const { value, done } = await reader.read();\n    if (done)\n      break;\n    out.push(value);\n    totalSize += value.byteLength;\n  }\n  await closePromise;\n  const concatenated = new Uint8Array(totalSize);\n  let offset = 0;\n  for (const array of out) {\n    concatenated.set(array, offset);\n    offset += array.byteLength;\n  }\n  return concatenated;\n}\n\nconst hello = 'Hello';\n\nfor (const format of formats) {\n  for (let numberOfChunks = 2; numberOfChunks <= 16; ++numberOfChunks) {\n    promise_test(async t => {\n      const compressedData = await compressMultipleChunks(hello, numberOfChunks, format);\n      const decompressedData = await decompressDataOrPako(compressedData, format);\n      const expectedValue = makeExpectedChunk(hello, numberOfChunks);\n      // check that we got the same result as our original string\n      assert_array_equals(decompressedData, expectedValue, 'value should match');\n    }, `compressing ${numberOfChunks} chunks with ${format} should work`);\n  }\n}\n}\nmain();\n",
+      "origin": "compression/compression-multiple-chunks.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [
+        "third_party/pako/pako_inflate.min.js",
+        "resources/decompress.js",
+        "resources/formats.js"
+      ],
+      "variants": [],
+      "meta": {
+        "global": "window,worker",
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.compression.compression-output-length",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\n// This test asserts that compressed data length is shorter than the original\n// data length. If the input is extremely small, the compressed data may be\n// larger than the original data.\n\nconst LARGE_FILE = '/media/test-av-384k-44100Hz-1ch-320x240-30fps-10kfr.webm';\n\nasync function compressArrayBuffer(input, format) {\n  const cs = new CompressionStream(format);\n  const writer = cs.writable.getWriter();\n  writer.write(input);\n  const closePromise = writer.close();\n  const out = [];\n  const reader = cs.readable.getReader();\n  let totalSize = 0;\n  while (true) {\n    const { value, done } = await reader.read();\n    if (done)\n      break;\n    out.push(value);\n    totalSize += value.byteLength;\n  }\n  await closePromise;\n  const concatenated = new Uint8Array(totalSize);\n  let offset = 0;\n  for (const array of out) {\n    concatenated.set(array, offset);\n    offset += array.byteLength;\n  }\n  return concatenated;\n}\n\nfor (const format of formats) {\n  promise_test(async () => {\n    const response = await fetch(LARGE_FILE);\n    const buffer = await response.arrayBuffer();\n    const bufferView = new Uint8Array(buffer);\n    const originalLength = bufferView.length;\n    const compressedData = await compressArrayBuffer(bufferView, format);\n    const compressedLength = compressedData.length;\n    assert_less_than(compressedLength, originalLength, 'output should be smaller');\n  }, `the length of ${format} data should be shorter than that of the original data`);\n}\n}\nmain();\n",
+      "origin": "compression/compression-output-length.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": true,
+      "includes": ["resources/formats.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.compression-stream",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nconst SMALL_FILE = \"/media/foo.vtt\";\nconst LARGE_FILE = \"/media/test-av-384k-44100Hz-1ch-320x240-30fps-10kfr.webm\";\n\nlet dataPromiseList = [\n  [\"empty data\", Promise.resolve(new Uint8Array(0))],\n  [\"small amount data\", fetch(SMALL_FILE).then(response => response.bytes())],\n  [\"large amount data\", fetch(LARGE_FILE).then(response => response.bytes())],\n];\n\nasync function compressArrayBuffer(input, format) {\n  const cs = new CompressionStream(format);\n  const writer = cs.writable.getWriter();\n  writer.write(input);\n  const closePromise = writer.close();\n  const out = [];\n  const reader = cs.readable.getReader();\n  let totalSize = 0;\n  while (true) {\n    const { value, done } = await reader.read();\n    if (done)\n      break;\n    out.push(value);\n    totalSize += value.byteLength;\n  }\n  await closePromise;\n  const concatenated = new Uint8Array(totalSize);\n  let offset = 0;\n  for (const array of out) {\n    concatenated.set(array, offset);\n    offset += array.byteLength;\n  }\n  return concatenated;\n}\n\ntest(() => {\n  assert_throws_js(TypeError, () => {\n    const transformer = new CompressionStream(\"nonvalid\");\n  }, \"non supported format should throw\");\n}, \"CompressionStream constructor should throw on invalid format\");\n\nfor (const format of formats) {\n  for (const [label, dataPromise] of dataPromiseList) {\n    promise_test(async () => {\n      const bufferView = await dataPromise;\n      const compressedData = await compressArrayBuffer(bufferView, format);\n      const decompressedData = await decompressDataOrPako(compressedData, format);\n      // check that we got the same result as our original string\n      assert_array_equals(decompressedData, bufferView, 'value should match');\n    }, `${format} ${label} should be reinflated back to its origin`);\n  }\n}\n}\nmain();\n",
+      "origin": "compression/compression-stream.any.js",
+      "n_tests": 2,
+      "async": true,
+      "fetch": true,
+      "includes": [
+        "third_party/pako/pako_inflate.min.js",
+        "resources/decompress.js",
+        "resources/formats.js"
+      ],
+      "variants": [],
+      "meta": {
+        "global": "window,worker",
+        "timeout": "long"
+      }
+    },
+    {
+      "id": "wpt.compression.compression-with-detach",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nconst kInputLength = 500000;\n\nfunction createLargeRandomInput() {\n  const buffer = new ArrayBuffer(kInputLength);\n  // The getRandomValues API will only let us get 65536 bytes at a time, so call\n  // it multiple times.\n  const kChunkSize = 65536;\n  for (let offset = 0; offset < kInputLength; offset += kChunkSize) {\n    const length =\n        offset + kChunkSize > kInputLength ? kInputLength - offset : kChunkSize;\n    const view = new Uint8Array(buffer, offset, length);\n    crypto.getRandomValues(view);\n  }\n  return new Uint8Array(buffer);\n}\n\nfunction decompress(view) {\n  const ds = new DecompressionStream('deflate');\n  const writer = ds.writable.getWriter();\n  writer.write(view);\n  writer.close();\n  return concatenateStream(ds.readable);\n}\n\npromise_test(async () => {\n  const input = createLargeRandomInput();\n  const inputCopy = input.slice(0, input.byteLength);\n  const cs = new CompressionStream('deflate');\n  const writer = cs.writable.getWriter();\n  writer.write(input);\n  writer.close();\n  // Object.prototype.then will be looked up synchronously when the promise\n  // returned by read() is resolved.\n  Object.defineProperty(Object.prototype, 'then', {\n    get() {\n      // Cause input to become detached and unreferenced.\n      try {\n        postMessage(undefined, 'nowhere', [input.buffer]);\n      } catch (e) {\n        // It's already detached.\n      }\n    }\n  });\n  const output = await concatenateStream(cs.readable);\n  // Perform the comparison as strings since this is reasonably fast even when\n  // JITted JavaScript is running under an emulator.\n  assert_equals(\n      inputCopy.toString(), (await decompress(output)).toString(),\n      'decompressing the output should return the input');\n}, 'data should be correctly compressed even if input is detached partway');\n}\nmain();\n",
+      "origin": "compression/compression-with-detach.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/concatenate-stream.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.decompression-bad-chunks",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nconst badChunks = [\n  {\n    name: 'undefined',\n    value: undefined\n  },\n  {\n    name: 'null',\n    value: null\n  },\n  {\n    name: 'numeric',\n    value: 3.14\n  },\n  {\n    name: 'object, not BufferSource',\n    value: {}\n  },\n  {\n    name: 'array',\n    value: [65]\n  },\n  {\n    name: 'SharedArrayBuffer',\n    // Use a getter to postpone construction so that all tests don't fail where\n    // SharedArrayBuffer is not yet implemented.\n    get value() {\n      // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n      return new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer;\n    }\n  },\n  {\n    name: 'shared Uint8Array',\n    get value() {\n      // See https://github.com/whatwg/html/issues/5380 for why not `new SharedArrayBuffer()`\n      return new Uint8Array(new WebAssembly.Memory({ shared:true, initial:1, maximum:1 }).buffer)\n    }\n  },\n  {\n    name: 'invalid deflate bytes',\n    value: new Uint8Array([0, 156, 75, 173, 40, 72, 77, 46, 73, 77, 81, 200, 47, 45, 41, 40, 45, 1, 0, 48, 173, 6, 36])\n  },\n  {\n    name: 'invalid gzip bytes',\n    value: new Uint8Array([0, 139, 8, 0, 0, 0, 0, 0, 0, 3, 75, 173, 40, 72, 77, 46, 73, 77, 81, 200, 47, 45, 41, 40, 45, 1, 0, 176, 1, 57, 179, 15, 0, 0, 0])\n  },\n];\n\n// Test Case Design\n// We need to wait until after we close the writable stream to check if the decoded stream is valid.\n// We can end up in a state where all reads/writes are valid, but upon closing the writable stream an error is detected.\n// (Example: A zlib encoded chunk w/o the checksum).\n\nasync function decompress(chunk, format, t)\n{\n    const ds = new DecompressionStream(format);\n    const reader = ds.readable.getReader();\n    const writer = ds.writable.getWriter();\n\n    writer.write(chunk.value).then(() => {}, () => {});\n    reader.read().then(() => {}, () => {});\n\n    await promise_rejects_js(t, TypeError, writer.close(), 'writer.close() should reject');\n    await promise_rejects_js(t, TypeError, writer.closed, 'write.closed should reject');\n\n    await promise_rejects_js(t, TypeError, reader.read(), 'reader.read() should reject');\n    await promise_rejects_js(t, TypeError, reader.closed, 'read.closed should reject');\n}\n\nfor (const format of formats) {\n  for (const chunk of badChunks) {\n    promise_test(async t => {\n      await decompress(chunk, format, t);\n    }, `chunk of type ${chunk.name} should error the stream for ${format}`);\n  }\n}\n}\nmain();\n",
+      "origin": "compression/decompression-bad-chunks.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/formats.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.decompression-buffersource",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nconst compressedBytes = [\n  [\"deflate\", [120, 156, 75, 52, 48, 52, 50, 54, 49, 53, 3, 0, 8, 136, 1, 199]],\n  [\"gzip\", [31, 139, 8, 0, 0, 0, 0, 0, 0, 3, 75, 52, 48, 52, 2, 0, 216, 252, 63, 136, 4, 0, 0, 0]],\n  [\"deflate-raw\", [\n    0x00, 0x06, 0x00, 0xf9, 0xff, 0x41, 0x42, 0x43,\n    0x44, 0x45, 0x46, 0x01, 0x00, 0x00, 0xff, 0xff,\n  ]],\n  [\"brotli\", [0x21, 0x08, 0x00, 0x04, 0x66, 0x6F, 0x6F, 0x03]]\n];\n// These chunk values below were chosen to make the length of the compressed\n// output be a multiple of 8 bytes.\nconst expectedChunkValue = new Map(Object.entries({\n  \"deflate\": new TextEncoder().encode('a0123456'),\n  \"gzip\": new TextEncoder().encode('a012'),\n  \"deflate-raw\": new TextEncoder().encode('ABCDEF'),\n  \"brotli\": new TextEncoder().encode('foo'),\n}));\n\nconst bufferSourceChunks = compressedBytes.map(([format, bytes]) => [format, [\n  {\n    name: 'ArrayBuffer',\n    value: new Uint8Array(bytes).buffer\n  },\n  {\n    name: 'Int8Array',\n    value: new Int8Array(new Uint8Array(bytes).buffer)\n  },\n  {\n    name: 'Uint8Array',\n    value: new Uint8Array(new Uint8Array(bytes).buffer)\n  },\n  {\n    name: 'Uint8ClampedArray',\n    value: new Uint8ClampedArray(new Uint8Array(bytes).buffer)\n  },\n  {\n    name: 'Int16Array',\n    value: new Int16Array(new Uint8Array(bytes).buffer)\n  },\n  {\n    name: 'Uint16Array',\n    value: new Uint16Array(new Uint8Array(bytes).buffer)\n  },\n  {\n    name: 'Int32Array',\n    value: new Int32Array(new Uint8Array(bytes).buffer)\n  },\n  {\n    name: 'Uint32Array',\n    value: new Uint32Array(new Uint8Array(bytes).buffer)\n  },\n  {\n    name: 'Float16Array',\n    value: () => new Float16Array(new Uint8Array(bytes).buffer)\n  },\n  {\n    name: 'Float32Array',\n    value: new Float32Array(new Uint8Array(bytes).buffer)\n  },\n  {\n    name: 'Float64Array',\n    value: new Float64Array(new Uint8Array(bytes).buffer)\n  },\n  {\n    name: 'DataView',\n    value: new DataView(new Uint8Array(bytes).buffer)\n  },\n]]);\n\nfor (const [format, chunks] of bufferSourceChunks) {\n  for (const chunk of chunks) {\n    promise_test(async t => {\n      const ds = new DecompressionStream(format);\n      const reader = ds.readable.getReader();\n      const writer = ds.writable.getWriter();\n      const writePromise = writer.write(typeof chunk.value === 'function' ? chunk.value() : chunk.value);\n      writer.close();\n      const { value } = await reader.read();\n      assert_array_equals(Array.from(value), expectedChunkValue.get(format), 'value should match');\n    }, `chunk of type ${chunk.name} should work for ${format}`);\n  }\n}\n}\nmain();\n",
+      "origin": "compression/decompression-buffersource.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.decompression-constructor-error",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\ntest(t => {\n  assert_throws_js(TypeError, () => new DecompressionStream('a'), 'constructor should throw');\n}, '\"a\" should cause the constructor to throw');\n\ntest(t => {\n  assert_throws_js(TypeError, () => new DecompressionStream(), 'constructor should throw');\n}, 'no input should cause the constructor to throw');\n\ntest(t => {\n  assert_throws_js(Error, () => new DecompressionStream({ toString() { throw Error(); } }), 'constructor should throw');\n}, 'non-string input should cause the constructor to throw');\n}\nmain();\n",
+      "origin": "compression/decompression-constructor-error.any.js",
+      "n_tests": 3,
+      "async": false,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.decompression-correct-input",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nfor (const [format, chunk] of compressedBytes) {\n  promise_test(async t => {\n    const ds = new DecompressionStream(format);\n    const reader = ds.readable.getReader();\n    const writer = ds.writable.getWriter();\n    const writePromise = writer.write(chunk);\n    const { done, value } = await reader.read();\n    assert_array_equals(Array.from(value), expectedChunkValue, \"value should match\");\n  }, `decompressing ${format} input should work`);\n}\n}\nmain();\n",
+      "origin": "compression/decompression-correct-input.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/decompression-input.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.decompression-corrupt-input",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n// This test checks that DecompressionStream behaves according to the standard\n// when the input is corrupted. To avoid a combinatorial explosion in the\n// number of tests, we only mutate one field at a time, and we only test\n// \"interesting\" values.\n\n'use strict';\n\n// The many different cases are summarised in this data structure.\nconst expectations = [\n  {\n    format: 'deflate',\n\n    // Decompresses to 'expected output'.\n    baseInput: deflateChunkValue,\n\n    // See RFC1950 for the definition of the various fields used by deflate:\n    // https://tools.ietf.org/html/rfc1950.\n    fields: [\n      {\n        // The function of this field. This matches the name used in the RFC.\n        name: 'CMF',\n\n        // The offset of the field in bytes from the start of the input.\n        offset: 0,\n\n        // The length of the field in bytes.\n        length: 1,\n\n        cases: [\n          {\n            // The value to set the field to. If the field contains multiple\n            // bytes, all the bytes will be set to this value.\n            value: 0,\n\n            // The expected result. 'success' means the input is decoded\n            // successfully. 'error' means that the stream will be errored.\n            result: 'error'\n          }\n        ]\n      },\n      {\n        name: 'FLG',\n        offset: 1,\n        length: 1,\n\n        // FLG contains a 4-bit checksum (FCHECK) which is calculated in such a\n        // way that there are 4 valid values for this field.\n        cases: [\n          {\n            value: 218,\n            result: 'success'\n          },\n          {\n            value: 1,\n            result: 'success'\n          },\n          {\n            value: 94,\n            result: 'success'\n          },\n          {\n            // The remaining 252 values cause an error.\n            value: 157,\n            result: 'error'\n          }\n        ]\n      },\n      {\n        name: 'DATA',\n        // In general, changing any bit of the data will trigger a checksum\n        // error. Only the last byte does anything else.\n        offset: 18,\n        length: 1,\n        cases: [\n          {\n            value: 4,\n            result: 'success'\n          },\n          {\n            value: 5,\n            result: 'error'\n          }\n        ]\n      },\n      {\n        name: 'ADLER',\n        offset: -4,\n        length: 4,\n        cases: [\n          {\n            value: 255,\n            result: 'error'\n          }\n        ]\n      }\n    ]\n  },\n  {\n    format: 'gzip',\n\n    // Decompresses to 'expected output'.\n    baseInput: gzipChunkValue,\n\n    // See RFC1952 for the definition of the various fields used by gzip:\n    // https://tools.ietf.org/html/rfc1952.\n    fields: [\n      {\n        name: 'ID',\n        offset: 0,\n        length: 2,\n        cases: [\n          {\n            value: 255,\n            result: 'error'\n          }\n        ]\n      },\n      {\n        name: 'CM',\n        offset: 2,\n        length: 1,\n        cases: [\n          {\n            value: 0,\n            result: 'error'\n          }\n        ]\n      },\n      {\n        name: 'FLG',\n        offset: 3,\n        length: 1,\n        cases: [\n          {\n            value: 1, // FTEXT\n            result: 'success'\n          },\n          {\n            value: 2, // FHCRC\n            result: 'error'\n          }\n        ]\n      },\n      {\n        name: 'MTIME',\n        offset: 4,\n        length: 4,\n        cases: [\n          {\n            // Any value is valid for this field.\n            value: 255,\n            result: 'success'\n          }\n        ]\n      },\n      {\n        name: 'XFL',\n        offset: 8,\n        length: 1,\n        cases: [\n          {\n            // Any value is accepted.\n            value: 255,\n            result: 'success'\n          }\n        ]\n      },\n      {\n        name: 'OS',\n        offset: 9,\n        length: 1,\n        cases: [\n          {\n            // Any value is accepted.\n            value: 128,\n            result: 'success'\n          }\n        ]\n      },\n      {\n        name: 'DATA',\n\n        // The last byte of the data is the most interesting.\n        offset: 26,\n        length: 1,\n        cases: [\n          {\n            value: 3,\n            result: 'error'\n          },\n          {\n            value: 4,\n            result: 'success'\n          }\n        ]\n      },\n      {\n        name: 'CRC',\n        offset: -8,\n        length: 4,\n        cases: [\n          {\n            // Any change will error the stream.\n            value: 0,\n            result: 'error'\n          }\n        ]\n      },\n      {\n        name: 'ISIZE',\n        offset: -4,\n        length: 4,\n        cases: [\n          {\n            // A mismatch will error the stream.\n            value: 1,\n            result: 'error'\n          }\n        ]\n      }\n    ]\n  },\n  {\n    format: 'brotli',\n\n    // Decompresses to 'expected output'.\n    baseInput: brotliChunkValue,\n\n    fields: []\n  }\n];\n\nasync function tryDecompress(input, format) {\n  const ds = new DecompressionStream(format);\n  const reader = ds.readable.getReader();\n  const writer = ds.writable.getWriter();\n  writer.write(input).catch(() => {});\n  writer.close().catch(() => {});\n  let out = [];\n  while (true) {\n    try {\n      const { value, done } = await reader.read();\n      if (done) {\n        break;\n      }\n      out = out.concat(Array.from(value));\n    } catch (e) {\n      if (e instanceof TypeError) {\n        return { result: 'error' };\n      } else {\n        return { result: e.name };\n      }\n    }\n  }\n  const expectedOutput = 'expected output';\n  if (out.length !== expectedOutput.length) {\n    return { result: 'corrupt' };\n  }\n  for (let i = 0; i < out.length; ++i) {\n    if (out[i] !== expectedOutput.charCodeAt(i)) {\n      return { result: 'corrupt' };\n    }\n  }\n  return { result: 'success' };\n}\n\nfunction corruptInput(input, offset, length, value) {\n  const output = new Uint8Array(input);\n  if (offset < 0) {\n    offset += input.length;\n  }\n  for (let i = offset; i < offset + length; ++i) {\n    output[i] = value;\n  }\n  return output;\n}\n\nfor (const { format, baseInput, fields } of expectations) {\n  promise_test(async () => {\n    const { result } = await tryDecompress(baseInput, format);\n    assert_equals(result, 'success', 'decompression should succeed');\n  }, `the unchanged input for '${format}' should decompress successfully`);\n\n  promise_test(async () => {\n    const truncatedInput = baseInput.subarray(0, -1);\n    const { result } = await tryDecompress(truncatedInput, format);\n    assert_equals(result, 'error', 'decompression should fail');\n  }, `truncating the input for '${format}' should give an error`);\n\n  promise_test(async () => {\n    const extendedInput = new Uint8Array([...baseInput, 0]);\n    const { result } = await tryDecompress(extendedInput, format);\n    assert_equals(result, 'error', 'decompression should fail');\n  }, `trailing junk for '${format}' should give an error`);\n\n  for (const { name, offset, length, cases } of fields) {\n    for (const { value, result } of cases) {\n      promise_test(async () => {\n        const corruptedInput = corruptInput(baseInput, offset, length, value);\n        const { result: actual } =\n              await tryDecompress(corruptedInput, format);\n        assert_equals(actual, result, 'result should match');\n      }, `format '${format}' field ${name} should be ${result} for ${value}`);\n    }\n  }\n}\n\npromise_test(async () => {\n  // Data generated in Python:\n  // ```py\n  // h = b\"thequickbrownfoxjumped\\x00\"\n  // words = h.split()\n  // zdict = b''.join(words)\n  // co = zlib.compressobj(zdict=zdict)\n  // cd = co.compress(h) + co.flush()\n  // ```\n  const { result } = await tryDecompress(new Uint8Array([\n    0x78, 0xbb, 0x74, 0xee, 0x09, 0x59, 0x2b, 0xc1, 0x2e, 0x0c, 0x00, 0x74, 0xee, 0x09, 0x59\n  ]), 'deflate');\n  assert_equals(result, 'error', 'Data compressed with a dictionary should throw TypeError');\n}, 'the deflate input compressed with dictionary should give an error')\n}\nmain();\n",
+      "origin": "compression/decompression-corrupt-input.any.js",
+      "n_tests": 5,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/decompression-input.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.decompression-empty-input",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nconst emptyValues = [\n  [\"gzip\", new Uint8Array([31, 139, 8, 0, 0, 0, 0, 0, 0, 3, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0])],\n  [\"deflate\", new Uint8Array([120, 156, 3, 0, 0, 0, 0, 1])],\n  [\"deflate-raw\", new Uint8Array([1, 0, 0, 255, 255])],\n  [\"brotli\", new Uint8Array([0xa1, 0x01])],\n];\n\nfor (const [format, emptyValue] of emptyValues) {\n  promise_test(async t => {\n    const ds = new DecompressionStream(format);\n    const reader = ds.readable.getReader();\n    const writer = ds.writable.getWriter();\n    const writePromise = writer.write(emptyValue);\n    writer.close();\n    const { value, done } = await reader.read();\n    assert_true(done, \"read() should set done\");\n    assert_equals(value, undefined, \"value should be undefined\");\n    await writePromise;\n  }, `decompressing ${format} empty input should work`);\n}\n}\nmain();\n",
+      "origin": "compression/decompression-empty-input.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": [],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.decompression-extra-input",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nconst tests = compressedBytes.map(\n  ([format, chunk]) => [format, new Uint8Array([...chunk, 0])]\n);\n\nfor (const [format, chunk] of tests) {\n  promise_test(async t => {\n    const ds = new DecompressionStream(format);\n    const reader = ds.readable.getReader();\n    const writer = ds.writable.getWriter();\n    writer.write(chunk).catch(() => { });\n    const { done, value } = await reader.read();\n    assert_array_equals(Array.from(value), expectedChunkValue, \"value should match\");\n    await promise_rejects_js(t, TypeError, reader.read(), \"Extra input should eventually throw\");\n  }, `decompressing ${format} input with extra pad should still give the output`);\n}\n}\nmain();\n",
+      "origin": "compression/decompression-extra-input.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/decompression-input.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.decompression-split-chunk",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nasync function decompressArrayBuffer(input, format, chunkSize) {\n  const ds = new DecompressionStream(format);\n  const reader = ds.readable.getReader();\n  const writer = ds.writable.getWriter();\n  for (let beginning = 0; beginning < input.length; beginning += chunkSize) {\n    writer.write(input.slice(beginning, beginning + chunkSize));\n  }\n  writer.close();\n  const out = [];\n  let totalSize = 0;\n  while (true) {\n    const { value, done } = await reader.read();\n    if (done) break;\n    out.push(value);\n    totalSize += value.byteLength;\n  }\n  const concatenated = new Uint8Array(totalSize);\n  let offset = 0;\n  for (const array of out) {\n    concatenated.set(array, offset);\n    offset += array.byteLength;\n  }\n  return concatenated;\n}\n\nfor (const [format, bytes] of compressedBytes) {\n  for (let chunkSize = 1; chunkSize < 16; ++chunkSize) {\n    promise_test(async t => {\n      const decompressedData = await decompressArrayBuffer(bytes, format, chunkSize);\n      assert_array_equals(decompressedData, expectedChunkValue, \"value should match\");\n    }, `decompressing splitted chunk into pieces of size ${chunkSize} should work in ${format}`);\n  }\n}\n}\nmain();\n",
+      "origin": "compression/decompression-split-chunk.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/decompression-input.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.decompression-uint8array-output",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nfor (const [format, chunkValue] of compressedBytes) {\n  promise_test(async t => {\n    const ds = new DecompressionStream(format);\n    const reader = ds.readable.getReader();\n    const writer = ds.writable.getWriter();\n    const writePromise = writer.write(chunkValue);\n    const { value } = await reader.read();\n    assert_equals(value.constructor, Uint8Array, \"type should match\");\n    await writePromise;\n  }, `decompressing ${format} output should give Uint8Array chunks`);\n}\n}\nmain();\n",
+      "origin": "compression/decompression-uint8array-output.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/decompression-input.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.decompression-with-detach",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\nconst kInputLength = 1000000;\n\nasync function createLargeCompressedInput() {\n  const cs = new CompressionStream('deflate');\n  // The input has to be large enough that it won't fit in a single chunk when\n  // decompressed.\n  const writer = cs.writable.getWriter();\n  writer.write(new Uint8Array(kInputLength));\n  writer.close();\n  return concatenateStream(cs.readable);\n}\n\npromise_test(async () => {\n  const input = await createLargeCompressedInput();\n  const ds = new DecompressionStream('deflate');\n  const writer = ds.writable.getWriter();\n  writer.write(input);\n  writer.close();\n  // Object.prototype.then will be looked up synchronously when the promise\n  // returned by read() is resolved.\n  Object.defineProperty(Object.prototype, 'then', {\n    get() {\n      // Cause input to become detached and unreferenced.\n      try {\n        postMessage(undefined, 'nowhere', [input.buffer]);\n      } catch (e) {\n        // It's already detached.\n      }\n    }\n  });\n  const output = await concatenateStream(ds.readable);\n  // If output successfully decompressed and gave the right length, we can be\n  // reasonably confident that no data corruption happened.\n  assert_equals(\n      output.byteLength, kInputLength, 'output should be the right length');\n}, 'data should be correctly decompressed even if input is detached partway');\n}\nmain();\n",
+      "origin": "compression/decompression-with-detach.any.js",
+      "n_tests": 1,
+      "async": true,
+      "fetch": false,
+      "includes": ["resources/concatenate-stream.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,worker"
+      }
+    },
+    {
+      "id": "wpt.compression.idlharness.https",
+      "category": "compression",
+      "source": "wpt",
+      "fixture": "function main(): void {\n'use strict';\n\n// https://wicg.github.io/compression/\n\nidl_test(\n  ['compression'],\n  ['streams'],\n  idl_array => {\n    idl_array.add_objects({\n      CompressionStream: ['new CompressionStream(\"deflate\")'],\n      DecompressionStream: ['new DecompressionStream(\"deflate\")'],\n    });\n  }\n);\n}\nmain();\n",
+      "origin": "compression/idlharness.https.any.js",
+      "n_tests": 0,
+      "async": false,
+      "fetch": false,
+      "includes": ["/resources/WebIDLParser.js", "/resources/idlharness.js"],
+      "variants": [],
+      "meta": {
+        "global": "window,dedicatedworker"
+      }
+    }
+  ]
+}
