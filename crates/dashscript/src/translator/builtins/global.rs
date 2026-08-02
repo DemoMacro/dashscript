@@ -410,18 +410,76 @@ pub(in crate::translator) fn reg_exp_static(
     let s = args.first()?;
     let e = translate_argument(s, ctx);
     Some(parse_quote!({
-        // TC39 RegExp.escape: backslash-escape every SyntaxCharacter and `/`.
+        // ES2025 RegExp.escape (sec-regexp.escape): if the first code point is
+        // a decimal digit or ASCII letter, emit it as `\xHH` (so the result is
+        // safe after a `\0`/`\1` escape); every other code point runs through
+        // EncodeForRegExpEscape — ControlEscape, SyntaxCharacter or `/`,
+        // otherPunctuators, WhiteSpace, LineTerminator and surrogate code
+        // points become `\xHH` (≤ U+FF) or `\uHHHH` (> U+FF); the rest pass
+        // through. Isolated surrogates cannot occur in a Rust `String` (UTF-8),
+        // so the surrogate branch is unreachable here — those fixtures stay
+        // partial honestly.
+        fn __hex2(__o: &mut String, __cp: u32) {
+            __o.push('\\');
+            __o.push('x');
+            __o.push(char::from_digit((__cp >> 4) & 0xF, 16).unwrap());
+            __o.push(char::from_digit(__cp & 0xF, 16).unwrap());
+        }
+        fn __hex4(__o: &mut String, __cp: u32) {
+            __o.push_str("\\u");
+            __o.push(char::from_digit((__cp >> 12) & 0xF, 16).unwrap());
+            __o.push(char::from_digit((__cp >> 8) & 0xF, 16).unwrap());
+            __o.push(char::from_digit((__cp >> 4) & 0xF, 16).unwrap());
+            __o.push(char::from_digit(__cp & 0xF, 16).unwrap());
+        }
         let __s = #e;
-        let mut __out = ::std::string::String::with_capacity(__s.len());
+        let mut __out = String::with_capacity(__s.len());
+        let mut __first = true;
         for __c in __s.chars() {
-            if matches!(
-                __c,
-                '^' | '$' | '\\' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | ']' | '{' | '}'
-                    | '|' | '/'
-            ) {
-                __out.push('\\');
+            if __first {
+                __first = false;
+                if __c.is_ascii_digit() || __c.is_ascii_alphabetic() {
+                    __hex2(&mut __out, __c as u32);
+                    continue;
+                }
             }
-            __out.push(__c);
+            match __c {
+                '\t' => __out.push_str("\\t"),
+                '\n' => __out.push_str("\\n"),
+                '\u{B}' => __out.push_str("\\v"),
+                '\u{C}' => __out.push_str("\\f"),
+                '\r' => __out.push_str("\\r"),
+                '^' | '$' | '\\' | '.' | '*' | '+' | '?' | '(' | ')' | '[' | ']'
+                    | '{' | '}' | '|' | '/' => {
+                    __out.push('\\');
+                    __out.push(__c);
+                }
+                _ => {
+                    let __cp = __c as u32;
+                    let __need = matches!(
+                        __c,
+                        ',' | '-' | '=' | '<' | '>' | '#' | '&' | '!' | '%' | ':' | ';'
+                            | '@' | '~' | '\'' | '`' | '"'
+                    ) || matches!(
+                        __cp,
+                        0x20 | 0xA0 | 0xFEFF | 0x1680 | 0x2000..=0x200A | 0x2028 | 0x2029
+                            | 0x202F | 0x205F | 0x3000
+                    );
+                    if __need {
+                        if __cp <= 0xFF {
+                            __hex2(&mut __out, __cp);
+                        } else if __cp > 0xFFFF {
+                            let __v = __cp - 0x10000;
+                            __hex4(&mut __out, 0xD800 + (__v >> 10));
+                            __hex4(&mut __out, 0xDC00 + (__v & 0x3FF));
+                        } else {
+                            __hex4(&mut __out, __cp);
+                        }
+                    } else {
+                        __out.push(__c);
+                    }
+                }
+            }
         }
         __out
     }))

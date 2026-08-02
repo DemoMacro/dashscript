@@ -212,7 +212,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (13768) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
+    "detail": "Test262Error: \nthread 'main' (28536) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
     "note": ""
   },
   {
@@ -411,16 +411,16 @@
     "id": "test262.test.built-ins.regexp.escape.escaped-control-characters",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (34800) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\t\\n\\u{b}\\u{c}\\r\"», «\"\\\\t\\\\n\\\\v\\\\f\\\\r\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.escape.escaped-lineterminator",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (43208) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{2028}\"», «\"\\\\u2028\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41432) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (30608) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -483,16 +483,16 @@
     "id": "test262.test.built-ins.regexp.escape.escaped-whitespace",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (4924) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"\\u{feff}\"», «\"\\\\ufeff\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrac",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.escape.initial-char-escape",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40884) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"1111\"», «\"\\\\x31111\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -531,8 +531,8 @@
     "id": "test262.test.built-ins.regexp.escape.not-escaped-underscore",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (32692) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"hello_world\"», «\"\\\\x68ello_world\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -771,16 +771,16 @@
     "id": "test262.test.built-ins.regexp.named-groups.duplicate-names-exec",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: duplicate group name",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.named-groups.duplicate-names-match",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: duplicate group name",
     "note": ""
   },
   {
@@ -788,15 +788,15 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (3644) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (9732) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.named-groups.duplicate-names-replaceall",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:6:56: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:14:56: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:22:56: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:30:56: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors | engine: engine error: SyntaxError: duplicate group name",
     "note": ""
   },
   {
@@ -811,8 +811,8 @@
     "id": "test262.test.built-ins.regexp.named-groups.duplicate-names-test",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: duplicate group name",
     "note": ""
   },
   {
@@ -1139,16 +1139,16 @@
     "id": "test262.test.built-ins.regexp.prototype.exec.duplicate-named-groups-properties",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: duplicate group name",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.prototype.exec.duplicate-named-indices-groups-properties",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: duplicate group name",
     "note": ""
   },
   {
@@ -1379,8 +1379,8 @@
     "id": "test262.test.built-ins.regexp.prototype.exec.s15.10.6.2_a1_t9",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid redefinition of global identifier",
     "note": ""
   },
   {
@@ -4051,8 +4051,8 @@
     "id": "test262.test.built-ins.regexp.prototype.test.s15.10.6.3_a1_t9",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid redefinition of global identifier",
     "note": ""
   },
   {
@@ -4188,7 +4188,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (43028) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (23004) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4411,496 +4411,496 @@
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-dotall",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-dotall-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-dotall-does-not-affect-dotall-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-dotall-does-not-affect-ignorecase-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-dotall-does-not-affect-multiline-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-backreferences",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-characterclasses",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-characterescapes",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-slash-lower-b",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-slash-lower-p",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-slash-lower-w",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-slash-upper-b",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-slash-upper-p",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-slash-upper-w",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-does-not-affect-dotall-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-does-not-affect-ignorecase-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-does-not-affect-multiline-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-multiline",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-multiline-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-multiline-does-not-affect-dotall-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-multiline-does-not-affect-ignorecase-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-multiline-does-not-affect-multiline-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-remove-modifiers",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.changing-dotall-flag-does-not-affect-dotall-modifier",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.changing-ignorecase-flag-does-not-affect-ignorecase-modifier",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.changing-multiline-flag-does-not-affect-multiline-modifier",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nested-add-remove-modifiers",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-add-dotall-within-remove-dotall",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-add-ignorecase-within-remove-ignorecase",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-add-multiline-within-remove-multiline",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-dotall-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-ignorecase-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-multiline-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-remove-dotall-within-add-dotall",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-remove-ignorecase-within-add-ignorecase",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-remove-multiline-within-add-multiline",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-dotall",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-dotall-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-dotall-does-not-affect-dotall-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-dotall-does-not-affect-ignorecase-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-dotall-does-not-affect-multiline-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-backreferences",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-characterclasses",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-characterescapes",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-slash-lower-b",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-slash-lower-p",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-slash-lower-w",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-slash-upper-b",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-slash-upper-p",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-slash-upper-w",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-does-not-affect-dotall-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-does-not-affect-ignorecase-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-does-not-affect-multiline-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-multiline",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-multiline-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-multiline-does-not-affect-dotall-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-multiline-does-not-affect-ignorecase-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-multiline-does-not-affect-multiline-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: invalid group",
     "note": ""
   },
   {

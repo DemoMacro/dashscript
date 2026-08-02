@@ -2073,20 +2073,36 @@ fn engine_eval(
             // execution semantics), so a single eval runs it — no separate call.
             // The wrapper stringifies any escaped throw so the value fetched via
             // `ctx.catch()` is always a JS string (Test262Error → its toString,
-            // other throws → their own name/message).
-            let wrapped =
-                format!("try {{\n{js_source}\n}} catch (__ds_err) {{ throw String(__ds_err); }}\n");
+            // other throws → their own name/message). The inner `try` around
+            // `String(__ds_err)` is essential: a throw of a `Symbol` or an object
+            // whose `toString` throws makes `String()` itself throw a non-string,
+            // which would otherwise reach the uncatchable-interrupt fallback below
+            // and be mislabeled "budget exhausted" (the budget never tripped — the
+            // fixture failed fast with a non-string throw).
+            let wrapped = format!(
+                "try {{\n{js_source}\n}} catch (__ds_err) {{\n  var __ds_msg;\n  try {{ __ds_msg = String(__ds_err); }} catch (_) {{ __ds_msg = '[' + (typeof __ds_err) + ']'; }}\n  throw __ds_msg;\n}}\n"
+            );
             if ctx
                 .eval_with_options::<(), _>(wrapped.as_str(), fixture_opts())
                 .is_err()
             {
                 let thrown = ctx.catch();
-                if let Ok(s) = String::from_js(&ctx, thrown) {
+                if let Ok(s) = String::from_js(&ctx, thrown.clone()) {
                     return Ok(Some(s));
                 }
-                // An uncatchable interrupt (busy-loop budget exhausted) leaves
-                // no thrown value for `ctx.catch()`. Report it as a timeout so
-                // the fixture degrades to `partial`, not misread as a clean run.
+                // The throw left a non-string value — most often a parse-time
+                // SyntaxError from ES2025 regex syntax QuickJS-NG can't compile
+                // (`(?i:…)` modifiers, duplicate named groups), whose object the
+                // `try/catch` wrapper can't intercept (the wrapper itself is part
+                // of the parsed source, so a syntax error aborts before any
+                // runtime handler installs). Stringize via the engine so the real
+                // message is reported instead of masked as a budget timeout. Only
+                // a truly empty catch — an uncatchable busy-loop interrupt — falls
+                // through to the timeout label.
+                let _ = ctx.globals().set("__ds_err_diag", thrown);
+                if let Ok(s) = ctx.eval::<String, &str>("String(globalThis.__ds_err_diag)") {
+                    return Ok(Some(s));
+                }
                 return Ok(Some("engine eval budget exhausted (interrupted)".into()));
             }
             Ok(None)
