@@ -240,6 +240,30 @@ pub(in crate::translator) fn string_method_on(
         // A replacement with `$` routes through `ds_replace_all` (GetSubstitution
         // at each match); otherwise Rust's literal `replace` is exact.
         "replaceAll" => {
+            if let Argument::RegExpLiteral(re) = args.first()? {
+                // `.replaceAll(/pat/g, repl)` — replace every match. ES requires
+                // a global regex (else TypeError); `regex_replace` honors `g`,
+                // and `$<name>` named groups expand via `expand_replacement`.
+                let (pat, fl) = regex_lit_parts(re);
+                let mut flags = fl.value();
+                if !flags.contains('g') {
+                    flags.push('g');
+                }
+                let gl = syn::LitStr::new(&flags, Span::call_site());
+                let b = str_method_arg(args.get(1)?, ctx);
+                let text: Expr = if matches!(
+                    &obj,
+                    Expr::Lit(syn::ExprLit {
+                        lit: syn::Lit::Str(_),
+                        ..
+                    })
+                ) {
+                    obj
+                } else {
+                    parse_quote!(#obj.as_str())
+                };
+                return Some(parse_quote!(crate::__ds::regex_replace(#pat, #gl, #text, #b)));
+            }
             let a = str_method_arg(args.first()?, ctx);
             let b_arg = args.get(1)?;
             let b = str_method_arg(b_arg, ctx);
@@ -425,31 +449,38 @@ pub(in crate::translator) fn string_method_on(
         // `Vec<u16>` (the trail unit is re-derived only in the rare surrogate
         // case) — so a hot loop pays zero per-call allocation.
         "codePointAt" => {
-            let i = usize_arg(args.first()?, ctx);
+            let i = translate_argument(args.first()?, ctx);
             parse_quote!({
                 let __s = &(#obj);
-                let __i = #i;
-                if __s.is_ascii() {
-                    __s.as_bytes().get(__i).map(|&b| b as f64).unwrap_or(f64::NAN)
+                // ES: position < 0 or >= length → undefined. Keep the index as
+                // f64 so a negative literal (e.g. -1) is not saturated to 0 by
+                // `as usize` (Rust 1.45+ saturating float→int cast).
+                let __idx: f64 = #i;
+                if __idx < 0.0 {
+                    None
                 } else {
-                    __s.encode_utf16()
-                        .nth(__i)
-                        .map(|__c1| {
-                            let __c1 = __c1 as u32;
-                            if (0xD800..=0xDBFF).contains(&__c1) {
-                                if let Some(__c2) = __s.encode_utf16().nth(__i + 1) {
-                                    let __c2 = __c2 as u32;
-                                    if (0xDC00..=0xDFFF).contains(&__c2) {
-                                        return (0x10000
-                                            + ((__c1 - 0xD800) << 10)
-                                            + (__c2 - 0xDC00))
-                                            as f64;
+                    let __i = __idx as usize;
+                    if __s.is_ascii() {
+                        __s.as_bytes().get(__i).map(|&b| b as f64)
+                    } else {
+                        __s.encode_utf16()
+                            .nth(__i)
+                            .map(|__c1| {
+                                let __c1 = __c1 as u32;
+                                if (0xD800..=0xDBFF).contains(&__c1) {
+                                    if let Some(__c2) = __s.encode_utf16().nth(__i + 1) {
+                                        let __c2 = __c2 as u32;
+                                        if (0xDC00..=0xDFFF).contains(&__c2) {
+                                            return (0x10000
+                                                + ((__c1 - 0xD800) << 10)
+                                                + (__c2 - 0xDC00))
+                                                as f64;
+                                        }
                                     }
                                 }
-                            }
-                            __c1 as f64
-                        })
-                        .unwrap_or(f64::NAN)
+                                __c1 as f64
+                            })
+                    }
                 }
             })
         }

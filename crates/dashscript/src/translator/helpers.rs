@@ -1693,6 +1693,28 @@ fn expand_replacement(repl: &str, text: &str, m: &Match, out: &mut String) {
                 }
                 i += 2 + usize::from(two);
             }
+            '<' => {
+                // `$<name>` — named capture group (ES2021 `GetSubstitution`).
+                // Scan to the closing `>`; a missing closer is left literal.
+                // A non-participating or nonexistent group expands to empty
+                // (regress' `named_groups` already collapses duplicate names to
+                // the matched branch, matching ES `groups.x` semantics).
+                let mut j = i + 2;
+                while j < chars.len() && chars[j] != '>' {
+                    j += 1;
+                }
+                if j >= chars.len() {
+                    out.push('$');
+                    out.push('<');
+                    i += 2;
+                } else {
+                    let name: String = chars[i + 2..j].iter().collect();
+                    if let Some((_, Some(gr))) = m.named_groups().find(|(n, _)| *n == name) {
+                        out.push_str(&text[gr]);
+                    }
+                    i = j + 1;
+                }
+            }
             _ => {
                 out.push('$');
                 out.push(nc);
