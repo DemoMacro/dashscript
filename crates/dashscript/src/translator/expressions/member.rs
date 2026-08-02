@@ -176,11 +176,21 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
         }
     }
     // `/pat/gi.flags` / `.source` / `.global` / `.ignoreCase` / … on a regex
-    // literal → the static property (known at translate time). Only a literal
-    // receiver; a regex local has lost its source flags.
+    // literal, or on a regex local whose initializer was recorded (`let re =
+    // /pat/flags` or `new RegExp("pat", "flags")`) → the static property (known
+    // at translate time). regress's `Regex` exposes no such fields; only the
+    // parsed literal / recorded initializer carries the flags + pattern.
     if let Expression::RegExpLiteral(re) = &sm.object {
         if let Some(e) = super::regex_literal_property(re, field_name) {
             return e;
+        }
+    }
+    if let Expression::Identifier(id) = &sm.object {
+        let name = bindings::snake(id.name.as_str()).to_string();
+        if let Some(ri) = ctx.regex_init_of(&name) {
+            if let Some(e) = super::regex_property(ri.flags, ri.pattern.as_str(), field_name) {
+                return e;
+            }
         }
     }
     // `d.year`/`d.month`/`d.hour`/… on a `Temporal.<Type>` local → the matching

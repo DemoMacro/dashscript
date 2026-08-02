@@ -448,8 +448,16 @@ fn unsupported_expr() -> Expr {
 pub(in crate::translator) fn regex_lit_parts(
     re: &oxc_ast::ast::RegExpLiteral,
 ) -> (syn::LitStr, syn::LitStr) {
+    let pat = syn::LitStr::new(re.regex.pattern.text.as_str(), Span::call_site());
+    let fl = syn::LitStr::new(&flag_str(re.regex.flags), Span::call_site());
+    (pat, fl)
+}
+
+/// The canonical-order flag string for a regex's flags (the value of ES's
+/// `RegExp.prototype.flags`): `gimsuvyd` order, only the set ones. Shared by a
+/// regex literal and a static `new RegExp("pat", "flags")` initializer.
+pub(in crate::translator) fn flag_str(f: oxc_ast::ast::RegExpFlags) -> String {
     use oxc_ast::ast::RegExpFlags;
-    let f = re.regex.flags;
     let mut flags = String::new();
     if f.contains(RegExpFlags::G) {
         flags.push('g');
@@ -475,23 +483,22 @@ pub(in crate::translator) fn regex_lit_parts(
     if f.contains(RegExpFlags::V) {
         flags.push('v');
     }
-    let pat = syn::LitStr::new(re.regex.pattern.text.as_str(), Span::call_site());
-    let fl = syn::LitStr::new(&flags, Span::call_site());
-    (pat, fl)
+    flags
 }
 
-/// `/pat/gi.flags` / `.source` / `.global` / `.ignoreCase` / `.multiline` /
-/// `.dotAll` / `.unicode` / `.unicodeSets` / `.sticky` / `.hasIndices` on a
-/// regex literal — the property is fully known at translate time (oxc parsed
-/// the literal), so it lowers to a bare literal, not a runtime `Regex` field.
-/// `.source` follows ES's empty-pattern rule (`"(?:)"`); `.unicode` is true
-/// under either the `u` or `v` flag. Returns `None` for any other name.
-pub(in crate::translator) fn regex_literal_property(
-    re: &oxc_ast::ast::RegExpLiteral,
+/// A regex property fully known at translate time — the flags + pattern come
+/// from a parsed literal or a recorded static `new RegExp("pat", "flags")`
+/// initializer — so it lowers to a bare literal, not a runtime `Regex` field
+/// (regress's `Regex` exposes no such fields). `.source` follows ES's
+/// empty-pattern rule (`"(?:)"`); `.unicode` is true under either the `u` or
+/// `v` flag. `None` for any other name. Shared by a regex literal receiver
+/// and a regex local whose initializer was recorded in [`super::context::Ctx`].
+pub(in crate::translator) fn regex_property(
+    f: oxc_ast::ast::RegExpFlags,
+    pattern: &str,
     name: &str,
 ) -> Option<Expr> {
     use oxc_ast::ast::RegExpFlags;
-    let f = re.regex.flags;
     let bool_expr = |set: bool| -> Expr {
         if set {
             parse_quote!(true)
@@ -511,17 +518,26 @@ pub(in crate::translator) fn regex_literal_property(
         "sticky" => Some(bool_expr(f.contains(RegExpFlags::Y))),
         "hasIndices" => Some(bool_expr(f.contains(RegExpFlags::D))),
         "flags" => {
-            let (_, fl) = regex_lit_parts(re);
-            Some(parse_quote!(#fl))
+            let fl = flag_str(f);
+            let lit = syn::LitStr::new(&fl, Span::call_site());
+            Some(parse_quote!(#lit))
         }
         "source" => {
-            let pat = re.regex.pattern.text.as_str();
-            let src = if pat.is_empty() { "(?:)" } else { pat };
+            let src = if pattern.is_empty() { "(?:)" } else { pattern };
             let lit = syn::LitStr::new(src, Span::call_site());
             Some(parse_quote!(#lit))
         }
         _ => None,
     }
+}
+
+/// `/pat/gi.flags` / `.source` / `.global` / … on a regex literal — delegates
+/// to [`regex_property`] with the literal's parsed flags + pattern.
+pub(in crate::translator) fn regex_literal_property(
+    re: &oxc_ast::ast::RegExpLiteral,
+    name: &str,
+) -> Option<Expr> {
+    regex_property(re.regex.flags, re.regex.pattern.text.as_str(), name)
 }
 
 fn regex_literal_expr(re: &oxc_ast::ast::RegExpLiteral) -> Expr {

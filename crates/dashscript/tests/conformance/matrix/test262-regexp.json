@@ -212,7 +212,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (36788) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
+    "detail": "Test262Error: \nthread 'main' (43844) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
     "note": ""
   },
   {
@@ -788,7 +788,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (19708) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (24184) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -812,7 +812,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38044) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39820) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4188,7 +4188,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (28220) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (38996) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4427,8 +4427,8 @@
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-dotall-does-not-affect-dotall-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:4:43: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:6:43: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:8:43: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:10:43: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors | engine: engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4460,7 +4460,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40500) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (34924) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4484,7 +4484,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39796) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (34108) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4492,7 +4492,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (7568) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (42264) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4508,7 +4508,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (43200) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (11412) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4516,7 +4516,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (43236) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (41220) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4547,8 +4547,8 @@
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-does-not-affect-ignorecase-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:4:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nsrc\\main.rs:6:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nsrc\\main.rs:8:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nsrc\\main.rs:10:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors | engine: engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4595,8 +4595,8 @@
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-multiline-does-not-affect-multiline-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:4:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:6:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:8:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:10:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors | engine: engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4731,8 +4731,8 @@
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-dotall-does-not-affect-dotall-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:4:42: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:6:42: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors | engine: engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4764,7 +4764,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (40580) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (36896) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4788,7 +4788,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20864) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39796) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4812,7 +4812,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (17860) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (41656) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4851,8 +4851,8 @@
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-does-not-affect-ignorecase-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:4:42: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nsrc\\main.rs:6:42: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors | engine: engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4899,8 +4899,8 @@
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-multiline-does-not-affect-multiline-property",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:4:42: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:6:42: error[E0609]: no field `multiline` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors | engine: engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {

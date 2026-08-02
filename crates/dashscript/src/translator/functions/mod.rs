@@ -43,7 +43,7 @@ use std::cell::{Cell, RefCell};
 use std::collections::HashSet;
 use syn::{parse_quote, Block, Expr, FnArg, Ident, ItemFn, Path, ReturnType, Stmt, Type};
 
-use super::context::{Ctx, Locals, Narrow};
+use super::context::{Ctx, Locals, Narrow, RegexInit};
 use super::name_table::NameTable;
 use super::registry::TypeRegistry;
 use super::{bindings, declarations, expressions, types};
@@ -1036,6 +1036,12 @@ fn register_declarator(
         return;
     };
     let name = bindings::snake(id.name.as_str()).to_string();
+    // A regex local (`let re = /pat/flags` or `new RegExp("pat", "flags")`)
+    // records its initializer so a later `re.dotAll`/`.source`/`.flags` reads
+    // the static property (regress's `Regex` exposes no such fields).
+    if let Some(ri) = regex_init_of_declarator(decl) {
+        locals.regex_inits.insert(name.clone(), ri);
+    }
     let path = match &decl.init {
         Some(Expression::CallExpression(call)) => callee_return_path(call, registry),
         // `new Uint8Array(…)` → `Vec<u8>` (typed_array_path), so a later
@@ -1051,6 +1057,67 @@ fn register_declarator(
     if let Some(path) = path {
         locals.insert(name, path);
     }
+}
+
+/// A declarator's regex initializer when it is statically known —
+/// `let re = /pat/flags` (a `RegExpLiteral`) or `new RegExp("pat"[, "flags"])`
+/// with literal string arguments — so a later `re.dotAll`/`.source`/`.flags`
+/// reads the property at translate time. `None` for a dynamic pattern/flags or
+/// any other initializer shape (those fall back to the engine on a property
+/// read). Recorded into [`Locals::regex_inits`] by [`register_declarator`].
+fn regex_init_of_declarator(decl: &oxc_ast::ast::VariableDeclarator) -> Option<RegexInit> {
+    use oxc_ast::ast::{Argument, Expression};
+    let init = decl.init.as_ref()?;
+    match init {
+        Expression::RegExpLiteral(re) => Some(RegexInit {
+            flags: re.regex.flags,
+            pattern: re.regex.pattern.text.as_str().to_string(),
+        }),
+        Expression::NewExpression(n) => {
+            let Expression::Identifier(id) = &n.callee else {
+                return None;
+            };
+            if id.name.as_str() != "RegExp" {
+                return None;
+            }
+            let mut args = n.arguments.iter();
+            let pattern = match args.next()? {
+                Argument::StringLiteral(s) => s.value.as_str().to_string(),
+                _ => return None,
+            };
+            let flags = match args.next() {
+                Some(Argument::StringLiteral(s)) => parse_flags(s.value.as_str()),
+                // No flags argument ⇒ an empty flag set (the common
+                // `new RegExp("pat")` form).
+                None => oxc_ast::ast::RegExpFlags::empty(),
+                _ => return None,
+            };
+            Some(RegexInit { flags, pattern })
+        }
+        _ => None,
+    }
+}
+
+/// Parse an ES regex flag string (`"gim"`) into oxc's bitflag set. Unknown
+/// characters are ignored — an invalid flag is a parser error for a literal,
+/// and for `new RegExp(…)` the engine path is the authority.
+fn parse_flags(s: &str) -> oxc_ast::ast::RegExpFlags {
+    use oxc_ast::ast::RegExpFlags;
+    let mut f = RegExpFlags::empty();
+    for c in s.chars() {
+        match c {
+            'g' => f |= RegExpFlags::G,
+            'i' => f |= RegExpFlags::I,
+            'm' => f |= RegExpFlags::M,
+            's' => f |= RegExpFlags::S,
+            'u' => f |= RegExpFlags::U,
+            'y' => f |= RegExpFlags::Y,
+            'd' => f |= RegExpFlags::D,
+            'v' => f |= RegExpFlags::V,
+            _ => {}
+        }
+    }
+    f
 }
 
 /// `new Uint8Array(…)` / `ArrayBuffer` / `Uint8ClampedArray` → `Vec<u8>`, so an

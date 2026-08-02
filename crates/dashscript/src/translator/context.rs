@@ -10,12 +10,25 @@
 
 use std::collections::{HashMap, HashSet};
 
-use oxc_ast::ast::IdentifierReference;
+use oxc_ast::ast::{IdentifierReference, RegExpFlags};
 use oxc_semantic::SymbolId;
 use syn::{parse_quote, Expr, Ident, Path, Type};
 
 use super::flavor::NumberFlavor;
 use super::registry::{TypeRegistry, VariantShape};
+
+/// A regex local's static initializer — `let re = /pat/flags` or
+/// `new RegExp("pat", "flags")` with literal arguments — recorded so a later
+/// `re.dotAll`/`.source`/`.flags` access reads the property at translate time.
+/// regress's `Regex` exposes no such fields; only the initializer carries the
+/// flags + pattern. See [`super::functions::regex_init_of_declarator`].
+#[derive(Clone)]
+pub struct RegexInit {
+    /// The oxc-parsed flag bitset.
+    pub flags: RegExpFlags,
+    /// The raw source pattern (before ES's empty-pattern `"(?:)"` rule).
+    pub pattern: String,
+}
 
 /// A function body's locals: their declared types, plus the set of names that
 /// are mutated (assigned / updated / mutator-method receiver) — so a `.ts`
@@ -35,6 +48,11 @@ pub struct Locals {
     /// same-named counters in different scopes stay distinct. Absent symbols
     /// default to `F64` at query time.
     pub number_flavors: HashMap<SymbolId, NumberFlavor>,
+    /// Per-local regex initializer (`let re = /pat/flags` or
+    /// `new RegExp("pat", "flags")`), so a `re.dotAll`/`.source`/`.flags`
+    /// access reads the static property. Keyed on the snake-cased binding name
+    /// (the same key as `types`). Absent for any other initializer shape.
+    pub regex_inits: HashMap<String, RegexInit>,
 }
 
 impl Locals {
@@ -47,6 +65,7 @@ impl Locals {
             ref_params: HashSet::new(),
             use_counts: HashMap::new(),
             number_flavors: HashMap::new(),
+            regex_inits: HashMap::new(),
         }
     }
 
@@ -205,6 +224,14 @@ impl<'a> Ctx<'a> {
     #[must_use]
     pub fn local_type(&self, name: &str) -> Option<&'a Path> {
         self.locals.get(name)
+    }
+
+    /// The regex initializer (`let re = /pat/flags` or `new RegExp("pat",
+    /// "flags")`) of the local named `name` (snake-cased), if recorded — so a
+    /// `re.dotAll`/`.source`/`.flags` access reads the static property.
+    #[must_use]
+    pub fn regex_init_of(&self, name: &str) -> Option<&'a RegexInit> {
+        self.locals.regex_inits.get(name)
     }
 
     /// The translated type of a field of the interface/struct named
