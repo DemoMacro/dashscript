@@ -1128,11 +1128,20 @@ pub fn translate_project(
     // module) only declares, never executes — the `Module` role errors on its
     // top-level executable statements (module semantics). Compared by canonical
     // path so the call/import form or a relative/absolute `bin` spelling does
-    // not affect the decision.
+    // not affect the decision. Canonicalize failures (symlink loop, missing
+    // privilege) fall back to the joined path on BOTH sides — the per-file
+    // check below uses the same fallback — so the comparison stays symmetric
+    // instead of silently dropping an entry whose canonicalization failed.
     let entry_paths: std::collections::HashSet<PathBuf> = bins
         .iter()
-        .filter_map(|(_, p)| root.join(p).canonicalize().ok())
-        .chain(lib.as_ref().and_then(|p| root.join(p).canonicalize().ok()))
+        .map(|(_, p)| {
+            let full = root.join(p);
+            full.canonicalize().unwrap_or(full)
+        })
+        .chain(lib.as_ref().map(|p| {
+            let full = root.join(p);
+            full.canonicalize().unwrap_or(full)
+        }))
         .collect();
 
     let mut files = Vec::new();
