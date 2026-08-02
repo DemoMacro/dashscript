@@ -989,47 +989,80 @@ pub(in crate::translator) fn arrow_expr(
     ctx: &Ctx<'_>,
     borrow_params: bool,
 ) -> Expr {
-    let params: Vec<Pat> = arrow
-        .params
+    // An expression-body arrow (`() => expr`) lowers its single expression
+    // inline. A block-body arrow (`() => { … }`) is a function body in
+    // everything but syntax, so it shares `closure_block_body` with a
+    // `FunctionExpression` (same `FormalParameters` + `FunctionBody` shape),
+    // its statements translated via `translate_body` with the same per-body
+    // `Locals` a named `fn` gets (params registered, mutations + number
+    // flavors analyzed), built once in `body_locals` — the shared source of
+    // truth, so an arrow body and an `fn` body never diverge.
+    if arrow.expression {
+        let params = closure_pats(&arrow.params, borrow_params);
+        let body = single_expression_body(&arrow.body)
+            .map(|e| translate_expr(e, ctx))
+            .unwrap_or_else(|| parse_quote!(::core::todo!()));
+        parse_quote!(|#(#params),*| #body)
+    } else {
+        closure_block_body(&arrow.params, &arrow.body, ctx, borrow_params)
+    }
+}
+
+/// The `|p0, p1, …|` parameter list shared by every closure lowering — a plain
+/// `name` pat, or `&name` when `borrow` wraps the param so a `.filter` callback
+/// reads owned values from a `&` pattern.
+fn closure_pats(params: &oxc_ast::ast::FormalParameters, borrow: bool) -> Vec<Pat> {
+    params
         .items
         .iter()
         .map(|fp| {
             let name = bindings::binding_name(&fp.pattern);
-            if borrow_params {
+            if borrow {
                 parse_quote!(&#name)
             } else {
                 parse_quote!(#name)
             }
         })
-        .collect();
-    // An expression-body arrow (`() => expr`) lowers its single expression
-    // inline. A block-body arrow (`() => { … }`) is a function body in
-    // everything but syntax: its statements translate via `translate_body`
-    // with the same per-body `Locals` a named `fn` gets (params registered,
-    // mutations + number flavors analyzed), built once in `body_locals` — the
-    // shared source of truth, so an arrow body and an `fn` body never diverge.
-    let body: Expr = if arrow.expression {
-        single_expression_body(&arrow.body)
-            .map(|e| translate_expr(e, ctx))
-            .unwrap_or_else(|| parse_quote!(::core::todo!()))
-    } else {
-        let mut locals = super::functions::body_locals(
-            &arrow.params,
-            Some(&*arrow.body),
-            ctx.registry(),
-            ctx.names(),
-        );
-        let block = super::functions::translate_body(
-            &arrow.body.statements[..],
-            &mut locals,
-            ctx.registry(),
-            &Narrow::default(),
-            None,
-            ctx.names(),
-        );
-        parse_quote!(#block)
-    };
-    parse_quote!(|#(#params),*| #body)
+        .collect()
+}
+
+/// Build `|params| { body }` — the closure shared by a block-body arrow and a
+/// non-async, non-generator `FunctionExpression` (same `FormalParameters` +
+/// `FunctionBody` shape). The per-body `Locals` come from `body_locals`, the
+/// shared source of truth.
+fn closure_block_body(
+    params: &oxc_ast::ast::FormalParameters,
+    body: &FunctionBody,
+    ctx: &Ctx<'_>,
+    borrow_params: bool,
+) -> Expr {
+    let pats = closure_pats(params, borrow_params);
+    let mut locals = super::functions::body_locals(params, Some(body), ctx.registry(), ctx.names());
+    let block = super::functions::translate_body(
+        &body.statements[..],
+        &mut locals,
+        ctx.registry(),
+        &Narrow::default(),
+        None,
+        ctx.names(),
+    );
+    parse_quote!(|#(#pats),*| #block)
+}
+
+/// A non-async, non-generator `FunctionExpression` lowers to the same closure
+/// as a block-body arrow — same `FormalParameters` + `FunctionBody` shape. The
+/// WPT testharness `test(function () { … })` pattern (the dominant WPT fixture
+/// form) lowers through here on the static path. Returns `None` for
+/// async/generator (a runtime the static path lacks) or a body-less expression.
+pub(in crate::translator) fn function_expr_to_closure(
+    f: &oxc_ast::ast::Function,
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    if f.r#async || f.generator {
+        return None;
+    }
+    let body = f.body.as_deref()?;
+    Some(closure_block_body(&f.params, body, ctx, false))
 }
 
 /// The single expression of an expression-body arrow (`() => expr`), when the

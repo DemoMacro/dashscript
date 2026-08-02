@@ -71,11 +71,15 @@ pub(in crate::translator) fn testharness_function(
         // dropped (the helper takes no args; the verdict keys off the prefix).
         "assert_unreached" => parse_quote!(crate::__ds::wpt_assert_unreached()),
         // `test(fn, name[, props])` → invoke `fn` immediately; `name`/`props`
-        // dropped. An assert failure inside `fn` propagates (fail-fast).
-        "test" => {
-            let f = translate_argument(args.first()?, ctx);
-            parse_quote!((#f)())
-        }
+        // dropped. An assert failure inside `fn` propagates (fail-fast). WPT
+        // fixtures write the callback as `function () { … }` or `() => { … }`;
+        // both lower to a closure (see [`test_callback_closure`]). Any other
+        // shape — or an async/generator callback — returns `None`, so the call
+        // surfaces as a plain E0425 (honestly unsupported on the static path).
+        "test" => match test_callback_closure(args.first()?, ctx) {
+            Some(f) => parse_quote!((#f)()),
+            None => return None,
+        },
         // `setup(fn_or_props)` / `done()` — no-ops on the static path.
         "setup" | "done" => parse_quote!(()),
         _ => return None,
@@ -98,4 +102,23 @@ fn wpt_assert_throws_expr(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     };
     let f = translate_argument(args.get(1)?, ctx);
     Some(parse_quote!(crate::__ds::wpt_assert_throws(#expected, #f)))
+}
+
+/// Lower the `test()` callback argument to a closure. WPT fixtures write it as
+/// a `FunctionExpression` (`test(function () { … })`) or an
+/// `ArrowFunctionExpression` (`test(() => { … })`); both lower to a Rust closure
+/// (a `FunctionExpression` shares the block-body arrow's `FormalParameters` +
+/// `FunctionBody` shape). Returns `None` for any other shape, or an
+/// async/generator callback (a runtime the static path lacks) — the call then
+/// surfaces as a plain E0425, honestly unsupported.
+fn test_callback_closure(arg: &Argument, ctx: &Ctx<'_>) -> Option<Expr> {
+    match arg {
+        Argument::ArrowFunctionExpression(arrow) => Some(
+            super::super::super::expressions::arrow_expr(arrow, ctx, false),
+        ),
+        Argument::FunctionExpression(f) => {
+            super::super::super::expressions::function_expr_to_closure(f, ctx)
+        }
+        _ => None,
+    }
 }
