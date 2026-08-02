@@ -18,5 +18,33 @@
 mod assert;
 mod testharness;
 
+use oxc_ast::ast::Argument;
+use syn::{parse_quote, Expr};
+
+use super::super::context::Ctx;
+use super::super::expressions::translate_argument;
+
 pub(in crate::translator) use assert::{assert_call, assert_method};
 pub(in crate::translator) use testharness::testharness_function;
+
+/// Translate an `assert.sameValue` / WPT `assert_equals` operand, mapping a
+/// `null` (or the `undefined` global) to a concrete `Option::<()>::None` so the
+/// two-param `…_assert_equals<A, B>` helper can infer `B`. A bare `None` leaves
+/// `B = Option<_>` — `A` and `B` are independent type params, so the `&None`
+/// operand carries no type information (E0282). `Option<()>: DsSameValue`
+/// projects to `DsCmp::Undefined`, matching any `Option`'s own `None`, so
+/// SameValue against an absent value holds the way ES `assert_equals(x, null)`
+/// does when `x` is null — `params.get("missing")` returns `Option::None`,
+/// which compares `Undefined`-to-`Undefined` against this `null` operand.
+/// `null` and `undefined` both project to `Undefined` (DashScript's unified
+/// nullable model), so an explicit `null` compares against an `Option`'s `None`
+/// regardless of which JS nullish the harness wrote.
+pub(in crate::translator) fn assert_operand(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
+    match arg {
+        Argument::NullLiteral(_) => parse_quote!(::core::option::Option::<()>::None),
+        Argument::Identifier(id) if id.name.as_str() == "undefined" => {
+            parse_quote!(::core::option::Option::<()>::None)
+        }
+        _ => translate_argument(arg, ctx),
+    }
+}

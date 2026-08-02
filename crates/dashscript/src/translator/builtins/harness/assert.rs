@@ -35,8 +35,8 @@ pub(in crate::translator) fn assert_method(
     if name == "throws" {
         return assert_throws_expr(args, ctx);
     }
-    let a = translate_argument(args.first()?, ctx);
-    let b = translate_argument(args.get(1)?, ctx);
+    let a = super::assert_operand(args.first()?, ctx);
+    let b = super::assert_operand(args.get(1)?, ctx);
     Some(match name {
         // SameValue (Object.is): `===` plus distinct +0/-0 and NaN===NaN —
         // see `ASSERT_HELPER`. Both operands lower to the same Rust type (TS

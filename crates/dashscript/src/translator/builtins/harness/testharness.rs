@@ -41,13 +41,13 @@ pub(in crate::translator) fn testharness_function(
         // (arg 2) is dropped — the verdict keys off the `AssertionError:`
         // prefix only.
         "assert_equals" => {
-            let a = translate_argument(args.first()?, ctx);
-            let b = translate_argument(args.get(1)?, ctx);
+            let a = super::assert_operand(args.first()?, ctx);
+            let b = super::assert_operand(args.get(1)?, ctx);
             parse_quote!(crate::__ds::wpt_assert_equals(&(#a), &(#b)))
         }
         "assert_not_equals" => {
-            let a = translate_argument(args.first()?, ctx);
-            let b = translate_argument(args.get(1)?, ctx);
+            let a = super::assert_operand(args.first()?, ctx);
+            let b = super::assert_operand(args.get(1)?, ctx);
             parse_quote!(crate::__ds::wpt_assert_not_equals(&(#a), &(#b)))
         }
         // `assert_true(x)` / `assert_false(x)` — WPT requires `actual === true`
@@ -56,11 +56,11 @@ pub(in crate::translator) fn testharness_function(
         // (a number/string projects via `DsCmp`; a non-bool projecting to
         // `Num`/`Str` mismatches `Bool` → fail, exactly the strict semantics).
         "assert_true" => {
-            let a = translate_argument(args.first()?, ctx);
+            let a = super::assert_operand(args.first()?, ctx);
             parse_quote!(crate::__ds::wpt_assert_equals(&(#a), &true))
         }
         "assert_false" => {
-            let a = translate_argument(args.first()?, ctx);
+            let a = super::assert_operand(args.first()?, ctx);
             parse_quote!(crate::__ds::wpt_assert_equals(&(#a), &false))
         }
         // `assert_throws_dom(name, fn)` / `assert_throws_js(ctor, fn)` — see
