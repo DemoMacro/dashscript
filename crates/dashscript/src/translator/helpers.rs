@@ -1483,6 +1483,11 @@ thread_local! {
     // module-load path sets) survive across `call_module_fn` calls. A fresh
     // `Context::full` per call gives each its own global object, so a namespace
     // installed by one call is invisible to the next.
+    //
+    // Lifetime is safe on both counts: (1) a `Context` keeps its `Runtime`
+    // alive (the same property ShadowRealm realms rely on — only the `Context`
+    // is stored), so RUNTIME cannot be freed while CTX holds it; (2) thread_local
+    // destructors run in reverse declaration order, so CTX drops before RUNTIME.
     static CTX: Context = RUNTIME.with(|rt| Context::full(rt).expect("rquickjs Context"));
 }
 
