@@ -487,6 +487,14 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::collection_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `params.get/has/set/append/delete/getAll/sort/toString(...)` on a
+        // `URLSearchParams` (`DsUrlSearchParams` local) — a WinterTC Web API.
+        // Dispatched after `collection_method` (a HashMap/HashSet receiver is
+        // not a `DsUrlSearchParams`); each name/value arg is coerced via ES
+        // `ToString`, so a numeric value type-checks against `AsRef<str>`.
+        if let Some(expr) = builtins::url_search_params_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         // `buf.set(source, offset)` on a `Uint8Array` (`Vec<u8>` local) — a
         // byte-buffer copy. Dispatched after `collection_method` so a `Map.set`
         // (a HashMap receiver) is handled first; only a `Vec<u8>` receiver

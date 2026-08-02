@@ -5,20 +5,30 @@ use oxc_ast::ast::{Argument, StaticMemberExpression};
 use syn::{parse_quote, Expr};
 
 use super::super::context::Ctx;
-use super::super::expressions::{translate_argument, translate_number_to};
+use super::super::expressions::{is_number_expr, translate_argument, translate_number_to};
 use super::super::flavor::NumberFlavor;
 
 /// Methods on a `.ts` `number` (`f64`). `.toFixed(n)` → a formatted string
-/// with `n` decimal places. Returns `None` for an unmapped name.
+/// with `n` decimal places. Returns `None` for an unmapped name, or for any
+/// receiver that is not a `number` — a `.toString()` on e.g. `URLSearchParams`
+/// falls through to the receiver's own `Display::to_string`.
 pub(in crate::translator) fn number_method(
     sm: &StaticMemberExpression,
     args: &[Argument],
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
-    // `number` methods (`toString`/`toPrecision`/…) emit `f64`-only operations
-    // (`.is_nan()`, `as i64`, …); coerce a flavor-promoted `i64` receiver to
-    // `f64` so those sites compile (an `i64 → f64` widening is exact below 2^53,
-    // the ES safe-integer range).
+    // Number methods (`toString`/`toFixed`/…) emit `f64`-only operations
+    // (`.is_nan()`, `as i64`, …) and route ToString through `number_to_string`
+    // (ryu_js). They apply only to a `number` receiver; any other type (a
+    // `URLSearchParams`, a class with its own `toString`) must fall through to
+    // its inherent methods. Guard the whole dispatch on the receiver being a
+    // number so `params.toString()` → `params.to_string()` (Display), not
+    // `number_to_string(params)` (E0308 — expected `f64`).
+    if !is_number_expr(&sm.object, ctx) {
+        return None;
+    }
+    // Coerce a flavor-promoted `i64` receiver to `f64` so those sites compile
+    // (an `i64 → f64` widening is exact below 2^53, the ES safe-integer range).
     let recv = translate_number_to(&sm.object, NumberFlavor::F64, ctx);
     Some(match sm.property.name.as_str() {
         // `(3.14).toFixed(2)` → `format!("{:.*}", n, …)`. In Rust the `*`

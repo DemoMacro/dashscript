@@ -156,7 +156,9 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     // otherwise lower it to `m.get("size")`. A user struct with a `size` field
     // is unaffected (its receiver is not a HashMap/HashSet local).
     if field_name == "size"
-        && (is_hashmap_local(&sm.object, ctx) || is_hashset_local(&sm.object, ctx))
+        && (is_hashmap_local(&sm.object, ctx)
+            || is_hashset_local(&sm.object, ctx)
+            || is_url_search_params_local(&sm.object, ctx))
     {
         let obj = translate_expr(&sm.object, ctx);
         return parse_quote!((#obj.len() as f64));
@@ -717,6 +719,20 @@ pub(in crate::translator) fn is_vec_u8_local(expr: &Expression, ctx: &Ctx<'_>) -
     };
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name).is_some_and(is_vec_u8)
+}
+
+/// True when `expr` is a local whose type is `crate::__ds::DsUrlSearchParams`
+/// (a `new URLSearchParams(...)` binding), so `params.size` lowers to `.len()`.
+pub(in crate::translator) fn is_url_search_params_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(|p| {
+        p.segments
+            .last()
+            .is_some_and(|s| s.ident == "DsUrlSearchParams")
+    })
 }
 
 /// A HashMap key: a string literal stays bare (a `&str` for `HashMap::get`);

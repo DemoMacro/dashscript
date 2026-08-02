@@ -97,6 +97,17 @@ pub enum RuntimeDep {
     /// `__ds::TextEncoder`; the helper slice defines both structs, so a file
     /// that uses either gets both.
     Encoding,
+    /// A WHATWG URL API `URLSearchParams` (a WinterTC Web API). `new
+    /// URLSearchParams("a=b&c=d")` parses an `application/x-www-form-urlencoded`
+    /// string into an ordered name/value list; `.get`/`.has`/`.set`/`.append`/
+    /// `.delete`/`.getAll`/`.sort`/`.toString`/`.size` map to the
+    /// `__ds::DsUrlSearchParams` impl (a `Vec<(String, String)>`). Routes
+    /// through `form_urlencoded::parse`/`Serializer` (the WHATWG spec reference
+    /// parser — the same one servo/url uses). Flags the `form_urlencoded` dep.
+    /// The marker `__ds::DsUrlSearchParams` is emitted at the constructor (a
+    /// `new URLSearchParams(...)` always precedes any method call), so the
+    /// helper slice is injected once per file that builds one.
+    Url,
     /// An ECMAScript error object lowered through `panic!`/`catch_unwind` —
     /// `throw new RangeError("msg")` panics a `DsError`, and `catch (e)`
     /// downcasts it back. Carries the error class `name` + `message`, so
@@ -157,7 +168,7 @@ pub enum RuntimeDep {
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 17] = [
+    const ALL: [RuntimeDep; 18] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -168,6 +179,7 @@ impl RuntimeDep {
         RuntimeDep::Truthy,
         RuntimeDep::Display,
         RuntimeDep::Encoding,
+        RuntimeDep::Url,
         RuntimeDep::Error,
         RuntimeDep::Inspect,
         RuntimeDep::Assert,
@@ -191,6 +203,7 @@ impl RuntimeDep {
             RuntimeDep::Truthy => Some("__ds::truthy"),
             RuntimeDep::Display => Some("__ds::display"),
             RuntimeDep::Encoding => Some("__ds::TextEncoder"),
+            RuntimeDep::Url => Some("__ds::DsUrlSearchParams"),
             RuntimeDep::Error => Some("__ds::DsError"),
             RuntimeDep::Inspect => Some("__ds::inspect"),
             // Common prefix of `assert_same_value`/`assert_not_same_value`/
@@ -251,6 +264,11 @@ impl RuntimeDep {
             RuntimeDep::Truthy => None,
             RuntimeDep::Display => None,
             RuntimeDep::Encoding => None,
+            // `form_urlencoded` (servo/url) — the WHATWG
+            // `application/x-www-form-urlencoded` parser/serializer
+            // `DsUrlSearchParams` routes through. v1.2.2 is cached locally (a
+            // transitive dep of the workspace `url` crate).
+            RuntimeDep::Url => Some(&[("form_urlencoded", "\"1.2\"")]),
             RuntimeDep::Error => None,
             RuntimeDep::Assert => None,
             RuntimeDep::WptAssert => None,
@@ -272,6 +290,7 @@ impl RuntimeDep {
             RuntimeDep::Truthy => Some(TRUTHY_HELPER),
             RuntimeDep::Display => Some(DISPLAY_HELPER),
             RuntimeDep::Encoding => Some(ENCODING_HELPER),
+            RuntimeDep::Url => Some(URL_HELPER),
             RuntimeDep::Error => Some(ERROR_HELPER),
             RuntimeDep::Assert => Some(ASSERT_HELPER),
             // WPT asserts share ASSERT_HELPER (same DsSameValue core). A

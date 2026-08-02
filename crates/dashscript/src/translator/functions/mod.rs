@@ -1048,9 +1048,9 @@ fn register_declarator(
         // `x[0] = v` stores with a `u8` cast. A `new Set(…)` / `new Map(…)`
         // falls back to the inferred collection type (so `s.add(…)` later
         // resolves the receiver); any other `new` yields `None`.
-        Some(Expression::NewExpression(n)) => {
-            typed_array_path(n).or_else(|| collection_local_path(n))
-        }
+        Some(Expression::NewExpression(n)) => typed_array_path(n)
+            .or_else(|| collection_local_path(n))
+            .or_else(|| url_search_params_path(n)),
         Some(other) => vec_index_elem_path(other, locals),
         None => return,
     };
@@ -1146,6 +1146,22 @@ fn typed_array_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
 fn collection_local_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     let ty = lazy_static::new_collection_return_type(new_expr)?;
     types::type_path(&ty).cloned()
+}
+
+/// `new URLSearchParams(...)` → `crate::__ds::DsUrlSearchParams`, so an
+/// unannotated `let params = new URLSearchParams("a=b")` records the type and a
+/// later `params.size` lowers to `.len()`. Only the `URLSearchParams` callee
+/// maps; any other `new` yields `None`.
+fn url_search_params_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    if id.name.as_str() == "URLSearchParams" {
+        Some(parse_quote!(crate::__ds::DsUrlSearchParams))
+    } else {
+        None
+    }
 }
 
 /// `arr[i]` where `arr` is a tracked `Vec<T>` (or `Option<Vec<T>>`) local → `T`,

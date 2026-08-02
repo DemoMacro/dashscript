@@ -88,6 +88,18 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
             let name = bindings::type_ident(&id.name);
             return parse_quote!(crate::__ds::#name::new());
         }
+        // `new URLSearchParams(...)` — the WHATWG URL API (a WinterTC Web API).
+        // `new URLSearchParams("a=b&c=d")` parses a query string;
+        // `new URLSearchParams()` is empty. Intercepted before the generic
+        // `Foo::new` path (which would emit `URLSearchParams::new` — E0433, no
+        // such Rust type). The `Url` runtime dep is flagged by the
+        // `__ds::DsUrlSearchParams` marker probe, which injects the struct
+        // def into `__ds.rs`. Instance methods (`.get`/`.has`/…) lower
+        // verbatim — `DsUrlSearchParams`'s inherent methods already carry
+        // ES-matching signatures.
+        if builtins::url_ctor_type(id.name.as_str()).is_some() {
+            return url_search_params_ctor(n.arguments.as_slice(), ctx);
+        }
         // `new Error("msg")` / `new TypeError(msg)` / `new Test262Error(msg)` —
         // an ES native Error constructor (or the test262 harness's
         // `Test262Error`). `throw new <X>(<literal>)` is intercepted earlier by
@@ -204,6 +216,22 @@ fn worker_ctor(arg: &Argument, handler: Expr) -> Expr {
     match msg_ty {
         Some(ty) => parse_quote!(crate::__ds::Worker::new_with_reply::<#ty, _>(#handler)),
         None => parse_quote!(crate::__ds::Worker::new_with_reply(#handler)),
+    }
+}
+
+/// `new URLSearchParams(init?)` → `crate::__ds::DsUrlSearchParams::from_query
+/// (init)` (one arg) or `::new()` (no arg). The init may be a `String` or a
+/// `&str` literal — `from_query` is generic over `AsRef<str>`. A
+/// record/sequence/`URLSearchParams` init (ES also accepts those) is not yet
+/// lowered; it falls through to the generic `Foo::new` path and surfaces at
+/// `cargo check` honestly.
+fn url_search_params_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
+    match args.first() {
+        Some(arg) => {
+            let init = array_elem_arg(arg, ctx);
+            parse_quote!(crate::__ds::DsUrlSearchParams::from_query(#init))
+        }
+        None => parse_quote!(crate::__ds::DsUrlSearchParams::new()),
     }
 }
 

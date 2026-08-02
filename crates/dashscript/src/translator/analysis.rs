@@ -44,6 +44,8 @@ const MUTATORS: &[&str] = &[
     "add",
     "delete",
     "clear",
+    // URLSearchParams.append — &mut self (set/delete/sort listed above).
+    "append",
 ];
 
 /// The body facts: the set of mutated bindings and per-local read counts.

@@ -48,7 +48,7 @@ mod drift_guard;
 pub(in crate::translator) use array::{array_method, array_method_on, array_static};
 pub(in crate::translator) use collection::collection_method;
 pub(in crate::translator) use global::{
-    global_function, reg_exp_constructor, reg_exp_static, to_number_expr,
+    es_to_string_arg, global_function, reg_exp_constructor, reg_exp_static, to_number_expr,
 };
 pub(in crate::translator) use json::json_static;
 pub(in crate::translator) use math::{math_constant, math_method};
@@ -62,7 +62,9 @@ pub(in crate::translator) use temporal::{
 pub(in crate::translator) use typed_array::typed_array_method;
 
 pub(in crate::translator) use harness::{assert_call, assert_method, testharness_function};
-pub(in crate::translator) use web::{console_method, encoding_ctor_type};
+pub(in crate::translator) use web::{
+    console_method, encoding_ctor_type, url_ctor_type, url_search_params_method,
+};
 
 use oxc_ast::ast::{Argument, Expression};
 use proc_macro2::Span;

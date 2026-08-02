@@ -161,6 +161,143 @@ impl TextDecoder {
 }
 ";
 
+/// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
+/// list (ES `URLSearchParams` preserves insertion order), backed by
+/// `Vec<(String, String)>`. Parsing and serialization route through
+/// `form_urlencoded` (the WHATWG `application/x-www-form-urlencoded` reference
+/// parser — the same one servo/url uses), so `+`→space and `%xx`
+/// percent-decoding/encoding match the spec. `toString` is `Display`, so
+/// template-literal interpolation of a `URLSearchParams` works without a
+/// separate `DsDisplay` impl.
+pub(super) const URL_HELPER: &str = "\
+pub struct DsUrlSearchParams {
+    pairs: Vec<(String, String)>,
+}
+impl DsUrlSearchParams {
+    /// `new URLSearchParams(s)` — parse `s` as
+    /// `application/x-www-form-urlencoded`. `form_urlencoded::parse` splits on
+    /// `&`/`=` and percent-decodes each side (`+`→space), matching the spec.
+    /// Generic over `AsRef<str>` so the constructor emit passes either a
+    /// `String` or a `&str` literal unchanged.
+    pub fn from_query<S: AsRef<str>>(init: S) -> Self {
+        let pairs = form_urlencoded::parse(init.as_ref().as_bytes())
+            .map(|(k, v)| (k.into_owned(), v.into_owned()))
+            .collect();
+        Self { pairs }
+    }
+    /// `new URLSearchParams()` / `new URLSearchParams(undefined)` — empty.
+    pub fn new() -> Self {
+        Self { pairs: Vec::new() }
+    }
+    /// `params.get(name)` — the first value for `name`, or `None` (ES `null`).
+    /// Generic over `AsRef<str>` so a `String` or `&str` argument (both TS
+    /// `string`) is accepted without a call-site borrow.
+    pub fn get<S: AsRef<str>>(&self, name: S) -> Option<String> {
+        let name = name.as_ref();
+        self.pairs.iter().find(|(k, _)| k == name).map(|(_, v)| v.clone())
+    }
+    /// `params.has(name)` — whether any pair's name is `name`.
+    pub fn has<S: AsRef<str>>(&self, name: S) -> bool {
+        let name = name.as_ref();
+        self.pairs.iter().any(|(k, _)| k == name)
+    }
+    /// `params.has(name, value)` (ES2024) — whether a `(name, value)` pair
+    /// exists. The single-arg `has(name)` is the common form; the two-arg
+    /// form matches both name and value.
+    pub fn has_value<N: AsRef<str>, V: AsRef<str>>(&self, name: N, value: V) -> bool {
+        let name = name.as_ref();
+        let value = value.as_ref();
+        self.pairs.iter().any(|(k, v)| k == name && v == value)
+    }
+    /// `params.set(name, value)` — WHATWG set: update the first matching pair's
+    /// value in place, drop any later matches, or append if none. Not
+    /// delete-all-then-append — that would move the pair to the end; the spec
+    /// keeps the first match position: `set('a','B')` on `'a=b&c=d'` yields
+    /// `a=B&c=d`.
+    pub fn set<N: AsRef<str>, V: AsRef<str>>(&mut self, name: N, value: V) {
+        let name = name.as_ref();
+        let value = value.as_ref().to_string();
+        let mut found = false;
+        // Keep the first match (to update in place), drop later matches.
+        self.pairs.retain(|(k, _)| {
+            if k == name {
+                if found {
+                    false
+                } else {
+                    found = true;
+                    true
+                }
+            } else {
+                true
+            }
+        });
+        if found {
+            for pair in &mut self.pairs {
+                if pair.0 == name {
+                    pair.1 = value;
+                    break;
+                }
+            }
+        } else {
+            self.pairs.push((name.to_string(), value));
+        }
+    }
+    /// `params.append(name, value)` — append a pair (duplicates kept).
+    pub fn append<N: AsRef<str>, V: AsRef<str>>(&mut self, name: N, value: V) {
+        self.pairs
+            .push((name.as_ref().to_string(), value.as_ref().to_string()));
+    }
+    /// `params.delete(name)` — remove every pair named `name`.
+    pub fn delete<S: AsRef<str>>(&mut self, name: S) {
+        let name = name.as_ref();
+        self.pairs.retain(|(k, _)| k != name);
+    }
+    /// `params.delete(name, value)` (ES2024) — remove only pairs matching both
+    /// `name` and `value`; the single-arg `delete(name)` removes every pair
+    /// with that name.
+    pub fn delete_value<N: AsRef<str>, V: AsRef<str>>(&mut self, name: N, value: V) {
+        let name = name.as_ref();
+        let value = value.as_ref();
+        self.pairs.retain(|(k, v)| !(k == name && v == value));
+    }
+    /// `params.getAll(name)` — every value for `name`, in insertion order.
+    pub fn get_all<S: AsRef<str>>(&self, name: S) -> Vec<String> {
+        let name = name.as_ref();
+        self.pairs
+            .iter()
+            .filter(|(k, _)| k == name)
+            .map(|(_, v)| v.clone())
+            .collect()
+    }
+    /// `params.sort()` — sort by name. Rust's `sort_by` is stable, matching
+    /// ES (equal names keep their relative order).
+    pub fn sort(&mut self) {
+        self.pairs.sort_by(|a, b| a.0.cmp(&b.0));
+    }
+    /// `params.size` — the number of name/value pairs.
+    #[inline]
+    pub fn len(&self) -> usize {
+        self.pairs.len()
+    }
+    #[inline]
+    pub fn is_empty(&self) -> bool {
+        self.pairs.is_empty()
+    }
+}
+impl ::core::fmt::Display for DsUrlSearchParams {
+    /// `params.toString()` — serialize back to
+    /// `application/x-www-form-urlencoded`. `form_urlencoded::Serializer`
+    /// percent-encodes per the WHATWG byte set.
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        let mut s = form_urlencoded::Serializer::new(String::new());
+        for (k, v) in &self.pairs {
+            s.append_pair(k, v);
+        }
+        write!(f, \"{}\", s.finish())
+    }
+}
+";
+
 /// ES truthiness for a value used in condition position. The translator emits
 /// `__ds::truthy(&expr)` for a non-boolean condition (member access like
 /// `opts.indent`, a numeric cast, a call) it cannot lower without a type

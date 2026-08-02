@@ -245,7 +245,19 @@ pub(in crate::translator) fn es_to_string_arg(arg: &Argument, ctx: &Ctx<'_>) -> 
             return parse_quote!(crate::__ds::number_to_string(#n));
         }
     }
-    translate_argument(arg, ctx)
+    // ES `ToString` (§7.1.17): `null` → "null", `undefined` → "undefined".
+    // Other values pass through `translate_argument`; the receiving API's own
+    // `Display`/`AsRef<str>` finishes the coercion. Without this a `null`
+    // lowers as `Option::None`, which fails `AsRef<str>` on `URLSearchParams`
+    // / `JSON.parse` / `parseInt` arguments (`params.append(null, null)`,
+    // `JSON.parse(null)`).
+    match arg {
+        Argument::NullLiteral(_) => parse_quote!("null".to_string()),
+        Argument::Identifier(id) if id.name.as_str() == "undefined" => {
+            parse_quote!("undefined".to_string())
+        }
+        _ => translate_argument(arg, ctx),
+    }
 }
 
 pub(in crate::translator) fn parse_int_expr(a: Expr, radix: Option<Expr>) -> Expr {
