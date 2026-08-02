@@ -371,9 +371,23 @@ pub(in crate::translator) fn string_method_on(
             }
         }
         // `.charAt(i)` → the `i`-th char as a `String` ("" if out of range).
+        // ASCII fast path indexes raw bytes in O(1) (a byte is a char); the
+        // `is_ascii` scan is SIMD and cheap per call, and ASCII covers the
+        // common hot loop (scanners, parsers). Non-ASCII keeps `chars().nth`.
         "charAt" => {
             let i = usize_arg(args.first()?, ctx);
-            parse_quote!(#obj.chars().nth(#i).map(|c| c.to_string()).unwrap_or_default())
+            parse_quote!({
+                let __s = &(#obj);
+                let __i = #i;
+                if __s.is_ascii() {
+                    match __s.as_bytes().get(__i) {
+                        Some(&__b) => (__b as char).to_string(),
+                        None => ::std::string::String::new(),
+                    }
+                } else {
+                    __s.chars().nth(__i).map(|c| c.to_string()).unwrap_or_default()
+                }
+            })
         }
         // `.charCodeAt(i)` → the `i`-th UTF-16 code unit as `f64` (`NaN` out of
         // range). The ASCII fast path indexes raw bytes in O(1) — `is_ascii` is a
@@ -406,28 +420,37 @@ pub(in crate::translator) fn string_method_on(
         // lead/trail surrogate pair into its code point (0x10000+). ES indexes
         // UTF-16 code units, so Rust's `chars().nth` (scalar values) is wrong:
         // `\uD800\uDBFF`.codePointAt(0) yields the lead surrogate 0xD800, not
-        // the replacement char a UTF-32 read would give. Mirror `charCodeAt`'s
-        // `encode_utf16` path, then apply ES's lead/trail merge.
+        // the replacement char a UTF-32 read would give. ASCII fast path is
+        // O(1); non-ASCII iterates `encode_utf16()` without materializing a
+        // `Vec<u16>` (the trail unit is re-derived only in the rare surrogate
+        // case) — so a hot loop pays zero per-call allocation.
         "codePointAt" => {
             let i = usize_arg(args.first()?, ctx);
             parse_quote!({
-                let __s = &#obj;
-                let __u16: ::std::vec::Vec<u16> = __s.encode_utf16().collect();
+                let __s = &(#obj);
                 let __i = #i;
-                __u16
-                    .get(__i)
-                    .map(|&__c1| {
-                        let __c1 = __c1 as u32;
-                        if (0xD800..=0xDBFF).contains(&__c1) && __i + 1 < __u16.len() {
-                            let __c2 = __u16[__i + 1] as u32;
-                            if (0xDC00..=0xDFFF).contains(&__c2) {
-                                return (0x10000 + ((__c1 - 0xD800) << 10) + (__c2 - 0xDC00))
-                                    as f64;
+                if __s.is_ascii() {
+                    __s.as_bytes().get(__i).map(|&b| b as f64).unwrap_or(f64::NAN)
+                } else {
+                    __s.encode_utf16()
+                        .nth(__i)
+                        .map(|__c1| {
+                            let __c1 = __c1 as u32;
+                            if (0xD800..=0xDBFF).contains(&__c1) {
+                                if let Some(__c2) = __s.encode_utf16().nth(__i + 1) {
+                                    let __c2 = __c2 as u32;
+                                    if (0xDC00..=0xDFFF).contains(&__c2) {
+                                        return (0x10000
+                                            + ((__c1 - 0xD800) << 10)
+                                            + (__c2 - 0xDC00))
+                                            as f64;
+                                    }
+                                }
                             }
-                        }
-                        __c1 as f64
-                    })
-                    .unwrap_or(f64::NAN)
+                            __c1 as f64
+                        })
+                        .unwrap_or(f64::NAN)
+                }
             })
         }
         // `.padStart(n)` → right-align to width `n` (fills on the left with
