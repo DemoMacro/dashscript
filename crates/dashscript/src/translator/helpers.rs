@@ -170,6 +170,107 @@ impl TextDecoder {
 /// template-literal interpolation of a `URLSearchParams` works without a
 /// separate `DsDisplay` impl.
 pub(super) const URL_HELPER: &str = "\
+/// WHATWG URL — `__ds::DsUrl`. Wraps `url::Url` (servo/url, the spec reference
+/// parser). ES `URL` exposes the parsed components as zero-arg accessors; both
+/// `JSON.stringify(url)` and `url.toString()` serialize to the `href` (the
+/// WHATWG serialized URL), so `Display` is the href and `Serialize` is a string
+/// (matching ES `URL.toJSON()`). `new URL(input[, base])` parses via `Url::parse`
+/// / `Url::options().base_url(...)`; a parse error panics (ES throws
+/// `TypeError` — the WPT verdict reads the panic prefix).
+pub struct DsUrl(url::Url);
+impl DsUrl {
+    /// `new URL(input)` — parse an absolute URL. Generic over `AsRef<str>` so
+    /// the constructor emit passes either a `String` or a `&str` literal
+    /// unchanged.
+    pub fn parse<S: ::std::convert::AsRef<str>>(input: S) -> Self {
+        Self(url::Url::parse(input.as_ref()).expect(\"invalid URL\"))
+    }
+    /// `new URL(input, base)` — resolve `input` against `base`. The base is
+    /// parsed first (its own failure panics), then `input` resolves against it.
+    pub fn parse_with_base<I: ::std::convert::AsRef<str>, B: ::std::convert::AsRef<str>>(
+        input: I,
+        base: B,
+    ) -> Self {
+        let base = url::Url::parse(base.as_ref()).expect(\"invalid base URL\");
+        Self(
+            url::Url::options()
+                .base_url(::std::option::Option::Some(&base))
+                .parse(input.as_ref())
+                .expect(\"invalid URL\"),
+        )
+    }
+    /// `url.href` — the WHATWG serialized URL.
+    pub fn href(&self) -> String {
+        self.0.to_string()
+    }
+    /// `url.origin` — the ASCII serialization of the origin (`https://example.com`).
+    pub fn origin(&self) -> String {
+        self.0.origin().ascii_serialization()
+    }
+    /// `url.protocol` — the scheme plus `:` (`https:`).
+    pub fn protocol(&self) -> String {
+        format!(\"{}:\", self.0.scheme())
+    }
+    /// `url.host` — `hostname:port` (port omitted if not present).
+    pub fn host(&self) -> String {
+        match self.0.port() {
+            ::std::option::Option::Some(p) => {
+                format!(\"{}:{}\", self.0.host_str().unwrap_or(\"\"), p)
+            }
+            ::std::option::Option::None => self.0.host_str().unwrap_or(\"\").to_string(),
+        }
+    }
+    /// `url.hostname` — the host without the port.
+    pub fn hostname(&self) -> String {
+        self.0.host_str().unwrap_or(\"\").to_string()
+    }
+    /// `url.pathname` — the path (`/path`).
+    pub fn pathname(&self) -> String {
+        self.0.path().to_string()
+    }
+    /// `url.search` — `?` plus the query, or `\"\"` if absent.
+    pub fn search(&self) -> String {
+        self.0
+            .query()
+            .map(|q| format!(\"?{}\", q))
+            .unwrap_or_default()
+    }
+    /// `url.hash` — `#` plus the fragment, or `\"\"` if absent.
+    pub fn hash(&self) -> String {
+        self.0
+            .fragment()
+            .map(|f| format!(\"#{}\", f))
+            .unwrap_or_default()
+    }
+    /// `url.port` — the port as a string, or `\"\"` if absent.
+    pub fn port(&self) -> String {
+        self.0.port().map(|p| p.to_string()).unwrap_or_default()
+    }
+    /// `url.username` — the username, or `\"\"` if absent.
+    pub fn username(&self) -> String {
+        self.0.username().to_string()
+    }
+    /// `url.password` — the password, or `\"\"` if absent.
+    pub fn password(&self) -> String {
+        self.0.password().unwrap_or(\"\").to_string()
+    }
+}
+impl ::core::fmt::Display for DsUrl {
+    /// `url.toString()` / string coercion — the href.
+    fn fmt(&self, f: &mut ::core::fmt::Formatter<'_>) -> ::core::fmt::Result {
+        write!(f, \"{}\", self.0)
+    }
+}
+impl ::serde::Serialize for DsUrl {
+    /// `JSON.stringify(url)` / `url.toJSON()` — ES serializes a URL as its href
+    /// string (a JSON string, quoted), so `Serialize` emits the href as a `str`.
+    fn serialize<S: ::serde::Serializer>(
+        &self,
+        s: S,
+    ) -> ::core::result::Result<S::Ok, S::Error> {
+        s.serialize_str(&self.0.to_string())
+    }
+}
 pub struct DsUrlSearchParams {
     pairs: Vec<(String, String)>,
 }

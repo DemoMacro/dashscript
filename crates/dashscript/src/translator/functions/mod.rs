@@ -1050,7 +1050,8 @@ fn register_declarator(
         // resolves the receiver); any other `new` yields `None`.
         Some(Expression::NewExpression(n)) => typed_array_path(n)
             .or_else(|| collection_local_path(n))
-            .or_else(|| url_search_params_path(n)),
+            .or_else(|| url_search_params_path(n))
+            .or_else(|| url_path(n)),
         Some(other) => vec_index_elem_path(other, locals),
         None => return,
     };
@@ -1159,6 +1160,21 @@ fn url_search_params_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path
     };
     if id.name.as_str() == "URLSearchParams" {
         Some(parse_quote!(crate::__ds::DsUrlSearchParams))
+    } else {
+        None
+    }
+}
+
+/// `new URL(...)` → `crate::__ds::DsUrl`, so an unannotated `let u = new
+/// URL("…")` records the type and a later `u.href`/`u.origin`/… lowers to the
+/// matching accessor. Only the `URL` callee maps; any other `new` yields `None`.
+fn url_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    if id.name.as_str() == "URL" {
+        Some(parse_quote!(crate::__ds::DsUrl))
     } else {
         None
     }

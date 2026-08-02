@@ -88,17 +88,20 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
             let name = bindings::type_ident(&id.name);
             return parse_quote!(crate::__ds::#name::new());
         }
-        // `new URLSearchParams(...)` — the WHATWG URL API (a WinterTC Web API).
-        // `new URLSearchParams("a=b&c=d")` parses a query string;
-        // `new URLSearchParams()` is empty. Intercepted before the generic
-        // `Foo::new` path (which would emit `URLSearchParams::new` — E0433, no
-        // such Rust type). The `Url` runtime dep is flagged by the
-        // `__ds::DsUrlSearchParams` marker probe, which injects the struct
-        // def into `__ds.rs`. Instance methods (`.get`/`.has`/…) lower
-        // verbatim — `DsUrlSearchParams`'s inherent methods already carry
-        // ES-matching signatures.
+        // `new URLSearchParams(...)` / `new URL(...)` — the WHATWG URL API
+        // (a WinterTC Web API). `URLSearchParams` parses a query string (or
+        // empty); `URL` parses a full URL, optionally against a base.
+        // Intercepted before the generic `Foo::new` path (which would emit
+        // `URLSearchParams::new`/`Url::new` — E0433, no such Rust type). The
+        // `Url` runtime dep is flagged by the `__ds::DsUrl`/`__ds::DsUrlSearchParams`
+        // marker probe, which injects both struct defs into `__ds.rs`.
+        // Instance methods (`.get`/`.has`/…) lower verbatim — each struct's
+        // inherent methods already carry ES-matching signatures.
         if builtins::url_ctor_type(id.name.as_str()).is_some() {
-            return url_search_params_ctor(n.arguments.as_slice(), ctx);
+            return match id.name.as_str() {
+                "URL" => url_ctor(n.arguments.as_slice(), ctx),
+                _ => url_search_params_ctor(n.arguments.as_slice(), ctx),
+            };
         }
         // `new Error("msg")` / `new TypeError(msg)` / `new Test262Error(msg)` —
         // an ES native Error constructor (or the test262 harness's
@@ -232,6 +235,29 @@ fn url_search_params_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
             parse_quote!(crate::__ds::DsUrlSearchParams::from_query(#init))
         }
         None => parse_quote!(crate::__ds::DsUrlSearchParams::new()),
+    }
+}
+
+/// `new URL(input[, base])` → `crate::__ds::DsUrl::parse(input)` or
+/// `::parse_with_base(input, base)`. Each arg may be a `String` or a `&str`
+/// literal — both `parse`/`parse_with_base` are generic over `AsRef<str>`. ES
+/// `new URL()` with no args throws `TypeError`; the no-arg case panics with
+/// the same class name (the WPT verdict reads the panic prefix), rather than
+/// emitting a phantom `Url::new` (E0433).
+fn url_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
+    match (args.first(), args.get(1)) {
+        (Some(input), Some(base)) => {
+            let i = array_elem_arg(input, ctx);
+            let b = array_elem_arg(base, ctx);
+            parse_quote!(crate::__ds::DsUrl::parse_with_base(#i, #b))
+        }
+        (Some(input), None) => {
+            let i = array_elem_arg(input, ctx);
+            parse_quote!(crate::__ds::DsUrl::parse(#i))
+        }
+        (None, _) => parse_quote!(::core::panic!(
+            "TypeError: URL constructor requires at least 1 argument"
+        )),
     }
 }
 

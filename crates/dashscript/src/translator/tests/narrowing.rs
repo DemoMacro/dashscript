@@ -190,3 +190,20 @@ fn translates_member_access_truthiness_via_ds_truthy() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("__ds::truthy(&"), "got:\n{rust}");
 }
+
+#[test]
+fn url_ctor_emits_dsurl_parse() {
+    // `new URL(str)` → `DsUrl::parse(str)`; `JSON.stringify(url)` routes through
+    // the generic `serde_json::to_string`, which needs `DsUrl: Serialize` (the
+    // href string). The WPT url-tojson fixture is exactly this shape.
+    let src = "function f(): void { const a = new URL(\"https://example.com/\"); console.log(JSON.stringify(a)); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("DsUrl::parse(\"https://example.com/\""),
+        "new URL(str) should emit DsUrl::parse(str): {rust}"
+    );
+    assert!(
+        rust.contains("serde_json::to_string(&"),
+        "JSON.stringify(url) should emit serde_json::to_string: {rust}"
+    );
+}

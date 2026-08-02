@@ -203,7 +203,11 @@ impl RuntimeDep {
             RuntimeDep::Truthy => Some("__ds::truthy"),
             RuntimeDep::Display => Some("__ds::display"),
             RuntimeDep::Encoding => Some("__ds::TextEncoder"),
-            RuntimeDep::Url => Some("__ds::DsUrlSearchParams"),
+            // Common prefix of `__ds::DsUrl` and `__ds::DsUrlSearchParams`, so
+            // a fixture using either the WHATWG URL parser (`new URL(…)`) or the
+            // query params list pulls URL_HELPER (the `DsUrl` wrapper + the
+            // `DsUrlSearchParams` list live in the same slice).
+            RuntimeDep::Url => Some("__ds::DsUrl"),
             RuntimeDep::Error => Some("__ds::DsError"),
             RuntimeDep::Inspect => Some("__ds::inspect"),
             // Common prefix of `assert_same_value`/`assert_not_same_value`/
@@ -264,11 +268,17 @@ impl RuntimeDep {
             RuntimeDep::Truthy => None,
             RuntimeDep::Display => None,
             RuntimeDep::Encoding => None,
-            // `form_urlencoded` (servo/url) — the WHATWG
+            // `url` (servo/url) — the WHATWG URL reference parser `DsUrl`
+            // wraps. `serde` provides the `Serialize` trait for
+            // `JSON.stringify(url)` / `url.toJSON()`. `form_urlencoded` is the
             // `application/x-www-form-urlencoded` parser/serializer
-            // `DsUrlSearchParams` routes through. v1.2.2 is cached locally (a
-            // transitive dep of the workspace `url` crate).
-            RuntimeDep::Url => Some(&[("form_urlencoded", "\"1.2\"")]),
+            // `DsUrlSearchParams` routes through (cached locally as a transitive
+            // dep of the workspace `url` crate).
+            RuntimeDep::Url => Some(&[
+                ("url", "\"2\""),
+                ("serde", "\"1\""),
+                ("form_urlencoded", "\"1.2\""),
+            ]),
             RuntimeDep::Error => None,
             RuntimeDep::Assert => None,
             RuntimeDep::WptAssert => None,

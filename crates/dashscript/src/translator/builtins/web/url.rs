@@ -7,9 +7,10 @@
 //! receiver's resolved type. ES coerces each name/value argument via ToString
 //! (a `number` routes through `number_to_string`), so the arguments go through
 //! `es_to_string_arg` before the inherent methods — otherwise a numeric value
-//! (`params.set("id", 0)`) fails `AsRef<str>`. `URL` (the full WHATWG URL
-//! parser) is a later Tier 1 batch — it needs the `url` crate's spec-compliant
-//! parser, not just `form_urlencoded`.
+//! (`params.set("id", 0)`) fails `AsRef<str>`. `new URL(input[, base])` lowers
+//! to `DsUrl::parse`/`parse_with_base` (a `url::Url` wrapper, injected by the
+//! same `Url` runtime dep); its component accessors (`href`/`origin`/
+//! `protocol`/…) are dispatched in `member.rs`.
 
 use oxc_ast::ast::{Argument, StaticMemberExpression};
 use syn::{parse_quote, Expr, Type};
@@ -19,12 +20,13 @@ use super::super::super::expressions::{is_url_search_params_local, translate_exp
 use super::super::es_to_string_arg;
 
 /// The Rust type a WHATWG URL API constructor builds, if `name` is one:
-/// `URLSearchParams` → `crate::__ds::DsUrlSearchParams`. `None` for any other
-/// name. (`URL` — the full WHATWG URL parser — is a later Tier 1 batch; it
-/// needs the `url` crate's spec-compliant parser, not just `form_urlencoded`.)
+/// `URLSearchParams` → `crate::__ds::DsUrlSearchParams`, `URL` →
+/// `crate::__ds::DsUrl`. `None` for any other name (the `new` lowering falls
+/// through to the generic `Foo::new` path and surfaces at `cargo check`).
 pub(in crate::translator) fn url_ctor_type(name: &str) -> Option<Type> {
     match name {
         "URLSearchParams" => Some(parse_quote!(crate::__ds::DsUrlSearchParams)),
+        "URL" => Some(parse_quote!(crate::__ds::DsUrl)),
         _ => None,
     }
 }
