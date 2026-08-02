@@ -437,6 +437,15 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
     }
     // Global conversion functions: `String(x)`, `parseInt(s)`, `parseFloat(s)`.
     if let Expression::Identifier(id) = &call.callee {
+        // Bare `assert(mustBeTrue[, message])` — test262's truth assert, lowered
+        // to `assert_same_value(mustBeTrue, true)` (see `assert_call`). Dispatched
+        // before `global_function` so the bare-callee form does not fall through
+        // to a phantom `assert` binding (E0425).
+        if id.name.as_str() == "assert" {
+            if let Some(expr) = builtins::assert_call(call.arguments.as_slice(), ctx) {
+                return expr;
+            }
+        }
         if let Some(expr) = builtins::global_function(id, call.arguments.as_slice(), ctx) {
             return expr;
         }

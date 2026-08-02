@@ -2238,7 +2238,23 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
     }
     let (rust, deps) = match translate_catch(&raw.fixture) {
         Ok(r) => r,
-        Err(e) => return ("partial", e),
+        Err(e) => {
+            // The translator itself failed (a `quote`/`Ident::new` panic on a
+            // construct it cannot lower — e.g. a non-ASCII member name). That is
+            // a stricter failure than a cargo-check-fail (no Rust was produced
+            // at all), so the same "degrade, don't reject" contract applies:
+            // fall back to the engine so the fixture still runs under QuickJS
+            // rather than reporting a translator-only partial. Only upgrade to
+            // supported; if the engine also fails, keep `partial` carrying both.
+            let (estatus, edetail) = run_engine(raw);
+            if estatus == "supported" {
+                return (
+                    "supported",
+                    "engine fallback after translate failure".into(),
+                );
+            }
+            return ("partial", format!("translate: {e} | engine: {edetail}"));
+        }
     };
     // Engine path: ES reflection the static translator cannot lower. Run the
     // source in-process under QuickJS with the test262 harness injected, so

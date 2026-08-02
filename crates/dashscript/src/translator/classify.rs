@@ -477,11 +477,16 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
         }
         return degrade("Temporal.* unmapped/type-mismatched coercion → engine (polyfill)");
     }
-    // Bare `assert(x)` — test262's shorthand for `assert.sameValue(x, true)`.
-    // No static lowering yet; degrade so the engine's `assert.js` runs it.
+    // Bare `assert(mustBeTrue[, message])` — test262's `assert` passes iff
+    // `mustBeTrue === true` (strict, per assert.js), i.e. exactly
+    // `assert.sameValue(mustBeTrue, true)`, so it lowers statically. Keeping
+    // these fixtures off the engine matters where the engine cannot parse the
+    // source's ES2025 regex (`(?s:…)` modifiers, duplicate named groups):
+    // regress parses them, QuickJS-NG does not — the engine path would
+    // SyntaxError where the static path runs the assert.
     if let Expression::Identifier(id) = &c.callee {
         if id.name.as_str() == "assert" {
-            return degrade("`assert(x)` needs the engine (test262 harness)");
+            return Mapping::Mapped;
         }
         // A test262 harness helper (`isConstructor`, `compareArray`,
         // `verifyProperty`, `testWithTypedArrayConstructors`, …) is defined only

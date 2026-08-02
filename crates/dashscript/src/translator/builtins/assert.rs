@@ -63,3 +63,16 @@ fn assert_throws_expr(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     let f = translate_argument(args.get(1)?, ctx);
     Some(parse_quote!(crate::__ds::assert_throws(#ctor, #f)))
 }
+
+/// Bare `assert(mustBeTrue[, message])` → `__ds::assert_same_value(&cond, &true)`.
+/// test262's `assert(mustBeTrue)` passes iff `mustBeTrue === true` (strict, per
+/// assert.js), so it is exactly `assert.sameValue(mustBeTrue, true)`. The optional
+/// `message` is dropped — the conformance verdict keys off the `Test262Error:`
+/// prefix only, never the text. Keeping this off the engine matters where the
+/// engine cannot parse the source's ES2025 regex (`(?s:…)`, dup-names): regress
+/// parses them, QuickJS-NG does not. Returns `None` only if there is no
+/// condition operand (a malformed `assert()`).
+pub(in crate::translator) fn assert_call(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    let cond = translate_argument(args.first()?, ctx);
+    Some(parse_quote!(crate::__ds::assert_same_value(&(#cond), &true)))
+}
