@@ -221,7 +221,10 @@ fn translates_string_from_char_code_to_char() {
 
 #[test]
 fn translates_string_code_point_at() {
-    let src = "function f(s: string): number { return s.codePointAt(0); }";
+    // `codePointAt` returns `number | undefined`, lowered to `Option<f64>`
+    // (out-of-range or negative → `None`). Bind it to exercise the
+    // surrogate-aware emit; the call site owns any defaulting.
+    let src = "function f(s: string): void { let _ = s.codePointAt(0); }";
     let rust = Translator::new().translate(src).expect("should translate");
     // UTF-16 code-unit index + lead/trail surrogate merge — mirrors
     // `charCodeAt`'s `encode_utf16` path. `chars().nth` (scalar values) is
