@@ -945,6 +945,20 @@ var __ds_atomics_clock = 0;
   try {
     Object.defineProperty(Atomics, 'wait', {
       value: function (ta, index, value, timeout) {
+        // ES ValidateSharedIntegerTypedArray(ta, onlyInt32=false): ta must be
+        // an Int32Array OR BigInt64Array view on a SharedArrayBuffer, validated
+        // before index/value/timeout coercion (Atomics.wait accepts both — the
+        // BigInt64 path carries a BigInt value). The single-thread sim
+        // overrides native wait; re-add these checks so the
+        // "validate-arraytype-before-*", "non-int32-typedarray",
+        // "non-shared-bufferdata", "not-a-typedarray", "not-an-object", and
+        // "null-bufferdata" fixtures still throw TypeError. Index/value/timeout
+        // coercion stays native (delegated to Atomics.load below), so bad-range
+        // still raises RangeError.
+        var isInt32 = (typeof Int32Array !== 'undefined' && ta instanceof Int32Array);
+        var isBig64 = (typeof BigInt64Array !== 'undefined' && ta instanceof BigInt64Array);
+        if (!isInt32 && !isBig64) throw new TypeError("Atomics.wait requires a shared Int32Array or BigInt64Array");
+        if (!(ta.buffer instanceof SharedArrayBuffer)) throw new TypeError("Atomics.wait requires a SharedArrayBuffer");
         if (Atomics.load(ta, index) !== value) return "not-equal";
         var t = (timeout === undefined) ? Infinity : Number(timeout);
         if (t > 0 && isFinite(t)) __ds_atomics_clock += t;
