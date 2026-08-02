@@ -852,21 +852,27 @@ const CONSOLE_PRELUDE: &str =
 /// semantics need true parallel wake ordering stay `partial` — honest, not a
 /// fake pass.
 const AGENT_262_PRELUDE: &str = r#"
+// Simulated monotonic clock (ms). In one thread Atomics.wait always runs to
+// its full timeout (no concurrent waker), so it advances this clock by the
+// timeout — `$262.agent.monotonicNow` then reports a lapse consistent with
+// the "timed-out" outcome the no-spurious-wakeup fixtures assert on.
+var __ds_atomics_clock = 0;
 // Single-threaded Atomics.wait: with no concurrent waker, a blocking wait
 // would deadlock the main thread (an agent script's `Atomics.wait` runs
 // synchronously inside `start`/`broadcast`). Return immediately instead —
 // "not-equal" when the precondition fails, else "timed-out", the only
-// terminating outcome without a concurrent waker. This mirrors what a
-// single-threaded caller observes and keeps agent scripts from hanging on
-// the per-fixture timeout. Best-effort: if `Atomics.wait` is non-configurable
-// the define throws and is swallowed (the original blocks, bounded by the
-// harness timeout).
+// terminating outcome without a concurrent waker. The simulated clock is
+// advanced by the timeout so duration/lapse assertions hold. Best-effort:
+// if `Atomics.wait` is non-configurable the define throws and is swallowed
+// (the original blocks, bounded by the harness timeout).
 (function () {
   if (typeof Atomics === 'undefined') return;
   try {
     Object.defineProperty(Atomics, 'wait', {
       value: function (ta, index, value, timeout) {
         if (Atomics.load(ta, index) !== value) return "not-equal";
+        var t = (timeout === undefined) ? Infinity : Number(timeout);
+        if (t > 0 && isFinite(t)) __ds_atomics_clock += t;
         return "timed-out";
       },
       writable: true, configurable: true,
@@ -932,6 +938,10 @@ var $262 = (function () {
           }
         }
       },
+      // Host-defined monotonic clock (atomicsHelper.js does not provide it).
+      // Returns the simulated time advanced by Atomics.wait, so the
+      // duration/lapse assertions in the no-spurious-wakeup fixtures hold.
+      monotonicNow: function () { return __ds_atomics_clock; },
     },
   };
 })();
