@@ -200,6 +200,16 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         }
         // `123n` — BigInt literals.
         Expression::BigIntLiteral(_) => reject("`BigInt` literals are unsupported"),
+        // A string literal containing a lone surrogate (`"\uD800"`) — oxc
+        // decodes the lone surrogate to U+FFFD (Rust `&str` cannot represent
+        // surrogates), so the static string diverges from ES and any regex/
+        // char/length op on it is wrong. Degrade so QuickJS (which allows
+        // lone surrogates) carries the real semantics. A genuine U+FFFD char
+        // also matches; degrading it is harmless — the engine runs U+FFFD
+        // fine, so the verdict stays `supported`.
+        Expression::StringLiteral(s) if s.value.as_str().contains('\u{FFFD}') => {
+            degrade("a string literal with a lone surrogate needs the engine")
+        }
         // `await expr` — DashScript has no async runtime.
         Expression::AwaitExpression(_) => {
             reject("`await` is unsupported (DashScript has no async runtime)")
