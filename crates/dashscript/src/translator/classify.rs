@@ -19,7 +19,7 @@ use std::collections::HashMap;
 
 use oxc_ast::ast::{
     Argument, AssignmentTarget, BinaryOperator, CallExpression, Class, Expression, Function,
-    ObjectPropertyKind, PropertyKind, UnaryOperator,
+    ObjectPropertyKind, PropertyKind, StaticMemberExpression, UnaryOperator,
 };
 
 use super::builtins::{
@@ -151,6 +151,18 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
             )),
             _ => Mapping::Mapped,
         },
+        // `this` outside a class method — the static emit is a `compile_error!`
+        // (`this_expr`), so the enclosing function degrades to the engine
+        // rather than failing `cargo build`. (A class method's `this` is `self`
+        // and never reaches here — `collect_expr` does not walk class bodies, so
+        // every `this` this arm sees is genuinely outside a method.) This is the
+        // safety net for a `function` expression whose body now lowers to a
+        // closure: `arr.map(function () { return this; })` would otherwise emit
+        // `compile_error!` and break `ds build` (the conformance harness'
+        // cargo-check-fail fallback is harness-only).
+        Expression::ThisExpression(_) => {
+            degrade("`this` outside a class method needs the engine (no static lowering)")
+        }
         // A reflection call, a `Function`-value callee/argument, or a dynamic
         // method whose engine routing depends on the argument/loop context.
         Expression::CallExpression(c) => classify_call(c, ctx),
@@ -371,6 +383,19 @@ fn compare_operand_type(arg: Option<&Argument>, ctx: &ClassifyCtx) -> Option<Str
     }
 }
 
+/// The Temporal `<Type>` of a `<recv>.<method>` receiver, when `recv` is a
+/// local bound to a Temporal value of that type (in this walk). `None` for a
+/// non-Temporal local or any other receiver shape.
+fn temporal_receiver_ty(sm: &StaticMemberExpression, ctx: &ClassifyCtx) -> Option<String> {
+    let Expression::Identifier(id) = &sm.object else {
+        return None;
+    };
+    match ctx.local_kinds.get(id.name.as_str())? {
+        LocalKind::Temporal(ty) => Some(ty.clone()),
+        LocalKind::NonString | LocalKind::String => None,
+    }
+}
+
 /// Classify an assignment's left-hand target — `prototype` mutation, an ES
 /// match-result field write, or a `<re>.lastIndex = …` write. The target's
 /// object/expression children are classified separately by the walk.
@@ -458,25 +483,12 @@ pub(in crate::translator) fn classify_class(class: &Class) -> Mapping {
 /// as callee/argument, `JSON.<other>`, or a dynamic regex/search method
 /// degrades to the engine.
 fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
-    // A WPT testharness mapped function (`test`/`assert_throws_dom`/…) lowers
-    // statically EVEN when its argument is a `function` expression — `test(fn,
-    // name)` emits `(fn)()` and `assert_throws_dom(name, fn)` emits a closure
-    // around `fn`. The body is the static lowering, not a callback, so skip the
-    // generic function-expression-as-argument degrade for these; control falls
-    // through to the testharness mapped→Mapped arm below.
-    let callee_is_testharness = matches!(&c.callee, Expression::Identifier(id)
-        if is_testharness_mapped(id.name.as_str()));
-    if !callee_is_testharness
-        && (is_function_expression(&c.callee)
-            || c.arguments
-                .iter()
-                .any(|a| a.as_expression().is_some_and(is_function_expression)))
-    {
-        return degrade(
-            "a `function` expression as a callee (IIFE) or argument (callback) needs the engine \
-             (no static lowering)",
-        );
-    }
+    // A `function` expression (IIFE callee or callback argument) lowers
+    // statically to a closure (`function_expr_to_closure`), the same shape a
+    // block-body arrow takes — so it no longer degrades. A body using
+    // `this`/`arguments`/`super` keeps the closure shape but its `this` emits a
+    // `compile_error!`; cargo check then fails and the enclosing function
+    // degrades to the engine (the static path stays for the common callback).
     // `Temporal.<Type>.<method>(…)` — route to the static `temporal_rs` mapping
     // when the pair is mapped AND the args are type-compatible with the static
     // emit (a `from(item)` only for a string operand; a `compare(a, b)` only
@@ -537,6 +549,19 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
         return Mapping::Mapped;
     };
     let prop = sm.property.name.as_str();
+    // `<temporal>.toString({options})` / `<temporal>.toJSON({options})` — the
+    // static `Display` emit ignores the options bag (`calendarName` /
+    // `fractionalSecondDigits` / `roundingMode` / …), so a call WITH arguments
+    // degrades to the engine, whose polyfill honours them. A bare
+    // `<temporal>.toString()` stays on the static `Display` path.
+    if matches!(prop, "toString" | "toJSON") && !c.arguments.is_empty() {
+        if let Some(ty) = temporal_receiver_ty(sm, ctx) {
+            return degrade_owned(format!(
+                "`{ty}.{{toString|toJSON}}(options)` — the static `Display` emit ignores the \
+                 options bag — runs under the engine"
+            ));
+        }
+    }
     // `<engine-value-global>.<method>(…)` — these globals (`Date`, `Promise`,
     // `Atomics`, the typed-array constructors, the test262 `TemporalHelpers`/
     // `$262` harness objects, …) carry no static member-call mapping; the
@@ -766,19 +791,6 @@ fn array_search_arg_needs_engine(args: &[Argument]) -> bool {
         | Expression::NullLiteral(_) => true,
         Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Void) => true,
         Expression::Identifier(id) if id.name.as_str() == "undefined" => true,
-        _ => false,
-    }
-}
-
-/// True when `expr` is a `function` expression, unwrapping the paren / TS
-/// wrappers oxc keeps around an IIFE callee or a typed callback.
-fn is_function_expression(e: &Expression) -> bool {
-    match e {
-        Expression::FunctionExpression(_) => true,
-        Expression::ParenthesizedExpression(p) => is_function_expression(&p.expression),
-        Expression::TSAsExpression(a) => is_function_expression(&a.expression),
-        Expression::TSTypeAssertion(t) => is_function_expression(&t.expression),
-        Expression::TSNonNullExpression(n) => is_function_expression(&n.expression),
         _ => false,
     }
 }
@@ -1015,9 +1027,24 @@ mod tests {
     }
 
     #[test]
-    fn degrades_function_iife() {
+    fn maps_function_iife() {
+        // A `function` expression (IIFE callee or callback) lowers to a closure
+        // (`function_expr_to_closure`), the same shape a block-body arrow takes,
+        // so it stays mapped rather than degrading to the engine.
+        assert!(classify_first_expr("(function () { return 1; })()").is_mapped());
+    }
+
+    #[test]
+    fn degrades_this_outside_method() {
+        // `this` outside a class method has no static lowering — the static emit
+        // is `compile_error!`, so it degrades to the engine. This is the safety
+        // net for a `function`-expression callback whose body now lowers to a
+        // closure: `function () { return this; }` would otherwise break `ds build`.
+        // (`collect_expr` recurses the IIFE body in the `program_uses_engine`
+        // walk, so the `this` inside is caught there; here the bare `this` tests
+        // the arm directly.)
         assert!(matches!(
-            classify_first_expr("(function () { return 1; })()"),
+            classify_first_expr("this"),
             Mapping::DegradeEngine(_)
         ));
     }
@@ -1359,5 +1386,27 @@ mod tests {
         );
         let m = classify_first_expr_ctx("Temporal.PlainDate.compare(a, b)", false, &vars);
         assert!(matches!(m, Mapping::DegradeEngine(_)));
+    }
+
+    #[test]
+    fn degrades_temporal_to_string_with_options() {
+        // `<temporal>.toString({options})` — the static `Display` emit ignores
+        // the options bag (`calendarName` / `fractionalSecondDigits` /
+        // `roundingMode` / …), so a call WITH arguments degrades to the engine,
+        // whose polyfill honours them. A bare `<temporal>.toString()` stays on
+        // the static `Display` path.
+        let mut vars = HashMap::new();
+        vars.insert(
+            "x".to_string(),
+            LocalKind::Temporal("PlainDate".to_string()),
+        );
+        let with_opts =
+            classify_first_expr_ctx("x.toString({ calendarName: 'always' })", false, &vars);
+        assert!(
+            matches!(with_opts, Mapping::DegradeEngine(_)),
+            "toString(options) must degrade: {with_opts:?}"
+        );
+        let bare = classify_first_expr_ctx("x.toString()", false, &vars);
+        assert!(bare.is_mapped(), "bare toString stays static: {bare:?}");
     }
 }

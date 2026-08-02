@@ -383,6 +383,15 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         Expression::TSInstantiationExpression(i) => translate_expr(&i.expression, ctx),
         // Functions, sequences, references.
         Expression::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx, false),
+        // A non-async, non-generator `function` expression lowers to the same
+        // closure as a block-body arrow (`function_expr_to_closure`). A body
+        // using `this`/`arguments`/`super` (no static lowering) keeps the
+        // closure shape but its `this` emits a `compile_error!`, so cargo check
+        // fails and the enclosing function degrades to the engine — the common
+        // callback form (`arr.map(function (x) { … })`) and IIFE stay static.
+        Expression::FunctionExpression(f) => {
+            function_expr_to_closure(f, ctx).unwrap_or_else(unsupported_expr)
+        }
         Expression::SequenceExpression(s) => sequence_expr(s, ctx),
         // User-written parens are unwrapped; `prettyplease` re-adds any needed
         // for precedence (e.g. `(a + b) * c` round-trips correctly).
@@ -406,7 +415,6 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         | Expression::JSXFragment(_)
         | Expression::V8IntrinsicExpression(_)
         | Expression::BigIntLiteral(_)
-        | Expression::FunctionExpression(_)
         | Expression::ClassExpression(_)
         | Expression::TaggedTemplateExpression(_) => unsupported_expr(),
     }
@@ -566,6 +574,9 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::TSAsExpression(a) => translate_expr(&a.expression, ctx),
         Argument::TSTypeAssertion(t) => translate_expr(&t.expression, ctx),
         Argument::ArrowFunctionExpression(arrow) => arrow_expr(arrow, ctx, false),
+        Argument::FunctionExpression(f) => {
+            function_expr_to_closure(f, ctx).unwrap_or_else(unsupported_expr)
+        }
         Argument::ParenthesizedExpression(p) => translate_expr(&p.expression, ctx),
         Argument::ThisExpression(_) => super::context::this_expr(ctx),
         Argument::NewExpression(n) => new::new_expr(n, ctx),
@@ -597,7 +608,6 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         | Argument::JSXFragment(_)
         | Argument::V8IntrinsicExpression(_)
         | Argument::BigIntLiteral(_)
-        | Argument::FunctionExpression(_)
         | Argument::ClassExpression(_)
         | Argument::TaggedTemplateExpression(_)
         | Argument::SpreadElement(_) => unsupported_expr(),

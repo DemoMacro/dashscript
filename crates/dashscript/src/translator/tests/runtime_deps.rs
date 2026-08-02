@@ -1026,33 +1026,33 @@ fn check_rejects_match_result_property_assignment() {
 }
 
 #[test]
-fn function_expression_callback_routes_to_engine() {
+fn function_expression_callback_stays_static() {
     // `[1].find(function (kValue) { … })` — a `function` expression as a call
-    // argument (a callback) has no static lowering (`translate_expr` maps a
-    // `FunctionExpression` to `todo!()`), so the call site is `!` (never) and
-    // fails `cargo check` (E0618 "expected function, found `!`"). The engine
-    // (rquickjs) runs the callback verbatim. (An arrow callback stays mapped.)
+    // argument (a callback) lowers to a Rust closure (`function_expr_to_closure`),
+    // the same shape a block-body arrow takes, so the program does NOT pull the
+    // engine. (A body using `this` would still route to the engine via the
+    // harness' cargo-check-fail fallback, since its `this` emits `compile_error!`.)
     let src = "function main(): void {\n  const r = [1, 2, 3].find(function (kValue) { return kValue > 1; });\n  console.log(r);\n}";
     let (_rust, deps) = Translator::new()
         .translate_with_deps(src)
         .expect("translate_with_deps");
     assert!(
-        deps.needs_engine(),
-        "function-expression callback should flip needs_engine, got deps: {deps:?}"
+        !deps.needs_engine(),
+        "function-expression callback must stay static, got deps: {deps:?}"
     );
 }
 
 #[test]
-fn iife_routes_to_engine() {
-    // `(function () { … })()` — an IIFE's callee is a `function` expression,
-    // which has no static lowering, so the whole program routes to the engine.
+fn iife_stays_static() {
+    // `(function () { … })()` — an IIFE's callee is a `function` expression
+    // that lowers to a closure, so the program does NOT pull the engine.
     let src = "function main(): void {\n  (function () { console.log(1); })();\n}";
     let (_rust, deps) = Translator::new()
         .translate_with_deps(src)
         .expect("translate_with_deps");
     assert!(
-        deps.needs_engine(),
-        "an IIFE should flip needs_engine, got deps: {deps:?}"
+        !deps.needs_engine(),
+        "an IIFE must stay static, got deps: {deps:?}"
     );
 }
 

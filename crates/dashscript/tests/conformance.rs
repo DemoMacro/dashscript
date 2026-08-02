@@ -3006,3 +3006,54 @@ fn waitasync_polyfill_validation_and_returns() {
              r.async === true && r.value instanceof Promise"));
     });
 }
+
+#[test]
+fn function_expression_lowers_to_closure_not_engine() {
+    // task #421: a `function` expression as a callback (or IIFE) lowers to a
+    // closure (`function_expr_to_closure`), the same shape a block-body arrow
+    // takes — it no longer degrades to the engine. A body using `this` keeps
+    // the closure shape but its `this` emits `compile_error!`; cargo check
+    // then fails and the enclosing function degrades (covered by the harness'
+    // cargo-check-fail fallback, not re-asserted here).
+    let classify_static = |src: &str| !Translator::new().uses_engine(src);
+    // 1. classify: a callback / IIFE no longer triggers engine degrade.
+    assert!(
+        classify_static("[1, 2].map(function (x) { return x * 2; });"),
+        "callback `function` expression must classify as Mapped"
+    );
+    assert!(
+        classify_static("(function () { return 1; })();"),
+        "IIFE `function` expression must classify as Mapped"
+    );
+    // A `function` expression body using `this` (no static lowering — `this` is
+    // only valid in a class method) must still route to the engine, since the
+    // static emit would produce `compile_error!` and break `ds build` (the
+    // conformance harness' cargo-check-fail fallback is harness-only).
+    assert!(
+        !classify_static("[1, 2].map(function (x) { return this; });"),
+        "a `function` expression body using `this` must route to the engine"
+    );
+    // 2. emit: translate produces a closure, not todo!().
+    let (rust, deps) = Translator::new()
+        .translate_with_deps("[1, 2].map(function (x) { return x * 2; });")
+        .expect("translate callback source");
+    assert!(
+        !rust.contains("todo!()"),
+        "function-expression callback must lower to a closure, not todo!():\n{rust}"
+    );
+    // 3. cargo check passes — the static closure is valid Rust.
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    write_project(&project, &rust, &deps);
+    let (ok, err) = cargo(
+        &project,
+        &target_dir,
+        &["check", "--quiet", "--message-format=short"],
+    );
+    assert!(
+        ok,
+        "static function-expression callback must compile: {err}\n--- emitted ---\n{rust}"
+    );
+}

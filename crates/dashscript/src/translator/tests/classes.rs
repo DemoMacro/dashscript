@@ -2,14 +2,21 @@
 use super::super::Translator;
 
 #[test]
-fn this_outside_method_is_compile_error() {
-    // `this` has no receiver at module scope or in a free function, so it lowers
-    // to a `compile_error!` (the generated Rust still parses; it fails loudly).
+fn this_outside_method_routes_to_engine() {
+    // `this` has no receiver at module scope or in a free function — no static
+    // lowering. Rather than emit `compile_error!` (which would break `ds build`
+    // in production — the conformance harness' cargo-check-fail fallback is
+    // harness-only), the function degrades to the engine: the emit carries the
+    // JS source verbatim for the engine to run.
     let src = "function f() { return this; }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains("compile_error"),
-        "this outside method: {rust}"
+        !rust.contains("compile_error"),
+        "`this` outside a method must route to the engine, not emit compile_error: {rust}"
+    );
+    assert!(
+        rust.contains("return this;"),
+        "the engine must receive the original `this` source verbatim: {rust}"
     );
 }
 
