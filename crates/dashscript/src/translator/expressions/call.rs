@@ -495,6 +495,16 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::url_search_params_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `url.searchParams.<method>(...)` — a URLSearchParams method through a
+        // DsUrl's live `searchParams` view (the receiver is `<DsUrl>.searchParams`,
+        // not a DsUrlSearchParams local). Dispatched right after the local form:
+        // a DsUrlSearchParams local receiver never matches the `<DsUrl>.searchParams`
+        // chain, so the two are mutually exclusive.
+        if let Some(expr) =
+            builtins::url_search_params_on_url_method(sm, call.arguments.as_slice(), ctx)
+        {
+            return expr;
+        }
         // `buf.set(source, offset)` on a `Uint8Array` (`Vec<u8>` local) — a
         // byte-buffer copy. Dispatched after `collection_method` so a `Map.set`
         // (a HashMap receiver) is handled first; only a `Vec<u8>` receiver

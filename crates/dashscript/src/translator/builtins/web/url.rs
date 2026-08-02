@@ -12,11 +12,11 @@
 //! same `Url` runtime dep); its component accessors (`href`/`origin`/
 //! `protocol`/…) are dispatched in `member.rs`.
 
-use oxc_ast::ast::{Argument, StaticMemberExpression};
+use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
 use syn::{parse_quote, Expr, Type};
 
 use super::super::super::context::Ctx;
-use super::super::super::expressions::{is_url_search_params_local, translate_expr};
+use super::super::super::expressions::{is_url_local, is_url_search_params_local, translate_expr};
 use super::super::es_to_string_arg;
 
 /// The Rust type a WHATWG URL API constructor builds, if `name` is one:
@@ -92,6 +92,72 @@ pub(in crate::translator) fn url_search_params_method(
         }
         "sort" if args.is_empty() => parse_quote!({ #obj.sort(); }),
         "toString" if args.is_empty() => parse_quote!(#obj.to_string()),
+        _ => return None,
+    })
+}
+
+/// `url.searchParams.<method>(...)` — a URLSearchParams method invoked through
+/// a DsUrl's live `searchParams` view. The receiver is `<DsUrl>.searchParams`
+/// (a `StaticMemberExpression` whose object is a `DsUrl` local and whose
+/// property is `searchParams`); the method mutates the URL's query in place,
+/// so it lowers to a `DsUrl::sp_<method>(&self, …)` call on the URL local.
+/// Returns `None` for any other receiver shape or an unmapped name, so the call
+/// falls through to a plain method call (cargo check rejects it honestly).
+pub(in crate::translator) fn url_search_params_on_url_method(
+    sm: &StaticMemberExpression,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    let Expression::StaticMemberExpression(inner) = &sm.object else {
+        return None;
+    };
+    if inner.property.name.as_str() != "searchParams" {
+        return None;
+    }
+    if !is_url_local(&inner.object, ctx) {
+        return None;
+    }
+    let url = translate_expr(&inner.object, ctx);
+    let name = sm.property.name.as_str();
+    Some(match name {
+        "get" => {
+            let k = es_to_string_arg(args.first()?, ctx);
+            parse_quote!(#url.sp_get(#k))
+        }
+        "has" => {
+            let k = es_to_string_arg(args.first()?, ctx);
+            if value_arg_absent(args.get(1)) {
+                parse_quote!(#url.sp_has(#k))
+            } else {
+                let v = es_to_string_arg(args.get(1)?, ctx);
+                parse_quote!(#url.sp_has_value(#k, #v))
+            }
+        }
+        "set" => {
+            let k = es_to_string_arg(args.first()?, ctx);
+            let v = es_to_string_arg(args.get(1)?, ctx);
+            parse_quote!({ #url.sp_set(#k, #v); })
+        }
+        "append" => {
+            let k = es_to_string_arg(args.first()?, ctx);
+            let v = es_to_string_arg(args.get(1)?, ctx);
+            parse_quote!({ #url.sp_append(#k, #v); })
+        }
+        "delete" => {
+            let k = es_to_string_arg(args.first()?, ctx);
+            if value_arg_absent(args.get(1)) {
+                parse_quote!({ #url.sp_delete(#k); })
+            } else {
+                let v = es_to_string_arg(args.get(1)?, ctx);
+                parse_quote!({ #url.sp_delete_value(#k, #v); })
+            }
+        }
+        "getAll" => {
+            let k = es_to_string_arg(args.first()?, ctx);
+            parse_quote!(#url.sp_get_all(#k))
+        }
+        "sort" if args.is_empty() => parse_quote!({ #url.sp_sort(); }),
+        "toString" if args.is_empty() => parse_quote!(#url.sp_to_string()),
         _ => return None,
     })
 }

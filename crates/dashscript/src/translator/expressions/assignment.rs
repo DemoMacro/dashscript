@@ -12,7 +12,7 @@ use super::super::bindings;
 use super::super::context::Ctx;
 use super::logical::assign_truthy;
 use super::member::{is_hashmap_local, static_member_is_optional_field};
-use super::{array_elem_expr, ident_expr, is_vec_u8, translate_expr};
+use super::{array_elem_expr, ident_expr, is_url_local, is_vec_u8, translate_expr};
 
 /// The lvalue kind of an assignment's left-hand side. A plain target is any
 /// Rust lvalue (`x`, `obj.field`, `arr[i as usize]`); a `m["k"]` on a
@@ -53,6 +53,13 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
         if let Some(setter) = ctx.names().mutable_static_setter(id) {
             return mutable_static_assign(a, id, &setter, ctx);
         }
+    }
+    // `url.search = s` / `url.protocol = s` / … — a WHATWG URL component setter
+    // on a DsUrl local. The Rust wrapper exposes setters (not fields), so the
+    // generic `obj.field = v` lowering would fail to compile; route through
+    // `url.set_<field>(v)`.
+    if let Some(setter) = url_setter_assign(a, ctx) {
+        return setter;
     }
     let right = translate_expr(&a.right, ctx);
     // Arithmetic (and plain `=`) compound assignments must match the target's
@@ -415,6 +422,30 @@ fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<As
         }
         _ => None,
     }
+}
+
+/// `url.<component> = value` — a WHATWG URL setter on a DsUrl local, if the
+/// field is a mapped component (`search`/…). Returns `None` for a non-URL
+/// receiver, an unmapped field, or a non-`=` operator, so the generic member
+/// assignment lowering handles everything else.
+fn url_setter_assign(a: &AssignmentExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+    if !matches!(a.operator, AssignmentOperator::Assign) {
+        return None;
+    }
+    let AssignmentTarget::StaticMemberExpression(sm) = &a.left else {
+        return None;
+    };
+    if !is_url_local(&sm.object, ctx) {
+        return None;
+    }
+    let setter = match sm.property.name.as_str() {
+        "search" => "set_search",
+        _ => return None,
+    };
+    let url = translate_expr(&sm.object, ctx);
+    let value = translate_expr(&a.right, ctx);
+    let method = Ident::new(setter, proc_macro2::Span::call_site());
+    Some(parse_quote!({ #url.#method(#value); }))
 }
 
 fn simple_target(target: &SimpleAssignmentTarget, ctx: &Ctx<'_>) -> Option<Expr> {

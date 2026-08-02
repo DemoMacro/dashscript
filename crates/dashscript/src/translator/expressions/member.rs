@@ -163,6 +163,17 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
         let obj = translate_expr(&sm.object, ctx);
         return parse_quote!((#obj.len() as f64));
     }
+    // `url.searchParams.size` — the live-view size on a DsUrl's searchParams.
+    // The `<url>.searchParams` object is not a Rust value (no field), so the
+    // `.size` access folds to a `sp_size()` call on the underlying URL local.
+    if field_name == "size" {
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            if inner.property.name.as_str() == "searchParams" && is_url_local(&inner.object, ctx) {
+                let url = translate_expr(&inner.object, ctx);
+                return parse_quote!((#url.sp_size() as f64));
+            }
+        }
+    }
     // `m.groups.name` — a named-capture access on a `.match`/`.exec` result.
     // The outer member's object is `<match-local>.groups`; `groups` is not a
     // Rust field on `DsMatch` (reached via `group_named`), so detect it before
@@ -221,6 +232,25 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             } else {
                 parse_quote!((#obj.#method() as f64))
             };
+        }
+    }
+    // `url.searchParams` as a standalone read (assigned/passed, not chained
+    // into a method call or `.size`) — a live view sharing the URL's query
+    // (an `Rc<RefCell<url::Url>>` clone), so mutations through the view are
+    // visible back on the URL. Method chains (`url.searchParams.delete(…)`)
+    // lower in the call dispatch; `.size` in the `size` arm above.
+    if field_name == "searchParams" && is_url_local(&sm.object, ctx) {
+        let obj = translate_expr(&sm.object, ctx);
+        return parse_quote!(#obj.sp_view());
+    }
+    // `url.href`/`.search`/`.origin`/… on a DsUrl local → the zero-arg
+    // accessor. ES `URL` exposes parsed components as properties; the Rust
+    // wrapper's accessors are methods, so `url.href` rewrites to `url.href()`.
+    if is_url_local(&sm.object, ctx) {
+        if let Some(m) = url_accessor(field_name) {
+            let method = Ident::new(m, Span::call_site());
+            let obj = translate_expr(&sm.object, ctx);
+            return parse_quote!(#obj.#method());
         }
     }
     // `tags.a` on a `Record`/HashMap local → `tags.get("a").<copied|cloned>().unwrap()`
@@ -732,6 +762,40 @@ pub(in crate::translator) fn is_url_search_params_local(expr: &Expression, ctx: 
         p.segments
             .last()
             .is_some_and(|s| s.ident == "DsUrlSearchParams")
+    })
+}
+
+/// True when `expr` is a local whose type is `crate::__ds::DsUrl` (a
+/// `new URL(...)` binding), so `url.href`/`.search`/… lower to accessors and
+/// `url.searchParams.<op>` to the live-view methods.
+pub(in crate::translator) fn is_url_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsUrl"))
+}
+
+/// The `__ds::DsUrl` accessor method name for an ES `URL` component property,
+/// or `None` for any other name (the access falls through to a struct field).
+/// Each ES property maps to a same-named zero-arg Rust method (`url.href` →
+/// `url.href()`); `searchParams` is not here — it is a live-view entry point,
+/// handled with its method/`size` in the call/member dispatch.
+fn url_accessor(field: &str) -> Option<&'static str> {
+    Some(match field {
+        "href" => "href",
+        "origin" => "origin",
+        "protocol" => "protocol",
+        "host" => "host",
+        "hostname" => "hostname",
+        "pathname" => "pathname",
+        "search" => "search",
+        "hash" => "hash",
+        "port" => "port",
+        "username" => "username",
+        "password" => "password",
+        _ => return None,
     })
 }
 
