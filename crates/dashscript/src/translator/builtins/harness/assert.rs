@@ -16,8 +16,8 @@ use oxc_ast::ast::{Argument, Expression};
 use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
-use super::super::context::Ctx;
-use super::super::expressions::translate_argument;
+use super::super::super::context::Ctx;
+use super::super::super::expressions::translate_argument;
 
 /// `assert.sameValue(a, b)` / `assert.notSameValue(a, b)` → a `__ds::assert_*`
 /// call (SameValue check; panics `Test262Error` on failure); `assert.throws`

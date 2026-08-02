@@ -27,7 +27,7 @@ use super::builtins::{
 };
 use super::globals::{
     is_engine_value_global, is_global_receiver, is_harness_helper, is_static_only_global,
-    is_unmapped_new_global,
+    is_testharness_mapped, is_testharness_rejected, is_unmapped_new_global,
 };
 
 /// How a single AST node lowers — the translator's translatability verdict,
@@ -458,12 +458,19 @@ pub(in crate::translator) fn classify_class(class: &Class) -> Mapping {
 /// as callee/argument, `JSON.<other>`, or a dynamic regex/search method
 /// degrades to the engine.
 fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
-    // A `function` expression as the callee (an IIFE) or as an argument (a
-    // callback) has no static lowering — degrade to the engine.
-    if is_function_expression(&c.callee)
-        || c.arguments
-            .iter()
-            .any(|a| a.as_expression().is_some_and(is_function_expression))
+    // A WPT testharness mapped function (`test`/`assert_throws_dom`/…) lowers
+    // statically EVEN when its argument is a `function` expression — `test(fn,
+    // name)` emits `(fn)()` and `assert_throws_dom(name, fn)` emits a closure
+    // around `fn`. The body is the static lowering, not a callback, so skip the
+    // generic function-expression-as-argument degrade for these; control falls
+    // through to the testharness mapped→Mapped arm below.
+    let callee_is_testharness = matches!(&c.callee, Expression::Identifier(id)
+        if is_testharness_mapped(id.name.as_str()));
+    if !callee_is_testharness
+        && (is_function_expression(&c.callee)
+            || c.arguments
+                .iter()
+                .any(|a| a.as_expression().is_some_and(is_function_expression)))
     {
         return degrade(
             "a `function` expression as a callee (IIFE) or argument (callback) needs the engine \
@@ -496,6 +503,22 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
     // SyntaxError where the static path runs the assert.
     if let Expression::Identifier(id) = &c.callee {
         if id.name.as_str() == "assert" {
+            return Mapping::Mapped;
+        }
+        // WPT testharness globals — `test()`/`assert_equals`/… (the
+        // web-platform analogue of test262's `assert`). The mapped set lowers
+        // statically to `__ds::wpt_*` (WinterTC is pure-Rust, no degradation);
+        // the rejected set (async/composite) has no static lowering and, per
+        // WinterTC's static-only contract, no engine fallback — honestly
+        // `unsupported` rather than degraded.
+        if is_testharness_rejected(id.name.as_str()) {
+            return reject_owned(format!(
+                "`{name}` is a WPT testharness function with no static lowering (async/composite) \
+                 — WinterTC is static-only, no degradation",
+                name = id.name.as_str()
+            ));
+        }
+        if is_testharness_mapped(id.name.as_str()) {
             return Mapping::Mapped;
         }
         // A test262 harness helper (`isConstructor`, `compareArray`,

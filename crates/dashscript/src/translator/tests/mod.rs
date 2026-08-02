@@ -21,5 +21,6 @@ mod number_methods;
 mod operators;
 mod runtime_deps;
 mod strings;
+mod testharness;
 mod transpile_js;
 mod types;

@@ -6,7 +6,7 @@ use oxc_ast::ast::Expression;
 use quote::format_ident;
 use syn::Ident;
 
-use super::is_ident;
+use super::super::is_ident;
 
 /// The Rust macro for a `console.<m>(…)` call: `log` → `println!`, `warn`/
 /// `error` → `eprintln!`. Returns `None` for any other member.

@@ -1,40 +1,52 @@
-//! ES built-in library mappings — one file per built-in, mirroring tc39
-//! test262's `test/built-ins/{Math,Array,String,Object,Number}/`. A test262
-//! differential failure (e.g. `test/built-ins/Math/round/…`) points straight
-//! at the matching file here (`math.rs`), so coverage gaps and the code that
-//! closes them stay co-located.
+//! Runtime library mappings, organised in four layers that mirror the four
+//! surfaces DashScript must translate (the same separation Deno's `ext/` uses):
 //!
-//! `mod.rs` re-exports each built-in's mapping functions in one flat namespace
-//! — `expressions` calls `builtins::math_method`, `builtins::array_static`, …
-//! — and holds the helpers shared across built-ins (`map_method`, `is_ident`,
-//! `usize_arg`, `str_method_arg`). Global conversion functions
-//! (`parseInt`/`String(x)`/`Number(s)`/…) live in `global.rs`; `console` in
-//! `console.rs`. Future Node standard libraries (`node:crypto`/`node:zlib`/
-//! `node:fs`) will live under `node/`, parallel to the ES built-ins.
+//! - **ECMAScript built-ins** (top level, one file per built-in) — mirror tc39
+//!   test262's `test/built-ins/{Math,Array,String,Object,Number}/`, so a
+//!   test262 differential failure points straight at the file here (`math.rs`).
+//! - **Web API / WinterTC** (`web/`) — host-defined Web globals (Ecma TC55
+//!   «Minimum Common Web API»: `console`, `TextEncoder`/`TextDecoder`, and
+//!   forthcoming `URL`/`crypto`/`atob`/…), mapped to Rust crates the way Deno's
+//!   `ext/web` + `ext/<api>/` back them.
+//! - **Node modules** (`node/`) — `node:` imports (`node:fs`/`node:crypto`/…),
+//!   parallel to Deno's `ext/node`.
+//! - **Conformance test harness** (`harness/`) — orthogonal to the three
+//!   runtime layers: the test262 `assert.sameValue` and WPT `test()`/
+//!   `assert_equals()` APIs a conformance fixture calls, lowered to
+//!   `__ds::assert_*`/`__ds::wpt_*` so the fixture runs on the static path.
+//!
+//! `mod.rs` re-exports each mapping in one flat namespace — `expressions` calls
+//! `builtins::math_method`, `builtins::assert_call`, … — and holds the helpers
+//! shared across built-ins (`map_method`, `is_ident`, `usize_arg`,
+//! `str_method_arg`). Global conversion functions (`parseInt`/`String(x)`/
+//! `Number(s)`/…) live in `global.rs`.
 
+// ECMAScript built-ins (ECMA-262) — mirror tc39 test262's
+// `test/built-ins/<cat>/`.
 mod array;
-mod assert;
 mod collection;
-mod console;
-mod encoding;
 mod global;
 mod json;
 mod math;
-mod node;
 mod number;
 mod object;
 mod string;
 mod temporal;
 mod typed_array;
 
+// Web API / WinterTC (Ecma TC55) and Node modules — host-defined globals and
+// `node:` imports mapped to Rust crates.
+mod node;
+mod web;
+
+// Conformance test harness (test262 `assert` + WPT `testharness`) — orthogonal.
+mod harness;
+
 #[cfg(test)]
 mod drift_guard;
 
 pub(in crate::translator) use array::{array_method, array_method_on, array_static};
-pub(in crate::translator) use assert::{assert_call, assert_method};
 pub(in crate::translator) use collection::collection_method;
-pub(in crate::translator) use console::console_method;
-pub(in crate::translator) use encoding::encoding_ctor_type;
 pub(in crate::translator) use global::{
     global_function, reg_exp_constructor, reg_exp_static, to_number_expr,
 };
@@ -48,6 +60,9 @@ pub(in crate::translator) use temporal::{
     temporal_static, temporal_static_maps, temporal_type_of_callee, TEMPORAL_TYPES,
 };
 pub(in crate::translator) use typed_array::typed_array_method;
+
+pub(in crate::translator) use harness::{assert_call, assert_method, testharness_function};
+pub(in crate::translator) use web::{console_method, encoding_ctor_type};
 
 use oxc_ast::ast::{Argument, Expression};
 use proc_macro2::Span;

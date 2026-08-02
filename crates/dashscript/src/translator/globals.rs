@@ -225,6 +225,68 @@ pub fn is_harness_helper(name: &str) -> bool {
     HARNESS_HELPER_GLOBALS.contains(&name)
 }
 
+/// WPT (web-platform-tests) testharness global functions DashScript lowers
+/// statically to `__ds::wpt_*` Rust helpers — the web-platform analogue of
+/// test262's `assert.sameValue`, run on the **static path** (translate → cargo
+/// → run). WinterTC conformance is pure-Rust: these never degrade to the
+/// engine. A bare call to one of these names classifies `Mapped`; see
+/// [`TESTHARNESS_REJECTED_GLOBALS`] for the async/composite forms with no
+/// static lowering. Distinct from [`HARNESS_HELPER_GLOBALS`] (test262's
+/// `$INCLUDE` helpers, which DO degrade — different harness, different layer).
+pub const TESTHARNESS_MAPPED_GLOBALS: &[&str] = &[
+    "test",
+    "setup",
+    "done",
+    "assert_equals",
+    "assert_not_equals",
+    "assert_true",
+    "assert_false",
+    "assert_throws_dom",
+    "assert_throws_js",
+    "assert_unreached",
+];
+
+/// True if `name` is a WPT testharness function with a static `__ds::wpt_*`
+/// lowering. See [`TESTHARNESS_MAPPED_GLOBALS`].
+#[inline]
+pub fn is_testharness_mapped(name: &str) -> bool {
+    TESTHARNESS_MAPPED_GLOBALS.contains(&name)
+}
+
+/// WPT testharness functions with NO static lowering — the async forms
+/// (`async_test`/`promise_test`, which need a runtime/tokio the static path
+/// does not ship) and the composite asserts (`assert_array_equals`/
+/// `assert_object_equals`/`assert_approx_equals`/…, whose operands are not
+/// plain `DsSameValue` scalars). Unlike test262's degrade-don't-reject, WinterTC
+/// is static-only — a fixture using one of these is honestly `unsupported`, not
+/// engine-degraded. Growing [`TESTHARNESS_MAPPED_GLOBALS`] (add a `__ds::wpt_*`
+/// helper + a `testharness_function` arm, then move the name here→there) is how
+/// WinterTC coverage expands.
+pub const TESTHARNESS_REJECTED_GLOBALS: &[&str] = &[
+    "async_test",
+    "promise_test",
+    "assert_array_equals",
+    "assert_object_equals",
+    "assert_approx_equals",
+    "assert_less",
+    "assert_greater",
+    "assert_between",
+    "assert_own_property",
+    "assert_not_own_property",
+    "assert_inherits",
+    "assert_readonly",
+    "assert_implements",
+    "assert_implements_float",
+    "generate_string",
+];
+
+/// True if `name` is a WPT testharness function with no static lowering (and no
+/// engine fallback — WinterTC is static-only). See [`TESTHARNESS_REJECTED_GLOBALS`].
+#[inline]
+pub fn is_testharness_rejected(name: &str) -> bool {
+    TESTHARNESS_REJECTED_GLOBALS.contains(&name)
+}
+
 /// ES builtin/wrapper constructors whose `new <X>(…)` form has no static
 /// lowering in `expressions/new`. `new_expr` special-cases `Map`/`WeakMap`/
 /// `Set`/`WeakSet`, the `u8` typed arrays, `RegExp`, `TextEncoder`/
@@ -300,7 +362,8 @@ mod drift {
     //! first arm to match wins, so the verdict silently depends on list order
     //! rather than intent. These tests pin the disjointness the comments claim.
     use super::{
-        ENGINE_VALUE_GLOBALS, HARNESS_HELPER_GLOBALS, STATIC_ONLY_GLOBALS, UNMAPPED_NEW_GLOBALS,
+        ENGINE_VALUE_GLOBALS, HARNESS_HELPER_GLOBALS, STATIC_ONLY_GLOBALS,
+        TESTHARNESS_MAPPED_GLOBALS, TESTHARNESS_REJECTED_GLOBALS, UNMAPPED_NEW_GLOBALS,
     };
 
     fn intersect(a: &[&'static str], b: &[&'static str]) -> Vec<&'static str> {
@@ -343,6 +406,39 @@ mod drift {
                  helper is never an ES global; a dual-listed name's verdict depends on Identifier \
                  arm order, not intent"
             );
+        }
+    }
+
+    #[test]
+    fn testharness_lists_disjoint_and_distinct() {
+        // mapped ∩ rejected = ∅: a name in both has an ambiguous verdict (the
+        // classify_call arm checks rejected before mapped, but a dual-listed
+        // name is still an undocumented drift — pick one list).
+        let overlap = intersect(TESTHARNESS_MAPPED_GLOBALS, TESTHARNESS_REJECTED_GLOBALS);
+        assert!(
+            overlap.is_empty(),
+            "TESTHARNESS_MAPPED_GLOBALS ∩ TESTHARNESS_REJECTED_GLOBALS = {overlap:?} (non-empty): \
+             a WPT testharness name in both has an ambiguous verdict"
+        );
+        // A WPT testharness name is never a test262 harness helper, an ES
+        // engine-value global, a static-only global, or an unmapped `new` global
+        // — a dual-listed name's classify_call verdict would depend on arm
+        // order, not intent.
+        for (label, list) in [
+            ("HARNESS_HELPER_GLOBALS", HARNESS_HELPER_GLOBALS),
+            ("ENGINE_VALUE_GLOBALS", ENGINE_VALUE_GLOBALS),
+            ("STATIC_ONLY_GLOBALS", STATIC_ONLY_GLOBALS),
+            ("UNMAPPED_NEW_GLOBALS", UNMAPPED_NEW_GLOBALS),
+        ] {
+            for th in [TESTHARNESS_MAPPED_GLOBALS, TESTHARNESS_REJECTED_GLOBALS] {
+                let overlap = intersect(th, list);
+                assert!(
+                    overlap.is_empty(),
+                    "testharness ∩ {label} = {overlap:?} (non-empty): a WPT testharness name is \
+                     never an ES/test262 global; a dual-listed name's verdict depends on \
+                     classify_call arm order, not intent"
+                );
+            }
         }
     }
 }

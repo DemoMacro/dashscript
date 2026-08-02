@@ -433,6 +433,82 @@ impl<T: DsSameValue> DsSameValue for Option<T> {
         }
     }
 }
+
+// WPT (web-platform-tests) testharness asserts — the web-platform analogue of
+// test262's `assert.sameValue`. A WinterTC conformance fixture runs on the
+// static path (translate → cargo → run), so these lower to Rust helpers in the
+// same `__ds` module and panic an `AssertionError` on failure (the WPT
+// testharness convention). The `AssertionError:` prefix lets the conformance
+// harness distinguish a WPT assert failure (`partial`) from a build error
+// (`unsupported`), the way `Test262Error:` does for test262. Composite WPT
+// asserts (`assert_array_equals`/`assert_object_equals`/…) and async forms
+// (`async_test`/`promise_test`) stay `unsupported` — the WinterTC path is
+// static-only (degrade-don't-reject does not apply to Web APIs).
+
+/// WPT `assert_equals(a, b)` — panics an `AssertionError` on mismatch. Same
+/// SameValue (Object.is) semantics as `assert_same_value`; two type params so
+/// a `&str` operand and a `String` operand (both TS `string`) compare. WPT's
+/// `assert_true(x)`/`assert_false(x)` route here too against `&true`/`&false`
+/// (WPT requires `actual === true`/`=== false` strictly — SameValue against the
+/// boolean is exactly that, and accepts any `DsSameValue` operand type).
+#[inline]
+pub fn wpt_assert_equals<A: DsSameValue, B: DsSameValue>(a: &A, b: &B) {
+    if !a.ds_cmp().same(&b.ds_cmp()) {
+        panic!(
+            "AssertionError: Expected SameValue(«{:?}», «{:?}») to be true",
+            a, b
+        );
+    }
+}
+
+/// WPT `assert_not_equals(a, b)` — panics if the values are SameValue.
+#[inline]
+pub fn wpt_assert_not_equals<A: DsSameValue, B: DsSameValue>(a: &A, b: &B) {
+    if a.ds_cmp().same(&b.ds_cmp()) {
+        panic!(
+            "AssertionError: Expected SameValue(«{:?}», «{:?}») to be false",
+            a, b
+        );
+    }
+}
+
+/// WPT `assert_throws_dom(name, fn)` / `assert_throws_js(ctor, fn)` —
+/// catch_unwinds `fn` and checks the thrown error's class (`DsError.name`)
+/// equals `expected` (a DOMException name like `"NetworkError"` or a JS
+/// constructor name like `"TypeError"`). Passes silently on a match; a
+/// mismatch or a no-throw return panics an `AssertionError`. `R` is the
+/// closure's return type (discarded). Uses `catch_quiet`/`DsError` from the
+/// Error slice, so a fixture using `wpt_assert_throws` pulls `RuntimeDep::Error`
+/// (the WptAssert→Error联动 in `translator/mod.rs`).
+#[inline]
+pub fn wpt_assert_throws<R>(expected: &str, f: impl FnOnce() -> R) {
+    match catch_quiet(::std::panic::AssertUnwindSafe(f)) {
+        Err(payload) => {
+            let got = DsError::from_panic(&payload)
+                .map(|e| e.name.to_string())
+                .unwrap_or_else(|| "Error".to_string());
+            if got == expected {
+                return;
+            }
+            panic!(
+                "AssertionError: Expected a {expected} to be thrown but got a {got}"
+            );
+        }
+        Ok(_) => {
+            panic!(
+                "AssertionError: Expected a {expected} to be thrown but no exception was thrown"
+            )
+        }
+    }
+}
+
+/// WPT `assert_unreached([msg])` — always panics an `AssertionError`. The
+/// optional message is dropped at the call site (the verdict keys off the
+/// `AssertionError:` prefix only).
+#[inline]
+pub fn wpt_assert_unreached() {
+    panic!("AssertionError: unreachable");
+}
 "#;
 
 /// The `serde_json::Value` `DsSameValue` impl — emitted only when both `Assert`

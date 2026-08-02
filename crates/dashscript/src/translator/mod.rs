@@ -120,6 +120,17 @@ pub enum RuntimeDep {
     /// (`throws`/`compareArray`/`verifyProperty`/…) degrade to the engine
     /// (`RuntimeDep::Engine`), where the test262 harness runs natively.
     Assert,
+    /// WPT (web-platform-tests) testharness asserts — `assert_equals`/
+    /// `not_equals`/`assert_throws_dom`/`assert_throws_js`/`assert_unreached`
+    /// lower to Rust helpers (`__ds::wpt_*`) that panic an `AssertionError` on
+    /// failure. The WinterTC conformance path is static-only — Web APIs are
+    /// pure-Rust, never degraded to the engine — so these share `ASSERT_HELPER`
+    /// with test262's asserts (same `DsSameValue` core). `assert_true`/
+    /// `assert_false` route through `wpt_assert_equals` against `&true`/`&false`;
+    /// `test(fn, name)` lowers to an immediate closure call (no helper). Pure
+    /// `std` — no cargo dep; marker `__ds::wpt_`. Pulls `Error` (for
+    /// `wpt_assert_throws`'s `catch_quiet`).
+    WptAssert,
     /// A `number` as a `Set`/`Map` key. ES `Set`/`Map` compare keys by
     /// SameValueZero, but Rust `f64` lacks `Eq`/`Hash` (NaN breaks reflexivity),
     /// so `Set<number>`/`Map<number, _>` wrap each key in `DsF64Key` — a
@@ -146,7 +157,7 @@ pub enum RuntimeDep {
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 16] = [
+    const ALL: [RuntimeDep; 17] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -160,6 +171,7 @@ impl RuntimeDep {
         RuntimeDep::Error,
         RuntimeDep::Inspect,
         RuntimeDep::Assert,
+        RuntimeDep::WptAssert,
         RuntimeDep::CollectionKey,
         RuntimeDep::StringReplace,
         RuntimeDep::F64MaxMin,
@@ -185,6 +197,10 @@ impl RuntimeDep {
             // `assert_throws`, so a fixture using any one `assert.*` form pulls
             // ASSERT_HELPER (each is a sibling free fn in the slice).
             RuntimeDep::Assert => Some("__ds::assert_"),
+            // Common prefix of `wpt_assert_equals`/`wpt_assert_not_equals`/
+            // `wpt_assert_throws`/`wpt_assert_unreached`, so a fixture using any
+            // WPT assert pulls ASSERT_HELPER (sibling free fns in the slice).
+            RuntimeDep::WptAssert => Some("__ds::wpt_"),
             RuntimeDep::CollectionKey => Some("__ds::DsF64Key"),
             RuntimeDep::StringReplace => Some("__ds::ds_replace"),
             RuntimeDep::F64MaxMin => Some("__ds::ds_f64_max"),
@@ -237,6 +253,7 @@ impl RuntimeDep {
             RuntimeDep::Encoding => None,
             RuntimeDep::Error => None,
             RuntimeDep::Assert => None,
+            RuntimeDep::WptAssert => None,
             RuntimeDep::Inspect => Some(&[("ryu-js", "\"1.0\""), ("serde_json", "\"1\"")]),
             RuntimeDep::CollectionKey => None,
             RuntimeDep::StringReplace => None,
@@ -257,6 +274,11 @@ impl RuntimeDep {
             RuntimeDep::Encoding => Some(ENCODING_HELPER),
             RuntimeDep::Error => Some(ERROR_HELPER),
             RuntimeDep::Assert => Some(ASSERT_HELPER),
+            // WPT asserts share ASSERT_HELPER (same DsSameValue core). A
+            // WPT-only fixture still pulls the slice's test262 asserts (unused
+            // but must type-check) — the same asymmetry Assert has with
+            // `assert_throws` (which needs ERROR_HELPER, pulled below).
+            RuntimeDep::WptAssert => Some(ASSERT_HELPER),
             RuntimeDep::Inspect => Some(INSPECT_HELPER),
             RuntimeDep::CollectionKey => Some(COLLECTION_KEY_HELPER),
             RuntimeDep::StringReplace => Some(STRING_REPLACE_HELPER),
@@ -1252,7 +1274,9 @@ impl Translator {
         // mismatch. Both live in ERROR_HELPER — so every assert-bearing fixture
         // pulls ERROR_HELPER alongside, even a `sameValue`-only one (whose
         // `assert_throws` is unused but still must type-check).
-        if deps.has(RuntimeDep::Assert) {
+        // WPT asserts (`wpt_assert_throws`) share the same `catch_quiet`/
+        // `DsError` machinery, so a WPT-only fixture pulls ERROR_HELPER too.
+        if deps.has(RuntimeDep::Assert) || deps.has(RuntimeDep::WptAssert) {
             deps.insert(RuntimeDep::Error);
         }
         // Per-function degradation pulls the engine runtime (`rquickjs` + the
