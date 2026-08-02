@@ -164,13 +164,55 @@ fn conformance_matrix() {
         };
         test262_features.extend(file.features.into_iter().take(limit));
     }
+    // WinterTC (Ecma TC55) lives per-dir under `data/wpt/<dir>.json`, discovered
+    // at runtime so a new dir file is picked up with no Rust edit. The layer is
+    // opt-in: `DASH_WPT_CATEGORIES=url,encoding` runs only those WinterTC dirs;
+    // unset → wpt skipped (so a bare `cargo test` stays fast). WinterTC is
+    // pure-Rust (no engine fallback): the harness runs the static path only, so
+    // a Web API not yet mapped surfaces honestly as unsupported/partial — the
+    // baseline for the API-implementation backlog. `DASH_WPT=<n>` caps each dir.
+    let wpt_cats: Vec<String> = std::env::var("DASH_WPT_CATEGORIES")
+        .map(|s| {
+            s.split(',')
+                .map(|c| c.trim().to_lowercase())
+                .filter(|c| !c.is_empty())
+                .collect()
+        })
+        .unwrap_or_default();
+    let wpt_limit = match std::env::var("DASH_WPT") {
+        Ok(v) if v == "all" || v == "0" => usize::MAX,
+        Ok(v) => v.parse().unwrap_or(usize::MAX),
+        Err(_) => usize::MAX,
+    };
+    let wpt_dir = conformance_dir().join("data").join("wpt");
+    let mut wpt_features: Vec<RawFeature> = Vec::new();
+    for cat in &wpt_cats {
+        let path = wpt_dir.join(format!("{cat}.json"));
+        let json = match fs::read_to_string(&path) {
+            Ok(s) => s,
+            Err(_) => {
+                eprintln!(
+                    "conformance: {} not found — run \
+                     `node scripts/extract-wpt.mjs --dirs {cat}`",
+                    path.display()
+                );
+                continue;
+            }
+        };
+        let file: FeatureFile = match serde_json::from_str(&json) {
+            Ok(f) => f,
+            Err(e) => panic!("parse {}: {e}", path.display()),
+        };
+        wpt_features.extend(file.features.into_iter().take(wpt_limit));
+    }
     // Each raw paired with its layer — drives the per-file matrix output
-    // (`test262` → one file per category; the other two → one file each).
+    // (`test262`/`wpt` → one file per category; the other two → one file each).
     let raws: Vec<(RawFeature, &'static str)> = tests
         .features
         .into_iter()
         .map(|r| (r, "translator-tests"))
         .chain(test262_features.into_iter().map(|r| (r, "test262")))
+        .chain(wpt_features.into_iter().map(|r| (r, "wpt")))
         .chain(correct.features.into_iter().map(|r| (r, "correctness")))
         .collect();
 
@@ -261,6 +303,37 @@ fn conformance_matrix() {
         "{} conformance expectation(s) not met:\n{}",
         mismatches.len(),
         report
+    );
+}
+
+/// WinterTC smoke: a minimal WPT fixture (no Web API — just the testharness
+/// builtin) must run the full static path end-to-end and pass. Proves the
+/// `test`/`assert_equals` → `__ds::wpt_*` lowering closes the loop through
+/// `run_wpt` (translate → check → cargo → run → exit 0), independent of any
+/// Web API mapping — so a Tier-1 API's matrix can drop to zero without hiding
+/// a harness regression. The fixture is inline (not from `data/wpt/`) so it
+/// cannot be regressed by re-extraction.
+#[test]
+fn wpt_testharness_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.smoke".into(),
+        category: "smoke".into(),
+        fixture: "test(function () { assert_equals(1, 1); }, \"trivial\");\n".into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "testharness smoke should be supported: {detail}"
     );
 }
 
@@ -742,10 +815,12 @@ fn cargo_run_full(project: &Path, target_dir: &Path) -> (RunOutcome, String) {
     if let Some(e) = child.stderr.as_mut() {
         let _ = e.read_to_string(&mut stderr);
     }
-    // exit≠0: a test262 assert panics `Test262Error: …`; any other panic or
-    // non-zero exit is a runtime error. The stderr snippet drives the verdict.
+    // exit≠0: a test262 assert panics `Test262Error: …`, a WPT testharness
+    // assert panics `AssertionError: …` (the `__ds::wpt_*` helper prefix); any
+    // other panic or non-zero exit is a runtime error. The stderr snippet
+    // drives the verdict.
     let snippet = stderr.chars().take(200).collect::<String>();
-    if snippet.contains("Test262Error") {
+    if snippet.contains("Test262Error") || snippet.contains("AssertionError") {
         (RunOutcome::AssertFailed(snippet), String::new())
     } else {
         (
@@ -784,12 +859,12 @@ enum EngineOutcome {
 }
 
 /// Map a compiled-probe verdict to a (status, detail) row. No Node oracle: the
-/// test262 fixture carries its own expected values, and `Test262Error` is the
-/// single failure signal.
+/// fixture carries its own expected values, and an assert panic (`Test262Error`
+/// for test262, `AssertionError` for WPT) is the single failure signal.
 fn judge_run(o: RunOutcome) -> (&'static str, String) {
     match o {
         RunOutcome::Ok => ("supported", String::new()),
-        RunOutcome::AssertFailed(d) => ("partial", format!("Test262Error: {d}")),
+        RunOutcome::AssertFailed(d) => ("partial", d),
         RunOutcome::BuildFailed(d) => ("unsupported", format!("cargo build failed: {d}")),
         RunOutcome::Timeout => ("unsupported", "timed out".into()),
         RunOutcome::RunError(d) => ("partial", format!("runtime error: {d}")),
@@ -2419,14 +2494,68 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
     }
 }
 
+/// Run one WPT (WinterTC, Ecma TC55) fixture through the **static-only**
+/// pipeline. Returns `(status, detail)`. WinterTC is pure-Rust: there is NO
+/// engine fallback — a construct the static translator cannot lower (an
+/// unmapped Web API like `URL`, an `async_test`/`promise_test` needing a
+/// tokio-driven host) is honestly `unsupported`/`partial`, never degraded to
+/// QuickJS. That is the contract difference from `run_test262` (which
+/// degrades-don't-reject): WinterTC conformance is static-only.
+///
+/// Path: `Translator::check` (translatability) → `cargo check` (compiles,
+/// partial on failure) → build + run the probe; exit 0 → supported, a panicked
+/// `AssertionError` (the testharness builtin's prefix) → partial, a build
+/// failure or timeout → unsupported.
+fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str, String) {
+    let diags = Translator::new().check(&raw.fixture);
+    if !diags.is_empty() {
+        let msg = diags
+            .iter()
+            .map(|d| format!("{d}"))
+            .collect::<Vec<_>>()
+            .join(" | ");
+        return ("unsupported", msg);
+    }
+    let (rust, deps) = match translate_catch(&raw.fixture) {
+        Ok(r) => r,
+        // No engine fallback (WinterTC is static-only): a translator failure is
+        // an honest partial, not a degrade-to-QuickJS.
+        Err(e) => return ("partial", format!("translate: {e}")),
+    };
+    if deps.needs_engine() {
+        // The testharness builtin is `Mapped`, so this means classify let an
+        // unmapped construct through — honest partial, no engine fallback.
+        return (
+            "partial",
+            "static classify flagged engine; WinterTC has no fallback".into(),
+        );
+    }
+    write_project(project, &rust, &deps);
+    let (ok, err) = cargo(
+        project,
+        target_dir,
+        &["check", "--quiet", "--message-format=short"],
+    );
+    if !ok {
+        return ("partial", format!("static build: {err}"));
+    }
+    let (verdict, _stdout) = cargo_run_full(project, target_dir);
+    judge_run(verdict)
+}
+
 /// One fixture, run against a worker-owned `project`/`target_dir` pair.
-/// Unifies the test262 assert-driven path (exit code + Test262Error) with the
-/// translator-tests/correctness path (cargo check + optional expected-stdout
-/// run). Pure over its arguments — no shared mutable state across calls — so
-/// it is safe to invoke from many threads in parallel, each on its own project.
+/// Unifies the test262 assert-driven path (exit code + Test262Error) and the
+/// WPT testharness path (exit code + AssertionError) with the translator-tests/
+/// correctness path (cargo check + optional expected-stdout run). Pure over its
+/// arguments — no shared mutable state across calls — so it is safe to invoke
+/// from many threads in parallel, each on its own project.
 fn run_fixture(raw: &RawFeature, layer: &str, project: &Path, target_dir: &Path) -> Outcome {
     if layer == "test262" {
         let (status, detail) = run_test262(raw, project, target_dir);
+        return outcome(raw, layer, status, detail, None);
+    }
+    if layer == "wpt" {
+        let (status, detail) = run_wpt(raw, project, target_dir);
         return outcome(raw, layer, status, detail, None);
     }
     let diags = Translator::new().check(&raw.fixture);
@@ -2491,21 +2620,23 @@ fn write_matrix_split(outcomes: &[Outcome]) {
     let dir = conformance_dir().join("matrix");
     let _ = fs::create_dir_all(&dir);
 
-    // test262: one file per category (sorted).
-    let mut cats: Vec<String> = outcomes
-        .iter()
-        .filter(|o| o.layer == "test262")
-        .map(|o| o.category.clone())
-        .collect::<HashSet<_>>()
-        .into_iter()
-        .collect();
-    cats.sort();
-    for cat in &cats {
-        let rows: Vec<&Outcome> = outcomes
+    // test262 + wpt: one file per category (sorted), prefixed by its layer.
+    for layer in ["test262", "wpt"] {
+        let mut cats: Vec<String> = outcomes
             .iter()
-            .filter(|o| o.layer == "test262" && o.category == *cat)
+            .filter(|o| o.layer == layer)
+            .map(|o| o.category.clone())
+            .collect::<HashSet<_>>()
+            .into_iter()
             .collect();
-        write_section(&dir.join(format!("test262-{cat}")), &rows);
+        cats.sort();
+        for cat in &cats {
+            let rows: Vec<&Outcome> = outcomes
+                .iter()
+                .filter(|o| o.layer == layer && o.category == *cat)
+                .collect();
+            write_section(&dir.join(format!("{layer}-{cat}")), &rows);
+        }
     }
     // translator-tests + correctness: one file each (all categories merged).
     for layer in ["translator-tests", "correctness"] {
@@ -2623,7 +2754,7 @@ fn render_overview_from_disk(dir: &Path) -> String {
                 continue;
             };
             for r in rows {
-                let key = if r.layer == "test262" {
+                let key = if r.layer == "test262" || r.layer == "wpt" {
                     (r.layer, r.category)
                 } else {
                     (r.layer, String::new())
@@ -2654,8 +2785,8 @@ fn render_overview_from_disk(dir: &Path) -> String {
     s.push_str("| layer | category | supported | partial | unsupported | other |\n");
     s.push_str("| --- | --- | ---: | ---: | ---: | ---: |\n");
     for ((layer, cat), c) in &by_key {
-        let link = if layer == "test262" {
-            format!("[{cat}](test262-{cat}.md)")
+        let link = if layer == "test262" || layer == "wpt" {
+            format!("[{cat}]({layer}-{cat}.md)")
         } else {
             format!("[{layer}]({layer}.md)")
         };

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "wpt.url.historical",
+    "layer": "wpt",
+    "category": "url",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:3:30: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:6:19: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:11:30: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:14:19: error[E0425]: cannot find value `document` in this scope: not found in this scope\nsrc\\main.rs:18:19: error[E0425]: cannot find value `document` in this scope: not found in this scope\nsrc\\main.rs:34:42: error[E0425]: cannot find value `url` in this scope",
+    "note": ""
+  },
+  {
+    "id": "wpt.url.idlharness",
+    "layer": "wpt",
+    "category": "url",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:2:5: error[E0425]: cannot find function `idl_test` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "note": ""
+  },
+  {
+    "id": "wpt.url.idnatestv2-removed",
+    "layer": "wpt",
+    "category": "url",
+    "status": "unsupported",
+    "detail": "`promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine",
+    "note": ""
+  }
+]
