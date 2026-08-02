@@ -50,22 +50,11 @@ After install, opening any `.ts` file gives native TS syntax highlight, completi
 
 ## Repository Layout
 
-A hybrid cargo + pnpm workspace. Core logic lives only in `crates/`; everything else is a thin bridge.
+A hybrid cargo + pnpm workspace — core logic lives only in `crates/`; everything else is a thin bridge. Full layout and per-file conventions in `CLAUDE.md` §Package Layout.
 
 ```
-crates/
-  dashscript/        the only crate — library + the `ds` binary
-                     library (src/): translator/, package.rs, bindgen.rs
-                       translator/
-                         expressions/   one file per AST node family (literals, binary, …, call);
-                                        mod.rs is the dispatch table + shared helpers only
-                         builtins/      ES built-ins, one file per built-in, mirroring tc39
-                                        test262 test/built-ins/ (math, array, string, number,
-                                        object, global, console)
-                         functions/     statement translation, one file per kind
-                     binary (bin/): the `ds` CLI + language server
-packages/
-  dashscript/        the single npm package: bin `ds` + editor types
+crates/dashscript/   the only crate — library (src/: translator/, package.rs, bindgen.rs) + the `ds` binary (bin/: CLI + language server)
+packages/dashscript/ the single npm package: bin `ds` + editor types
 ```
 
 ## Coding Standards
@@ -75,10 +64,10 @@ packages/
 - **Functions / variables**: `snake_case`. **Types / traits / enums**: `PascalCase`. **Constants**: `SCREAMING_SNAKE_CASE`. **Modules / files**: `snake_case`.
 - **Reuse oxc for parsing, build lint/fmt on the AST** — consume `oxc_parser` / `oxc_ast` / `oxc_allocator` as given. `oxc_linter` / `oxc_formatter` are `publish = false` (not on crates.io), so `ds lint` and `ds fmt` are built in-process on the parsed AST; do not shell out to external oxlint/oxfmt.
 - **One mapping rule per AST node kind** in `translator/`, slotted by what it maps: a new expression kind → `expressions/<family>.rs` (or a new family file); a new ES built-in → `builtins/<name>.rs` mirroring its tc39 test262 directory; a new statement kind → `functions/`. Unmapped nodes must raise a diagnostic — never silently emit broken Rust.
-- **Type queries over type inference — `Ctx` is a reader, not a checker.** The translator's type knowledge lives in the `TypeRegistry`/`Locals`/`flavor`, surfaced as read-only queries on `Ctx` (`field_type`, `is_union`, …). When a lowering needs a type fact, add a `Ctx` query that reads existing registry data — do **not** write a `type_of_expr` inference pass. When a fact is genuinely unknown, emit `_` and let `cargo check` arbitrate (it is the final type authority). The translator is the single source of truth for "what maps" via its `classify` table (`Mapped`/`Reject`/`DegradeEngine`); `check` queries it rather than keeping a parallel rule tree.
+- **Type queries over type inference — `Ctx` is a reader, not a checker.** The translator's type knowledge lives in `TypeRegistry`/`Locals`/`flavor`, surfaced as read-only `Ctx` queries (`field_type`, `is_union`, …). When a lowering needs a type fact, add a query that reads existing registry data — do **not** write a `type_of_expr` inference pass; when a fact is genuinely unknown, emit `_` and let `cargo check` arbitrate. The `classify` table (`Mapped`/`Reject`/`DegradeEngine`) is the single source of truth for "what maps"; `check` queries it, not a parallel rule tree.
 - **Diagnostics over panics** — collect errors, recover, and report as many as possible. Reserve `unwrap`/`panic!` for true invariants in tests.
 - **No logic in bindings** — the `ds` binary (`bin/` on the `dashscript` crate) and the npm package are thin. If you are writing translation logic there, it belongs in the library (`src/`).
-- **Keep `translator/` files focused — one core crate, split by sub-responsibility.** One file per AST node family (`expressions/`), one per ES built-in (`builtins/`), statement translation under `functions/`. A file growing past ~1000 lines is a signal to split by sub-responsibility (`functions/mod.rs` splits into `entry`/`locals`/`escape`/`lazy_static`/`dispatch`). Do **not** split into separate crates — one core crate until a module needs its own release cadence.
+- **Keep `translator/` files focused — one core crate, split by sub-responsibility.** One file per AST node family (`expressions/`), one per ES built-in (`builtins/`), statement translation under `functions/`. A file past ~1000 lines is a signal to split by sub-responsibility — but never into separate crates (one core crate until a module needs its own release cadence).
 - Run `cargo fmt` and `cargo clippy -- -D warnings` before committing.
 
 ### TypeScript — CLI / npm surface (`packages/dashscript`)
@@ -92,7 +81,7 @@ packages/
 
 TypeScript-flavored surface. The mapping table is still growing — when adding `.ts` fixtures, follow TS conventions and keep samples minimal. Do not invent syntax the translator cannot yet map.
 
-**Execution model — pure-TS semantics.** A `.ts` file runs like a Node script: top-level declarations (`function`/`class`/`interface`/`type`/`import`/`export`) become Rust items and do **not** execute; top-level executable statements (`const`/`let`, expression statements, control flow, `throw`) run in source order, collected into an implicit `fn main` the translator emits. A file with only declarations emits an empty `fn main` (the way Node runs a script that defines functions but never calls them). `function main` is therefore an ordinary declaration — it is renamed `__ds_main` so it cannot collide with the cargo entry; to run it, call it explicitly at the top level (`main();`). A top-level binding referenced from inside a `function` would close over an `fn main` local (impossible for a Rust fn item), so it is hoisted to a module-global item — a const-expr literal to `pub const`, a runtime-immutable binding to a `static OnceLock<T>` + accessor, a mutable binding to `thread_local! { RefCell<T> }` (+ get/set accessors) — so no rewrite is needed. A module file initializes its globals eagerly (no `fn main`); an entry file seeds them in source order from `fn main`.\_
+**Execution model — pure-TS semantics.** A `.ts` file runs like a Node script: top-level declarations become Rust items that do **not** execute; top-level executable statements run in source order, collected into an implicit `fn main` the translator emits (empty for a declarations-only file). `function main` is an ordinary declaration, renamed `__ds_main` to avoid colliding with the cargo entry — call it explicitly to run it. A top-level binding referenced from a `function` is hoisted to a module-global item (no rewrite needed). Full rules in `CLAUDE.md` §Design Decisions.
 
 ### DashScript package (`package.json`)
 
@@ -103,12 +92,13 @@ TypeScript-flavored surface. The mapping table is still growing — when adding 
 
 ## Conformance / Support Matrix
 
-`crates/dashscript/tests/conformance.rs` answers a question the per-node translation tests (`translator/tests/`) do not: **does the translated Rust actually compile?** Those tests assert the output _contains_ a substring; they never run `cargo check`. Conformance runs the full three-layer chain per fixture — `Translator::check` (translatability), then `translate` + `cargo check` (the emitted Rust must compile) — and records `supported` | `partial` (translates but won't compile) | `unsupported` (`check` flags it). A `partial` here is a real translator gap the substring tests missed.
+`crates/dashscript/tests/conformance.rs` answers a question the per-node translation tests (`translator/tests/`) do not: **does the translated Rust actually compile?** Those tests assert the output _contains_ a substring; they never run `cargo check`. Conformance runs the three-layer chain per fixture — `Translator::check` (translatability) → `translate` + `cargo check` (emitted Rust compiles) → run — recording `supported` / `partial` / `unsupported`. A `partial` is a real translator gap the substring tests missed.
 
 Feature data lives in `crates/dashscript/tests/conformance/data/`:
 
 - `tests-fixtures.json` — **auto-extracted** from `translator/tests/*.rs` by `scripts/extract-tests.mjs`. Every `let src = "..."` in a `translates_*` `#[test]` becomes a fixture (**zero hand-written**). These are recorded informationally — no `expect`, so the run reports the current state and surfaces its partials without asserting them.
-- `test262/<cat>.json` (one file per builtin) — **auto-extracted** from tc39 test262 by `scripts/extract-test262.mjs`. Each test is rewritten to a `main()` that logs its assertions; the differential harness diffs `ds` output against Node's — the ground-truth oracle, so there are no hand-written expectations (mechanism detailed in `CLAUDE.md`). No whitelist: every `test/built-ins/` dir is one category; `new`/`Reflect`/`$INCLUDE`/descriptor/Symbol/async fixtures are filtered or marked `unsupported`. The test262 layer is **opt-in** via `DASH_TEST262_CATEGORIES` (unset → skipped, so a bare `cargo test` stays fast).
+- `test262/<cat>.json` (one file per builtin) — **auto-extracted** from tc39 test262 by `scripts/extract-test262.mjs`. The verdict is **assert-driven**: each fixture's own `assert.sameValue`/`assert.throws` carry the expected values (the spec truth), so a fixture passes when its asserts hold — no Node oracle, no hand-written expectations (mechanism in `CLAUDE.md`). Three states: `supported` (exit 0) / `partial` (a `Test262Error`) / `unsupported` (build failure, timeout, or engine `ReferenceError`). No whitelist: every `test/built-ins/` dir is one category. Opt-in via `DASH_TEST262_CATEGORIES` (unset → skipped, so a bare `cargo test` stays fast).
+- `wpt/<dir>.json` (one file per WPT top-level dir) — **auto-extracted** from web-platform-tests by `scripts/extract-wpt.mjs`. WPT fixtures use `testharness.js` (`test`/`assert_equals`/…), statically mapped to Rust builtins — the same static path as test262, **but with no engine fallback**: a fixture that does not translate statically is honestly `partial`/`unsupported`, never degraded to the engine (WinterTC Web APIs are fully Rust, by policy). Opt-in via `DASH_WPT_CATEGORIES` (unset → skipped). Regenerate: `node scripts/extract-wpt.mjs --dirs url,encoding` (after `git clone https://github.com/web-platform-tests/wpt .temp/wpt`).
 - `correctness.json` — the **only** hand-written fixtures. Each carries `expect` + `expect_output`; the runner `cargo run`s the emitted program and compares stdout. These are asserted (regression guard).
 
 Regenerate the auto-derived lists (from the repo root, after `pnpm install`):
