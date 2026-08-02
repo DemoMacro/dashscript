@@ -956,12 +956,20 @@ impl Drop for Worker {
     fn drop(&mut self) {
         // Close the sender first so the worker's `rx.iter()` ends, then join so
         // a posted message is guaranteed processed before the process exits. A
-        // handler panic surfaces via `join`'s `Err` (re-panic, matching a worker
-        // that throws uncaught). `reply_rx` drops with the Worker — pending
-        // un-received replies are lost (main didn't recv them).
+        // handler panic surfaces via `join`'s `Err`: we resume the unwind so a
+        // worker that throws uncaught is not silently swallowed — matching a
+        // synchronous handler call that throws. The `thread::panicking()` guard
+        // avoids a double-panic abort when this Worker is dropped while the main
+        // thread is already unwinding; there the in-flight panic propagates and
+        // the worker's is lost (the only safe choice). `reply_rx` drops with the
+        // Worker — pending un-received replies are lost (main didn't recv them).
         drop(self.tx.take());
         if let Some(handle) = self.handle.take() {
-            let _ = handle.join();
+            if let Err(payload) = handle.join() {
+                if !std::thread::panicking() {
+                    std::panic::resume_unwind(payload);
+                }
+            }
         }
     }
 }
