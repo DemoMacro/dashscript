@@ -24,6 +24,14 @@
     "note": ""
   },
   {
+    "id": "arrays.translates_array_every_with_named_callback",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "arrays.translates_array_fill_to_vec_fill",
     "layer": "translator-tests",
     "category": "arrays",
@@ -33,6 +41,14 @@
   },
   {
     "id": "arrays.translates_array_filter_to_iter_copied_filter_collect",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_filter_with_named_callback",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -120,6 +136,14 @@
     "note": ""
   },
   {
+    "id": "arrays.translates_array_includes_with_from_index",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "arrays.translates_array_index",
     "layer": "translator-tests",
     "category": "arrays",
@@ -128,7 +152,7 @@
     "note": ""
   },
   {
-    "id": "arrays.translates_array_index_assign_to_usize_index",
+    "id": "arrays.translates_array_index_assign_to_array_set",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -137,6 +161,14 @@
   },
   {
     "id": "arrays.translates_array_index_of_to_position",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_index_of_with_from_index",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -161,6 +193,14 @@
   },
   {
     "id": "arrays.translates_array_last_index_of_to_rposition",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_last_index_of_with_from_index",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -200,6 +240,14 @@
     "note": ""
   },
   {
+    "id": "arrays.translates_array_prototype_call_to_engine",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "unsupported",
+    "detail": "`<builtin>.prototype.<method>` reflection needs the engine",
+    "note": ""
+  },
+  {
     "id": "arrays.translates_array_reduce_right_to_rev_fold",
     "layer": "translator-tests",
     "category": "arrays",
@@ -233,6 +281,14 @@
   },
   {
     "id": "arrays.translates_array_shift_unshift_pop",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "arrays.translates_array_slice_negative_from_end",
     "layer": "translator-tests",
     "category": "arrays",
     "status": "supported",
@@ -320,6 +376,14 @@
     "note": ""
   },
   {
+    "id": "arrays.translates_typeof_global_constructor_to_function",
+    "layer": "translator-tests",
+    "category": "arrays",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "classes.translates_new_expression",
     "layer": "translator-tests",
     "category": "classes",
@@ -379,6 +443,78 @@
     "id": "clone_move.translates_unmutated_let_is_plain_let",
     "layer": "translator-tests",
     "category": "clone_move",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "collections.translates_map_type_to_hashmap",
+    "layer": "translator-tests",
+    "category": "collections",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "collections.translates_new_map_from_array_literal",
+    "layer": "translator-tests",
+    "category": "collections",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "collections.translates_new_map_from_number_key_array_wraps_f64_key",
+    "layer": "translator-tests",
+    "category": "collections",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "collections.translates_new_map_to_hashmap_new",
+    "layer": "translator-tests",
+    "category": "collections",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "collections.translates_new_set_to_hashset_new",
+    "layer": "translator-tests",
+    "category": "collections",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "collections.translates_new_uint8_array_empty_to_empty_vec",
+    "layer": "translator-tests",
+    "category": "collections",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "collections.translates_new_uint8_array_from_array_literal",
+    "layer": "translator-tests",
+    "category": "collections",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "collections.translates_new_uint8_array_to_zeroed_vec",
+    "layer": "translator-tests",
+    "category": "collections",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "collections.translates_set_type_to_hashset",
+    "layer": "translator-tests",
+    "category": "collections",
     "status": "supported",
     "detail": "",
     "note": ""
@@ -504,6 +640,14 @@
     "note": ""
   },
   {
+    "id": "control_flow.translates_var_shared_c_style_for_loops",
+    "layer": "translator-tests",
+    "category": "control_flow",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "control_flow.translates_while_with_update",
     "layer": "translator-tests",
     "category": "control_flow",
@@ -584,6 +728,14 @@
     "note": ""
   },
   {
+    "id": "enums.translates_numeric_enum_to_mod_of_consts",
+    "layer": "translator-tests",
+    "category": "enums",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "globals.translates_boolean_global_nonzero_to_true",
     "layer": "translator-tests",
     "category": "globals",
@@ -649,6 +801,30 @@
   },
   {
     "id": "globals.translates_number_constants",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_global_binary_octal_string",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_global_empty_string_to_zero",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_number_global_hex_string_to_value",
     "layer": "translator-tests",
     "category": "globals",
     "status": "supported",
@@ -728,7 +904,7 @@
     "note": ""
   },
   {
-    "id": "globals.translates_parse_int_to_parse_f64",
+    "id": "globals.translates_parse_float_to_truncating_closure",
     "layer": "translator-tests",
     "category": "globals",
     "status": "supported",
@@ -736,7 +912,7 @@
     "note": ""
   },
   {
-    "id": "globals.translates_parse_int_with_radix_to_from_str_radix",
+    "id": "globals.translates_parse_int_number_arg_routes_through_es_tostring",
     "layer": "translator-tests",
     "category": "globals",
     "status": "supported",
@@ -744,9 +920,49 @@
     "note": ""
   },
   {
-    "id": "globals.translates_string_global_to_format",
+    "id": "globals.translates_parse_int_to_truncating_closure",
     "layer": "translator-tests",
     "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_parse_int_with_radix_and_hex_prefix",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_string_global_numeric_to_helper",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "globals.translates_unary_plus_on_hex_string_to_number",
+    "layer": "translator-tests",
+    "category": "globals",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "json.translates_json_parse_to_serde_json_from_str",
+    "layer": "translator-tests",
+    "category": "json",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "json.translates_json_stringify_to_serde_json_to_string",
+    "layer": "translator-tests",
+    "category": "json",
     "status": "supported",
     "detail": "",
     "note": ""
@@ -952,6 +1168,14 @@
     "note": ""
   },
   {
+    "id": "narrowing.translates_member_access_truthiness_via_ds_truthy",
+    "layer": "translator-tests",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "narrowing.translates_non_null_assertion",
     "layer": "translator-tests",
     "category": "narrowing",
@@ -992,6 +1216,14 @@
     "note": ""
   },
   {
+    "id": "narrowing.translates_optional_chain_on_optional_field_uses_and_then",
+    "layer": "translator-tests",
+    "category": "narrowing",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "narrowing.translates_optional_chain_to_as_ref_map",
     "layer": "translator-tests",
     "category": "narrowing",
@@ -1016,7 +1248,23 @@
     "note": ""
   },
   {
-    "id": "number_methods.translates_number_to_string_no_arg_is_display",
+    "id": "number_methods.translates_number_to_precision_no_arg_is_number_to_string",
+    "layer": "translator-tests",
+    "category": "number_methods",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number_methods.translates_number_to_precision_with_arg",
+    "layer": "translator-tests",
+    "category": "number_methods",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number_methods.translates_number_to_string_no_arg_is_number_to_string",
     "layer": "translator-tests",
     "category": "number_methods",
     "status": "supported",
@@ -1033,6 +1281,22 @@
   },
   {
     "id": "number_methods.translates_number_to_string_radix_hex",
+    "layer": "translator-tests",
+    "category": "number_methods",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number_methods.translates_number_to_string_radix_nan_infinity",
+    "layer": "translator-tests",
+    "category": "number_methods",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "number_methods.translates_number_to_string_variable_radix",
     "layer": "translator-tests",
     "category": "number_methods",
     "status": "supported",
@@ -1176,6 +1440,14 @@
     "note": ""
   },
   {
+    "id": "strings.translates_string_bracket_index_to_chars_nth",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "strings.translates_string_char_at_to_chars_nth",
     "layer": "translator-tests",
     "category": "strings",
@@ -1201,6 +1473,14 @@
   },
   {
     "id": "strings.translates_string_compound_append",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_concat_number_uses_es_tostring",
     "layer": "translator-tests",
     "category": "strings",
     "status": "supported",
@@ -1248,7 +1528,31 @@
     "note": ""
   },
   {
+    "id": "strings.translates_string_from_code_point_multiple_args",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_includes_with_position",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "strings.translates_string_index_of_to_find",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_index_of_with_position",
     "layer": "translator-tests",
     "category": "strings",
     "status": "supported",
@@ -1320,7 +1624,31 @@
     "note": ""
   },
   {
+    "id": "strings.translates_string_pad_undefined_fill_uses_space_default",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "strings.translates_string_predicate_methods",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_prototype_touppercase_call",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_prototype_trim_call_to_method",
     "layer": "translator-tests",
     "category": "strings",
     "status": "supported",
@@ -1336,6 +1664,14 @@
     "note": ""
   },
   {
+    "id": "strings.translates_string_replace_all_dollar_to_ds_helper",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "strings.translates_string_replace_all_to_replace",
     "layer": "translator-tests",
     "category": "strings",
@@ -1344,7 +1680,31 @@
     "note": ""
   },
   {
+    "id": "strings.translates_string_replace_dollar_to_ds_helper",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "strings.translates_string_replace_substring_methods",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_self_plus_literal_to_push_str",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_slice_negative_from_end",
     "layer": "translator-tests",
     "category": "strings",
     "status": "supported",
@@ -1368,6 +1728,30 @@
     "note": ""
   },
   {
+    "id": "strings.translates_string_split_with_limit",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_starts_ends_with_position",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
+    "id": "strings.translates_string_substring_swaps_bounds",
+    "layer": "translator-tests",
+    "category": "strings",
+    "status": "supported",
+    "detail": "",
+    "note": ""
+  },
+  {
     "id": "strings.translates_string_to_well_formed",
     "layer": "translator-tests",
     "category": "strings",
@@ -1384,7 +1768,7 @@
     "note": ""
   },
   {
-    "id": "strings.translates_to_string_to_display",
+    "id": "strings.translates_to_locale_lower_upper_case",
     "layer": "translator-tests",
     "category": "strings",
     "status": "supported",
@@ -1496,7 +1880,7 @@
     "note": ""
   },
   {
-    "id": "types.translates_object_freeze_to_passthrough",
+    "id": "types.translates_object_freeze_degrades_to_engine",
     "layer": "translator-tests",
     "category": "types",
     "status": "unsupported",
@@ -1528,19 +1912,19 @@
     "note": ""
   },
   {
-    "id": "types.translates_object_is_frozen_to_false",
-    "layer": "translator-tests",
-    "category": "types",
-    "status": "unsupported",
-    "detail": "`Object.isFrozen` (extensibility state) needs the engine (no static freeze tracking) | `Object.isSealed` (extensibility state) needs the engine (no static freeze tracking) | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking)",
-    "note": ""
-  },
-  {
     "id": "types.translates_object_is_nan_equal",
     "layer": "translator-tests",
     "category": "types",
     "status": "supported",
     "detail": "",
+    "note": ""
+  },
+  {
+    "id": "types.translates_object_isfrozen_degrades_to_engine",
+    "layer": "translator-tests",
+    "category": "types",
+    "status": "unsupported",
+    "detail": "`Object.isFrozen` (extensibility state) needs the engine (no static freeze tracking) | `Object.isSealed` (extensibility state) needs the engine (no static freeze tracking) | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking)",
     "note": ""
   },
   {

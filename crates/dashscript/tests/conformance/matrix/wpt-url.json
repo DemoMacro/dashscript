@@ -4,7 +4,7 @@
     "layer": "wpt",
     "category": "url",
     "status": "partial",
-    "detail": "static build: src\\main.rs:3:30: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:6:19: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:11:30: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:14:19: error[E0425]: cannot find value `document` in this scope: not found in this scope\nsrc\\main.rs:18:19: error[E0425]: cannot find value `document` in this scope: not found in this scope\nsrc\\main.rs:34:42: error[E0425]: cannot find value `url` in this scope",
+    "detail": "static build: src\\main.rs:3:30: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:6:19: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:11:30: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:14:19: error[E0425]: cannot find value `document` in this scope: not found in this scope\nsrc\\main.rs:18:19: error[E0425]: cannot find value `document` in this scope: not found in this scope\nsrc\\main.rs:43:15: error[E0423]: expected value, found crate `url`",
     "note": ""
   },
   {
@@ -36,7 +36,7 @@
     "layer": "wpt",
     "category": "url",
     "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine",
+    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `promise_test` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `Promise.<method>` has no static mapping — runs under the engine",
     "note": ""
   },
   {
@@ -84,15 +84,15 @@
     "layer": "wpt",
     "category": "url",
     "status": "partial",
-    "detail": "static build: src\\main.rs:26:24: error[E0425]: cannot find value `expected` in this scope: not found in this scope\nsrc\\main.rs:27:58: error[E0425]: cannot find value `url` in this scope: not found in this scope\nsrc\\main.rs:27:68: error[E0425]: cannot find value `url` in this scope: not found in this scope\nsrc\\main.rs:27:73: error[E0425]: cannot find value `base` in this scope: not found in this scope\nsrc\\main.rs:30:31: error[E0425]: cannot find value `url` in this scope: not found in this scope\nsrc\\main.rs:30:41: error[E0425]: cannot find value `url` in this scope: not found in this scope",
+    "detail": "static build: src\\main.rs:26:24: error[E0425]: cannot find value `expected` in this scope: not found in this scope\nsrc\\main.rs:28:31: error[E0423]: expected value, found crate `url`\nsrc\\main.rs:28:41: error[E0423]: expected value, found crate `url`: not a value\nsrc\\main.rs:28:46: error[E0425]: cannot find value `base` in this scope: not found in this scope\nsrc\\main.rs:33:31: error[E0423]: expected value, found crate `url`\nsrc\\main.rs:33:41: error[E0423]: expected value, found crate `url`: not a value",
     "note": ""
   },
   {
     "id": "wpt.url.url-tojson",
     "layer": "wpt",
     "category": "url",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:4:17: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -124,7 +124,7 @@
     "layer": "wpt",
     "category": "url",
     "status": "partial",
-    "detail": "static build: src\\main.rs:79:23: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nsrc\\main.rs:89:23: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nsrc\\main.rs:98:23: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nsrc\\main.rs:113:23: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "detail": "\nthread 'main' (34444) panicked at src\\__ds.rs:659:9:\nAssertionError: Expected SameValue(«\"space\"», «\"space   %20\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a back",
     "note": ""
   },
   {
@@ -132,15 +132,15 @@
     "layer": "wpt",
     "category": "url",
     "status": "unsupported",
-    "detail": "a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
+    "detail": "`assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation | `assert_array_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
     "note": ""
   },
   {
     "id": "wpt.url.urlsearchparams-get",
     "layer": "wpt",
     "category": "url",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:36:49: error[E0369]: binary operation `!=` cannot be applied to type `DsUrlSearchParams`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -171,8 +171,8 @@
     "id": "wpt.url.urlsearchparams-size",
     "layer": "wpt",
     "category": "url",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:24:23: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nsrc\\main.rs:32:23: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -187,8 +187,8 @@
     "id": "wpt.url.urlsearchparams-stringifier",
     "layer": "wpt",
     "category": "url",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:264:19: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nsrc\\main.rs:282:19: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   }
 ]

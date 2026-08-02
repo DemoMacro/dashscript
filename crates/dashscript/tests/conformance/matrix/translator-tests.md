@@ -1,52 +1,60 @@
 # DashScript Conformance Matrix
 
-- 201 features: **197** supported, **2** partial, **2** unsupported, **0** untested
+- 249 features: **244** supported, **2** partial, **3** unsupported, **0** untested
 - correctness cases passing: 0
 
 ## arrays
 
-| feature                                                      | status       | detail / note |
-| ------------------------------------------------------------ | ------------ | ------------- |
-| arrays.translates_array_at_to_signed_runtime_index           | 🟢 supported |               |
-| arrays.translates_array_concat_to_slice_concat               | 🟢 supported |               |
-| arrays.translates_array_copy_within                          | 🟢 supported |               |
-| arrays.translates_array_fill_to_vec_fill                     | 🟢 supported |               |
-| arrays.translates_array_filter_to_iter_copied_filter_collect | 🟢 supported |               |
-| arrays.translates_array_find_index_to_position               | 🟢 supported |               |
-| arrays.translates_array_find_last_index_to_rposition         | 🟢 supported |               |
-| arrays.translates_array_find_last_to_rev_find                | 🟢 supported |               |
-| arrays.translates_array_find_to_iter_copied_find             | 🟢 supported |               |
-| arrays.translates_array_flat_map_to_flat_map_collect         | 🟢 supported |               |
-| arrays.translates_array_flat_to_concat                       | 🟢 supported |               |
-| arrays.translates_array_for_each_to_for_each                 | 🟢 supported |               |
-| arrays.translates_array_from_clone                           | 🟢 supported |               |
-| arrays.translates_array_from_mapped                          | 🟢 supported |               |
-| arrays.translates_array_includes_to_contains                 | 🟢 supported |               |
-| arrays.translates_array_index                                | 🟢 supported |               |
-| arrays.translates_array_index_assign_to_usize_index          | 🟢 supported |               |
-| arrays.translates_array_index_of_to_position                 | 🟢 supported |               |
-| arrays.translates_array_is_array_vec_true                    | 🟢 supported |               |
-| arrays.translates_array_join_to_vec_string_join              | 🟢 supported |               |
-| arrays.translates_array_last_index_of_to_rposition           | 🟢 supported |               |
-| arrays.translates_array_literal_to_vec_macro                 | 🟢 supported |               |
-| arrays.translates_array_literal_with_expression_elements     | 🟢 supported |               |
-| arrays.translates_array_map_to_iter_copied_map_collect       | 🟢 supported |               |
-| arrays.translates_array_of                                   | 🟢 supported |               |
-| arrays.translates_array_reduce_right_to_rev_fold             | 🟢 supported |               |
-| arrays.translates_array_reduce_with_seed_to_fold             | 🟢 supported |               |
-| arrays.translates_array_reduce_without_seed_to_reduce        | 🟢 supported |               |
-| arrays.translates_array_reverse_to_in_place_reverse          | 🟢 supported |               |
-| arrays.translates_array_shift_unshift_pop                    | 🟢 supported |               |
-| arrays.translates_array_slice_to_index_range_to_vec          | 🟢 supported |               |
-| arrays.translates_array_some_every_to_any_all                | 🟢 supported |               |
-| arrays.translates_array_sort_to_numeric_sort_by              | 🟢 supported |               |
-| arrays.translates_array_splice                               | 🟢 supported |               |
-| arrays.translates_array_to_reversed_to_rev_collect           | 🟢 supported |               |
-| arrays.translates_array_to_sorted_to_clone_sort              | 🟢 supported |               |
-| arrays.translates_array_to_spliced_to_clone_splice           | 🟢 supported |               |
-| arrays.translates_array_to_string_join                       | 🟢 supported |               |
-| arrays.translates_array_with_to_clone_index_assign           | 🟢 supported |               |
-| arrays.translates_in_operator_on_array_to_index_bound        | 🟢 supported |               |
+| feature                                                      | status         | detail / note                                              |
+| ------------------------------------------------------------ | -------------- | ---------------------------------------------------------- |
+| arrays.translates_array_at_to_signed_runtime_index           | 🟢 supported   |                                                            |
+| arrays.translates_array_concat_to_slice_concat               | 🟢 supported   |                                                            |
+| arrays.translates_array_copy_within                          | 🟢 supported   |                                                            |
+| arrays.translates_array_every_with_named_callback            | 🟢 supported   |                                                            |
+| arrays.translates_array_fill_to_vec_fill                     | 🟢 supported   |                                                            |
+| arrays.translates_array_filter_to_iter_copied_filter_collect | 🟢 supported   |                                                            |
+| arrays.translates_array_filter_with_named_callback           | 🟢 supported   |                                                            |
+| arrays.translates_array_find_index_to_position               | 🟢 supported   |                                                            |
+| arrays.translates_array_find_last_index_to_rposition         | 🟢 supported   |                                                            |
+| arrays.translates_array_find_last_to_rev_find                | 🟢 supported   |                                                            |
+| arrays.translates_array_find_to_iter_copied_find             | 🟢 supported   |                                                            |
+| arrays.translates_array_flat_map_to_flat_map_collect         | 🟢 supported   |                                                            |
+| arrays.translates_array_flat_to_concat                       | 🟢 supported   |                                                            |
+| arrays.translates_array_for_each_to_for_each                 | 🟢 supported   |                                                            |
+| arrays.translates_array_from_clone                           | 🟢 supported   |                                                            |
+| arrays.translates_array_from_mapped                          | 🟢 supported   |                                                            |
+| arrays.translates_array_includes_to_contains                 | 🟢 supported   |                                                            |
+| arrays.translates_array_includes_with_from_index             | 🟢 supported   |                                                            |
+| arrays.translates_array_index                                | 🟢 supported   |                                                            |
+| arrays.translates_array_index_assign_to_array_set            | 🟢 supported   |                                                            |
+| arrays.translates_array_index_of_to_position                 | 🟢 supported   |                                                            |
+| arrays.translates_array_index_of_with_from_index             | 🟢 supported   |                                                            |
+| arrays.translates_array_is_array_vec_true                    | 🟢 supported   |                                                            |
+| arrays.translates_array_join_to_vec_string_join              | 🟢 supported   |                                                            |
+| arrays.translates_array_last_index_of_to_rposition           | 🟢 supported   |                                                            |
+| arrays.translates_array_last_index_of_with_from_index        | 🟢 supported   |                                                            |
+| arrays.translates_array_literal_to_vec_macro                 | 🟢 supported   |                                                            |
+| arrays.translates_array_literal_with_expression_elements     | 🟢 supported   |                                                            |
+| arrays.translates_array_map_to_iter_copied_map_collect       | 🟢 supported   |                                                            |
+| arrays.translates_array_of                                   | 🟢 supported   |                                                            |
+| arrays.translates_array_prototype_call_to_engine             | 🔴 unsupported | `<builtin>.prototype.<method>` reflection needs the engine |
+| arrays.translates_array_reduce_right_to_rev_fold             | 🟢 supported   |                                                            |
+| arrays.translates_array_reduce_with_seed_to_fold             | 🟢 supported   |                                                            |
+| arrays.translates_array_reduce_without_seed_to_reduce        | 🟢 supported   |                                                            |
+| arrays.translates_array_reverse_to_in_place_reverse          | 🟢 supported   |                                                            |
+| arrays.translates_array_shift_unshift_pop                    | 🟢 supported   |                                                            |
+| arrays.translates_array_slice_negative_from_end              | 🟢 supported   |                                                            |
+| arrays.translates_array_slice_to_index_range_to_vec          | 🟢 supported   |                                                            |
+| arrays.translates_array_some_every_to_any_all                | 🟢 supported   |                                                            |
+| arrays.translates_array_sort_to_numeric_sort_by              | 🟢 supported   |                                                            |
+| arrays.translates_array_splice                               | 🟢 supported   |                                                            |
+| arrays.translates_array_to_reversed_to_rev_collect           | 🟢 supported   |                                                            |
+| arrays.translates_array_to_sorted_to_clone_sort              | 🟢 supported   |                                                            |
+| arrays.translates_array_to_spliced_to_clone_splice           | 🟢 supported   |                                                            |
+| arrays.translates_array_to_string_join                       | 🟢 supported   |                                                            |
+| arrays.translates_array_with_to_clone_index_assign           | 🟢 supported   |                                                            |
+| arrays.translates_in_operator_on_array_to_index_bound        | 🟢 supported   |                                                            |
+| arrays.translates_typeof_global_constructor_to_function      | 🟢 supported   |                                                            |
 
 ## classes
 
@@ -65,6 +73,20 @@
 | clone_move.translates_mutated_var_is_let_mut                    | 🟢 supported |               |
 | clone_move.translates_mutated_vec_by_method_is_let_mut          | 🟢 supported |               |
 | clone_move.translates_unmutated_let_is_plain_let                | 🟢 supported |               |
+
+## collections
+
+| feature                                                            | status       | detail / note |
+| ------------------------------------------------------------------ | ------------ | ------------- |
+| collections.translates_map_type_to_hashmap                         | 🟢 supported |               |
+| collections.translates_new_map_from_array_literal                  | 🟢 supported |               |
+| collections.translates_new_map_from_number_key_array_wraps_f64_key | 🟢 supported |               |
+| collections.translates_new_map_to_hashmap_new                      | 🟢 supported |               |
+| collections.translates_new_set_to_hashset_new                      | 🟢 supported |               |
+| collections.translates_new_uint8_array_empty_to_empty_vec          | 🟢 supported |               |
+| collections.translates_new_uint8_array_from_array_literal          | 🟢 supported |               |
+| collections.translates_new_uint8_array_to_zeroed_vec               | 🟢 supported |               |
+| collections.translates_set_type_to_hashset                         | 🟢 supported |               |
 
 ## console
 
@@ -90,6 +112,7 @@
 | control_flow.translates_try_block_with_return_rejected | 🟡 partial   | src\main.rs:2:5: error: DashScript try blocks cannot contain return/break/continue (control flow cannot cross the catch boundary) src\main.rs:1:11: error[E0308]: mismatched types: expected `f64`, found `()` error: could not compile `probe` (bin "probe") due to 2 previous errors |
 | control_flow.translates_try_catch_to_catch_unwind      | 🟢 supported |                                                                                                                                                                                                                                                                                        |
 | control_flow.translates_try_finally_runs_after_match   | 🟢 supported |                                                                                                                                                                                                                                                                                        |
+| control_flow.translates_var_shared_c_style_for_loops   | 🟢 supported |                                                                                                                                                                                                                                                                                        |
 | control_flow.translates_while_with_update              | 🟢 supported |                                                                                                                                                                                                                                                                                        |
 
 ## destructuring
@@ -106,31 +129,50 @@
 | destructuring.translates_object_destructuring_to_struct_pattern  | 🟢 supported |               |
 | destructuring.translates_object_spread_to_struct_update          | 🟢 supported |               |
 
+## enums
+
+| feature                                        | status       | detail / note |
+| ---------------------------------------------- | ------------ | ------------- |
+| enums.translates_numeric_enum_to_mod_of_consts | 🟢 supported |               |
+
 ## globals
 
-| feature                                                      | status       | detail / note |
-| ------------------------------------------------------------ | ------------ | ------------- |
-| globals.translates_boolean_global_nonzero_to_true            | 🟢 supported |               |
-| globals.translates_boolean_global_number_var_to_ne_zero      | 🟢 supported |               |
-| globals.translates_boolean_global_option_to_is_some          | 🟢 supported |               |
-| globals.translates_boolean_global_string_literal_to_is_empty | 🟢 supported |               |
-| globals.translates_boolean_global_vec_to_is_empty            | 🟢 supported |               |
-| globals.translates_boolean_global_zero_to_false              | 🟢 supported |               |
-| globals.translates_global_is_finite                          | 🟢 supported |               |
-| globals.translates_global_is_nan                             | 🟢 supported |               |
-| globals.translates_number_constants                          | 🟢 supported |               |
-| globals.translates_number_global_number_passes_through       | 🟢 supported |               |
-| globals.translates_number_global_string_to_parse             | 🟢 supported |               |
-| globals.translates_number_global_string_var_to_parse         | 🟢 supported |               |
-| globals.translates_number_is_safe_integer                    | 🟢 supported |               |
-| globals.translates_number_parse_float                        | 🟢 supported |               |
-| globals.translates_number_parse_int_radix                    | 🟢 supported |               |
-| globals.translates_number_static_type_checks                 | 🟢 supported |               |
-| globals.translates_number_to_exponential                     | 🟢 supported |               |
-| globals.translates_number_value_of                           | 🟢 supported |               |
-| globals.translates_parse_int_to_parse_f64                    | 🟢 supported |               |
-| globals.translates_parse_int_with_radix_to_from_str_radix    | 🟢 supported |               |
-| globals.translates_string_global_to_format                   | 🟢 supported |               |
+| feature                                                            | status       | detail / note |
+| ------------------------------------------------------------------ | ------------ | ------------- |
+| globals.translates_boolean_global_nonzero_to_true                  | 🟢 supported |               |
+| globals.translates_boolean_global_number_var_to_ne_zero            | 🟢 supported |               |
+| globals.translates_boolean_global_option_to_is_some                | 🟢 supported |               |
+| globals.translates_boolean_global_string_literal_to_is_empty       | 🟢 supported |               |
+| globals.translates_boolean_global_vec_to_is_empty                  | 🟢 supported |               |
+| globals.translates_boolean_global_zero_to_false                    | 🟢 supported |               |
+| globals.translates_global_is_finite                                | 🟢 supported |               |
+| globals.translates_global_is_nan                                   | 🟢 supported |               |
+| globals.translates_number_constants                                | 🟢 supported |               |
+| globals.translates_number_global_binary_octal_string               | 🟢 supported |               |
+| globals.translates_number_global_empty_string_to_zero              | 🟢 supported |               |
+| globals.translates_number_global_hex_string_to_value               | 🟢 supported |               |
+| globals.translates_number_global_number_passes_through             | 🟢 supported |               |
+| globals.translates_number_global_string_to_parse                   | 🟢 supported |               |
+| globals.translates_number_global_string_var_to_parse               | 🟢 supported |               |
+| globals.translates_number_is_safe_integer                          | 🟢 supported |               |
+| globals.translates_number_parse_float                              | 🟢 supported |               |
+| globals.translates_number_parse_int_radix                          | 🟢 supported |               |
+| globals.translates_number_static_type_checks                       | 🟢 supported |               |
+| globals.translates_number_to_exponential                           | 🟢 supported |               |
+| globals.translates_number_value_of                                 | 🟢 supported |               |
+| globals.translates_parse_float_to_truncating_closure               | 🟢 supported |               |
+| globals.translates_parse_int_number_arg_routes_through_es_tostring | 🟢 supported |               |
+| globals.translates_parse_int_to_truncating_closure                 | 🟢 supported |               |
+| globals.translates_parse_int_with_radix_and_hex_prefix             | 🟢 supported |               |
+| globals.translates_string_global_numeric_to_helper                 | 🟢 supported |               |
+| globals.translates_unary_plus_on_hex_string_to_number              | 🟢 supported |               |
+
+## json
+
+| feature                                                | status       | detail / note |
+| ------------------------------------------------------ | ------------ | ------------- |
+| json.translates_json_parse_to_serde_json_from_str      | 🟢 supported |               |
+| json.translates_json_stringify_to_serde_json_to_string | 🟢 supported |               |
 
 ## math
 
@@ -160,28 +202,34 @@
 
 ## narrowing
 
-| feature                                                        | status       | detail / note |
-| -------------------------------------------------------------- | ------------ | ------------- |
-| narrowing.translates_logical_nullish_assign                    | 🟢 supported |               |
-| narrowing.translates_logical_or_assign                         | 🟢 supported |               |
-| narrowing.translates_logical_or_bool_short_circuits            | 🟢 supported |               |
-| narrowing.translates_logical_or_value_returns_left_when_truthy | 🟢 supported |               |
-| narrowing.translates_non_null_assertion                        | 🟢 supported |               |
-| narrowing.translates_null_equality_to_is_none                  | 🟢 supported |               |
-| narrowing.translates_null_inequality_to_is_some                | 🟢 supported |               |
-| narrowing.translates_nullish_coalescing_to_unwrap_or_else      | 🟢 supported |               |
-| narrowing.translates_optional_chain_coalesce_to_unwrap_or      | 🟢 supported |               |
-| narrowing.translates_optional_chain_to_as_ref_map              | 🟢 supported |               |
-| narrowing.translates_some_wrapping                             | 🟢 supported |               |
+| feature                                                             | status       | detail / note |
+| ------------------------------------------------------------------- | ------------ | ------------- |
+| narrowing.translates_logical_nullish_assign                         | 🟢 supported |               |
+| narrowing.translates_logical_or_assign                              | 🟢 supported |               |
+| narrowing.translates_logical_or_bool_short_circuits                 | 🟢 supported |               |
+| narrowing.translates_logical_or_value_returns_left_when_truthy      | 🟢 supported |               |
+| narrowing.translates_member_access_truthiness_via_ds_truthy         | 🟢 supported |               |
+| narrowing.translates_non_null_assertion                             | 🟢 supported |               |
+| narrowing.translates_null_equality_to_is_none                       | 🟢 supported |               |
+| narrowing.translates_null_inequality_to_is_some                     | 🟢 supported |               |
+| narrowing.translates_nullish_coalescing_to_unwrap_or_else           | 🟢 supported |               |
+| narrowing.translates_optional_chain_coalesce_to_unwrap_or           | 🟢 supported |               |
+| narrowing.translates_optional_chain_on_optional_field_uses_and_then | 🟢 supported |               |
+| narrowing.translates_optional_chain_to_as_ref_map                   | 🟢 supported |               |
+| narrowing.translates_some_wrapping                                  | 🟢 supported |               |
 
 ## number_methods
 
-| feature                                                       | status       | detail / note |
-| ------------------------------------------------------------- | ------------ | ------------- |
-| number_methods.translates_number_to_fixed_to_format_precision | 🟢 supported |               |
-| number_methods.translates_number_to_string_no_arg_is_display  | 🟢 supported |               |
-| number_methods.translates_number_to_string_radix_binary       | 🟢 supported |               |
-| number_methods.translates_number_to_string_radix_hex          | 🟢 supported |               |
+| feature                                                                  | status       | detail / note |
+| ------------------------------------------------------------------------ | ------------ | ------------- |
+| number_methods.translates_number_to_fixed_to_format_precision            | 🟢 supported |               |
+| number_methods.translates_number_to_precision_no_arg_is_number_to_string | 🟢 supported |               |
+| number_methods.translates_number_to_precision_with_arg                   | 🟢 supported |               |
+| number_methods.translates_number_to_string_no_arg_is_number_to_string    | 🟢 supported |               |
+| number_methods.translates_number_to_string_radix_binary                  | 🟢 supported |               |
+| number_methods.translates_number_to_string_radix_hex                     | 🟢 supported |               |
+| number_methods.translates_number_to_string_radix_nan_infinity            | 🟢 supported |               |
+| number_methods.translates_number_to_string_variable_radix                | 🟢 supported |               |
 
 ## operators
 
@@ -206,37 +254,52 @@
 
 ## strings
 
-| feature                                              | status       | detail / note |
-| ---------------------------------------------------- | ------------ | ------------- |
-| strings.translates_string_at_to_chars_nth            | 🟢 supported |               |
-| strings.translates_string_char_at_to_chars_nth       | 🟢 supported |               |
-| strings.translates_string_char_code_at_to_code_point | 🟢 supported |               |
-| strings.translates_string_code_point_at              | 🟢 supported |               |
-| strings.translates_string_compound_append            | 🟢 supported |               |
-| strings.translates_string_concat_to_format           | 🟢 supported |               |
-| strings.translates_string_concatenation_to_format    | 🟢 supported |               |
-| strings.translates_string_ends_with_to_ends_with     | 🟢 supported |               |
-| strings.translates_string_from_char_code_to_char     | 🟢 supported |               |
-| strings.translates_string_from_code_point            | 🟢 supported |               |
-| strings.translates_string_index_of_to_find           | 🟢 supported |               |
-| strings.translates_string_is_well_formed             | 🟢 supported |               |
-| strings.translates_string_last_index_of_to_rfind     | 🟢 supported |               |
-| strings.translates_string_lower_trim_methods         | 🟢 supported |               |
-| strings.translates_string_method_call                | 🟢 supported |               |
-| strings.translates_string_pad_end_to_left_align      | 🟢 supported |               |
-| strings.translates_string_pad_end_with_fill_char     | 🟢 supported |               |
-| strings.translates_string_pad_start_to_right_align   | 🟢 supported |               |
-| strings.translates_string_pad_start_with_fill_char   | 🟢 supported |               |
-| strings.translates_string_predicate_methods          | 🟢 supported |               |
-| strings.translates_string_repeat_and_replace         | 🟢 supported |               |
-| strings.translates_string_replace_all_to_replace     | 🟢 supported |               |
-| strings.translates_string_replace_substring_methods  | 🟢 supported |               |
-| strings.translates_string_slice_to_byte_range        | 🟢 supported |               |
-| strings.translates_string_split_to_vec_string        | 🟢 supported |               |
-| strings.translates_string_to_well_formed             | 🟢 supported |               |
-| strings.translates_string_value_of                   | 🟢 supported |               |
-| strings.translates_to_string_to_display              | 🟢 supported |               |
-| strings.translates_trim_start_end_to_trim_methods    | 🟢 supported |               |
+| feature                                                         | status       | detail / note |
+| --------------------------------------------------------------- | ------------ | ------------- |
+| strings.translates_string_at_to_chars_nth                       | 🟢 supported |               |
+| strings.translates_string_bracket_index_to_chars_nth            | 🟢 supported |               |
+| strings.translates_string_char_at_to_chars_nth                  | 🟢 supported |               |
+| strings.translates_string_char_code_at_to_code_point            | 🟢 supported |               |
+| strings.translates_string_code_point_at                         | 🟢 supported |               |
+| strings.translates_string_compound_append                       | 🟢 supported |               |
+| strings.translates_string_concat_number_uses_es_tostring        | 🟢 supported |               |
+| strings.translates_string_concat_to_format                      | 🟢 supported |               |
+| strings.translates_string_concatenation_to_format               | 🟢 supported |               |
+| strings.translates_string_ends_with_to_ends_with                | 🟢 supported |               |
+| strings.translates_string_from_char_code_to_char                | 🟢 supported |               |
+| strings.translates_string_from_code_point                       | 🟢 supported |               |
+| strings.translates_string_from_code_point_multiple_args         | 🟢 supported |               |
+| strings.translates_string_includes_with_position                | 🟢 supported |               |
+| strings.translates_string_index_of_to_find                      | 🟢 supported |               |
+| strings.translates_string_index_of_with_position                | 🟢 supported |               |
+| strings.translates_string_is_well_formed                        | 🟢 supported |               |
+| strings.translates_string_last_index_of_to_rfind                | 🟢 supported |               |
+| strings.translates_string_lower_trim_methods                    | 🟢 supported |               |
+| strings.translates_string_method_call                           | 🟢 supported |               |
+| strings.translates_string_pad_end_to_left_align                 | 🟢 supported |               |
+| strings.translates_string_pad_end_with_fill_char                | 🟢 supported |               |
+| strings.translates_string_pad_start_to_right_align              | 🟢 supported |               |
+| strings.translates_string_pad_start_with_fill_char              | 🟢 supported |               |
+| strings.translates_string_pad_undefined_fill_uses_space_default | 🟢 supported |               |
+| strings.translates_string_predicate_methods                     | 🟢 supported |               |
+| strings.translates_string_prototype_touppercase_call            | 🟢 supported |               |
+| strings.translates_string_prototype_trim_call_to_method         | 🟢 supported |               |
+| strings.translates_string_repeat_and_replace                    | 🟢 supported |               |
+| strings.translates_string_replace_all_dollar_to_ds_helper       | 🟢 supported |               |
+| strings.translates_string_replace_all_to_replace                | 🟢 supported |               |
+| strings.translates_string_replace_dollar_to_ds_helper           | 🟢 supported |               |
+| strings.translates_string_replace_substring_methods             | 🟢 supported |               |
+| strings.translates_string_self_plus_literal_to_push_str         | 🟢 supported |               |
+| strings.translates_string_slice_negative_from_end               | 🟢 supported |               |
+| strings.translates_string_slice_to_byte_range                   | 🟢 supported |               |
+| strings.translates_string_split_to_vec_string                   | 🟢 supported |               |
+| strings.translates_string_split_with_limit                      | 🟢 supported |               |
+| strings.translates_string_starts_ends_with_position             | 🟢 supported |               |
+| strings.translates_string_substring_swaps_bounds                | 🟢 supported |               |
+| strings.translates_string_to_well_formed                        | 🟢 supported |               |
+| strings.translates_string_value_of                              | 🟢 supported |               |
+| strings.translates_to_locale_lower_upper_case                   | 🟢 supported |               |
+| strings.translates_trim_start_end_to_trim_methods               | 🟢 supported |               |
 
 ## types
 
@@ -254,12 +317,12 @@
 | types.translates_nullable_return_type                            | 🟢 supported   |                                                                                                                                                                                                                                                                          |
 | types.translates_nullable_to_option                              | 🟢 supported   |                                                                                                                                                                                                                                                                          |
 | types.translates_object_assign_to_extend                         | 🟢 supported   |                                                                                                                                                                                                                                                                          |
-| types.translates_object_freeze_to_passthrough                    | 🔴 unsupported | `Object.freeze` (extensibility state) needs the engine (no static freeze tracking) \| `Object.seal` (extensibility state) needs the engine (no static freeze tracking) \| `Object.preventExtensions` (extensibility state) needs the engine (no static freeze tracking)  |
+| types.translates_object_freeze_degrades_to_engine                | 🔴 unsupported | `Object.freeze` (extensibility state) needs the engine (no static freeze tracking) \| `Object.seal` (extensibility state) needs the engine (no static freeze tracking) \| `Object.preventExtensions` (extensibility state) needs the engine (no static freeze tracking)  |
 | types.translates_object_from_entries_to_collect                  | 🟢 supported   |                                                                                                                                                                                                                                                                          |
 | types.translates_object_get_own_property_names_to_keys           | 🟢 supported   |                                                                                                                                                                                                                                                                          |
 | types.translates_object_has_own_to_contains_key                  | 🟢 supported   |                                                                                                                                                                                                                                                                          |
-| types.translates_object_is_frozen_to_false                       | 🔴 unsupported | `Object.isFrozen` (extensibility state) needs the engine (no static freeze tracking) \| `Object.isSealed` (extensibility state) needs the engine (no static freeze tracking) \| `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) |
 | types.translates_object_is_nan_equal                             | 🟢 supported   |                                                                                                                                                                                                                                                                          |
+| types.translates_object_isfrozen_degrades_to_engine              | 🔴 unsupported | `Object.isFrozen` (extensibility state) needs the engine (no static freeze tracking) \| `Object.isSealed` (extensibility state) needs the engine (no static freeze tracking) \| `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) |
 | types.translates_object_keys_to_hashmap_keys                     | 🟢 supported   |                                                                                                                                                                                                                                                                          |
 | types.translates_object_literal_argument_to_struct_init          | 🟢 supported   |                                                                                                                                                                                                                                                                          |
 | types.translates_object_values_to_hashmap_values                 | 🟢 supported   |                                                                                                                                                                                                                                                                          |

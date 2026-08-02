@@ -500,7 +500,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
@@ -508,7 +508,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
@@ -3844,7 +3844,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
