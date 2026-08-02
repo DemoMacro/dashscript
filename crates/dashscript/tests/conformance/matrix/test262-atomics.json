@@ -1963,72 +1963,72 @@
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-no-operation",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-add",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-and",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-compareexchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-exchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-or",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-store",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-sub",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-xor",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -2323,72 +2323,72 @@
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-no-operation",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-add",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-and",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-compareexchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-exchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-or",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-store",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-sub",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-xor",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The result of evaluating `(lapse >= TIMEOUT)` is true",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {

@@ -1002,6 +1002,12 @@ if (typeof Atomics !== 'undefined' && Atomics !== null
     var coerced = (typeof current === 'bigint') ? BigInt(value) : (value | 0);
     if (current !== coerced) return { async: false, value: 'not-equal' };
     if (t <= 0) return { async: false, value: 'timed-out' };
+    // Mirror the single-threaded Atomics.wait: a finite timeout always runs
+    // to completion (no concurrent waker), so advance the simulated clock
+    // the no-spurious-wakeup fixtures measure via monotonicNow. Guarded so
+    // the polyfill stays self-contained when injected without the $262 prelude
+    // (the waitasync unit test).
+    if (isFinite(t) && typeof __ds_atomics_clock !== 'undefined') __ds_atomics_clock += t;
     return { async: true, value: Promise.resolve('timed-out') };
   };
 }
