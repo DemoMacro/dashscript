@@ -450,6 +450,16 @@ fn iterable_element_type(
             iterable_element_type(&l.left, locals, registry)
         }
         Expression::StaticMemberExpression(sm) => member_iter_element_type(sm, locals, registry),
+        // A bare local iterable `for (const x of arr)` where `arr: Vec<T>` (or
+        // `Option<Vec<T>>`) → the element type `T`, typing the loop variable so
+        // a receiver-typed body call (`Temporal.X.from(x)` → `from_utf8`)
+        // routes correctly. Without this the binding stays untyped and the body
+        // sees a spurious `TypeError` instead of parsing the string.
+        Expression::Identifier(id) => {
+            let path = locals.get(&bindings::snake(id.name.as_str()).to_string())?;
+            let ty: Type = parse_quote!(#path);
+            vec_element_type(&ty)
+        }
         Expression::ChainExpression(c) => match &c.expression {
             ChainElement::StaticMemberExpression(sm) => {
                 member_iter_element_type(sm, locals, registry)

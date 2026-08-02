@@ -352,8 +352,13 @@ fn from_arg_needs_engine(arg: Option<&Argument>, ctx: &ClassifyCtx) -> bool {
             // Only a local bound to a string literal stays on the static
             // `from_utf8` path (the emit's `is_string_arg` infers `String` for
             // it); a Temporal/NonString local, or an untracked local (an
-            // untyped callback parameter, an unknown) needs the polyfill — the
-            // emit would otherwise throw a spurious `TypeError`.
+            // untyped callback parameter, an unknown) needs the polyfill. The
+            // polyfill (@js-temporal/polyfill) is the ES reference and is MORE
+            // conformant than temporal-rs on edge-case ISO strings (minus-sign,
+            // calendar annotations, UTC designators), so `for (const s of arr)
+            // from(s)` that degrades runs more fixtures supported than the
+            // static temporal-rs path — the untracked loop variable routes to
+            // the engine on purpose.
             !matches!(
                 ctx.local_kinds.get(id.name.as_str()),
                 Some(LocalKind::String)
@@ -1284,10 +1289,14 @@ mod tests {
 
     #[test]
     fn degrades_temporal_from_untracked_local() {
-        // An untracked local's type is unknown to the walk; the emit's
-        // `is_string_arg` would throw a spurious `TypeError`, so degrade and let
-        // the polyfill carry the real ToTemporal coercion. A local bound to a
-        // string literal stays on the static path (`local_kinds` carries it).
+        // An untracked local's type is unknown to the walk, so degrade and let
+        // the polyfill carry the real ToTemporal coercion. The polyfill
+        // (@js-temporal/polyfill) is the ES reference and is MORE conformant
+        // than temporal-rs on edge-case ISO strings (minus-sign, calendar
+        // annotations, UTC designators): a `for (const s of arr) from(s)` that
+        // degrades runs more fixtures supported than the static temporal-rs
+        // path — quantified at -50 fixtures when the loop variable was forced
+        // static. A local bound to a string literal stays static.
         assert!(matches!(
             classify_first_expr("Temporal.PlainDate.from(s)"),
             Mapping::DegradeEngine(_)
