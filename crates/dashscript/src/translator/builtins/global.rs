@@ -53,12 +53,12 @@ pub(in crate::translator) fn global_function(
         }
         // `parseFloat(s)` — full ES semantics: longest valid decimal-literal
         // prefix (truncation), `±Infinity`, NaN if none. See `parse_float_expr`.
-        "parseFloat" => parse_float_expr(translate_argument(args.first()?, ctx)),
+        "parseFloat" => parse_float_expr(es_to_string_arg(args.first()?, ctx)),
         // `parseInt(s[, radix])` — full ES semantics: trim, sign, `0x`
         // auto-detect (radix 0/16), truncate at the first non-digit. See
         // `parse_int_expr`.
         "parseInt" => parse_int_expr(
-            translate_argument(args.first()?, ctx),
+            es_to_string_arg(args.first()?, ctx),
             args.get(1).map(|r| translate_argument(r, ctx)),
         ),
         // `Number(x)` is the ES ToNumber coercion (§7.1.3). A string runs
@@ -231,9 +231,39 @@ fn bool_cast(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
 /// `[2, 36]` yields `NaN`. Inlined as a closure so each call site is
 /// self-contained (a top-level `fn` would clash when two `parseInt` calls share
 /// one translated scope).
+/// ES `ToString` for a `parseInt`/`parseFloat` argument, so the parse closures
+/// see the ECMAScript string — not Rust `Display`. A `number` arg routes
+/// through `__ds::number_to_string` (ryu-js): `Display` diverges for `-0`
+/// (`"-0"` vs `"0"`), `1e21`, `1e-7`, … — so `parseInt(-0)` returns `+0`
+/// (matching `ToString(-0) = "0"`), not `-0`. Any other value lowers as-is;
+/// the closure's own `.to_string()` then coerces (`String` clones; `bool`/
+/// `null` Display is well-formed enough to parse to `NaN`).
+pub(in crate::translator) fn es_to_string_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
+    if is_number_arg(arg, ctx) {
+        if let Some(e) = arg.as_expression() {
+            let n = translate_number_to(e, NumberFlavor::F64, ctx);
+            return parse_quote!(crate::__ds::number_to_string(#n));
+        }
+    }
+    translate_argument(arg, ctx)
+}
+
 pub(in crate::translator) fn parse_int_expr(a: Expr, radix: Option<Expr>) -> Expr {
+    // ES parseInt step 6 applies `ToInt32` to the radix, so ±Inf/NaN map to
+    // +0 (→ default 10), and a value like 2^32+2 wraps to 2 — neither matches a
+    // plain `f64 as i32`, which *saturates* out-of-range floats to `i32::MAX`/
+    // `MIN` (out of `[2,36]` → `NaN`). Gate non-finite values to 0, otherwise
+    // hop through `i64` so the `i64 as i32` truncation wraps mod 2³² (matching
+    // `ToInt32`).
     let radix_arg: Expr = match radix {
-        Some(r) => parse_quote!((#r) as i32),
+        Some(r) => parse_quote!({
+            let __rd: f64 = (#r) as f64;
+            if __rd.is_finite() {
+                (__rd as i64) as i32
+            } else {
+                0
+            }
+        }),
         None => parse_quote!(0_i32),
     };
     parse_quote!({

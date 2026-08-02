@@ -35,6 +35,26 @@ fn translates_parse_int_with_radix_and_hex_prefix() {
 }
 
 #[test]
+fn translates_parse_int_number_arg_routes_through_es_tostring() {
+    // ES `parseInt(-0)`: `ToString(-0)` is `"0"` (no sign), so the result is
+    // `+0`, not `-0`. Rust's `(-0.0_f64).to_string()` is `"-0"`, so a `number`
+    // arg must route through `__ds::number_to_string` (ryu-js), not `Display`.
+    // A `string` arg (`parseInt("-1")`) keeps the plain `.to_string()` path.
+    let src = "function f(): number { return parseInt(-0); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("number_to_string"),
+        "parseInt(number) must ES-ToString the arg, got:\n{rust}"
+    );
+    let src2 = "function f(s: string): number { return parseInt(s); }";
+    let rust2 = Translator::new().translate(src2).expect("should translate");
+    assert!(
+        !rust2.contains("number_to_string"),
+        "parseInt(string) must not ES-ToString, got:\n{rust2}"
+    );
+}
+
+#[test]
 fn translates_parse_float_to_truncating_closure() {
     // parseFloat takes the longest valid decimal prefix (truncation) —
     // "3.14abc" → 3.14, not NaN. Inlined as a closure.

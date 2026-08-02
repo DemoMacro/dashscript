@@ -249,9 +249,6 @@ pub(in crate::translator) fn number_static(
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
     let arg = args.first()?;
-    // `parseFloat` / `parseInt` take a string — keep the raw argument. The
-    // type-check arms re-translate at `f64` (see `number_arg_to_f64`).
-    let x = translate_argument(arg, ctx);
     Some(match name {
         "isNaN" => {
             let n = number_arg_to_f64(arg, ctx)?;
@@ -271,12 +268,16 @@ pub(in crate::translator) fn number_static(
         }
         // `Number.parseFloat(s)` ≡ the global `parseFloat` — full ES
         // truncation semantics (see `global::parse_float_expr`).
-        "parseFloat" => return Some(super::global::parse_float_expr(x)),
+        "parseFloat" => {
+            return Some(super::global::parse_float_expr(
+                super::global::es_to_string_arg(arg, ctx),
+            ))
+        }
         // `Number.parseInt(s[, radix])` ≡ the global `parseInt` — full ES
         // trim/sign/`0x`/truncation semantics (see `global::parse_int_expr`).
         "parseInt" => {
             return Some(super::global::parse_int_expr(
-                x,
+                super::global::es_to_string_arg(arg, ctx),
                 args.get(1).map(|r| translate_argument(r, ctx)),
             ));
         }
