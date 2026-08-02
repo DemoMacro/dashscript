@@ -114,6 +114,7 @@ pub(in crate::translator) fn string_method_on(
                     // isn't moved — later reads in the same fixture still work.
                     parse_quote!({
                         let __p = ((#p) as i64).max(0) as usize;
+                        let __p = __p.min((#obj).len());
                         (#obj).get(__p..).is_some_and(|t| t.contains(#a))
                     })
                 }
@@ -128,6 +129,7 @@ pub(in crate::translator) fn string_method_on(
                     let p = array_elem_arg(pos, ctx);
                     parse_quote!({
                         let __p = ((#p) as i64).max(0) as usize;
+                        let __p = __p.min((#obj).len());
                         (#obj).get(__p..).is_some_and(|t| t.starts_with(#a))
                     })
                 }
