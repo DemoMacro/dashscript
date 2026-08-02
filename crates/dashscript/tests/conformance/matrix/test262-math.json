@@ -1396,7 +1396,7 @@
     "layer": "test262",
     "category": "math",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (14480) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«inf», «0.30000000000000004») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a back",
+    "detail": "Test262Error: \nthread 'main' (41180) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«inf», «0.30000000000000004») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a back",
     "note": ""
   },
   {

@@ -476,7 +476,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (13596) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «55296.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (1532) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «55296.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (39848) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «56320.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39708) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«65533.0», «56320.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -548,7 +548,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -636,7 +636,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -644,7 +644,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -652,7 +652,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -748,7 +748,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -835,8 +835,8 @@
     "id": "test262.test.built-ins.string.prototype.includes.return-true-if-searchstring-is-empty",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (1288) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -844,7 +844,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -852,7 +852,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1195,16 +1195,16 @@
     "id": "test262.test.built-ins.string.prototype.match.duplicate-named-groups-properties",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: duplicate group name",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.match.duplicate-named-indices-groups-properties",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "engine error: SyntaxError: duplicate group name",
     "note": ""
   },
   {
@@ -1564,7 +1564,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (36180) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc💩💩💩\"», «\"abc💩�d83d\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (13576) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"abc💩💩💩\"», «\"abc💩�d83d\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -1644,7 +1644,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (37576) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"💩💩💩abc\"», «\"💩�d83dabc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
+    "detail": "Test262Error: \nthread 'main' (43304) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"💩💩💩abc\"», «\"💩�d83dabc\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtra",
     "note": ""
   },
   {
@@ -3292,7 +3292,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -3308,7 +3308,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3371,8 +3371,8 @@
     "id": "test262.test.built-ins.string.prototype.startswith.return-true-if-searchstring-is-empty",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (40744) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -3380,7 +3380,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3388,7 +3388,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4132,7 +4132,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -4140,7 +4140,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -4156,7 +4156,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {

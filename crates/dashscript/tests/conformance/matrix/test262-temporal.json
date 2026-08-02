@@ -2732,7 +2732,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (22960) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
+    "detail": "Test262Error: \nthread 'main' (34924) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
     "note": ""
   },
   {
@@ -4012,7 +4012,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6244,7 +6244,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (22596) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (43376) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -7036,7 +7036,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8140,7 +8140,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8388,7 +8388,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8788,7 +8788,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -9772,7 +9772,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (30796) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (32784) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -10628,7 +10628,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -12060,7 +12060,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -13620,7 +13620,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -15708,7 +15708,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -16564,7 +16564,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -17260,7 +17260,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (5464) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ba",
+    "detail": "Test262Error: \nthread 'main' (43940) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a TypeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a b",
     "note": ""
   },
   {
@@ -17460,7 +17460,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (43588) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (38064) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -17476,7 +17476,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (22916) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (38712) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -17732,7 +17732,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (36180) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-1.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (6892) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«0.0», «-1.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -18284,7 +18284,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -18748,7 +18748,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (21460) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (39132) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -19324,7 +19324,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -21052,7 +21052,7 @@
     "layer": "test262",
     "category": "temporal",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (20964) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
+    "detail": "Test262Error: \nthread 'main' (20104) panicked at src\\__ds.rs:157:13:\nTest262Error: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {

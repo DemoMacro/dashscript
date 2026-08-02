@@ -20,7 +20,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -179,32 +179,32 @@
     "id": "test262.test.built-ins.regexp.dotall.with-dotall",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (9444) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.dotall.with-dotall-unicode",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (36364) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.dotall.without-dotall",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (24728) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.dotall.without-dotall-unicode",
     "layer": "test262",
     "category": "regexp",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (43636) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -212,7 +212,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (28536) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
+    "detail": "Test262Error: \nthread 'main' (42828) panicked at src\\__ds.rs:401:13:\nTest262Error: Expected a SyntaxError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display a",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (30608) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (41028) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"�d800\"», «\"\\\\ud800\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -788,7 +788,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (9732) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (37332) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«\"[$<x>]b\"», «\"[a]b\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -812,7 +812,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: duplicate group name",
+    "detail": "Test262Error: \nthread 'main' (16264) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -900,7 +900,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after translate failure",
     "note": ""
   },
   {
@@ -915,8 +915,8 @@
     "id": "test262.test.built-ins.regexp.named-groups.non-unicode-property-names-valid",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "expected identifier or integer",
+    "status": "supported",
+    "detail": "engine fallback after translate failure",
     "note": ""
   },
   {
@@ -996,7 +996,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after translate failure",
     "note": ""
   },
   {
@@ -1011,8 +1011,8 @@
     "id": "test262.test.built-ins.regexp.named-groups.unicode-property-names-valid",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "expected identifier or integer",
+    "status": "supported",
+    "detail": "engine fallback after translate failure",
     "note": ""
   },
   {
@@ -1036,7 +1036,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1132,7 +1132,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1692,7 +1692,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -4188,7 +4188,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (23004) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (35184) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«true», «false») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4396,7 +4396,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4404,7 +4404,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4412,15 +4412,15 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (42664) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-dotall-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4428,31 +4428,31 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "static build: src\\main.rs:4:43: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:6:43: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:8:43: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:10:43: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors | engine: engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-dotall-does-not-affect-ignorecase-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-dotall-does-not-affect-multiline-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4460,23 +4460,23 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (42772) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-characterclasses",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-characterescapes",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4484,7 +4484,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (41904) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4492,15 +4492,15 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (34728) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-slash-lower-w",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4508,7 +4508,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (35820) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -4516,31 +4516,31 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (24408) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-affects-slash-upper-w",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-does-not-affect-dotall-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4548,47 +4548,47 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "static build: src\\main.rs:4:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nsrc\\main.rs:6:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nsrc\\main.rs:8:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nsrc\\main.rs:10:43: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors | engine: engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-ignorecase-does-not-affect-multiline-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-multiline",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-multiline-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-multiline-does-not-affect-dotall-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-multiline-does-not-affect-ignorecase-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4596,15 +4596,15 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "static build: src\\main.rs:4:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:6:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:8:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:10:43: error[E0609]: no field `multiline` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors | engine: engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.add-remove-modifiers",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4612,31 +4612,31 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (22784) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.changing-ignorecase-flag-does-not-affect-ignorecase-modifier",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.changing-multiline-flag-does-not-affect-multiline-modifier",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nested-add-remove-modifiers",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4644,47 +4644,47 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (20252) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-add-ignorecase-within-remove-ignorecase",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-add-multiline-within-remove-multiline",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-dotall-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-ignorecase-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-multiline-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4692,23 +4692,23 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (26712) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-remove-ignorecase-within-add-ignorecase",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.nesting-remove-multiline-within-add-multiline",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4716,15 +4716,15 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (22972) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-dotall-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4732,31 +4732,31 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "static build: src\\main.rs:4:42: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nsrc\\main.rs:6:42: error[E0609]: no field `dot_all` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors | engine: engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-dotall-does-not-affect-ignorecase-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-dotall-does-not-affect-multiline-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4764,23 +4764,23 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (1076) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-characterclasses",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-characterescapes",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4788,23 +4788,23 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (34524) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-slash-lower-p",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-slash-lower-w",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4812,39 +4812,39 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "Test262Error: \nthread 'main' (41564) panicked at src\\__ds.rs:359:9:\nTest262Error: Expected SameValue(«false», «true») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-slash-upper-p",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-affects-slash-upper-w",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-does-not-affect-dotall-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4852,47 +4852,47 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "static build: src\\main.rs:4:42: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nsrc\\main.rs:6:42: error[E0609]: no field `ignore_case` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors | engine: engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-ignorecase-does-not-affect-multiline-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-multiline",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-multiline-does-not-affect-alternatives-outside",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-multiline-does-not-affect-dotall-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.regexp.regexp-modifiers.remove-multiline-does-not-affect-ignorecase-flag",
     "layer": "test262",
     "category": "regexp",
-    "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -4900,7 +4900,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "partial",
-    "detail": "engine error: SyntaxError: invalid group",
+    "detail": "static build: src\\main.rs:4:42: error[E0609]: no field `multiline` on type `Regex`: unknown field\nsrc\\main.rs:6:42: error[E0609]: no field `multiline` on type `Regex`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors | engine: engine error: SyntaxError: invalid group",
     "note": ""
   },
   {
@@ -5100,7 +5100,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5164,7 +5164,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5204,7 +5204,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5268,7 +5268,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5748,7 +5748,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5764,7 +5764,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5828,7 +5828,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5868,7 +5868,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5924,7 +5924,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5932,7 +5932,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5980,7 +5980,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5996,7 +5996,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6012,7 +6012,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6028,7 +6028,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6060,7 +6060,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6212,7 +6212,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6268,7 +6268,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6300,7 +6300,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6316,7 +6316,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6364,7 +6364,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6372,7 +6372,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6524,7 +6524,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6572,7 +6572,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6628,7 +6628,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6692,7 +6692,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6764,7 +6764,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6804,7 +6804,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6812,7 +6812,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -6844,7 +6844,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -7036,7 +7036,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -7356,7 +7356,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -8196,7 +8196,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -8204,7 +8204,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -8212,7 +8212,7 @@
     "layer": "test262",
     "category": "regexp",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {

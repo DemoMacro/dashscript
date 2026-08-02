@@ -260,7 +260,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -299,8 +299,8 @@
     "id": "test262.test.built-ins.number.min_value.value",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: \nthread 'main' (19536) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«1.1125369292536007e-308», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ",
     "note": ""
   },
   {
@@ -436,7 +436,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -564,7 +564,7 @@
     "layer": "test262",
     "category": "number",
     "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38968) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "Test262Error: \nthread 'main' (42740) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {

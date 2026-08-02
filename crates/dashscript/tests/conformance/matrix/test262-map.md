@@ -58,7 +58,7 @@
 | test262.test.built-ins.map.prototype.delete.does-not-break-iterators                                             | 🟢 supported | engine fallback after static build failure |
 | test262.test.built-ins.map.prototype.delete.not-a-constructor                                                    | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.map.prototype.delete.returns-false                                                        | 🟢 supported |                                            |
-| test262.test.built-ins.map.prototype.delete.returns-true-for-deleted-entry                                       | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.map.prototype.delete.returns-true-for-deleted-entry                                       | 🟢 supported |                                            |
 | test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot                                 | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot-set                             | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.map.prototype.entries.does-not-have-mapdata-internal-slot-weakmap                         | 🟢 supported | via rquickjs engine                        |

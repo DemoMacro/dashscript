@@ -8,7 +8,7 @@
 | feature                                    | status       | detail / note                              |
 | ------------------------------------------ | ------------ | ------------------------------------------ |
 | test262.test.built-ins.nan.15.1.1.1-0      | 🟢 supported | via rquickjs engine                        |
-| test262.test.built-ins.nan.s15.1.1.1_a1    | 🟢 supported | via rquickjs engine                        |
+| test262.test.built-ins.nan.s15.1.1.1_a1    | 🟢 supported |                                            |
 | test262.test.built-ins.nan.s15.1.1.1_a2_t2 | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.nan.s15.1.1.1_a3_t2 | 🟢 supported | via rquickjs engine                        |
 | test262.test.built-ins.nan.s15.1.1.1_a4    | 🟢 supported | engine fallback after static build failure |

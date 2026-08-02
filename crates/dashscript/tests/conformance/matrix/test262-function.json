@@ -868,7 +868,7 @@
     "layer": "test262",
     "category": "function",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1092,7 +1092,7 @@
     "layer": "test262",
     "category": "function",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -1388,7 +1388,7 @@
     "layer": "test262",
     "category": "function",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -2252,7 +2252,7 @@
     "layer": "test262",
     "category": "function",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -2619,8 +2619,8 @@
     "id": "test262.test.built-ins.function.prototype.tostring.built-in-function-object",
     "layer": "test262",
     "category": "function",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Test262Error: Conforms to NativeFunction Syntax: \"function (ta, index, value, timeout) {\\n        if (Atomics.load(ta, index) !== value) return \\\"not-equal\\\";\\n        var t = (timeout === undefined) ? Infinity : Number(timeout);\\n        if (t > 0 && isFinite(t)) __ds_atomics_clock += t;\\n        return \\\"timed-out\\\";\\n      }\" (%Atomics%.wait)",
     "note": ""
   },
   {

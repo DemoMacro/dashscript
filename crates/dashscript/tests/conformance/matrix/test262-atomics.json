@@ -604,7 +604,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -628,7 +628,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -636,7 +636,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -772,7 +772,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -780,7 +780,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -788,7 +788,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -796,7 +796,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -812,7 +812,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -828,7 +828,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -852,7 +852,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -916,7 +916,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -1484,7 +1484,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -1492,7 +1492,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -1812,7 +1812,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -1868,7 +1868,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
@@ -1876,7 +1876,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: engine eval budget exhausted (interrupted)",
+    "detail": "engine error: InternalError: interrupted",
     "note": ""
   },
   {
