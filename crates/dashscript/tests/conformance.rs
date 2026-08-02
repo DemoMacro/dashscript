@@ -2165,19 +2165,14 @@ fn engine_eval(
             ctx.eval_with_options::<(), _>(DONE_PRELUDE, sloppy())?;
             // The fixture is self-contained (declares `main` and calls it, pure-TS
             // execution semantics), so a single eval runs it — no separate call.
-            // The wrapper stringifies any escaped throw so the value fetched via
-            // `ctx.catch()` is always a JS string (Test262Error → its toString,
-            // other throws → their own name/message). The inner `try` around
-            // `String(__ds_err)` is essential: a throw of a `Symbol` or an object
-            // whose `toString` throws makes `String()` itself throw a non-string,
-            // which would otherwise reach the uncatchable-interrupt fallback below
-            // and be mislabeled "budget exhausted" (the budget never tripped — the
-            // fixture failed fast with a non-string throw).
-            let wrapped = format!(
-                "try {{\n{js_source}\n}} catch (__ds_err) {{\n  var __ds_msg;\n  try {{ __ds_msg = String(__ds_err); }} catch (_) {{ __ds_msg = '[' + (typeof __ds_err) + ']'; }}\n  throw __ds_msg;\n}}\n"
-            );
+            // The body is eval'd BARE (no `try { … } catch` wrapper): in strict
+            // mode that wrapper would turn a top-level `function f(){}` into a
+            // block-scoped binding, hiding it from an indirect `eval`/`Function`
+            // that test262 expects to resolve it in global scope (function
+            // 15.3.5.4_2-*gs). Throws are stringified on the Rust side below
+            // (which, unlike a JS wrapper, can't perturb the fixture's scoping).
             if ctx
-                .eval_with_options::<(), _>(wrapped.as_str(), fixture_opts())
+                .eval_with_options::<(), _>(js_source, fixture_opts())
                 .is_err()
             {
                 let thrown = ctx.catch();
@@ -2186,15 +2181,18 @@ fn engine_eval(
                 }
                 // The throw left a non-string value — most often a parse-time
                 // SyntaxError from ES2025 regex syntax QuickJS-NG can't compile
-                // (`(?i:…)` modifiers, duplicate named groups), whose object the
-                // `try/catch` wrapper can't intercept (the wrapper itself is part
-                // of the parsed source, so a syntax error aborts before any
-                // runtime handler installs). Stringize via the engine so the real
-                // message is reported instead of masked as a budget timeout. Only
-                // a truly empty catch — an uncatchable busy-loop interrupt — falls
-                // through to the timeout label.
+                // (`(?i:…)` modifiers, duplicate named groups), whose object a JS
+                // `try/catch` wrapper can't intercept anyway (a parse error aborts
+                // before any runtime handler installs). Stringize via the engine
+                // so the real message is reported instead of masked as a budget
+                // timeout. The inner `try` guards the case `String()` itself
+                // throws (a Symbol, or an object whose `toString` throws) — that
+                // falls back to `[typeof]`, never the opaque timeout label, which
+                // is reserved for a truly empty catch (an uncatchable busy-loop
+                // interrupt).
                 let _ = ctx.globals().set("__ds_err_diag", thrown);
-                if let Ok(s) = ctx.eval::<String, &str>("String(globalThis.__ds_err_diag)") {
+                let diag = "(function(){ try { return String(globalThis.__ds_err_diag); } catch(_) { return '[' + (typeof globalThis.__ds_err_diag) + ']'; } })()";
+                if let Ok(s) = ctx.eval::<String, &str>(diag) {
                     return Ok(Some(s));
                 }
                 return Ok(Some("engine eval budget exhausted (interrupted)".into()));
