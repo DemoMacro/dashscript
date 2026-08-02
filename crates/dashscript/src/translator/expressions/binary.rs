@@ -61,6 +61,14 @@ pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
     if let Some(expr) = union_null_equality(bin, ctx) {
         return expr;
     }
+    // `value != null` / `value == null` when `value` is a known non-nullable,
+    // non-union value type (a struct such as `DsUrlSearchParams`, a `Vec`, …)
+    // — the value can never be null/undefined, so `!= null` folds to `true`
+    // and `== null` to `false`. A harness `assert_true(params != null)`
+    // constructor check is the common WPT shape this fixes.
+    if let Some(expr) = value_null_equality(bin, ctx) {
+        return expr;
+    }
     // `obj.field == value` where `field` is an optional `?:` struct member —
     // the field reads as `Option<T>`, so a bare `==`/`!=` against `T` would
     // not compile. Lower to an `as_deref()`/`Some(…)` comparison.
@@ -306,6 +314,45 @@ fn union_null_equality(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
         parse_quote!(!matches!(#local, crate::#enum_ident::#variant))
     } else {
         parse_quote!(matches!(#local, crate::#enum_ident::#variant))
+    })
+}
+
+/// `value != null` / `value == null` when `value` is an `Identifier` local of a
+/// known non-nullable, non-union value type — a struct (`DsUrlSearchParams`),
+/// `Vec`, `HashMap`, … The value can never be null/undefined, so `!= null`
+/// folds to `true` and `== null` to `false`. `Option<_>` locals are
+/// `null_equality`'s job; union enums (with or without a `Null`/`Undef`
+/// variant) are excluded so a union's `!= null` keeps its variant-match
+/// semantics instead of being folded to a constant.
+fn value_null_equality(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+    let negate = match bin.operator {
+        BinaryOperator::Equality | BinaryOperator::StrictEquality => false,
+        BinaryOperator::Inequality | BinaryOperator::StrictInequality => true,
+        _ => return None,
+    };
+    let (left_null, right_null) = (is_nullish(&bin.left), is_nullish(&bin.right));
+    let value_side = if right_null {
+        &bin.left
+    } else if left_null {
+        &bin.right
+    } else {
+        return None;
+    };
+    let Expression::Identifier(id) = value_side else {
+        return None;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    let last = ctx.local_type(&name)?.segments.last()?;
+    if last.ident == "Option" {
+        return None;
+    }
+    if ctx.registry().union_enums.contains_key(&last.ident) {
+        return None;
+    }
+    Some(if negate {
+        parse_quote!(true)
+    } else {
+        parse_quote!(false)
     })
 }
 

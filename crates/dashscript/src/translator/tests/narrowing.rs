@@ -102,6 +102,44 @@ fn translates_null_inequality_to_is_some() {
 }
 
 #[test]
+fn value_type_null_inequality_folds_to_true() {
+    // A value of a non-nullable type (a `Map`/struct) can never be null or
+    // undefined, so `m != null` folds to `true` — the WPT harness' common
+    // `assert_true(params != null)` constructor check.
+    let src = "function f(): boolean { var m = new Map<string, number>(); return m != null; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("None") && rust.contains("true"),
+        "a non-nullable value `!= null` should fold to `true`, not compare against None: {rust}"
+    );
+}
+
+#[test]
+fn value_type_null_equality_folds_to_false() {
+    let src = "function f(): boolean { const m = new Map<string, number>(); return m === null; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("None") && rust.contains("false"),
+        "a non-nullable value `=== null` should fold to `false`, not compare against None: {rust}"
+    );
+}
+
+#[test]
+fn url_search_params_null_inequality_folds_to_true() {
+    // WPT urlsearchparams-get shape: an unannotated `var params = new
+    // URLSearchParams("a=b")` records `DsUrlSearchParams`, so a harness
+    // `params != null` constructor check folds to `true` (the value can never
+    // be null/undefined) instead of E0369 (`DsUrlSearchParams != None`).
+    let src =
+        "function f(): boolean { var params = new URLSearchParams('a=b'); return params != null; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("None") && rust.contains("true"),
+        "a DsUrlSearchParams `!= null` should fold to `true`: {rust}"
+    );
+}
+
+#[test]
 fn translates_nullish_coalescing_to_unwrap_or_else() {
     let src = "function f(m: number | null): number { return m ?? 0; }";
     let rust = Translator::new().translate(src).expect("should translate");
