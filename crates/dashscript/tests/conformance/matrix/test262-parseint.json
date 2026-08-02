@@ -27,8 +27,8 @@
     "id": "test262.test.built-ins.parseint.s15.1.2.2_a1_t2",
     "layer": "test262",
     "category": "parseint",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (12432) panicked at src\\__ds.rs:127:9:\nTest262Error: Expected SameValue(«-0.0», «0.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -164,7 +164,7 @@
     "layer": "test262",
     "category": "parseint",
     "status": "supported",
-    "detail": "",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -219,8 +219,8 @@
     "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.2_t1",
     "layer": "test262",
     "category": "parseint",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (38656) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«NaN», «11.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -235,8 +235,8 @@
     "id": "test262.test.built-ins.parseint.s15.1.2.2_a3.2_t3",
     "layer": "test262",
     "category": "parseint",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (19880) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«NaN», «3.0») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
