@@ -243,7 +243,20 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
                         name = id.name.as_str()
                     ))
                 }
-                _ => Mapping::Mapped,
+                // `new <Identifier>(…)` — a user class or a mapped global ctor
+                // (`RegExp`/`Worker`/`Uint8Array`/`TextEncoder`/`Error`,
+                // lowered in `new_expr`). Static.
+                Expression::Identifier(_) => Mapping::Mapped,
+                // `new <member>(…)` / `new (expr)(…)` — `new_expr` lowers only
+                // an Identifier callee; any other shape emits `todo!()` (a
+                // runtime panic). ES built-in members (`Iterator.concat`,
+                // `Promise.all`, …) are not constructors — `new` throws
+                // TypeError — and a static lowering can neither build the value
+                // nor decide [[Construct]]. The function runs under the engine,
+                // where QuickJS applies real [[Construct]] semantics. No static
+                // `new <member>` passes today (every one is `todo!()`), so this
+                // cannot regress a static pass.
+                _ => degrade("`new <non-identifier>(…)` has no static lowering → engine"),
             },
         },
         _ => Mapping::Mapped,

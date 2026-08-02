@@ -235,8 +235,8 @@
     "id": "test262.test.built-ins.error.prototype.s15.11.4_a4",
     "layer": "test262",
     "category": "error",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41288) panicked at src\\__ds.rs:152:13:\nTest262Error: Expected a TypeError to be thrown but got a Error\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "via rquickjs engine",
     "note": ""
   },
   {
@@ -500,7 +500,7 @@
     "layer": "test262",
     "category": "error",
     "status": "supported",
-    "detail": "",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
@@ -508,7 +508,7 @@
     "layer": "test262",
     "category": "error",
     "status": "supported",
-    "detail": "",
+    "detail": "engine fallback after static build failure",
     "note": ""
   },
   {
