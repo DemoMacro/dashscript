@@ -11,7 +11,7 @@
 //! `TextEncoder.encode` / `TextDecoder.decode` instance-method dispatch
 //! (`text_encoder_method` / `text_decoder_method`).
 
-use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
+use oxc_ast::ast::{Argument, Expression, ObjectPropertyKind, PropertyKey, StaticMemberExpression};
 use syn::{parse_quote, Expr, Type};
 
 use super::super::super::bindings;
@@ -30,13 +30,13 @@ pub(in crate::translator) fn encoding_ctor_type(name: &str) -> Option<Type> {
 }
 
 /// `decoder.decode(bytes[, options])` on a `TextDecoder` local →
-/// `decoder.decode(bytes)`. The ES `decode` second arg `{ stream }` controls
-/// an instance buffer that carries an incomplete multi-byte sequence across
-/// calls; that streaming state is not modeled, so the option is dropped and
-/// each call decodes an independent buffer — matching every fixture that does
-/// not split a multi-byte sequence across calls. A non-`TextDecoder` receiver
-/// or an unmapped name falls through to a plain call (`cargo check` rejects it
-/// honestly if the shapes do not line up).
+/// `decoder.decode(bytes, stream)`. The ES `decode` second arg `{ stream }`
+/// controls an instance buffer that carries an incomplete multi-byte sequence
+/// across calls: a literal `stream: true` lowers to the runtime `stream` flag
+/// (buffer the trailing sequence; more input coming); anything else (absent,
+/// `stream: false`, or a non-literal value) is a flush. A non-`TextDecoder`
+/// receiver or an unmapped name falls through to a plain call (`cargo check`
+/// rejects it honestly if the shapes do not line up).
 pub(in crate::translator) fn text_decoder_method(
     sm: &StaticMemberExpression,
     args: &[Argument],
@@ -50,13 +50,48 @@ pub(in crate::translator) fn text_decoder_method(
     }
     let recv = translate_expr(&sm.object, ctx);
     // `decoder.decode()` with no args is the ES "flush the stream" call —
-    // equivalent to `decoder.decode(new Uint8Array())`. The streaming instance
-    // buffer is not modeled, so this decodes an empty buffer.
+    // equivalent to `decoder.decode(new Uint8Array())`, i.e. an empty buffer
+    // with `stream: false` (flush any pending bytes from a prior `stream: true`
+    // call as replacement).
     let bytes = match args.first() {
         Some(arg) => translate_argument(arg, ctx),
         None => parse_quote!(::std::vec::Vec::<u8>::new()),
     };
-    Some(parse_quote!(#recv.decode(#bytes)))
+    let stream = decode_stream_flag(args);
+    Some(parse_quote!(#recv.decode(#bytes, #stream)))
+}
+
+/// The ES `decode(bytes, { stream })` second arg's literal `stream` value, as a
+/// `bool` expr. Only a BooleanLiteral `stream` field lowers statically (the
+/// common fixture shape); an absent field, a `false` literal, or a non-literal
+/// value defaults to `false` (a flush), matching `decode_options`.
+fn decode_stream_flag(args: &[Argument]) -> Expr {
+    let value = match args.get(1) {
+        Some(Argument::ObjectExpression(obj)) => obj.properties.iter().find_map(|kind| {
+            let ObjectPropertyKind::ObjectProperty(p) = kind else {
+                return None;
+            };
+            let name = match &p.key {
+                PropertyKey::StaticIdentifier(id) => id.name.as_str(),
+                PropertyKey::StringLiteral(s) => s.value.as_str(),
+                _ => return None,
+            };
+            (name == "stream")
+                .then_some(&p.value)
+                .and_then(|v| match v {
+                    Expression::BooleanLiteral(b) => Some(b.value),
+                    _ => None,
+                })
+        }),
+        _ => None,
+    };
+    match value {
+        Some(b) => {
+            let lit = syn::LitBool::new(b, proc_macro2::Span::call_site());
+            parse_quote!(#lit)
+        }
+        None => parse_quote!(false),
+    }
 }
 
 /// `encoder.encode()` / `encoder.encode(undefined)` on a `TextEncoder` (a

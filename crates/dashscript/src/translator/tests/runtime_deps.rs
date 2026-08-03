@@ -164,9 +164,10 @@ fn text_decoder_ctor_and_decode_route_through_encoding_rs() {
     // `new TextDecoder(label?, options?)` resolves `label` via
     // `encoding_rs::Encoding::for_label` (so a non-UTF-8 label like "utf-16le"
     // works, not just the prior hard-coded UTF-8); `options.fatal` lowers to
-    // the `bool` ctor param. `decode(bytes, { stream })` drops the `stream`
-    // option (the streaming instance buffer is not modeled). The Encoding dep
-    // pulls `encoding_rs` and ships the `TextDecoder` struct.
+    // the `bool` ctor param. `decode(bytes, { stream })` lowers the literal
+    // `stream` value to the runtime `stream` flag (a stateful Decoder buffers
+    // an incomplete trailing multi-byte sequence across `stream: true` calls).
+    // The Encoding dep pulls `encoding_rs` and ships the `TextDecoder` struct.
     let src = "function f(): void {\n    const d = new TextDecoder(\"utf-16le\", { fatal: true });\n    const s = d.decode([72, 0], { stream: false });\n    console.log(s);\n}";
     let (rust, deps) = Translator::new()
         .translate_with_deps(src)
@@ -189,12 +190,35 @@ fn text_decoder_ctor_and_decode_route_through_encoding_rs() {
         "TextDecoder resolves labels via encoding_rs, got helper: {:?}",
         deps.helper_module()
     );
-    // `decode` dispatch drops the `{ stream }` second arg, so the emitted call
-    // carries no object literal.
+    // `decode` dispatch lowers the `{ stream }` second arg's literal value to a
+    // trailing `bool` — the object literal is not emitted, but `false` is.
     assert!(rust.contains(".decode("), "decode emits, got:\n{rust}");
     assert!(
         !rust.contains("stream"),
-        "decode stream option is dropped, got:\n{rust}"
+        "decode stream option lowers to a bool, not the object literal, got:\n{rust}"
+    );
+}
+
+#[test]
+fn text_decoder_decode_stream_true_lowers_to_runtime_stream_flag() {
+    // `decode(bytes, { stream: true })` — a literal `true` keeps the trailing
+    // incomplete multi-byte sequence buffered for the next call (encoding_rs
+    // `last = false`). The flag must reach the emitted call as the 3rd `bool`
+    // arg, and the no-arg flush `decode()` lowers to an empty buffer + `false`.
+    let src = "function f(): void {\n    const d = new TextDecoder();\n    const a = d.decode(new Uint8Array([0xF0]), { stream: true });\n    const b = d.decode();\n}";
+    let rust = Translator::new().translate(src).expect("translate");
+    let mut it = rust.match_indices(".decode(").map(|(i, _)| i);
+    let first = it.next().expect("first decode emits");
+    let second = it.next().expect("second decode emits");
+    // First call ends before the second, so the slice between the call start
+    // and the next decode carries the `true` stream flag.
+    assert!(
+        rust[first..second].contains("true"),
+        "stream: true lowers to the runtime stream flag, got:\n{rust}"
+    );
+    assert!(
+        rust[second..].contains("false"),
+        "no-arg decode() lowers to an empty buffer + stream: false flush, got:\n{rust}"
     );
 }
 

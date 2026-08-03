@@ -4,7 +4,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:52:55: error[E0609]: no field `slice` on type `Vec<_>`: unknown field\nsrc\\main.rs:60:61: error[E0609]: no field `buffer` on type `Vec<u8>`: unknown field\nsrc\\main.rs:64:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:73:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:82:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:55:43: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
+    "detail": "static build: src\\main.rs:52:55: error[E0609]: no field `slice` on type `Vec<_>`: unknown field\nsrc\\main.rs:71:26: error[E0609]: no field `buffer` on type `Vec<u8>`: unknown field\nsrc\\main.rs:77:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:86:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:95:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:37:65: error[E0609]: no field `buffer` on type `Vec<u8>`: unknown field",
     "note": ""
   },
   {
@@ -12,7 +12,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:382:33: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:382:71: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:386:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:387:58: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:169:34: error[E0425]: cannot find value `location` in this scope: not found in this scope\nsrc\\main.rs:173:17: error[E0425]: cannot find value `location` in this scope: not found in this scope",
+    "detail": "static build: src\\main.rs:169:34: error[E0425]: cannot find value `location` in this scope: not found in this scope\nsrc\\main.rs:173:17: error[E0425]: cannot find value `location` in this scope: not found in this scope\nsrc\\main.rs:293:17: error[E0425]: cannot find value `location` in this scope: not found in this scope\nsrc\\main.rs:374:35: error[E0425]: cannot find value `document` in this scope: not found in this scope\nsrc\\main.rs:376:21: error[E0425]: cannot find value `document` in this scope: not found in this scope\nsrc\\main.rs:376:54: error[E0425]: cannot find value `document` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -108,7 +108,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:24:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:31:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:28:22: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:35:22: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:5:31: error[E0308]: mismatched types: expected `String`, found `Option<_>`\nsrc\\main.rs:6:66: error[E0308]: mismatched types: expected `String`, found `Option<_>`",
+    "detail": "static build: src\\main.rs:27:25: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:28:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:34:25: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:35:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:5:31: error[E0308]: mismatched types: expected `String`, found `Option<_>`\nsrc\\main.rs:6:66: error[E0308]: mismatched types: expected `String`, found `Option<_>`",
     "note": ""
   },
   {
@@ -116,7 +116,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:88:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:98:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:49:14: error[E0599]: `f64` is not an iterator: `f64` is not an iterator\nsrc\\main.rs:53:18: error[E0599]: no method named `pipe_through` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:54:21: error[E0433]: cannot find type `TextDecoderStream` in this scope: use of undeclared type `TextDecoderStream`\nsrc\\main.rs:62:14: error[E0277]: `f64` is not a future: `f64` is not a future",
+    "detail": "static build: src\\main.rs:88:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:98:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:35:31: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:37:46: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:39:70: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:72:54: error[E0609]: no field `bytes` on type `HashMap<String, String>`: unknown field",
     "note": ""
   },
   {
@@ -124,7 +124,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:65:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:66:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:41:60: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:73:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:38:17: error[E0308]: mismatched types: expected `f64`, found `Vec<Vec<u8>>`\nsrc\\main.rs:40:32: error[E0599]: no method named `pipe_through` found for type `f64` in the current scope: method not found in `f64`",
+    "detail": "static build: src\\main.rs:65:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:66:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:41:60: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:38:17: error[E0308]: mismatched types: expected `f64`, found `Vec<Vec<u8>>`\nsrc\\main.rs:40:32: error[E0599]: no method named `pipe_through` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:40:45: error[E0433]: cannot find type `TextDecoderStream` in this scope: use of undeclared type `TextDecoderStream`",
     "note": ""
   },
   {
@@ -132,7 +132,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:30:50: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:31:50: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:51:50: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:52:50: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:72:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:79:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope",
+    "detail": "static build: src\\main.rs:39:54: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:40:54: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:62:50: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:63:50: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:88:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:95:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -140,7 +140,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:59:64: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:94:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:118:68: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:48:36: error[E0308]: mismatched types: expected `&[f64]`, found `&str`\nsrc\\main.rs:48:40: error[E0599]: the method `to_string` exists for reference `&[f64]`, but its trait bounds were not satisfied: method cannot be called on `&[f64]` due to unsatisfied trait bounds\nsrc\\main.rs:52:47: error[E0308]: mismatched types: expected `&[f64]`, found `&str`",
+    "detail": "static build: src\\main.rs:59:64: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:118:68: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:48:36: error[E0308]: mismatched types: expected `&[f64]`, found `&str`\nsrc\\main.rs:48:40: error[E0599]: the method `to_string` exists for reference `&[f64]`, but its trait bounds were not satisfied: method cannot be called on `&[f64]` due to unsatisfied trait bounds\nsrc\\main.rs:52:47: error[E0308]: mismatched types: expected `&[f64]`, found `&str`\nsrc\\main.rs:52:51: error[E0599]: the method `to_string` exists for reference `&[f64]`, but its trait bounds were not satisfied: method cannot be called on `&[f64]` due to unsatisfied trait bounds",
     "note": ""
   },
   {
@@ -156,7 +156,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:76:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:97:74: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:38:19: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:43:30: error[E0433]: cannot find type `TextEncoderStream` in this scope: use of undeclared type `TextEncoderStream`\nsrc\\main.rs:62:29: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope\nsrc\\main.rs:64:29: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope",
+    "detail": "static build: src\\main.rs:38:19: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:43:30: error[E0433]: cannot find type `TextEncoderStream` in this scope: use of undeclared type `TextEncoderStream`\nsrc\\main.rs:62:29: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope\nsrc\\main.rs:64:29: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope\nsrc\\main.rs:66:29: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope\nsrc\\main.rs:68:29: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -203,8 +203,8 @@
     "id": "wpt.encoding.textdecoder-eof",
     "layer": "wpt",
     "category": "encoding",
-    "status": "partial",
-    "detail": "\nthread 'main' (6340) panicked at src\\__ds.rs:314:9:\nAssertionError: Expected SameValue(«\"�\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -228,7 +228,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:7:57: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:9:57: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:11:57: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:21:44: error[E0609]: no field `encoding` on type `HashMap<String, String>`: unknown field\nsrc\\main.rs:26:70: error[E0609]: no field `sequence` on type `HashMap<String, String>`: unknown field\nsrc\\main.rs:31:44: error[E0609]: no field `encoding` on type `HashMap<String, String>`: unknown field",
+    "detail": "static build: src\\main.rs:7:57: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:9:57: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:11:57: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:21:44: error[E0609]: no field `encoding` on type `HashMap<String, String>`: unknown field\nsrc\\main.rs:27:48: error[E0609]: no field `sequence` on type `HashMap<String, String>`: unknown field\nsrc\\main.rs:37:44: error[E0609]: no field `encoding` on type `HashMap<String, String>`: unknown field",
     "note": ""
   },
   {

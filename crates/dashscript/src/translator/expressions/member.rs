@@ -805,16 +805,30 @@ pub(in crate::translator) fn is_url_local(expr: &Expression, ctx: &Ctx<'_>) -> b
         .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsUrl"))
 }
 
-/// True when `expr` is a local whose type is `crate::__ds::TextDecoder` (a
-/// `new TextDecoder(...)` binding), so `decoder.decode(bytes, options?)` can
-/// drop the `options` arg (the ES `stream` instance buffer is not modeled).
+/// True when `expr` is a `TextDecoder` receiver — a local whose type is
+/// `crate::__ds::TextDecoder` (a `let d = new TextDecoder(...)` binding) OR an
+/// inline `new TextDecoder(...)` expression. The inline form is a common WPT
+/// shape (`new TextDecoder("utf-8").decode(bytes, { stream: true })`), so,
+/// unlike most `is_*_local` predicates, the check also accepts the
+/// `NewExpression` (unwrapping one paren layer) and not just the identifier.
 pub(in crate::translator) fn is_text_decoder_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
-    let Expression::Identifier(id) = expr else {
-        return false;
+    // Unwrap one paren layer — `(new TextDecoder()).decode(...)` reaches the
+    // member object as a `ParenthesizedExpression(NewExpression)`.
+    let inner = match expr {
+        Expression::ParenthesizedExpression(p) => &p.expression,
+        other => other,
     };
-    let name = bindings::snake(&id.name).to_string();
-    ctx.local_type(&name)
-        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "TextDecoder"))
+    match inner {
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            ctx.local_type(&name)
+                .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "TextDecoder"))
+        }
+        Expression::NewExpression(n) => {
+            matches!(&n.callee, Expression::Identifier(id) if id.name.as_str() == "TextDecoder")
+        }
+        _ => false,
+    }
 }
 
 /// True when `expr` is a local whose type is `crate::__ds::DsEventTarget` (a

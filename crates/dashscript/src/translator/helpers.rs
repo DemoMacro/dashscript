@@ -134,14 +134,19 @@ pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
 /// Standard reference implementation). `TextEncoder` is UTF-8 only (the sole
 /// encoding the Encoding API guarantees for encode), so `encode` is
 /// `String::into_bytes` (zero-copy). `TextDecoder` carries a resolved
-/// `encoding_rs::Encoding` (looked up from the ctor `label`), and `decode`
-/// routes through `enc.decode()` (BOM-stripped, replacement) or
-/// `decode_without_bom_handling()` when `ignoreBOM: true`; `fatal: true`
-/// promotes a replacement (`had_errors`) to a panicked `TypeError` (ES: a
-/// fatal decoder throws on an invalid byte sequence). Streaming state (the ES
-/// `decode(…, { stream })` instance buffer) is not modeled — each call decodes
-/// an independent buffer (the dispatch drops the `stream` option), matching
-/// every fixture that does not split a multi-byte sequence across calls.
+/// `encoding_rs::Encoding` (looked up from the ctor `label`); `decode` feeds
+/// through a stateful `encoding_rs::Decoder` (`new_decoder` for BOM-stripped,
+/// `new_decoder_without_bom_handling` when `ignoreBOM: true`), with the ES
+/// `stream` option mapped to encoding_rs's `last` flag — `stream: true`
+/// buffers an incomplete trailing multi-byte sequence for the next call
+/// (`last = false`), `stream: false` flushes it as replacement (`last = true`).
+/// `fatal: true` promotes a replacement (`replaced`) to a panicked `TypeError`
+/// (ES: a fatal decoder throws on an invalid byte sequence). encoding_rs
+/// requires a fresh `Decoder` per stream once `last = true` ends one, so the
+/// instance holds `RefCell<Option<Decoder>>`: lazily created at the start of a
+/// stream, dropped on flush — matching ES, where each non-streaming `decode()`
+/// is independent (and re-sniffs the BOM). Interior mutability keeps `decode`
+/// at `&self` so a non-`mut` binding still borrows.
 pub(super) const ENCODING_HELPER: &str = "\
 pub struct TextEncoder { pub encoding: &'static str }
 impl TextEncoder {
@@ -159,25 +164,56 @@ pub struct TextDecoder {
     pub fatal: bool,
     pub ignore_bom: bool,
     enc: &'static encoding_rs::Encoding,
+    decoder: ::std::cell::RefCell<::std::option::Option<encoding_rs::Decoder>>,
 }
 impl TextDecoder {
     pub fn new(label: String, fatal: bool, ignore_bom: bool) -> Self {
         let enc = encoding_rs::Encoding::for_label(label.as_bytes())
             .unwrap_or(encoding_rs::UTF_8);
-        TextDecoder { encoding: enc.name(), fatal, ignore_bom, enc }
+        TextDecoder {
+            encoding: enc.name(),
+            fatal,
+            ignore_bom,
+            enc,
+            decoder: ::std::cell::RefCell::new(::std::option::Option::None),
+        }
     }
-    pub fn decode(&self, bytes: Vec<u8>) -> String {
-        // `decode` returns a 3-tuple `(Cow, &Encoding, bool)` — the middle
-        // Encoding is the one BOM-sniffed from the bytes (for chained streaming
-        // decode), which we discard; `decode_without_bom_handling` returns a
-        // 2-tuple `(Cow, bool)`. Unify both arms to `(Cow, bool)` so the let
-        // binding type-checks.
-        let (s, had_errors) = if self.ignore_bom {
-            self.enc.decode_without_bom_handling(&bytes)
-        } else {
-            let (s, _, had_errors) = self.enc.decode(&bytes);
-            (s, had_errors)
-        };
+    pub fn decode(&self, bytes: Vec<u8>, stream: bool) -> String {
+        let mut slot = self.decoder.borrow_mut();
+        if slot.is_none() {
+            *slot = ::std::option::Option::Some(if self.ignore_bom {
+                self.enc.new_decoder_without_bom_handling()
+            } else {
+                self.enc.new_decoder()
+            });
+        }
+        let dec = slot.as_mut().unwrap();
+        let mut out = ::std::string::String::new();
+        let mut input = bytes.as_slice();
+        let mut had_errors = false;
+        loop {
+            // Worst case: each input byte decodes to a 3-byte U+FFFD replacement
+            // (valid multi-byte input never expands beyond that), plus a few
+            // bytes of pending carried by the Decoder from a prior `stream:
+            // true` call. `decode_to_string` treats String capacity as the
+            // output limit and never reallocates, so reserve enough and loop on
+            // `OutputFull` (rare).
+            out.reserve(input.len() * 3 + 16);
+            let (res, read, replaced) = dec.decode_to_string(input, &mut out, !stream);
+            had_errors |= replaced;
+            match res {
+                encoding_rs::CoderResult::InputEmpty => break,
+                encoding_rs::CoderResult::OutputFull => input = &input[read..],
+            }
+        }
+        // A flush (`stream: false`) ends this stream; encoding_rs forbids reusing
+        // a Decoder after `last = true`, so drop it — the next call lazily makes
+        // a fresh one for a new stream (each ES `decode()` w/o stream is
+        // independent and re-sniffs the BOM).
+        if !stream {
+            *slot = ::std::option::Option::None;
+        }
+        drop(slot);
         if self.fatal && had_errors {
             ::std::panic::panic_any(crate::__ds::DsError::new(
                 \"TypeError\",
@@ -187,7 +223,7 @@ impl TextDecoder {
                 ),
             ));
         }
-        s.into_owned()
+        out
     }
 }
 ";
