@@ -29,6 +29,13 @@ interface performance {
   now(): number; // Monotonic milliseconds since timeOrigin.
 }
 
+// crypto — the WinterTC (W3C WebCrypto) global. `randomUUID()` returns an RFC
+// 4122 version-4 UUID string (`crypto.rs`, static Rust — never degraded).
+// `getRandomValues`/`subtle` are not Tier 1.
+interface crypto {
+  randomUUID(): string; // A fresh RFC 4122 version-4 UUID.
+}
+
 // URL — the WinterTC (WHATWG URL) static methods on the `URL` constructor
 // object (`url.rs`). Instance accessors (`href`/`origin`/`searchParams`/…) and
 // `new URL(…)` are not namespace members; completion surfaces them from the

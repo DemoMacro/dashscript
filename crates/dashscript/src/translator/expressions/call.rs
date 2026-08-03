@@ -482,6 +482,12 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::perf_method(sm) {
             return expr;
         }
+        // `crypto.randomUUID()` — the WinterTC (W3C WebCrypto) method on the
+        // global `crypto` object (optionally via the WinterTC `self` alias,
+        // `self.crypto.randomUUID()`); both lower to `__ds::crypto_random_uuid`.
+        if let Some(expr) = builtins::crypto_method(sm) {
+            return expr;
+        }
         // `URL.canParse(url, base?)` / `URL.parse(url, base?)` — the WinterTC
         // WHATWG URL static methods on the `URL` constructor object. The callee
         // is the `URL` identifier (not a local), so this dispatch fires before

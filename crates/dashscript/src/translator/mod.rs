@@ -175,12 +175,16 @@ pub enum RuntimeDep {
     /// WinterTC `self` alias (`self.performance.now()`); both lower to
     /// `__ds::perf_now()` (a `static OnceLock<Instant>` epoch — pure `std`).
     HrTime,
+    /// WinterTC WebCrypto — `crypto.randomUUID()` (an RFC 4122 v4 UUID string);
+    /// `crypto`/`self.crypto` both lower to `__ds::crypto_random_uuid` (the
+    /// `uuid` crate's `new_v4`, pure-Rust — never degraded).
+    Crypto,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 20] = [
+    const ALL: [RuntimeDep; 21] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -201,6 +205,7 @@ impl RuntimeDep {
         RuntimeDep::F64MaxMin,
         RuntimeDep::Base64,
         RuntimeDep::HrTime,
+        RuntimeDep::Crypto,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -237,6 +242,7 @@ impl RuntimeDep {
             RuntimeDep::F64MaxMin => Some("__ds::ds_f64_max"),
             RuntimeDep::Base64 => Some("__ds::b64_"),
             RuntimeDep::HrTime => Some("__ds::perf_now"),
+            RuntimeDep::Crypto => Some("__ds::crypto_random_uuid"),
             RuntimeDep::Engine => None,
         }
     }
@@ -304,6 +310,9 @@ impl RuntimeDep {
             RuntimeDep::F64MaxMin => None,
             RuntimeDep::Base64 => Some(&[("base64", "\"0.22\"")]),
             RuntimeDep::HrTime => None,
+            // `uuid` (uuid-rs/uuid) — `crypto.randomUUID()` is RFC 4122 v4.
+            // The `v4` feature enables `Uuid::new_v4` (backed by `getrandom`).
+            RuntimeDep::Crypto => Some(&[("uuid", "{ version = \"1\", features = [\"v4\"] }")]),
         }
     }
 
@@ -332,6 +341,7 @@ impl RuntimeDep {
             RuntimeDep::F64MaxMin => Some(F64_MAXMIN_HELPER),
             RuntimeDep::Base64 => Some(BASE64_HELPER),
             RuntimeDep::HrTime => Some(PERF_HELPER),
+            RuntimeDep::Crypto => Some(CRYPTO_HELPER),
         }
     }
 }

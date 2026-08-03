@@ -90,6 +90,15 @@
       "expect": "supported",
       "expect_output": "true\ntrue\nfalse",
       "note": "WinterTC URL.canParse: absolute URL → true; 'a' resolves against base https://b/ → true; 'not a url' (no base, has spaces) → false"
+    },
+    {
+      "id": "correctness.crypto_random_uuid",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { const a: string = crypto.randomUUID(); const b: string = self.crypto.randomUUID(); console.log(a.split(\"-\").length); console.log(b.split(\"-\").length); console.log(a !== b); }\nmain();\n",
+      "expect": "supported",
+      "expect_output": "5\n5\ntrue",
+      "note": "WinterTC WebCrypto: crypto.randomUUID() returns RFC 4122 v4 UUID (5 dash-separated groups); self.crypto alias works; two calls differ"
     }
   ]
 }

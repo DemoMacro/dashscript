@@ -219,6 +219,18 @@ pub fn perf_now() -> f64 {
 }
 "#;
 
+/// WinterTC WebCrypto helper — `__ds::crypto_random_uuid`. `crypto.randomUUID()`
+/// (an RFC 4122 version-4 UUID) lowers here; `uuid::Uuid::new_v4` is the
+/// reference implementation (`v4` feature, backed by `getrandom`). Pure-Rust —
+/// WinterTC never degrades a Web API to the engine.
+pub(super) const CRYPTO_HELPER: &str = r#"
+/// `crypto.randomUUID()` — an RFC 4122 version-4 UUID string (36 chars,
+/// `xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx`). Each call returns a fresh UUID.
+pub fn crypto_random_uuid() -> String {
+    ::uuid::Uuid::new_v4().to_string()
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through

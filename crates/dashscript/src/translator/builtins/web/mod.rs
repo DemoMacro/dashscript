@@ -13,11 +13,13 @@
 //! roadmap, task #408).
 
 mod console;
+mod crypto;
 mod encoding;
 mod hr_time;
 mod url;
 
 pub(in crate::translator) use console::console_method;
+pub(in crate::translator) use crypto::crypto_method;
 pub(in crate::translator) use encoding::encoding_ctor_type;
 pub(in crate::translator) use hr_time::perf_method;
 pub(in crate::translator) use url::{

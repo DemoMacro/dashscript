@@ -254,6 +254,40 @@ fn url_static_methods_emit_url_dep_helpers() {
 }
 
 #[test]
+fn crypto_random_uuid_emits_crypto_dep_helper() {
+    // `crypto.randomUUID()` (WinterTC WebCrypto) lowers to `__ds::crypto_random_uuid`;
+    // the `__ds::crypto_random_uuid` marker flags the `Crypto` dep, which pulls
+    // the `uuid` crate (`v4` feature) and ships the helper. The WinterTC `self`
+    // global-object alias lands on the same helper, so `self.crypto.randomUUID()`
+    // and `crypto.randomUUID()` are identical.
+    let src = "function f(): string { return self.crypto.randomUUID(); }\nfunction g(): string { return crypto.randomUUID(); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::crypto_random_uuid"),
+        "crypto.randomUUID → __ds::crypto_random_uuid, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Crypto),
+        "Crypto dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module()
+            .is_some_and(|s| s.contains("pub fn crypto_random_uuid") && s.contains("new_v4")),
+        "Crypto dep ships crypto_random_uuid helper, got helper: {:?}",
+        deps.helper_module()
+    );
+    // The `uuid` crate (v4 feature) is appended to Cargo.toml.
+    let mut toml = String::from("[dependencies]\n");
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(
+        toml.contains("uuid") && toml.contains("v4"),
+        "Crypto pulls uuid with v4 feature, got Cargo.toml: {toml}"
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);
