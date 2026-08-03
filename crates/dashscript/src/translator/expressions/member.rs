@@ -253,6 +253,17 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return parse_quote!(#obj.#method());
         }
     }
+    // `r.status`/`.ok`/`.headers` on a DsResponse local → the zero-arg
+    // accessor. ES `Response` exposes these as properties; the Rust wrapper's
+    // accessors are methods, so `r.status` rewrites to `r.status()`. The async
+    // `.text()`/`.json()` are method calls and dispatch in the call path.
+    if is_ds_response_local(&sm.object, ctx) {
+        if let Some(m) = ds_response_accessor(field_name) {
+            let method = Ident::new(m, Span::call_site());
+            let obj = translate_expr(&sm.object, ctx);
+            return parse_quote!(#obj.#method());
+        }
+    }
     // `tags.a` on a `Record`/HashMap local → `tags.get("a").<copied|cloned>().unwrap()`
     // (a TS `Record` static field access and `m["a"]` are the same lookup). A
     // `Copy` value (f64/bool) copies out of the borrow; a non-`Copy` value (a
@@ -795,6 +806,31 @@ fn url_accessor(field: &str) -> Option<&'static str> {
         "port" => "port",
         "username" => "username",
         "password" => "password",
+        _ => return None,
+    })
+}
+
+/// True when `expr` is a local whose type is `crate::__ds::DsResponse` (a
+/// `fetch(url)` or `await fetch(url)` binding), so `r.status`/`.ok`/`.headers`
+/// lower to the wrapper's zero-arg accessors.
+pub(in crate::translator) fn is_ds_response_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsResponse"))
+}
+
+/// The `__ds::DsResponse` accessor method name for a WHATWG `Response`
+/// property, or `None` for any other name. `status`/`ok`/`headers` map to the
+/// wrapper's same-named zero-arg methods; `text`/`json` are async and dispatch
+/// in the call path, not here.
+fn ds_response_accessor(field: &str) -> Option<&'static str> {
+    Some(match field {
+        "status" => "status",
+        "ok" => "ok",
+        "headers" => "headers",
         _ => return None,
     })
 }

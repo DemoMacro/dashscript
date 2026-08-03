@@ -1065,6 +1065,18 @@ fn register_declarator(
     }
     let path = match &decl.init {
         Some(Expression::CallExpression(call)) => callee_return_path(call, registry),
+        // `await fetch(url)` → the awaited call's return type (DsResponse), so
+        // an unannotated `let r = await fetch(url)` records `DsResponse` and a
+        // later `r.status`/`.ok` lowers to accessors. Only a directly-awaited
+        // call unwraps; `await fetch(url).then(…)` keeps its real shape (the
+        // `.then` makes the callee a member expression, not a bare `fetch`).
+        Some(Expression::AwaitExpression(aw)) => {
+            if let Expression::CallExpression(call) = &aw.argument {
+                callee_return_path(call, registry)
+            } else {
+                None
+            }
+        }
         // `new Uint8Array(…)` → `Vec<u8>` (typed_array_path), so a later
         // `x[0] = v` stores with a `u8` cast. A `new Set(…)` / `new Map(…)`
         // falls back to the inferred collection type (so `s.add(…)` later
@@ -1257,11 +1269,22 @@ fn callee_return_path(
 ) -> Option<Path> {
     use oxc_ast::ast::Expression;
     match &call.callee {
-        Expression::Identifier(id) => registry
-            .function_returns
-            .get(id.name.as_str())
-            .cloned()
-            .flatten(),
+        Expression::Identifier(id) => {
+            // `fetch(url)` → `crate::__ds::DsResponse` (a WinterTC Web API).
+            // `fetch` is a global, never in `function_returns`, so an
+            // unannotated `let r = fetch(url)` — and `let r = await fetch(url)`
+            // via the `AwaitExpression` arm in `register_declarator` — records
+            // the type and a later `r.status`/`.ok`/`.headers` lowers to the
+            // wrapper's accessors.
+            if id.name.as_str() == "fetch" {
+                return Some(parse_quote!(crate::__ds::DsResponse));
+            }
+            registry
+                .function_returns
+                .get(id.name.as_str())
+                .cloned()
+                .flatten()
+        }
         // `JSON.parse(s)` → `serde_json::Value` (the dynamic parse result), so
         // an unannotated `var v = JSON.parse(...)` records its type and a later
         // `console.log(v)` routes through `__ds::inspect` (rendering the parsed

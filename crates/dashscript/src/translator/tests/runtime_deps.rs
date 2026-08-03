@@ -211,6 +211,28 @@ fn fetch_lowers_to_ds_fetch_flags_reqwest() {
 }
 
 #[test]
+fn fetch_response_props_lower_to_accessors() {
+    // `const r = await fetch(url)` records `r: DsResponse` (the AwaitExpression
+    // arm in `register_declarator` unwraps `await` and `callee_return_path`
+    // maps the `fetch` callee to `DsResponse`), so `r.status`/`.ok`/`.headers`
+    // — ES `Response` properties — rewrite to the wrapper's zero-arg accessor
+    // methods (`r.status()`/`r.ok()`/`r.headers()`), mirroring the `DsUrl`
+    // property dispatch.
+    let src = "async function f(url: string): Promise<void> {\n  const r = await fetch(url);\n  const s: number = r.status;\n  const ok: boolean = r.ok;\n  const h = r.headers;\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("r.status()") && rust.contains("r.ok()") && rust.contains("r.headers()"),
+        "r.status/.ok/.headers → zero-arg accessors, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Fetch),
+        "Response props still under the Fetch dep, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn structured_clone_lowers_to_clone_no_dep() {
     // `structuredClone(v)` (WinterTC deep clone) lowers to `v.clone()` — no
     // runtime dep (DashScript values are `Clone`); a non-`Clone` value surfaces
