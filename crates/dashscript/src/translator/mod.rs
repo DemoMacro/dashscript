@@ -402,7 +402,7 @@ impl RuntimeDep {
             RuntimeDep::Fetch => Some(&[
                 ("reqwest", "{ version = \"0.12\", default-features = false, features = [\"rustls-tls\", \"charset\", \"http2\"] }"),
                 // `Response.json()` parses the body via `serde_json::Value`.
-                ("serde_json", "1.0"),
+                ("serde_json", "\"1\""),
             ]),
         }
     }
