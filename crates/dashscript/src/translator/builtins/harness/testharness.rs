@@ -57,7 +57,21 @@ pub(in crate::translator) fn testharness_function(
         // the fixture's other asserts.
         "assert_array_equals" => {
             let a = super::assert_operand(args.first()?, ctx);
-            let b = super::assert_operand(args.get(1)?, ctx);
+            // An empty `expected` literal (`assert_array_equals(xs, [])`)
+            // lowers to `vec![]`, whose element type is unknowable, so the
+            // helper's `U` type parameter stays unresolved (E0283). The check
+            // is length-only when either side is empty (the element loop never
+            // runs), so pin the empty literal to `Vec<&str>` — a `DsSameValue`
+            // type whose bound holds while the (uncalled) element comparison
+            // stays sound. A non-empty expected keeps `assert_operand` (its
+            // element types infer from the literals).
+            let b = match args.get(1) {
+                Some(Argument::ArrayExpression(arr)) if arr.elements.is_empty() => {
+                    parse_quote!(::std::vec::Vec::<&str>::new())
+                }
+                Some(arg) => super::assert_operand(arg, ctx),
+                None => return None,
+            };
             parse_quote!(crate::__ds::wpt_assert_array_equals(&(#a), &(#b)))
         }
         // `assert_approx_equals(actual, expected, epsilon[, msg])` — numeric

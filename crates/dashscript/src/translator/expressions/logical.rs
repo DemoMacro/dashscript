@@ -76,19 +76,18 @@ pub(super) fn logical_expr(log: &LogicalExpression, ctx: &Ctx<'_>) -> Expr {
     // value (e.g. a `Vec<String>` from `getAll`), the right a boolean (e.g.
     // `matches && matches.length == 4`). TS types the result `value | bool`;
     // the common use is a truthiness test (`assert_true`), so lower to a bool
-    // — `truthy(left) && right` — rather than the value/value block, whose
-    // if/else branches mismatch (`Vec` vs `bool`, E0308). Binds the left once
-    // so a side-effecting left operand evaluates only once.
+    // — `truthy(&left) && right` — rather than the value/value block, whose
+    // if/else branches mismatch (`Vec` vs `bool`, E0308). Borrows the left
+    // (`&left`, never moves) so a right operand that references it
+    // (`matches.length`) still type-checks — no E0382 borrow-of-moved. Re-
+    // evaluating `left` is sound: a value-position `&&` left is an identifier
+    // or literal (side-effect-free), matching ES's own non-binding evaluation.
     if expr_is_bool(&log.right, ctx) {
         let left = translate_expr(&log.left, ctx);
         let right = translate_expr(&log.right, ctx);
         return match log.operator {
-            LogicalOperator::And => {
-                parse_quote!({ let __l = #left; crate::__ds::truthy(&__l) && #right })
-            }
-            LogicalOperator::Or => {
-                parse_quote!({ let __l = #left; crate::__ds::truthy(&__l) || #right })
-            }
+            LogicalOperator::And => parse_quote!(crate::__ds::truthy(&(#left)) && #right),
+            LogicalOperator::Or => parse_quote!(crate::__ds::truthy(&(#left)) || #right),
             LogicalOperator::Coalesce => unreachable!(),
         };
     }
