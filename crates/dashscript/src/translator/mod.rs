@@ -198,12 +198,23 @@ pub enum RuntimeDep {
     /// a helper module). The marker is the `#[tokio::main]` attribute, which
     /// only the async entry emits.
     Tokio,
+    /// `Promise.resolve(x)` / `Promise.all([...])` — the static track for ES
+    /// `Promise` combinators (T3 stage 2a). A `Promise<T>` lowers to a boxed,
+    /// single-threaded `Future<Output = T>` (`DsPromise<T>`), so every Promise
+    /// site shares one Rust type (each `futures` combinator has a distinct
+    /// anonymous type — boxing unifies them). `Promise.resolve` →
+    /// `futures::future::ready`; `Promise.all` → `futures::future::join_all`.
+    /// Reflection-driven Promise usage (Symbol.species, thenable `await`,
+    /// prototype chains) is not lowered — those fixtures stay on the engine
+    /// (test262) or `unsupported` (WinterTC). Flags `futures` (also pulled by
+    /// `Tokio` — `append_dep` dedupes the overlap); marker `__ds::ds_promise_`.
+    Promise,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 23] = [
+    const ALL: [RuntimeDep; 24] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -227,6 +238,7 @@ impl RuntimeDep {
         RuntimeDep::Crypto,
         RuntimeDep::URLPattern,
         RuntimeDep::Tokio,
+        RuntimeDep::Promise,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -277,6 +289,7 @@ impl RuntimeDep {
             // needs no `Send` bound on futures (a `promise_test` body capturing
             // any value type compiles).
             RuntimeDep::Tokio => Some("#[tokio::main(flavor = \"current_thread\")]"),
+            RuntimeDep::Promise => Some("__ds::ds_promise_"),
             RuntimeDep::Engine => None,
         }
     }
@@ -366,6 +379,9 @@ impl RuntimeDep {
                 ),
                 ("futures", "\"0.3\""),
             ]),
+            // `futures` — `Promise.resolve`/`all` compose over `ready`/`join_all`.
+            // Also pulled by `Tokio` (`append_dep` dedupes the overlap).
+            RuntimeDep::Promise => Some(&[("futures", "\"0.3\"")]),
         }
     }
 
@@ -398,6 +414,7 @@ impl RuntimeDep {
             RuntimeDep::URLPattern => Some(URLPATTERN_HELPER),
             // The runtime is `#[tokio::main]`, not a helper module — no slice.
             RuntimeDep::Tokio => None,
+            RuntimeDep::Promise => Some(DS_PROMISE_HELPER),
         }
     }
 }

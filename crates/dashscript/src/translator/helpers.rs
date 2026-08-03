@@ -266,6 +266,40 @@ impl DsURLPattern {
 }
 "#;
 
+/// ES `Promise` combinator helpers — `__ds::DsPromise`/`ds_promise_resolve`/
+/// `ds_promise_all`. The static track for `Promise.resolve`/`Promise.all`
+/// (T3 stage 2a): a `Promise<T>` is a boxed, single-threaded `Future<Output =
+/// T>` so every Promise site shares one Rust type (each `futures` combinator
+/// has a distinct anonymous type — boxing unifies them). `current_thread`
+/// tokio needs no `Send` bound, so a `DsPromise` capturing any value type
+/// compiles. `Promise.all` uses `join_all` (awaits all, preserves order); the
+/// ES reject short-circuit is not yet modelled (an all-fulfill fixture passes;
+/// a rejection fixture stays partial). Reflection-driven Promise usage
+/// (Symbol.species, thenable `await`, prototype chains) is not lowered. Backed
+/// by the `futures` crate (also pulled by `Tokio`).
+pub(super) const DS_PROMISE_HELPER: &str = r#"
+/// A JS `Promise<T>` — a boxed, single-threaded `Future<Output = T>`. Boxing
+/// unifies the distinct anonymous types of `ready`/`join_all`/`async {}` so a
+/// Promise value has one Rust type at every site.
+type DsPromise<T> = ::std::pin::Pin<::std::boxed::Box<dyn ::std::future::Future<Output = T>>>;
+
+/// `Promise.resolve(x)` — a Promise fulfilled with `x`. `futures::future::ready`
+/// wraps the value; boxing unifies the type.
+fn ds_promise_resolve<T: 'static>(x: T) -> DsPromise<T> {
+    ::std::boxed::Box::pin(::futures::future::ready(x))
+}
+
+/// `Promise.all([p1, p2, …])` — fulfills with each input's value in order.
+/// `join_all` awaits every input (no reject short-circuit yet); an empty input
+/// fulfills with `[]`. Each input must already be a `DsPromise<T>` (the call
+/// emit wraps a non-Promise element via `ds_promise_resolve`).
+fn ds_promise_all<T: 'static>(
+    futs: ::std::vec::Vec<DsPromise<T>>,
+) -> DsPromise<::std::vec::Vec<T>> {
+    ::std::boxed::Box::pin(::futures::future::join_all(futs))
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through

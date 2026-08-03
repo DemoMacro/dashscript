@@ -30,6 +30,7 @@ mod json;
 mod math;
 mod number;
 mod object;
+mod promise;
 mod string;
 mod temporal;
 mod typed_array;
@@ -54,6 +55,7 @@ pub(in crate::translator) use json::json_static;
 pub(in crate::translator) use math::{math_constant, math_method};
 pub(in crate::translator) use number::{number_constant, number_method, number_static};
 pub(in crate::translator) use object::object_method;
+pub(in crate::translator) use promise::promise_static;
 pub(in crate::translator) use string::{string_method, string_method_on, string_static};
 pub(in crate::translator) use temporal::{
     temporal_callee_split, temporal_init_type, temporal_method, temporal_new, temporal_new_maps,

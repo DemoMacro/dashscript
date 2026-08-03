@@ -399,6 +399,17 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 return expr;
             }
         }
+        // `Promise.resolve(x)` / `Promise.all([...])` — static combinators (T3
+        // stage 2a). Every other `Promise.<method>` (race/any/allSettled/then)
+        // and bare `Promise`/`new Promise` degrade to the engine — `classify`
+        // pulls only `resolve`/`all` out, so they reach here.
+        if builtins::is_ident(&sm.object, "Promise") {
+            if let Some(expr) =
+                builtins::promise_static(&sm.property.name, call.arguments.as_slice(), ctx)
+            {
+                return expr;
+            }
+        }
         // `assert.sameValue(a, b)` / `assert.notSameValue(a, b)` — the test262
         // harness (a host object). Reflection asserts (`throws`/`compareArray`/
         // `verifyProperty`/…) are routed to the engine by `classify` before

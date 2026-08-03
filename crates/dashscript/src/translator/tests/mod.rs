@@ -19,6 +19,7 @@ mod modules;
 mod narrowing;
 mod number_methods;
 mod operators;
+mod promise;
 mod runtime_deps;
 mod strings;
 mod testharness;

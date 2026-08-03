@@ -567,6 +567,16 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
             ));
         }
     }
+    // `Promise.resolve(x)` / `Promise.all([...])` — static combinators with a
+    // native Rust lowering (T3 stage 2a: `ds_promise_resolve`/`ds_promise_all`).
+    // `Promise` is otherwise an engine-value global (bare `Promise`, `new
+    // Promise`, `Promise.race`/`.then`, …) — only these two have a static emit,
+    // so they are pulled out before the engine degrade.
+    if let Expression::Identifier(id) = &sm.object {
+        if id.name.as_str() == "Promise" && matches!(prop, "resolve" | "all") {
+            return Mapping::Mapped;
+        }
+    }
     // `<engine-value-global>.<method>(…)` — these globals (`Date`, `Promise`,
     // `Atomics`, the BigInt typed-array constructors, the test262
     // `TemporalHelpers`/`$262` harness objects, …) carry no static member-call
