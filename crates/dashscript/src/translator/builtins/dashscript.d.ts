@@ -129,6 +129,11 @@ declare function isFinite(x: number): boolean; // True when `x` is finite (not �
 declare function Boolean(x: unknown): boolean; // The truthiness of `x`.
 declare function String(x: unknown): string; // The string form of `x`.
 declare function Number(x: unknown): number; // The numeric form of `x`.
+// WinterTC (Ecma TC55) «Minimum Common Web API» globals — static Rust, never
+// degraded to the engine (lowered in `global.rs`).
+declare function atob(s: string): string; // Base64-decode a string (forgiving: whitespace stripped, missing padding padded).
+declare function btoa(s: string): string; // Base64-encode the string's Latin-1 bytes (code units > U+00FF throw).
+declare function structuredClone<T>(value: T): T; // Deep-clone a cloneable value (primitives, records, arrays).
 declare var undefined: any; // The absent value.
 declare var Infinity: number; // Positive infinity.
 declare var NaN: number; // Not-a-Number.

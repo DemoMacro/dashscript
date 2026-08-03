@@ -100,6 +100,25 @@ pub(in crate::translator) fn global_function(
         // lowered to the same `__ds::regex` helper as `/pat/` literals. See
         // [`reg_exp_constructor`].
         "RegExp" => return reg_exp_constructor(args, ctx),
+        // `atob(s)` / `btoa(s)` — WinterTC (Ecma TC55) base64 globals. `atob`
+        // forgiving-decodes (strip ASCII whitespace, pad, base64-decode → a
+        // Latin-1 string); `btoa` base64-encodes the string's ≤U+00FF code
+        // units. Both coerce the arg via ES `ToString`. See `BASE64_HELPER`.
+        "atob" => {
+            let s = es_to_string_arg(args.first()?, ctx);
+            parse_quote!(crate::__ds::b64_decode(#s))
+        }
+        "btoa" => {
+            let s = es_to_string_arg(args.first()?, ctx);
+            parse_quote!(crate::__ds::b64_encode(#s))
+        }
+        // `structuredClone(v)` — WinterTC deep clone. DashScript's subset
+        // (primitives, plain records, arrays — all `Clone`) lowers to
+        // `v.clone()`; a non-`Clone` value surfaces honestly at `cargo check`.
+        "structuredClone" => {
+            let v = translate_argument(args.first()?, ctx);
+            parse_quote!(#v.clone())
+        }
         _ => return None,
     })
 }

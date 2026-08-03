@@ -161,6 +161,45 @@ impl TextDecoder {
 }
 ";
 
+/// WinterTC base64 globals — `__ds::b64_encode`/`__ds::b64_decode` for `btoa`/
+/// `atob` (Ecma TC55 «Minimum Common Web API»). WHATWG `btoa(s)` takes each of
+/// `s`'s code units as a byte (a code unit > U+00FF throws), then base64-encodes;
+/// `atob(s)` strips ASCII whitespace (space/tab/LF/CR/FF), applies the forgiving
+/// padding rule (len%4==1 errors; ==2/3 pad with `=`), base64-decodes, and
+/// returns the bytes as a Latin-1 string (each byte → U+0000..U+00FF). A
+/// too-large code unit or invalid base64 panics, which the runtime lowers to a
+/// thrown error. Backed by the `base64` crate's `BASE64_STANDARD` engine.
+pub(super) const BASE64_HELPER: &str = r#"use base64::prelude::{Engine as _, BASE64_STANDARD};
+pub fn b64_encode<S: AsRef<str>>(s: S) -> String {
+    let s = s.as_ref();
+    let bytes: Vec<u8> = s
+        .chars()
+        .map(|c| {
+            if (c as u32) > 0xFF {
+                panic!("btoa: character outside U+0000..U+00FF");
+            }
+            c as u8
+        })
+        .collect();
+    BASE64_STANDARD.encode(&bytes)
+}
+pub fn b64_decode<S: AsRef<str>>(s: S) -> String {
+    let mut cleaned: String = s.as_ref()
+        .chars()
+        .filter(|c| !matches!(c, ' ' | '\t' | '\n' | '\r' | '\x0C'))
+        .collect();
+    match cleaned.len() % 4 {
+        0 => {}
+        1 => panic!("atob: invalid base64 string"),
+        n => cleaned.push_str(&"=".repeat(4 - n)),
+    }
+    let bytes = BASE64_STANDARD
+        .decode(cleaned.as_bytes())
+        .expect("atob: invalid base64 character");
+    bytes.iter().map(|&b| b as char).collect()
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through

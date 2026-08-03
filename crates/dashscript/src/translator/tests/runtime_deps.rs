@@ -139,6 +139,58 @@ fn text_encoder_encode_flags_encoding_dep_and_ships_structs() {
 }
 
 #[test]
+fn atob_btoa_flag_base64_dep_and_ships_helpers() {
+    // `atob(s)`/`btoa(s)` (WinterTC base64 globals) map to
+    // `__ds::b64_decode`/`__ds::b64_encode`; the `__ds::b64_` marker flags the
+    // `Base64` dep, which pulls the `base64` crate and ships both fns in `__ds`.
+    let src = "function f(s: string): string { return atob(btoa(s)); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::b64_decode") && rust.contains("crate::__ds::b64_encode"),
+        "atob/btoa → __ds::b64_decode/b64_encode, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Base64),
+        "Base64 dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module().is_some_and(|s| {
+            s.contains("pub fn b64_encode") && s.contains("pub fn b64_decode")
+        }),
+        "Base64 dep ships both fns, got helper: {:?}",
+        deps.helper_module()
+    );
+    // The dep appends the `base64` crate to the user's Cargo.toml.
+    let mut toml = String::from("[dependencies]\n");
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(
+        toml.contains("base64"),
+        "base64 crate in Cargo.toml: {toml}"
+    );
+}
+
+#[test]
+fn structured_clone_lowers_to_clone_no_dep() {
+    // `structuredClone(v)` (WinterTC deep clone) lowers to `v.clone()` — no
+    // runtime dep (DashScript values are `Clone`); a non-`Clone` value surfaces
+    // at `cargo check`.
+    let src = "function f(s: string): string { return structuredClone(s); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains(".clone()"),
+        "structuredClone → .clone(), got:\n{rust}"
+    );
+    assert!(
+        !deps.has(RuntimeDep::Base64),
+        "structuredClone pulls no dep, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);

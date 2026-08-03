@@ -45,6 +45,24 @@
       "expect": "supported",
       "expect_output": "2\ntrue",
       "note": "Set<T> -> HashSet<T: Hash+Eq>; string elements work (number can't — f64 has no Eq)"
+    },
+    {
+      "id": "correctness.atob_btoa_roundtrip",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { console.log(atob(btoa(\"hello\"))); console.log(btoa(\"A\")); }\nmain();\n",
+      "expect": "supported",
+      "expect_output": "hello\nQQ==",
+      "note": "WinterTC base64: btoa('hello')='aGVsbG8=' then atob -> 'hello'; btoa('A')='QQ=='"
+    },
+    {
+      "id": "correctness.structured_clone_string",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { const s: string = \"abc\"; console.log(structuredClone(s)); }\nmain();\n",
+      "expect": "supported",
+      "expect_output": "abc",
+      "note": "structuredClone(v) -> v.clone() (DashScript values are Clone); a primitive clone is itself"
     }
   ]
 }

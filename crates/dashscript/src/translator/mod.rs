@@ -163,12 +163,18 @@ pub enum RuntimeDep {
     /// compare equal). Variadic `max`/`min` folds `__ds::ds_f64_max`/
     /// `ds_f64_min` left to right. Pure `std` — no cargo dep.
     F64MaxMin,
+    /// `atob(s)`/`btoa(s)` — the WinterTC (Ecma TC55) base64 globals (WHATWG
+    /// Encoding/Infra). `btoa` Latin-1 encodes a string's ≤U+00FF code units;
+    /// `atob` strips ASCII whitespace then forgiving-decodes. Backed by the
+    /// `base64` crate; marker `__ds::b64_` (the common prefix of `b64_encode`/
+    /// `b64_decode`, so either global pulls the slice).
+    Base64,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 18] = [
+    const ALL: [RuntimeDep; 19] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -187,6 +193,7 @@ impl RuntimeDep {
         RuntimeDep::CollectionKey,
         RuntimeDep::StringReplace,
         RuntimeDep::F64MaxMin,
+        RuntimeDep::Base64,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -221,6 +228,7 @@ impl RuntimeDep {
             RuntimeDep::CollectionKey => Some("__ds::DsF64Key"),
             RuntimeDep::StringReplace => Some("__ds::ds_replace"),
             RuntimeDep::F64MaxMin => Some("__ds::ds_f64_max"),
+            RuntimeDep::Base64 => Some("__ds::b64_"),
             RuntimeDep::Engine => None,
         }
     }
@@ -286,6 +294,7 @@ impl RuntimeDep {
             RuntimeDep::CollectionKey => None,
             RuntimeDep::StringReplace => None,
             RuntimeDep::F64MaxMin => None,
+            RuntimeDep::Base64 => Some(&[("base64", "\"0.22\"")]),
         }
     }
 
@@ -312,6 +321,7 @@ impl RuntimeDep {
             RuntimeDep::CollectionKey => Some(COLLECTION_KEY_HELPER),
             RuntimeDep::StringReplace => Some(STRING_REPLACE_HELPER),
             RuntimeDep::F64MaxMin => Some(F64_MAXMIN_HELPER),
+            RuntimeDep::Base64 => Some(BASE64_HELPER),
         }
     }
 }
