@@ -239,12 +239,19 @@ pub enum RuntimeDep {
     /// degraded; marker `__ds::wpt_set_` (common prefix of `wpt_set_timeout`/
     /// `wpt_set_interval`).
     Timers,
+    /// WHATWG `ReadableStream` (Streams standard, a WinterTC Web API) — the
+    /// readable side. `new ReadableStream({ start(c) { c.enqueue(…); c.close() }
+    /// })` + `getReader()` + `await reader.read()` → `{ done, value }`. A push-
+    /// source baseline backed by an `Arc<Mutex<…>>` chunk queue (mirroring
+    /// `DsResolver`); pure `std`, never degraded; marker `__ds::DsReadableStream`.
+    /// `pull`/`cancel`/`tee`/BYOB are out of scope (honest partials).
+    Streams,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 28] = [
+    const ALL: [RuntimeDep; 29] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -273,6 +280,7 @@ impl RuntimeDep {
         RuntimeDep::EventTarget,
         RuntimeDep::Headers,
         RuntimeDep::Timers,
+        RuntimeDep::Streams,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -347,6 +355,7 @@ impl RuntimeDep {
             // not by themselves prove a timer was registered (so they do not
             // pull the slice on their own).
             RuntimeDep::Timers => Some("__ds::wpt_set_"),
+            RuntimeDep::Streams => Some("__ds::DsReadableStream"),
             RuntimeDep::Engine => None,
         }
     }
@@ -470,6 +479,10 @@ impl RuntimeDep {
             RuntimeDep::Headers => None,
             // Pure `std` (a `Vec` + `Instant`); no crate.
             RuntimeDep::Timers => None,
+            // Pure `std` (the `Arc<Mutex<VecDeque<…>>>` queue + `Waker`); no
+            // crate. The boxed `read()` future is spelled inline (`Pin<Box<dyn
+            // Future>>`), so a Streams-only fixture pulls no `futures`/Promise.
+            RuntimeDep::Streams => None,
         }
     }
 
@@ -507,6 +520,7 @@ impl RuntimeDep {
             RuntimeDep::EventTarget => Some(EVENT_TARGET_HELPER),
             RuntimeDep::Headers => Some(HEADERS_HELPER),
             RuntimeDep::Timers => Some(TIMERS_HELPER),
+            RuntimeDep::Streams => Some(DS_STREAMS_HELPER),
         }
     }
 }

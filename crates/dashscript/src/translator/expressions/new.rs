@@ -186,6 +186,17 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if builtins::headers_ctor_type(id.name.as_str()).is_some() {
             return builtins::headers_ctor(n.arguments.as_slice(), ctx);
         }
+        // `new ReadableStream([{ start(controller) { … } }])` — the WHATWG
+        // Streams API (a WinterTC Web API). The push-source form maps
+        // (`controller.enqueue`/`.close` + `getReader` + `await reader.read()`);
+        // any other shape degrades to an empty stream (an honest partial).
+        // Intercepted before the generic `Foo::new` path (which would emit
+        // `ReadableStream::new` — E0433). The `Streams` runtime dep is flagged
+        // by the `__ds::DsReadableStream` marker probe; instance methods
+        // (`getReader`/`read`/`enqueue`/`close`) dispatch in the call path.
+        if builtins::streams_ctor_type(id.name.as_str()).is_some() {
+            return builtins::readable_stream_ctor(n.arguments.as_slice(), ctx);
+        }
         // `new DOMException(message[, name])` — the WinterTC/HTML `DOMException`
         // (a Web API, never the engine). Unlike `new Error(msg)` — where `name`
         // derives from the constructor — a `DOMException`'s `name` is the SECOND

@@ -1650,3 +1650,95 @@ fn object_is_distinguishes_neg_zero() {
         "Object.is should emit a sign check for ±0, got:\n{rust}"
     );
 }
+
+#[test]
+fn readable_stream_empty_ctor_lowers_to_empty_closed() {
+    // `new ReadableStream()` (a WHATWG Streams API constructor — a WinterTC Web
+    // API) with no underlying source lowers to `DsReadableStream::<()>::empty_closed()`
+    // (a stream whose first `read()` is `{ done: true }`). The
+    // `__ds::DsReadableStream` marker flags the `Streams` dep, which ships the
+    // `DsReadableStream`/`DsReadableStreamController`/`DsReadableStreamDefaultReader`/
+    // `DsReadResult` types in `__ds.rs` (pure `std` — an `Arc<Mutex<…>>` chunk
+    // queue + waker, mirroring `DsResolver`; no cargo crate).
+    let src = "function f(): void { const s = new ReadableStream(); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::DsReadableStream::<()>::empty_closed()"),
+        "new ReadableStream() → empty_closed, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Streams),
+        "Streams dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module().is_some_and(|s| {
+            s.contains("pub struct DsReadableStream<")
+                && s.contains("pub struct DsReadableStreamController<")
+                && s.contains("pub struct DsReadableStreamDefaultReader<")
+                && s.contains("pub struct DsReadResult<")
+        }),
+        "Streams dep ships the stream/controller/reader/result types, got helper: {:?}",
+        deps.helper_module()
+    );
+    // Pure `std` — Streams appends no cargo crate.
+    let mut toml = String::from("[dependencies]\n");
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(
+        !toml.contains("= \""),
+        "Streams pulls no cargo crate, got Cargo.toml: {toml}"
+    );
+}
+
+#[test]
+fn readable_stream_push_source_lowers_to_from_start() {
+    // `new ReadableStream({ start(c) { c.enqueue(v); c.close(); } })` — the
+    // push-source form. The `start` callback (method-shorthand or arrow) lowers
+    // to a closure passed to `DsReadableStream::from_start`; the controller
+    // param is registered as `DsReadableStreamController`, so `c.enqueue(v)` /
+    // `c.close()` dispatch to its methods. The chunk type T is inferred from the
+    // `enqueue` argument (mirroring `ds_promise_new`'s resolve-type inference).
+    let src = "function f(): void {\n  const s = new ReadableStream({ start(c) { c.enqueue(1); c.close(); } });\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::DsReadableStream::from_start("),
+        "push-source → from_start, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("c.enqueue(") && rust.contains("c.close()"),
+        "controller.enqueue/close dispatch on the registered controller param, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Streams),
+        "Streams dep must flag, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn readable_stream_get_reader_and_read_lower_to_async() {
+    // `stream.getReader()` + `await reader.read()` — the push-source read loop.
+    // `getReader()` on a `DsReadableStream` local → `get_reader()`; `reader.read()`
+    // on a `DsReadableStreamDefaultReader` local → `read()`, a pinned future the
+    // caller's `await` drives (the await-gate). The stream local's type is
+    // inferred from the `new ReadableStream(…)` binding; the reader local's from
+    // the `getReader()` callee-return path.
+    let src = "async function f(): Promise<void> {\n  const s = new ReadableStream({ start(c) { c.enqueue(1); c.close(); } });\n  const r = s.getReader();\n  const x = await r.read();\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("s.get_reader()"),
+        "stream.getReader() → get_reader(), got:\n{rust}"
+    );
+    assert!(
+        rust.contains("r.read()") && rust.contains(".await"),
+        "reader.read() → read() driven by .await, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Streams),
+        "Streams dep must flag, got deps: {deps:?}"
+    );
+}

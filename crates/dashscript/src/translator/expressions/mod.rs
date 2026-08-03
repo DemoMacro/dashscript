@@ -40,7 +40,7 @@ use oxc_ast::ast::{
     SequenceExpression, Statement, TemplateLiteral,
 };
 use proc_macro2::Span;
-use syn::{parse_quote, Expr, Ident, Pat, Stmt, Type};
+use syn::{parse_quote, Expr, Ident, Pat, Path, Stmt, Type};
 
 use super::context::{is_option_path, Ctx, Narrow};
 use super::{bindings, types};
@@ -1082,6 +1082,33 @@ pub(in crate::translator) fn body_block(
     ctx: &Ctx<'_>,
 ) -> syn::Block {
     let mut locals = super::functions::body_locals(params, Some(body), ctx.registry(), ctx.names());
+    super::functions::translate_body(
+        &body.statements[..],
+        &mut locals,
+        ctx.registry(),
+        &Narrow::default(),
+        None,
+        ctx.names(),
+    )
+}
+
+/// [`body_block`], but overrides one parameter's recorded type before the body
+/// translates — so a synthetic-typed callback parameter (a `ReadableStream`
+/// `start(controller)` callback, where `controller` has no `.ts` annotation but
+/// must lower to `DsReadableStreamController<T>`) is recognized by the
+/// member-call dispatch (`controller.enqueue(v)`). The override runs after
+/// [`super::functions::body_locals`] registers the (untyped) param, replacing
+/// the entry; `None` makes this identical to [`body_block`].
+pub(in crate::translator) fn body_block_with_param_type(
+    params: &oxc_ast::ast::FormalParameters,
+    body: &FunctionBody,
+    ctx: &Ctx<'_>,
+    param_type: Option<(String, Path)>,
+) -> syn::Block {
+    let mut locals = super::functions::body_locals(params, Some(body), ctx.registry(), ctx.names());
+    if let Some((name, ty)) = param_type {
+        locals.insert(name, ty);
+    }
     super::functions::translate_body(
         &body.statements[..],
         &mut locals,

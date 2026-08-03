@@ -582,6 +582,15 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::headers_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `s.getReader()` / `r.read()` / `c.enqueue(v)` / `c.close()` on a
+        // `DsReadableStream` / `DsReadableStreamDefaultReader` /
+        // `DsReadableStreamController` local — the WinterTC WHATWG Streams API
+        // (push-source read loop). Dispatched on the receiver's resolved type;
+        // an unmapped receiver or name falls through. `reader.read()` returns a
+        // pinned future awaited by `await` (the await-gate drives it).
+        if let Some(expr) = builtins::streams_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         // `d.toString()` / `d.toJSON()` / `d.equals(o)` on a `Temporal.<Type>`
         // local (`temporal_rs::<Type>`). Dispatched on the receiver's resolved
         // type; a non-Temporal receiver or unmapped name falls through.

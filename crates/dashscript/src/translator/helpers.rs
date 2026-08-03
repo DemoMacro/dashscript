@@ -502,6 +502,165 @@ pub fn ds_promise_new<T: 'static, F: 'static + ::std::ops::FnOnce(DsResolver<T>)
 }
 "#;
 
+/// WHATWG `ReadableStream` helper — `__ds::DsReadableStream`. A WinterTC (Ecma
+/// TC55) Web API: the readable side of the Streams standard. This slice holds
+/// the push-source baseline — `new ReadableStream({ start(c) { c.enqueue(…);
+/// c.close() } })` + `stream.getReader()` + `await reader.read()` →
+/// `{ done, value }`. The state machine mirrors `DsResolver`: a chunk queue +
+/// closed flag + one waker slot shared (via `Arc<Mutex<…>>`) between the
+/// stream, the `start` controller, and the default reader — ES forbids two
+/// concurrent reads on a default reader, so one waker is the correct capacity.
+/// Self-contained (the boxed future is spelled inline, not via `DsPromise`, so
+/// a Streams-only fixture pulls no Promise slice); pure `std`, never degraded.
+/// `pull`/`cancel`/`tee`/BYOB are out of scope (an honest partial when met).
+pub(super) const DS_STREAMS_HELPER: &str = r#"
+/// Shared readable-stream state: a chunk queue + a closed flag + a waker for a
+/// pending `read()`. Mirrors the `DsResolver` settlement cell.
+struct DsStreamState<T> {
+    chunks: ::std::collections::VecDeque<T>,
+    closed: bool,
+    waker: ::std::option::Option<::std::task::Waker>,
+}
+
+impl<T> DsStreamState<T> {
+    fn new() -> Self {
+        Self {
+            chunks: ::std::collections::VecDeque::new(),
+            closed: false,
+            waker: ::std::option::Option::None,
+        }
+    }
+}
+
+/// WHATWG `ReadableStream<T>` — a readable stream of `T` chunks. Build via
+/// [`DsReadableStream::from_start`] (a push source) or
+/// [`DsReadableStream::empty_closed`] (`new ReadableStream()` with no
+/// underlying source).
+pub struct DsReadableStream<T> {
+    state: ::std::sync::Arc<::std::sync::Mutex<DsStreamState<T>>>,
+}
+
+/// The controller a `start(controller)` callback receives. `enqueue(chunk)`
+/// pushes a chunk (waking a pending reader); `close()` ends the stream.
+pub struct DsReadableStreamController<T> {
+    state: ::std::sync::Arc<::std::sync::Mutex<DsStreamState<T>>>,
+}
+
+impl<T> DsReadableStreamController<T> {
+    /// `controller.enqueue(chunk)` — push a chunk; wake a pending reader so its
+    /// `read()` re-polls.
+    pub fn enqueue(&self, value: T) {
+        let waker = {
+            let mut g = self.state.lock().expect("stream state poisoned");
+            g.chunks.push_back(value);
+            g.waker.take()
+        };
+        if let ::std::option::Option::Some(w) = waker {
+            w.wake();
+        }
+    }
+    /// `controller.close()` — signal end-of-stream. A pending `read()` resolves
+    /// `{ done: true, value: None }` once the queue drains.
+    pub fn close(&self) {
+        let waker = {
+            let mut g = self.state.lock().expect("stream state poisoned");
+            g.closed = true;
+            g.waker.take()
+        };
+        if let ::std::option::Option::Some(w) = waker {
+            w.wake();
+        }
+    }
+}
+
+/// The default reader `stream.getReader()` returns.
+pub struct DsReadableStreamDefaultReader<T> {
+    state: ::std::sync::Arc<::std::sync::Mutex<DsStreamState<T>>>,
+}
+
+/// `{ done: false, value }` / `{ done: true, value: undefined }` — the result of
+/// `await reader.read()`. `value` is `None` at end-of-stream.
+pub struct DsReadResult<T> {
+    pub done: bool,
+    pub value: ::std::option::Option<T>,
+}
+
+impl<T> DsReadableStream<T> {
+    /// `new ReadableStream({ start(controller) { … } })` — a push source. The
+    /// `start` closure runs synchronously (ES `start` is sync; a Promise-returning
+    /// `start` is not modelled); `controller.enqueue(v)` infers the chunk type
+    /// `T` from the call site.
+    pub fn from_start<F: ::std::ops::FnOnce(DsReadableStreamController<T>)>(
+        start: F,
+    ) -> DsReadableStream<T> {
+        let state = ::std::sync::Arc::new(::std::sync::Mutex::new(DsStreamState::new()));
+        start(DsReadableStreamController { state: state.clone() });
+        DsReadableStream { state }
+    }
+    /// `new ReadableStream()` — no underlying source. ES leaves such a stream
+    /// pending forever (nothing ever enqueues); the static path closes it on
+    /// construction so a `read()` resolves `{ done: true }` instead of hanging
+    /// the harness — a pragmatic, honest deviation on an empty stream.
+    pub fn empty_closed() -> DsReadableStream<T> {
+        let state = ::std::sync::Arc::new(::std::sync::Mutex::new(DsStreamState::new()));
+        {
+            let mut g = state.lock().expect("stream state poisoned");
+            g.closed = true;
+        }
+        DsReadableStream { state }
+    }
+    /// `stream.getReader()` — the default reader (a BYOB `getReader({ mode:
+    /// 'byob' })` has no static mapping).
+    pub fn get_reader(&self) -> DsReadableStreamDefaultReader<T> {
+        DsReadableStreamDefaultReader { state: self.state.clone() }
+    }
+}
+
+impl<T: 'static> DsReadableStreamDefaultReader<T> {
+    /// `reader.read()` — a Promise of the next chunk or end-of-stream. Polls the
+    /// shared state: a queued chunk → `{ done: false, value: Some(v) }`; an
+    /// empty, closed stream → `{ done: true, value: None }`; otherwise pending
+    /// (the waker is stored so `enqueue`/`close` wake this read). `T: 'static`
+    /// because the boxed `dyn Future` is `'static` (the same bound every
+    /// `DsPromise<T>` return carries).
+    pub fn read(
+        &self,
+    ) -> ::std::pin::Pin<
+        ::std::boxed::Box<dyn ::std::future::Future<Output = DsReadResult<T>>>,
+    > {
+        ::std::boxed::Box::pin(DsReadFuture { state: self.state.clone() })
+    }
+}
+
+struct DsReadFuture<T> {
+    state: ::std::sync::Arc<::std::sync::Mutex<DsStreamState<T>>>,
+}
+
+impl<T> ::std::future::Future for DsReadFuture<T> {
+    type Output = DsReadResult<T>;
+    fn poll(
+        self: ::std::pin::Pin<&mut Self>,
+        cx: &mut ::std::task::Context<'_>,
+    ) -> ::std::task::Poll<Self::Output> {
+        let mut g = self.state.lock().expect("stream state poisoned");
+        if let ::std::option::Option::Some(v) = g.chunks.pop_front() {
+            ::std::task::Poll::Ready(DsReadResult {
+                done: false,
+                value: ::std::option::Option::Some(v),
+            })
+        } else if g.closed {
+            ::std::task::Poll::Ready(DsReadResult {
+                done: true,
+                value: ::std::option::Option::None,
+            })
+        } else {
+            g.waker = ::std::option::Option::Some(cx.waker().clone());
+            ::std::task::Poll::Pending
+        }
+    }
+}
+"#;
+
 /// WHATWG `fetch` API helper — `__ds::DsResponse`/`__ds::ds_fetch`. A WinterTC
 /// (Ecma TC55) Web API: ES `fetch(url)` returns `Promise<Response>`; this slice
 /// holds the `DsResponse`/`DsHeaders` wrappers + the `ds_fetch` async fn that

@@ -1232,7 +1232,7 @@ fn register_declarator(
         locals.regex_inits.insert(name.clone(), ri);
     }
     let path = match &decl.init {
-        Some(Expression::CallExpression(call)) => callee_return_path(call, registry),
+        Some(Expression::CallExpression(call)) => callee_return_path(call, registry, locals),
         // `await fetch(url)` → the awaited call's return type (DsResponse), so
         // an unannotated `let r = await fetch(url)` records `DsResponse` and a
         // later `r.status`/`.ok` lowers to accessors. Only a directly-awaited
@@ -1240,7 +1240,7 @@ fn register_declarator(
         // `.then` makes the callee a member expression, not a bare `fetch`).
         Some(Expression::AwaitExpression(aw)) => {
             if let Expression::CallExpression(call) = &aw.argument {
-                callee_return_path(call, registry)
+                callee_return_path(call, registry, locals)
             } else {
                 None
             }
@@ -1256,7 +1256,8 @@ fn register_declarator(
             .or_else(|| encoding_ctor_path(n))
             .or_else(|| event_target_path(n))
             .or_else(|| headers_path(n))
-            .or_else(|| promise_path(n)),
+            .or_else(|| promise_path(n))
+            .or_else(|| streams_path(n)),
         Some(other) => vec_index_elem_path(other, locals),
         None => return,
     };
@@ -1453,6 +1454,23 @@ fn promise_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     }
 }
 
+/// `new ReadableStream(…)` → `crate::__ds::DsReadableStream`, so an unannotated
+/// `let rs = new ReadableStream(…)` records the type and a later
+/// `rs.getReader()` dispatches through `streams_method` (the receiver resolves
+/// to `DsReadableStream`). The chunk type `T` is inferred at the call site, so
+/// no generic arg is recorded here (the predicate matches on the segment name).
+fn streams_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    if id.name.as_str() == "ReadableStream" {
+        Some(parse_quote!(crate::__ds::DsReadableStream))
+    } else {
+        None
+    }
+}
+
 /// `arr[i]` where `arr` is a tracked `Vec<T>` (or `Option<Vec<T>>`) local → `T`,
 /// so an unannotated `let element = elements[i]` records `Element` and a later
 /// `element.text` access resolves its struct. Works on the source AST — the
@@ -1507,6 +1525,7 @@ fn first_type_arg_seg(seg: &syn::PathSegment) -> Option<&syn::PathSegment> {
 fn callee_return_path(
     call: &oxc_ast::ast::CallExpression,
     registry: &TypeRegistry,
+    locals: &Locals,
 ) -> Option<Path> {
     use oxc_ast::ast::Expression;
     match &call.callee {
@@ -1549,6 +1568,28 @@ fn callee_return_path(
                 && matches!(sm.property.name.as_str(), "resolve" | "all") =>
         {
             Some(parse_quote!(crate::__ds::DsPromise<serde_json::Value>))
+        }
+        // `rs.getReader()` → `crate::__ds::DsReadableStreamDefaultReader`
+        // (a WinterTC Web API), so an unannotated `let reader = rs.getReader()`
+        // — on a `DsReadableStream` local — records the type and a later
+        // `reader.read()` dispatches through `streams_method`. Only a
+        // `DsReadableStream` receiver qualifies; the chunk type `T` is inferred
+        // at the call site, so no generic arg is recorded (the predicate matches
+        // on the segment name).
+        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "getReader" => {
+            let Expression::Identifier(id) = &sm.object else {
+                return None;
+            };
+            let name = bindings::snake(id.name.as_str()).to_string();
+            if locals.get(&name).is_some_and(|p| {
+                p.segments
+                    .last()
+                    .is_some_and(|s| s.ident == "DsReadableStream")
+            }) {
+                Some(parse_quote!(crate::__ds::DsReadableStreamDefaultReader))
+            } else {
+                None
+            }
         }
         _ => None,
     }

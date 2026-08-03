@@ -522,6 +522,40 @@ fn wpt_promise_test_non_async_function_callback_compiles_and_runs() {
     );
 }
 
+/// `new ReadableStream({ start(c) { c.enqueue(v); c.close(); } })` + reader
+/// `read()` — the WHATWG Streams push-source read loop — end-to-end on the
+/// static path. The constructor lowers to `DsReadableStream::from_start`; the
+/// `start` callback's controller param registers as `DsReadableStreamController`
+/// (`.enqueue`/`.close` dispatch); `getReader()` → `get_reader()`; and
+/// `await reader.read()` drives the pinned `read()` future under
+/// `#[tokio::main]`. The state machine enqueues 42 then closes, so the read
+/// loop yields `{ done: false }` then `{ done: true }`. A failure here means
+/// the `Streams` helper, the controller-type registration, or the read-future
+/// state machine regressed. WinterTC Web APIs never degrade — pure static Rust.
+#[test]
+fn wpt_readable_stream_push_source_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.streams_push_smoke".into(),
+        category: "smoke".into(),
+        fixture: "async function readStream(): Promise<void> {\n  const s = new ReadableStream({ start(c) { c.enqueue(42); c.close(); } });\n  const r = s.getReader();\n  const x = await r.read();\n  assert_equals(x.done, false);\n  const y = await r.read();\n  assert_equals(y.done, true);\n}\npromise_test(readStream, \"readable stream push source\");\n".into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "readable stream push-source smoke should be supported: {detail}"
+    );
+}
+
 /// `await new Promise(executor)` — the Promise constructor on the static track,
 /// end-to-end. A bare `new Promise(…)` degrades to the engine (a sync `fn main`
 /// never polls the future); only the awaited form maps, because the `.await`
