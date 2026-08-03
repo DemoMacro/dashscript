@@ -167,10 +167,16 @@ impl TextDecoder {
         TextDecoder { encoding: enc.name(), fatal, ignore_bom, enc }
     }
     pub fn decode(&self, bytes: Vec<u8>) -> String {
+        // `decode` returns a 3-tuple `(Cow, &Encoding, bool)` — the middle
+        // Encoding is the one BOM-sniffed from the bytes (for chained streaming
+        // decode), which we discard; `decode_without_bom_handling` returns a
+        // 2-tuple `(Cow, bool)`. Unify both arms to `(Cow, bool)` so the let
+        // binding type-checks.
         let (s, had_errors) = if self.ignore_bom {
             self.enc.decode_without_bom_handling(&bytes)
         } else {
-            self.enc.decode(&bytes)
+            let (s, _, had_errors) = self.enc.decode(&bytes);
+            (s, had_errors)
         };
         if self.fatal && had_errors {
             ::std::panic::panic_any(crate::__ds::DsError::new(
@@ -181,7 +187,7 @@ impl TextDecoder {
                 ),
             ));
         }
-        s
+        s.into_owned()
     }
 }
 ";
