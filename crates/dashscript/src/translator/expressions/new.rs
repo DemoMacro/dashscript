@@ -206,7 +206,9 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         // path (E0433 — honest unsupported). Intercepted before the generic path
         // (which would emit `CompressionStream::new` — E0433).
         if builtins::compression_ctor_type(id.name.as_str()).is_some() {
-            if let Some(ctor) = builtins::compression_stream_ctor(n.arguments.as_slice()) {
+            if let Some(ctor) =
+                builtins::compression_stream_ctor(id.name.as_str(), n.arguments.as_slice())
+            {
                 return ctor;
             }
         }

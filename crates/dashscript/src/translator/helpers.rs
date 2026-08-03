@@ -685,11 +685,22 @@ pub enum DsCompressionFormat {
     DeflateRaw,
 }
 
+/// The direction of a `CompressionStream`/`DecompressionStream` — both lower
+/// to the same `DsCompressionStream` type (the writable/readable/writer/reader
+/// containers are direction-agnostic; only `close()`'s one-shot codec run
+/// differs). `Copy` so `close()` reads `state.dir` through a `MutexGuard`.
+#[derive(Clone, Copy)]
+pub enum DsCodecDir {
+    Compress,
+    Decompress,
+}
+
 struct DsCompressionState {
     input: ::std::vec::Vec<u8>,
     output: ::std::option::Option<::std::vec::Vec<u8>>,
     delivered: bool,
     format: DsCompressionFormat,
+    dir: DsCodecDir,
     closed: bool,
 }
 
@@ -730,13 +741,16 @@ pub struct DsCompressionReadResult {
 }
 
 impl DsCompressionStream {
-    /// `new CompressionStream(format)`.
-    pub fn new(format: DsCompressionFormat) -> DsCompressionStream {
+    /// `new CompressionStream(format)` / `new DecompressionStream(format)` —
+    /// `dir` selects the codec direction; the two share the container types,
+    /// differing only in `close()`'s one-shot codec run.
+    pub fn new(format: DsCompressionFormat, dir: DsCodecDir) -> DsCompressionStream {
         let state = ::std::sync::Arc::new(::std::sync::Mutex::new(DsCompressionState {
             input: ::std::vec::Vec::new(),
             output: ::std::option::Option::None,
             delivered: false,
             format,
+            dir,
             closed: false,
         }));
         DsCompressionStream {
@@ -777,8 +791,9 @@ impl DsCompressionWriter {
             if !g.closed {
                 g.closed = true;
                 let format = g.format;
+                let dir = g.dir;
                 let input = ::std::mem::take(&mut g.input);
-                g.output = ::std::option::Option::Some(ds_compress(format, input));
+                g.output = ::std::option::Option::Some(ds_codec_run(format, dir, input));
             }
         })
     }
@@ -818,36 +833,66 @@ impl DsCompressionReader {
     }
 }
 
-/// One-shot `flate2` compression of `input` per `format`. `gzip` →
-/// `GzEncoder`, `deflate` (zlib-wrapped) → `ZlibEncoder`, `deflate-raw` (raw
-/// DEFLATE) → `DeflateEncoder`. A compression error is impossible for an
-/// in-memory `Vec<u8>` sink (no I/O), so the `expect`s are unreachable.
-fn ds_compress(format: DsCompressionFormat, input: ::std::vec::Vec<u8>) -> ::std::vec::Vec<u8> {
-    use ::std::io::Write as _;
-    match format {
-        DsCompressionFormat::Gzip => {
-            let mut e = ::flate2::write::GzEncoder::new(
-                ::std::vec::Vec::new(),
-                ::flate2::Compression::default(),
-            );
-            e.write_all(&input).expect("gzip encode");
-            e.finish().expect("gzip finish")
+/// One-shot `flate2` codec run over `input` per `format` and `dir`. `Compress`
+/// → `write::{GzEncoder,ZlibEncoder,DeflateEncoder}`; `Decompress` →
+/// `read::{GzDecoder,ZlibDecoder,DeflateDecoder}`. A compress error is
+/// impossible for an in-memory `Vec<u8>` sink (no I/O); a decompress error
+/// means truncated/corrupt input — the fixtures round-trip a value produced by
+/// the matching `CompressionStream`, so the `expect`s are unreachable on the
+/// static path.
+fn ds_codec_run(
+    format: DsCompressionFormat,
+    dir: DsCodecDir,
+    input: ::std::vec::Vec<u8>,
+) -> ::std::vec::Vec<u8> {
+    match dir {
+        DsCodecDir::Compress => {
+            use ::std::io::Write as _;
+            match format {
+                DsCompressionFormat::Gzip => {
+                    let mut e = ::flate2::write::GzEncoder::new(
+                        ::std::vec::Vec::new(),
+                        ::flate2::Compression::default(),
+                    );
+                    e.write_all(&input).expect("gzip encode");
+                    e.finish().expect("gzip finish")
+                }
+                DsCompressionFormat::Deflate => {
+                    let mut e = ::flate2::write::ZlibEncoder::new(
+                        ::std::vec::Vec::new(),
+                        ::flate2::Compression::default(),
+                    );
+                    e.write_all(&input).expect("deflate encode");
+                    e.finish().expect("deflate finish")
+                }
+                DsCompressionFormat::DeflateRaw => {
+                    let mut e = ::flate2::write::DeflateEncoder::new(
+                        ::std::vec::Vec::new(),
+                        ::flate2::Compression::default(),
+                    );
+                    e.write_all(&input).expect("deflate-raw encode");
+                    e.finish().expect("deflate-raw finish")
+                }
+            }
         }
-        DsCompressionFormat::Deflate => {
-            let mut e = ::flate2::write::ZlibEncoder::new(
-                ::std::vec::Vec::new(),
-                ::flate2::Compression::default(),
-            );
-            e.write_all(&input).expect("deflate encode");
-            e.finish().expect("deflate finish")
-        }
-        DsCompressionFormat::DeflateRaw => {
-            let mut e = ::flate2::write::DeflateEncoder::new(
-                ::std::vec::Vec::new(),
-                ::flate2::Compression::default(),
-            );
-            e.write_all(&input).expect("deflate-raw encode");
-            e.finish().expect("deflate-raw finish")
+        DsCodecDir::Decompress => {
+            use ::std::io::Read as _;
+            let mut out = ::std::vec::Vec::new();
+            match format {
+                DsCompressionFormat::Gzip => {
+                    let mut d = ::flate2::read::GzDecoder::new(&input[..]);
+                    d.read_to_end(&mut out).expect("gzip decode");
+                }
+                DsCompressionFormat::Deflate => {
+                    let mut d = ::flate2::read::ZlibDecoder::new(&input[..]);
+                    d.read_to_end(&mut out).expect("deflate decode");
+                }
+                DsCompressionFormat::DeflateRaw => {
+                    let mut d = ::flate2::read::DeflateDecoder::new(&input[..]);
+                    d.read_to_end(&mut out).expect("deflate-raw decode");
+                }
+            }
+            out
         }
     }
 }

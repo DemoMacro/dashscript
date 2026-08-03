@@ -1751,8 +1751,9 @@ fn compression_stream_gzip_lowers_to_new() {
     // model is one-shot: `writer.write(bytes)` buffers, `writer.close()`
     // compresses, `reader.read()` yields the single chunk. The
     // `__ds::DsCompressionStream` marker flags the `Compression` dep, which
-    // ships `DsCompressionStream`/`DsCompressionFormat`/`ds_compress` in
-    // `__ds.rs` backed by `flate2` (pure-Rust static track, never degraded).
+    // ships `DsCompressionStream`/`DsCompressionFormat`/`DsCodecDir`/
+    // `ds_codec_run` in `__ds.rs` backed by `flate2` (pure-Rust static track,
+    // never degraded).
     let src = "function f(): void { const cs = new CompressionStream(\"gzip\"); }";
     let (rust, deps) = Translator::new()
         .translate_with_deps(src)
@@ -1760,7 +1761,7 @@ fn compression_stream_gzip_lowers_to_new() {
     assert!(
         rust.contains("crate::__ds::DsCompressionStream::new(")
             && rust.contains("crate::__ds::DsCompressionFormat::Gzip"),
-        "new CompressionStream(\"gzip\") → DsCompressionStream::new(Gzip), got:\n{rust}"
+        "new CompressionStream(\"gzip\") → DsCompressionStream::new(Gzip, Compress), got:\n{rust}"
     );
     assert!(
         deps.has(RuntimeDep::Compression),
@@ -1770,9 +1771,10 @@ fn compression_stream_gzip_lowers_to_new() {
         deps.helper_module().is_some_and(|s| {
             s.contains("pub struct DsCompressionStream")
                 && s.contains("pub enum DsCompressionFormat")
-                && s.contains("fn ds_compress(")
+                && s.contains("pub enum DsCodecDir")
+                && s.contains("fn ds_codec_run(")
         }),
-        "Compression dep ships the stream/format/compress types, got helper: {:?}",
+        "Compression dep ships the stream/format/dir/codec-run types, got helper: {:?}",
         deps.helper_module()
     );
     // `flate2` cargo crate (gzip/deflate/deflate-raw backends).
@@ -1803,5 +1805,37 @@ fn compression_stream_brotli_falls_through() {
     assert!(
         !deps.has(RuntimeDep::Compression),
         "brotli must not flag Compression dep, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn decompression_stream_gzip_lowers_to_shared_codec_type() {
+    // `new DecompressionStream("gzip")` — the decode side of the WHATWG Streams
+    // compression API. It lowers to the SAME `DsCompressionStream` type as
+    // `CompressionStream` (the writable/readable/writer/reader containers are
+    // direction-agnostic), differing only in the `DsCodecDir::Decompress` arg,
+    // which routes `close()` through `flate2::read::GzDecoder`. The shared
+    // `__ds::DsCompressionStream` marker still flags the `Compression` dep, so
+    // one helper slice + one flate2 dep covers both directions.
+    let src = "function f(): void { const ds = new DecompressionStream(\"gzip\"); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::DsCompressionStream::new(")
+            && rust.contains("crate::__ds::DsCompressionFormat::Gzip")
+            && rust.contains("crate::__ds::DsCodecDir::Decompress"),
+        "new DecompressionStream(\"gzip\") → DsCompressionStream::new(Gzip, Decompress), got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Compression),
+        "Decompression must flag the shared Compression dep, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module().is_some_and(|s| {
+            s.contains("fn ds_codec_run(") && s.contains("DsCodecDir::Decompress")
+        }),
+        "Compression helper ships the codec run + decompress direction, got helper: {:?}",
+        deps.helper_module()
     );
 }

@@ -1466,7 +1466,10 @@ fn streams_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     };
     if id.name.as_str() == "ReadableStream" {
         Some(parse_quote!(crate::__ds::DsReadableStream))
-    } else if id.name.as_str() == "CompressionStream" {
+    } else if matches!(
+        id.name.as_str(),
+        "CompressionStream" | "DecompressionStream"
+    ) {
         Some(parse_quote!(crate::__ds::DsCompressionStream))
     } else {
         None

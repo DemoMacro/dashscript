@@ -9,8 +9,9 @@
 //! as plain method calls on the handle types — only the constructor needs a
 //! dispatch arm (`expressions/new`), and the `writable`/`readable` fields are
 //! plain `pub` field access. Backed by `flate2` via the `Compression` runtime
-//! dep; pure-Rust static track, never degraded. `DecompressionStream`/`brotli`/
-//! true streaming are out of scope (honest partials).
+//! dep; pure-Rust static track, never degraded. `DecompressionStream` shares
+//! this model (same `DsCompressionStream` type, a `Decompress` direction);
+//! `brotli`/true streaming remain honest partials.
 
 use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
 use syn::{parse_quote, Expr, Type};
@@ -23,19 +24,33 @@ use super::super::super::expressions::{translate_argument, translate_expr};
 /// → `crate::__ds::DsCompressionStream`. `None` for any other name.
 pub(in crate::translator) fn compression_ctor_type(name: &str) -> Option<Type> {
     match name {
-        "CompressionStream" => Some(parse_quote!(crate::__ds::DsCompressionStream)),
+        // Both lower to `DsCompressionStream` — the writable/readable/writer/
+        // reader containers are direction-agnostic; only the constructor's
+        // direction arg (and so `close()`'s codec run) differs.
+        "CompressionStream" | "DecompressionStream" => {
+            Some(parse_quote!(crate::__ds::DsCompressionStream))
+        }
         _ => None,
     }
 }
 
-/// `new CompressionStream(format)` → `DsCompressionStream::new(variant)`. The
-/// format must be a string literal `gzip`/`deflate`/`deflate-raw` (the three
-/// `flate2` mappings); `brotli` (no `flate2` backend) and a non-literal format
-/// have no static form → `None`, so `expressions/new` falls through to the
-/// generic `Foo::new` path (E0433 — an honest unsupported).
-pub(in crate::translator) fn compression_stream_ctor(args: &[Argument]) -> Option<Expr> {
+/// `new CompressionStream(format)` → `DsCompressionStream::new(variant, Compress)`,
+/// `new DecompressionStream(format)` → `DsCompressionStream::new(variant, Decompress)`.
+/// The format must be a string literal `gzip`/`deflate`/`deflate-raw` (the
+/// three `flate2` mappings); `brotli` (no `flate2` backend) and a non-literal
+/// format have no static form → `None`, so `expressions/new` falls through to
+/// the generic `Foo::new` path (E0433 — an honest unsupported).
+pub(in crate::translator) fn compression_stream_ctor(
+    name: &str,
+    args: &[Argument],
+) -> Option<Expr> {
     let fmt = format_variant(args.first()?.as_expression()?)?;
-    Some(parse_quote!(crate::__ds::DsCompressionStream::new(#fmt)))
+    let dir: Expr = match name {
+        "CompressionStream" => parse_quote!(crate::__ds::DsCodecDir::Compress),
+        "DecompressionStream" => parse_quote!(crate::__ds::DsCodecDir::Decompress),
+        _ => return None,
+    };
+    Some(parse_quote!(crate::__ds::DsCompressionStream::new(#fmt, #dir)))
 }
 
 /// Map a `gzip`/`deflate`/`deflate-raw` string literal to its
