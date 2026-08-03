@@ -135,24 +135,22 @@ pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
 /// (invalid bytes become U+FFFD, matching the ES `fatal: false` default). Both
 /// structs are stateless, so a single shared instance is sound.
 pub(super) const ENCODING_HELPER: &str = "\
-pub struct TextEncoder;
+pub struct TextEncoder { pub encoding: &'static str }
 impl TextEncoder {
     #[inline]
     pub fn new() -> Self {
-        TextEncoder
+        TextEncoder { encoding: \"utf-8\" }
     }
     #[inline]
     pub fn encode(&self, s: String) -> Vec<u8> {
         s.into_bytes()
     }
 }
-#[allow(dead_code)]
-pub struct TextDecoder;
-#[allow(dead_code)]
+pub struct TextDecoder { pub encoding: &'static str }
 impl TextDecoder {
     #[inline]
     pub fn new() -> Self {
-        TextDecoder
+        TextDecoder { encoding: \"utf-8\" }
     }
     #[inline]
     pub fn decode(&self, bytes: Vec<u8>) -> String {

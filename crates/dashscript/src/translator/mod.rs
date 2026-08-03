@@ -242,7 +242,12 @@ impl RuntimeDep {
             RuntimeDep::Worker => Some("__ds::Worker"),
             RuntimeDep::Truthy => Some("__ds::truthy"),
             RuntimeDep::Display => Some("__ds::display"),
-            RuntimeDep::Encoding => Some("__ds::TextEncoder"),
+            // Common prefix of `__ds::TextEncoder` and `__ds::TextDecoder`, so
+            // a fixture using either the encoder or the decoder pulls
+            // ENCODING_HELPER (both structs live in the same slice) — a
+            // TextDecoder-only fixture must still inject the slice, or
+            // `__ds::TextDecoder` is an undefined type (E0433).
+            RuntimeDep::Encoding => Some("__ds::Text"),
             // Common prefix of `__ds::DsUrl` and `__ds::DsUrlSearchParams`, so
             // a fixture using either the WHATWG URL parser (`new URL(…)`) or the
             // query params list pulls URL_HELPER (the `DsUrl` wrapper + the
