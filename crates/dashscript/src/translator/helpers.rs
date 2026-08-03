@@ -338,10 +338,11 @@ impl DsResponse {
         self.inner.text().await.unwrap_or_default()
     }
 }
-/// Response headers — wraps `reqwest::HeaderMap`. `get(name)` is case-insensitive
-/// (HTTP headers are), returning the first value or `None` (ES `null`).
+/// Response headers — wraps `reqwest::header::HeaderMap` (re-exported from
+/// the `http` crate). `get(name)` is case-insensitive (HTTP headers are),
+/// returning the first value or `None` (ES `null`).
 pub struct DsHeaders {
-    inner: reqwest::HeaderMap,
+    inner: reqwest::header::HeaderMap,
 }
 impl DsHeaders {
     #[inline]
