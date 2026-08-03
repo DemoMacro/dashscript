@@ -110,14 +110,17 @@ pub(in crate::translator) fn lazy_static_candidate(
     // collection constructor (`const s = new Set([…])`) whose element type is
     // inferred from the literal, an options/config object literal
     // (`const opts = { flag: true, … }`) whose uniform value type is inferred from
-    // its properties, or an alias of an imported lazy static (`const x = m;`).
-    // Any other init without an annotation has no static type to put on the
-    // OnceLock — defer.
+    // its properties, an array literal (`const t = […]` — `cell_type` infers
+    // `Vec<T>` from the first element, falling back to `Vec<serde_json::Value>`
+    // for non-scalar/object elements), or an alias of an imported lazy static
+    // (`const x = m;`). Any other init without an annotation has no static type
+    // to put on the OnceLock — defer.
     if d.type_annotation.is_none()
         && !matches!(init, Expression::RegExpLiteral(_))
         && !is_inferable_call(init)
         && !is_inferable_new(init)
         && !is_inferable_object(init)
+        && !matches!(init, Expression::ArrayExpression(_))
         && !is_inferable_binary(init)
         && !is_typed_assertion(init)
         && !is_lazy_static_ref(init)

@@ -907,6 +907,30 @@ fn entry_non_mutated_let_runtime_init_referenced_by_fn_hoists() {
 }
 
 #[test]
+fn entry_const_array_literal_no_annotation_referenced_by_fn_hoists() {
+    // A top-level `const`/`let` whose initializer is an array literal with no
+    // type annotation, referenced from a function, hoists to a
+    // `static OnceLock<T>` + accessor — `cell_type::infer_array_type` infers
+    // `Vec<T>` from the first element (falling back to `Vec<serde_json::Value>`
+    // for non-scalar/object elements). Previously `unsupported`
+    // (check_escape): an unannotated array literal was not in
+    // `lazy_static_candidate`'s inferable set, so a WPT fixture whose inlined
+    // `// META: script=` defined `const encodings_table = […]` (then read from
+    // a `test()` callback) was rejected.
+    let src = "const words = [\"a\", \"b\", \"c\"];\nfunction first() { return words[0]; }";
+    let diags = Translator::new().check(src);
+    assert!(
+        diags.is_empty(),
+        "entry const array escape flagged: {diags:?}"
+    );
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("OnceLock<Vec<String>>") && rust.contains("fn words()"),
+        "entry const array not hoisted to OnceLock<Vec<String>>: {rust}"
+    );
+}
+
+#[test]
 fn entry_non_mutated_let_runtime_init_unreferenced_stays_local() {
     // B3-1b: an entry-file non-mutated `let` NOT referenced from any function
     // stays a plain `fn main` local (source-order, zero-cost) — only the
