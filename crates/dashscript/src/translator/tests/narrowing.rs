@@ -180,6 +180,25 @@ fn translates_logical_or_bool_short_circuits() {
 }
 
 #[test]
+fn value_and_bool_operand_lowers_to_truthy_and() {
+    // `matches && matches.length > 0` — a non-bool value left (`Vec`/`String`),
+    // a boolean right (a comparison). TS types the result `value | bool`; the
+    // common use is a truthiness test (`assert_true(matches && …)`), so lower
+    // to `truthy(left) && right` (bool) rather than the value/value block,
+    // whose if/else branches mismatch (`Vec` vs `bool`, E0308).
+    let src = "function f(m: string[]): boolean { return m && m.length > 0; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("truthy") && rust.contains("&&"),
+        "a value && bool should lower to truthy(value) && bool: {rust}"
+    );
+    assert!(
+        !rust.contains("} else { __l }"),
+        "value && bool should not fall through to the value/value block: {rust}"
+    );
+}
+
+#[test]
 fn translates_logical_nullish_assign() {
     let src = "function f(x: number | null): void { x ??= 5; }";
     let rust = Translator::new().translate(src).expect("should translate");
