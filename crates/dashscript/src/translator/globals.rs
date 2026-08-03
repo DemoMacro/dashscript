@@ -246,6 +246,7 @@ pub const TESTHARNESS_MAPPED_GLOBALS: &[&str] = &[
     "assert_equals",
     "assert_not_equals",
     "assert_array_equals",
+    "assert_approx_equals",
     "assert_true",
     "assert_false",
     "assert_throws_dom",
@@ -262,8 +263,9 @@ pub fn is_testharness_mapped(name: &str) -> bool {
 
 /// WPT testharness functions with NO static lowering — `async_test` (which
 /// needs `t.step_func` manual step management the static path does not model)
-/// and the composite asserts (`assert_object_equals`/`assert_approx_equals`/…,
-/// whose operands are not plain `DsSameValue` scalars or arrays of them).
+/// and the composite asserts (`assert_object_equals`/…, whose operands are
+/// not plain `DsSameValue` scalars or arrays of them). (`assert_approx_equals`
+/// is mapped — numeric operands cast to `f64`; see [`TESTHARNESS_MAPPED_GLOBALS`].)
 /// `promise_test` is mapped — it lowers to `wpt_promise_test(name, async move {
 /// … }).await` under `#[tokio::main]` (see `testharness_function`). Unlike
 /// test262's degrade-don't-reject, WinterTC is static-only — a fixture using
@@ -274,7 +276,6 @@ pub fn is_testharness_mapped(name: &str) -> bool {
 pub const TESTHARNESS_REJECTED_GLOBALS: &[&str] = &[
     "async_test",
     "assert_object_equals",
-    "assert_approx_equals",
     "assert_less",
     "assert_greater",
     "assert_between",

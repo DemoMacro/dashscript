@@ -98,6 +98,35 @@ fn check_passes_assert_array_equals() {
 }
 
 #[test]
+fn assert_approx_equals_lowers_to_wpt_helper() {
+    // `assert_approx_equals(actual, expected, epsilon)` →
+    // `wpt_assert_approx_equals((a) as f64, (b) as f64, (eps) as f64)` — pass
+    // iff `|actual - expected| <= epsilon`. Each operand casts to `f64` so an
+    // `i64`-flavor local type-checks.
+    let src =
+        "function f(a: number, b: number, eps: number): void { assert_approx_equals(a, b, eps); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("wpt_assert_approx_equals"),
+        "assert_approx_equals should lower to wpt_assert_approx_equals: {rust}"
+    );
+    assert!(
+        rust.contains(" as f64"),
+        "operands should cast to f64: {rust}"
+    );
+}
+
+#[test]
+fn check_passes_assert_approx_equals() {
+    // `assert_approx_equals` is Mapped (numeric approximation) — check produces
+    // no diagnostics.
+    let diags = Translator::new().check(
+        "function f(a: number, b: number, eps: number): void { assert_approx_equals(a, b, eps); }",
+    );
+    assert!(diags.is_empty(), "assert_approx_equals flagged: {diags:?}");
+}
+
+#[test]
 fn promise_test_lowers_to_async_await() {
     // `promise_test(async () => { assert_equals(1, 1); }, "n")` — the async
     // callback's body lowers to `async move { … }`, awaited via

@@ -1120,6 +1120,23 @@ pub fn wpt_assert_array_equals<T: DsSameValue, U: DsSameValue>(
         }
     }
 }
+
+/// WPT `assert_approx_equals(actual, expected, epsilon[, msg])` — panics an
+/// `AssertionError` when `|actual - expected| > epsilon` (WPT testharness.js:
+/// pass iff the difference is within `epsilon`, inclusive). Each operand is a
+/// `number`; the call site casts to `f64` so an `i64`-flavor local type-checks.
+/// A non-numeric operand fails inference (E0308) — the static path's honest
+/// partial. The optional `msg` (arg 3) is dropped at the call site (the verdict
+/// keys off the `AssertionError:` prefix).
+#[inline]
+pub fn wpt_assert_approx_equals(actual: f64, expected: f64, epsilon: f64) {
+    if (actual - expected).abs() > epsilon {
+        panic!(
+            "AssertionError: assert_approx_equals: |{} - {}| > {}",
+            actual, expected, epsilon
+        );
+    }
+}
 "#;
 
 /// The `serde_json::Value` `DsSameValue` impl — emitted only when both `Assert`

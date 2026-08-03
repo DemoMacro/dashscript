@@ -60,6 +60,19 @@ pub(in crate::translator) fn testharness_function(
             let b = super::assert_operand(args.get(1)?, ctx);
             parse_quote!(crate::__ds::wpt_assert_array_equals(&(#a), &(#b)))
         }
+        // `assert_approx_equals(actual, expected, epsilon[, msg])` — numeric
+        // approximation: pass iff `|actual - expected| <= epsilon`. Each
+        // operand is a `number` cast to `f64` at the call site (so an `i64`
+        // flavor local type-checks); the optional `msg` (arg 3) is dropped. A
+        // non-numeric operand fails inference (E0308) — honest partial.
+        "assert_approx_equals" => {
+            let a = translate_argument(args.first()?, ctx);
+            let b = translate_argument(args.get(1)?, ctx);
+            let eps = translate_argument(args.get(2)?, ctx);
+            parse_quote!(
+                crate::__ds::wpt_assert_approx_equals((#a) as f64, (#b) as f64, (#eps) as f64)
+            )
+        }
         // `assert_true(x)` / `assert_false(x)` — WPT requires `actual === true`
         // (resp. `=== false`) strictly, which is SameValue against the boolean.
         // Routing through `wpt_assert_equals` accepts any `DsSameValue` operand
