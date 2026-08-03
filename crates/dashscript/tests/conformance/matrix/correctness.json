@@ -10,6 +10,26 @@
     "note": "[1,2,3].join('-') prints 1-2-3 (f64 Display drops trailing .0)"
   },
   {
+    "id": "correctness.atob_btoa_roundtrip",
+    "layer": "correctness",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "WinterTC base64: btoa('hello')='aGVsbG8=' then atob -> 'hello'; btoa('A')='QQ=='"
+  },
+  {
+    "id": "correctness.crypto_random_uuid",
+    "layer": "correctness",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "WinterTC WebCrypto: crypto.randomUUID() returns RFC 4122 v4 UUID (5 dash-separated groups); self.crypto alias works; two calls differ"
+  },
+  {
     "id": "correctness.json_stringify_number",
     "layer": "correctness",
     "category": "correctness",
@@ -40,6 +60,26 @@
     "note": "parseInt('ff', 16) prints 255"
   },
   {
+    "id": "correctness.performance_now_positive",
+    "layer": "correctness",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "WinterTC hr-time: performance.now() returns a monotonic ms value > 0"
+  },
+  {
+    "id": "correctness.self_performance_now",
+    "layer": "correctness",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "WinterTC self global alias: self.performance.now() lowers the same as performance.now(); monotonic difference is non-negative"
+  },
+  {
     "id": "correctness.set_dedup_size",
     "layer": "correctness",
     "category": "correctness",
@@ -48,5 +88,25 @@
     "expect": "supported",
     "correct": true,
     "note": "Set<T> -> HashSet<T: Hash+Eq>; string elements work (number can't — f64 has no Eq)"
+  },
+  {
+    "id": "correctness.structured_clone_string",
+    "layer": "correctness",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "structuredClone(v) -> v.clone() (DashScript values are Clone); a primitive clone is itself"
+  },
+  {
+    "id": "correctness.url_can_parse",
+    "layer": "correctness",
+    "category": "correctness",
+    "status": "supported",
+    "detail": "",
+    "expect": "supported",
+    "correct": true,
+    "note": "WinterTC URL.canParse: absolute URL → true; 'a' resolves against base https://b/ → true; 'not a url' (no base, has spaces) → false"
   }
 ]

@@ -3,56 +3,56 @@
     "id": "wpt.urlpattern.urlpattern",
     "layer": "wpt",
     "category": "urlpattern",
-    "status": "supported",
-    "detail": "",
+    "status": "unsupported",
+    "detail": "`typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | regex `.exec` inside a loop needs the engine (regress is stateless) | regex `.exec` inside a loop needs the engine (regress is stateless) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `assert_object_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
     "note": ""
   },
   {
     "id": "wpt.urlpattern.urlpattern-compare.tentative",
     "layer": "wpt",
     "category": "urlpattern",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:13:23: error[E0425]: cannot find value `url_pattern` in this scope: not found in this scope\nsrc\\main.rs:24:23: error[E0425]: cannot find value `url_pattern` in this scope: not found in this scope\nsrc\\main.rs:28:23: error[E0425]: cannot find value `url_pattern` in this scope: not found in this scope\nsrc\\main.rs:32:23: error[E0425]: cannot find value `url_pattern` in this scope: not found in this scope\nsrc\\main.rs:49:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:46:27: error[E0308]: mismatched types: expected `f64`, found `Value`",
     "note": ""
   },
   {
     "id": "wpt.urlpattern.urlpattern-compare.tentative.https",
     "layer": "wpt",
     "category": "urlpattern",
-    "status": "supported",
-    "detail": "",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:13:23: error[E0425]: cannot find value `url_pattern` in this scope: not found in this scope\nsrc\\main.rs:24:23: error[E0425]: cannot find value `url_pattern` in this scope: not found in this scope\nsrc\\main.rs:28:23: error[E0425]: cannot find value `url_pattern` in this scope: not found in this scope\nsrc\\main.rs:32:23: error[E0425]: cannot find value `url_pattern` in this scope: not found in this scope\nsrc\\main.rs:49:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:46:27: error[E0308]: mismatched types: expected `f64`, found `Value`",
     "note": ""
   },
   {
     "id": "wpt.urlpattern.urlpattern-constructor",
     "layer": "wpt",
     "category": "urlpattern",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:7:17: error[E0433]: cannot find type `URLPattern` in this scope: use of undeclared type `URLPattern`\nsrc\\main.rs:7:33: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nsrc\\main.rs:13:17: error[E0433]: cannot find type `URLPattern` in this scope: use of undeclared type `URLPattern`\nsrc\\main.rs:13:33: error[E0433]: cannot find type `URL` in this scope: use of undeclared type `URL`\nsrc\\main.rs:19:17: error[E0433]: cannot find type `URLPattern` in this scope: use of undeclared type `URLPattern`\nsrc\\main.rs:24:9: error[E0433]: cannot find type `URLPattern` in this scope: use of undeclared type `URLPattern`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.urlpattern.urlpattern-generate.tentative",
     "layer": "wpt",
     "category": "urlpattern",
-    "status": "unsupported",
-    "detail": "nested function declaration is unsupported — move it to module scope, or use an arrow function for a callback | a `function` expression as a callee (IIFE) or argument (callback) needs the engine (no static lowering) | `await` is unsupported (DashScript has no async runtime) | `await` is unsupported (DashScript has no async runtime)",
+    "status": "partial",
+    "detail": "static build: src\\main.rs:32:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:29:27: error[E0308]: mismatched types: expected `f64`, found `Value`\nsrc\\main.rs:4:23: error[E0277]: `&f64` is not an iterator: `&f64` is not an iterator\nsrc\\main.rs:10:21: error[E0593]: closure is expected to take 0 arguments, but it takes 1 argument: expected closure that takes 0 arguments\nsrc\\main.rs:12:37: error[E0599]: no method named `generate` found for struct `DsURLPattern` in the current scope: method not found in `DsURLPattern`\nsrc\\main.rs:16:38: error[E0599]: no method named `generate` found for struct `DsURLPattern` in the current scope: method not found in `DsURLPattern`",
     "note": ""
   },
   {
     "id": "wpt.urlpattern.urlpattern-hasregexpgroups",
     "layer": "wpt",
     "category": "urlpattern",
-    "status": "supported",
-    "detail": "",
+    "status": "unsupported",
+    "detail": "`assert_implements` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
     "note": ""
   },
   {
     "id": "wpt.urlpattern.urlpattern.https",
     "layer": "wpt",
     "category": "urlpattern",
-    "status": "supported",
-    "detail": "",
+    "status": "unsupported",
+    "detail": "`typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | regex `.exec` inside a loop needs the engine (regress is stateless) | regex `.exec` inside a loop needs the engine (regress is stateless) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `assert_object_equals` is a WPT testharness function with no static lowering (async/composite) — WinterTC is static-only, no degradation",
     "note": ""
   }
 ]

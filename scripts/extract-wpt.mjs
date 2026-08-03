@@ -128,6 +128,30 @@ function parseMeta(src) {
   return { includes, variants, meta, body: lines.slice(bodyStart).join("\n") };
 }
 
+// Inline a fixture's `// META: script=` includes verbatim before its body, so
+// the static path sees the same globals the WPT harness would inject at run
+// time (e.g. `encodings_table` from resources/encodings.js — pure data the
+// fixture iterates over). Recursive depth-first: an included script's own
+// `// META: script=` lines are inlined before its body. A `seen` set breaks
+// include cycles; a missing file is skipped (an unmatched path is a harness
+// file not needed for this fixture's static slice).
+function inlineIncludes(fixturePath, includes, seen = new Set()) {
+  let out = "";
+  for (const inc of includes) {
+    const incPath = inc.startsWith("/")
+      ? resolve(WPT, inc.slice(1))
+      : resolve(dirname(fixturePath), inc);
+    const norm = incPath.replace(/\\/g, "/");
+    if (seen.has(norm) || !existsSync(incPath)) continue;
+    seen.add(norm);
+    const src = readFileSync(incPath, "utf8");
+    const { includes: nested, body } = parseMeta(src);
+    out += inlineIncludes(incPath, nested, seen);
+    out += body.trim() + "\n";
+  }
+  return out;
+}
+
 // Parse the body for test counts + flag async/fetch use (matrix diagnostics,
 // not filtering). The body is returned verbatim — DashScript lowers `test()`/
 // `assert_equals` to static `__ds::wpt_*` helpers; `async_test`/`promise_test`
@@ -209,7 +233,10 @@ function extract() {
       }
       // Wrap the body verbatim — the implicit `fn main` collector gathers the
       // top-level `test()` calls (pure-TS execution semantics, same as test262).
-      const fixture = `function main(): void {\n${r.body.trim()}\n}\nmain();\n`;
+      // Inline `// META: script=` includes first, so harness globals the body
+      // references (encodings_table, …) are in scope on the static path.
+      const inlined = inlineIncludes(f, includes);
+      const fixture = `function main(): void {\n${inlined}${r.body.trim()}\n}\nmain();\n`;
       const id =
         "wpt." +
         rel
