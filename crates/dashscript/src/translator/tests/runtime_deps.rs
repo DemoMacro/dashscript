@@ -412,6 +412,45 @@ fn crypto_random_uuid_emits_crypto_dep_helper() {
 }
 
 #[test]
+fn crypto_get_random_values_emits_helper_and_flags_dep() {
+    // `crypto.getRandomValues(new Uint8Array(n))` →
+    // `__ds::crypto_get_random_values(vec![0_u8; n])`. The marker prefix
+    // `__ds::crypto_` flags the `Crypto` dep (shared with `randomUUID`), which
+    // ships both helpers + the `uuid` (v4) and `getrandom` crates. The receiver
+    // may be the bare global or `self.crypto` (the WinterTC `self` alias).
+    let src =
+        "function f(): Uint8Array {\n  return self.crypto.getRandomValues(new Uint8Array(12));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::crypto_get_random_values"),
+        "crypto.getRandomValues → __ds::crypto_get_random_values, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Crypto),
+        "Crypto dep must flag, got deps: {deps:?}"
+    );
+    let helper = deps.helper_module().expect("Crypto dep ships a helper");
+    assert!(
+        helper.contains("pub fn crypto_get_random_values") && helper.contains("getrandom"),
+        "Crypto dep ships crypto_get_random_values (getrandom), got helper: {helper:?}"
+    );
+    // Both `uuid` (v4) and `getrandom` (0.2) land in Cargo.toml.
+    let mut toml = String::from("[dependencies]\n");
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(
+        toml.contains("uuid") && toml.contains("getrandom"),
+        "Crypto pulls uuid + getrandom, got Cargo.toml: {toml}"
+    );
+    // WinterTC Web API never degrades — getRandomValues is pure-Rust, not engine.
+    assert!(
+        !deps.needs_engine(),
+        "crypto.getRandomValues must not degrade, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);

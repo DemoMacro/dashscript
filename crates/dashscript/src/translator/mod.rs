@@ -289,7 +289,11 @@ impl RuntimeDep {
             RuntimeDep::F64MaxMin => Some("__ds::ds_f64_max"),
             RuntimeDep::Base64 => Some("__ds::b64_"),
             RuntimeDep::HrTime => Some("__ds::perf_now"),
-            RuntimeDep::Crypto => Some("__ds::crypto_random_uuid"),
+            // Common prefix of `crypto_random_uuid`/`crypto_get_random_values`,
+            // so a fixture using either WebCrypto method (`randomUUID`/
+            // `getRandomValues`) pulls CRYPTO_HELPER (sibling free fns in the
+            // slice) and the `uuid` + `getrandom` crates.
+            RuntimeDep::Crypto => Some("__ds::crypto_"),
             RuntimeDep::URLPattern => Some("__ds::DsURLPattern"),
             // The `#[tokio::main]` attribute only the async entry emits — a
             // `.ts` source cannot produce it any other way, so its presence in
@@ -369,7 +373,13 @@ impl RuntimeDep {
             RuntimeDep::HrTime => None,
             // `uuid` (uuid-rs/uuid) — `crypto.randomUUID()` is RFC 4122 v4.
             // The `v4` feature enables `Uuid::new_v4` (backed by `getrandom`).
-            RuntimeDep::Crypto => Some(&[("uuid", "{ version = \"1\", features = [\"v4\"] }")]),
+            // `getrandom` (rust-random/getrandom) — `crypto.getRandomValues(buf)`
+            // fills a byte buffer from the system CSPRNG (0.2 — the same major
+            // version `uuid::new_v4` pulls, so the two never fork the source).
+            RuntimeDep::Crypto => Some(&[
+                ("uuid", "{ version = \"1\", features = [\"v4\"] }"),
+                ("getrandom", "\"0.2\""),
+            ]),
             // `urlpattern` (denoland/rust-urlpattern) — the WHATWG URLPattern
             // reference. `new URLPattern(…)` wraps `urlpattern::UrlPattern`; a
             // pattern that fails to compile panics a `TypeError` (ES error class).

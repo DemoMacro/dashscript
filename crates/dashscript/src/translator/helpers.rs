@@ -227,6 +227,19 @@ pub(super) const CRYPTO_HELPER: &str = r#"
 pub fn crypto_random_uuid() -> String {
     ::uuid::Uuid::new_v4().to_string()
 }
+/// `crypto.getRandomValues(buf)` — fill `buf` with cryptographically-strong
+/// random bytes (WebCrypto `getRandomValues`, backed by `getrandom` — the same
+/// source `uuid::new_v4` uses). Consumes the buffer and returns it filled (ES
+/// returns the same typed array it was passed), matching the common
+/// `var iv = crypto.getRandomValues(new Uint8Array(12))` shape. An in-place
+/// call on an existing local (`crypto.getRandomValues(buf)`) moves the local,
+/// so a later read of `buf` is a cargo-check error honestly — assign the
+/// result back (`buf = crypto.getRandomValues(buf)`). ES caps the buffer at
+/// 65536 bytes (a `QuotaExceededError`); that bound is unchecked here.
+pub fn crypto_get_random_values(mut buf: ::std::vec::Vec<u8>) -> ::std::vec::Vec<u8> {
+    ::getrandom::getrandom(&mut buf).expect("getrandom failed");
+    buf
+}
 "#;
 
 /// WHATWG URLPattern API helper — `__ds::DsURLPattern`. A `new URLPattern(input)`

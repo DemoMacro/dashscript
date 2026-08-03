@@ -493,10 +493,10 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::perf_method(sm) {
             return expr;
         }
-        // `crypto.randomUUID()` — the WinterTC (W3C WebCrypto) method on the
-        // global `crypto` object (optionally via the WinterTC `self` alias,
-        // `self.crypto.randomUUID()`); both lower to `__ds::crypto_random_uuid`.
-        if let Some(expr) = builtins::crypto_method(sm) {
+        // `crypto.randomUUID()` / `crypto.getRandomValues(buf)` — WinterTC
+        // (W3C WebCrypto) methods on the global `crypto` object (optionally via
+        // the WinterTC `self` alias); lower to `__ds::crypto_*` helpers.
+        if let Some(expr) = builtins::crypto_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
         // `URL.canParse(url, base?)` / `URL.parse(url, base?)` — the WinterTC
