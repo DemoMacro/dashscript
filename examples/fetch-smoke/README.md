@@ -36,17 +36,31 @@ async fn probe(url: String) {
     println!("{}", r.ok());
 }
 
+async fn post(url: String) {
+    let r = crate::__ds::ds_fetch_with(
+        url,
+        "POST".to_string(),
+        ::std::option::Option::Some("hi".to_string()),
+        ::std::vec![("Content-Type".to_string(), ("text/plain".to_string()).to_string())],
+    )
+    .await;
+    println!("{}", r.status());
+}
+
 #[tokio::main(flavor = "current_thread")]
 async fn main() {
     probe("https://example.com".to_string()).await;
+    post("https://example.com".to_string()).await;
 }
 ```
 
-The top-level `await probe(...)` is collected into the implicit `fn main`,
-which DashScript emits as a single-thread `#[tokio::main]` async entry (no
-`Send` bounds — matching JavaScript's single-thread semantics). `fetch`,
-`Response.status/.ok/.headers`, and the `reqwest` dependency are injected by
-the `Fetch` runtime dep.
+The top-level `await probe(...)` / `await post(...)` are collected into the
+implicit `fn main`, which DashScript emits as a single-thread
+`#[tokio::main]` async entry (no `Send` bounds — matching JavaScript's
+single-thread semantics). `fetch(url)` → `ds_fetch`; `fetch(url, init)` with a
+plain object `init` → `ds_fetch_with` (method/body/headers extracted,
+ToString-coerced). `Response.status/.ok/.headers`, and the `reqwest`
+dependency are injected by the `Fetch` runtime dep.
 
 ## License
 

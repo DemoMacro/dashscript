@@ -3,14 +3,17 @@
 //! globals — not a `Math`/`Object` member — so they live here rather than under
 //! a named built-in file.
 
-use oxc_ast::ast::{Argument, IdentifierReference};
+use oxc_ast::ast::{
+    Argument, Expression, IdentifierReference, ObjectExpression, ObjectPropertyKind, PropertyKey,
+};
 use proc_macro2::Span;
 use syn::{parse_quote, Expr};
 
 use super::super::bindings;
 use super::super::context::Ctx;
 use super::super::expressions::{
-    bool_expr, is_number_arg, regex_lit_parts, string_expr, translate_argument, translate_number_to,
+    bool_expr, is_number_arg, regex_lit_parts, string_expr, translate_argument, translate_expr,
+    translate_number_to,
 };
 use super::super::flavor::NumberFlavor;
 
@@ -127,10 +130,76 @@ pub(in crate::translator) fn global_function(
         // See `DS_FETCH_HELPER`.
         "fetch" => {
             let url = translate_argument(args.first()?, ctx);
-            parse_quote!(crate::__ds::ds_fetch(#url))
+            // `fetch(url, init)` — a plain object `init` lowers to `ds_fetch_with`
+            // (method/body/headers); anything else (no second arg, a `Request`
+            // object, a non-literal) stays the GET `ds_fetch` path and surfaces
+            // honestly at `cargo check`. See `fetch_init` / `DS_FETCH_HELPER`.
+            match args.get(1) {
+                Some(Argument::ObjectExpression(obj)) => {
+                    let (method, body, headers) = fetch_init(obj, ctx);
+                    parse_quote!(crate::__ds::ds_fetch_with(#url, #method, #body, #headers))
+                }
+                _ => parse_quote!(crate::__ds::ds_fetch(#url)),
+            }
         }
         _ => return None,
     })
+}
+
+/// `fetch(url, init)`'s second argument — the ES `init` object — lowered to the
+/// `(method, body, headers)` triple `ds_fetch_with` takes. `method` defaults to
+/// `"GET"`; `body` to `None`; `headers` (only a plain object literal here) to an
+/// empty list. Each header name/value is ES ToString-coerced (`.to_string()`)
+/// the way `fetch` itself stringifies before sending.
+fn fetch_init(obj: &ObjectExpression<'_>, ctx: &Ctx<'_>) -> (Expr, Expr, Expr) {
+    let mut method: Option<Expr> = None;
+    let mut body: Option<Expr> = None;
+    let mut header_pairs: Vec<Expr> = Vec::new();
+    for prop in &obj.properties {
+        let ObjectPropertyKind::ObjectProperty(op) = prop else {
+            continue;
+        };
+        let Some(name) = init_key_name(&op.key) else {
+            continue;
+        };
+        match name.as_str() {
+            "method" => method = Some(translate_expr(&op.value, ctx)),
+            "body" => body = Some(translate_expr(&op.value, ctx)),
+            "headers" => {
+                if let Expression::ObjectExpression(ho) = &op.value {
+                    for hp in &ho.properties {
+                        let ObjectPropertyKind::ObjectProperty(hop) = hp else {
+                            continue;
+                        };
+                        let Some(k) = init_key_name(&hop.key) else {
+                            continue;
+                        };
+                        let v = translate_expr(&hop.value, ctx);
+                        let k_lit = syn::LitStr::new(&k, Span::call_site());
+                        header_pairs.push(parse_quote!((#k_lit.to_string(), (#v).to_string())));
+                    }
+                }
+            }
+            _ => {}
+        }
+    }
+    let method = method.unwrap_or_else(|| parse_quote!("GET".to_string()));
+    let body = body
+        .map(|b| parse_quote!(::std::option::Option::Some(#b)))
+        .unwrap_or_else(|| parse_quote!(::std::option::Option::None));
+    let headers = parse_quote!(::std::vec![#(#header_pairs),*]);
+    (method, body, headers)
+}
+
+/// An `init` object's property key as a string — a static identifier (`method`)
+/// or a string literal (`"method"`); computed/shorthand keys have no static
+/// name here.
+fn init_key_name(key: &PropertyKey<'_>) -> Option<String> {
+    match key {
+        PropertyKey::StaticIdentifier(id) => Some(id.name.to_string()),
+        PropertyKey::StringLiteral(s) => Some(s.value.to_string()),
+        _ => None,
+    }
 }
 
 /// ES ToNumber applied to a string (§7.1.4.1): trim; empty → +0; otherwise a

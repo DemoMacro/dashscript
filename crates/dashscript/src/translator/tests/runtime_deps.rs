@@ -233,6 +233,38 @@ fn fetch_response_props_lower_to_accessors() {
 }
 
 #[test]
+fn fetch_init_object_lowers_to_ds_fetch_with() {
+    // `fetch(url, init)` — a plain object `init` lowers to `ds_fetch_with`,
+    // extracting `method`/`body`/`headers` (ES ToString-coerced). A `headers`
+    // object literal becomes a `(name, value)` pair list. A no-`init`
+    // `fetch(url)` keeps the GET `ds_fetch` path (covered by
+    // `fetch_lowers_to_ds_fetch_flags_reqwest`).
+    let src = "async function f(url: string): Promise<void> {\n  await fetch(url, { method: \"POST\", body: \"hello\", headers: { \"Content-Type\": \"application/json\" } });\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::ds_fetch_with"),
+        "fetch(url, init) → ds_fetch_with, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("\"POST\"")
+            && rust.contains("\"hello\"")
+            && rust.contains("\"Content-Type\""),
+        "init method/body/headers-name extracted verbatim, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("::std::option::Option::Some"),
+        "body → Option::Some, got:\n{rust}"
+    );
+    assert!(rust.contains("::std::vec!"), "headers → vec!, got:\n{rust}");
+    assert!(
+        deps.has(RuntimeDep::Fetch),
+        "fetch POST stays under the Fetch dep, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn structured_clone_lowers_to_clone_no_dep() {
     // `structuredClone(v)` (WinterTC deep clone) lowers to `v.clone()` — no
     // runtime dep (DashScript values are `Clone`); a non-`Clone` value surfaces

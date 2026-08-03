@@ -370,6 +370,36 @@ pub async fn ds_fetch<T: reqwest::IntoUrl>(url: T) -> DsResponse {
         .expect("fetch network error");
     DsResponse { inner: resp }
 }
+/// `fetch(url, init)` — a request built from the ES `init` object fields:
+/// `method` (an HTTP verb, case-insensitive), `body` (a string payload), and
+/// `headers` (a `(name, value)` list). ES `fetch` returns `Promise<Response>`;
+/// this async fn is what `await fetch(url, init)` lowers to. `method` defaults
+/// to GET when `init` omits it; `body`/`headers` are `None`/empty when absent.
+/// Same 3s timeout and panic-on-network-error as `ds_fetch`.
+pub async fn ds_fetch_with<T: reqwest::IntoUrl>(
+    url: T,
+    method: ::std::string::String,
+    body: ::std::option::Option<::std::string::String>,
+    headers: ::std::vec::Vec<(::std::string::String, ::std::string::String)>,
+) -> DsResponse {
+    let mut req = reqwest::Client::builder()
+        .timeout(::std::time::Duration::from_secs(3))
+        .build()
+        .expect("reqwest client build")
+        .request(
+            method.to_ascii_uppercase().parse().expect("invalid HTTP method"),
+            url,
+        );
+    if let Some(b) = body {
+        req = req.body(b);
+    }
+    for (k, v) in headers {
+        req = req.header(k, v);
+    }
+    DsResponse {
+        inner: req.send().await.expect("fetch network error"),
+    }
+}
 "#;
 
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
