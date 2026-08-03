@@ -1594,6 +1594,49 @@ fn assert_same_value_void_return_equals_undefined() {
 }
 
 #[test]
+fn promise_ctor_lowers_to_ds_promise_new() {
+    // `await new Promise((resolve) => { resolve(42); })` — the ES Promise
+    // constructor lowers to `ds_promise_new`, but ONLY under `await`: that is the
+    // one context that polls the future (a bare `new Promise(…)` degrades to the
+    // engine, whose microtask loop drives the `.then` chain a sync `fn main`
+    // never would). The executor arrow becomes a sync closure taking a
+    // synthesized `__ds_res: DsResolver<_>`, with a prelude binding the JS
+    // `resolve` to `move |v| __ds_res.resolve(v)` (a clonable-resolver wrap so
+    // the executor body's `resolve(42)` calls it, and a deferred callback can
+    // capture it). The value type T is inferred from the `resolve(value)` call.
+    let src =
+        "async function f(): Promise<void> { await new Promise((resolve) => { resolve(42); }); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::ds_promise_new("),
+        "new Promise should lower to ds_promise_new, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("__ds::DsResolver<_>"),
+        "the executor closure takes a synthesized DsResolver param, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("__ds_res.resolve"),
+        "the prelude binds `resolve` to the resolver method, got:\n{rust}"
+    );
+    let helper = deps.helper_module().expect("Promise dep ships a helper");
+    assert!(
+        helper.contains("pub fn ds_promise_new"),
+        "helper ships ds_promise_new, got helper: {helper:?}"
+    );
+    assert!(
+        helper.contains("pub struct DsResolver"),
+        "helper ships DsResolver, got helper: {helper:?}"
+    );
+    assert!(
+        helper.contains("impl<T> ::std::clone::Clone for DsResolver<T>"),
+        "DsResolver is Clone (deferred settlement clones it into nested callbacks), got helper: {helper:?}"
+    );
+}
+
+#[test]
 fn object_is_distinguishes_neg_zero() {
     // `Object.is(0, -0)` → false: ES SameValue treats +0 and -0 as distinct,
     // where Rust `==` says `0.0 == -0.0`. The f64 lowering emits a sign check

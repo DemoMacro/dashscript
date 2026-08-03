@@ -395,6 +395,111 @@ pub fn ds_promise_then<T: 'static, U: 'static, F: 'static + FnOnce(T) -> U>(
 ) -> DsPromise<U> {
     ::std::boxed::Box::pin(async move { f(fut.await) })
 }
+
+/// A pending-or-settled slot shared between the `resolve`/`reject` a
+/// `new Promise(executor)` hands out and the `DsPromise`'s polling future.
+/// First settlement wins; later `resolve`/`reject` are no-ops (ES idempotency).
+enum DsPromiseCell<T> {
+    Pending(::std::option::Option<::std::task::Waker>),
+    Fulfilled(T),
+    Rejected(::std::string::String),
+}
+
+/// The `resolve`/`reject` handed to a `new Promise(executor)`. `Clone` shares
+/// the one settlement slot (a cheap `Arc`), so a resolver captured by a
+/// deferred callback (`setTimeout(() => resolve(x), …)`) settles the same
+/// promise — the deferred-settlement pattern the static path could not express
+/// before. A bare `new Promise(executor)` is now a first-class static value.
+pub struct DsResolver<T> {
+    cell: ::std::sync::Arc<::std::sync::Mutex<DsPromiseCell<T>>>,
+}
+
+impl<T> ::std::clone::Clone for DsResolver<T> {
+    #[inline]
+    fn clone(&self) -> Self {
+        Self {
+            cell: self.cell.clone(),
+        }
+    }
+}
+
+impl<T> DsResolver<T> {
+    /// `resolve(value)` — settle fulfilled. First call wins; a later call (after
+    /// any settle) is a no-op. Wakes a pending future so it re-polls.
+    pub fn resolve(&self, value: T) {
+        let waker = {
+            let mut guard = self.cell.lock().expect("promise cell poisoned");
+            if !::core::matches!(*guard, DsPromiseCell::Pending(_)) {
+                return;
+            }
+            ::std::mem::replace(&mut *guard, DsPromiseCell::Fulfilled(value))
+        };
+        if let DsPromiseCell::Pending(Some(waker)) = waker {
+            waker.wake();
+        }
+    }
+
+    /// `reject(reason)` — settle rejected. `reason` is `Display`'d (the message a
+    /// `.catch`/rejection surfaces). First call wins; a later call is a no-op.
+    pub fn reject<R: ::std::fmt::Display>(&self, reason: R) {
+        let waker = {
+            let mut guard = self.cell.lock().expect("promise cell poisoned");
+            if !::core::matches!(*guard, DsPromiseCell::Pending(_)) {
+                return;
+            }
+            ::std::mem::replace(&mut *guard, DsPromiseCell::Rejected(reason.to_string()))
+        };
+        if let DsPromiseCell::Pending(Some(waker)) = waker {
+            waker.wake();
+        }
+    }
+}
+
+/// The `new Promise(executor)` future — polls the shared cell. `Pending` stores
+/// the waker so a later `resolve`/`reject` (synchronous or deferred) wakes the
+/// task. A rejected promise propagates by panicking through the `.await`
+/// (matching `ds_promise_then`'s reject convention — an honest partial for
+/// reject-path fixtures).
+struct DsPromiseFuture<T> {
+    cell: ::std::sync::Arc<::std::sync::Mutex<DsPromiseCell<T>>>,
+}
+
+impl<T> ::std::future::Future for DsPromiseFuture<T> {
+    type Output = T;
+    fn poll(
+        self: ::std::pin::Pin<&mut Self>,
+        cx: &mut ::std::task::Context<'_>,
+    ) -> ::std::task::Poll<Self::Output> {
+        let mut guard = self.cell.lock().expect("promise cell poisoned");
+        match ::std::mem::replace(&mut *guard, DsPromiseCell::Pending(None)) {
+            DsPromiseCell::Pending(_) => {
+                *guard = DsPromiseCell::Pending(Some(cx.waker().clone()));
+                ::std::task::Poll::Pending
+            }
+            DsPromiseCell::Fulfilled(v) => ::std::task::Poll::Ready(v),
+            DsPromiseCell::Rejected(msg) => panic!("Promise rejected: {}", msg),
+        }
+    }
+}
+
+/// `new Promise((resolve, reject) => { … })`. The executor runs synchronously
+/// with a clonable `DsResolver`; `resolve(x)`/`reject(reason)` settle a shared
+/// cell the returned future polls (first settlement wins; later calls no-op).
+/// A deferred `resolve` — captured by a nested callback (`setTimeout`, etc.) —
+/// settles the same promise via the cloned resolver. The value type `T` is
+/// inferred from the `resolve(value)` call site; a Promise that never settles,
+/// or settles with disjoint types in different branches, has no single `T`
+/// (an honest partial — the static path neither fakes a type nor degrades).
+pub fn ds_promise_new<T: 'static, F: 'static + ::std::ops::FnOnce(DsResolver<T>)>(
+    executor: F,
+) -> DsPromise<T> {
+    let cell = ::std::sync::Arc::new(::std::sync::Mutex::new(DsPromiseCell::Pending(None)));
+    let resolver = DsResolver {
+        cell: cell.clone(),
+    };
+    executor(resolver);
+    ::std::boxed::Box::pin(DsPromiseFuture { cell })
+}
 "#;
 
 /// WHATWG `fetch` API helper — `__ds::DsResponse`/`__ds::ds_fetch`. A WinterTC

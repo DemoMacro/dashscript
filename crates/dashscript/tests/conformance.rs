@@ -522,6 +522,39 @@ fn wpt_promise_test_non_async_function_callback_compiles_and_runs() {
     );
 }
 
+/// `await new Promise(executor)` — the Promise constructor on the static track,
+/// end-to-end. A bare `new Promise(…)` degrades to the engine (a sync `fn main`
+/// never polls the future); only the awaited form maps, because the `.await`
+/// drives the `ds_promise_new` future. The executor runs synchronously under a
+/// clonable `DsResolver`, `resolve(42)` settles the shared cell, and the await
+/// polls it to `Ready(42)`. Wrapping in `promise_test(async () => …)` is what
+/// drives the async block (the WPT harness makes `main` async and awaits it);
+/// without that driver the await would never run.
+#[test]
+fn wpt_await_new_promise_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.await_new_promise".into(),
+        category: "smoke".into(),
+        fixture:
+            "promise_test(async () => { const v = await new Promise((resolve) => { resolve(42); }); assert_equals(v, 42); }, \"await new Promise\");\n".into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "await new Promise(executor) should resolve and assert on the static path: {detail}"
+    );
+}
+
 /// `setTimeout` + a task-queue drain at the entry end, end-to-end on the static
 /// path — the WinterTC WHATWG timers API core. The drain models the ES task
 /// queue: `setTimeout` enqueues into a `thread_local` queue, the implicit `fn

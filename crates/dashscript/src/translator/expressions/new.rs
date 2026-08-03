@@ -40,6 +40,21 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                 return e;
             }
         }
+        // `new Promise((resolve, reject) => { … })` — the ES `Promise`
+        // constructor (T3 stage 2c). The executor runs synchronously under a
+        // clonable `DsResolver`; `resolve(x)`/`reject(reason)` settle a shared
+        // cell the returned `DsPromise<T>` polls. Intercepted before the generic
+        // `Foo::new` path (which would emit `Promise::new(…)` — E0433, no such
+        // Rust type). The `Promise` runtime dep is flagged by the
+        // `__ds::DsPromise` marker probe; a non-function/async executor returns
+        // `None` and falls through honestly. `new Promise` reaches `new` outside
+        // reflection fixtures, so the classify `Identifier => Mapped` arm covers
+        // it (no engine degrade — unlike `Date`, `Promise` now has a static ctor).
+        if id.name.as_str() == "Promise" {
+            if let Some(e) = builtins::promise_ctor(&n.arguments, ctx) {
+                return e;
+            }
+        }
         // `new Worker(handler)` — a Web Worker isolate (Direction D, D1): spawns a
         // thread running `handler` for each message received. Lowered before
         // the generic `Foo::new` path (which would emit `Worker::new` — E0425,

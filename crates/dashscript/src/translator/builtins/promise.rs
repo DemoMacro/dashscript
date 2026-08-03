@@ -17,12 +17,15 @@
 //! pulls `resolve`/`all` out of the engine degrade, so a different property
 //! that slipped past surfaces honestly as a compile error.
 
-use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
+use oxc_ast::ast::{
+    Argument, BindingPattern, Expression, FormalParameters, FunctionBody, StaticMemberExpression,
+};
+use quote::format_ident;
 use syn::{parse_quote, Expr};
 
 use super::super::bindings;
 use super::super::context::Ctx;
-use super::super::expressions::{translate_argument, translate_expr};
+use super::super::expressions::{body_block, translate_argument, translate_expr};
 
 /// `Promise.resolve(x)` / `Promise.all([...])` → a `DsPromise<T>` expression.
 /// Returns `None` for any other property name (falls through to a plain call,
@@ -123,6 +126,13 @@ fn receiver_is_promise(expr: &Expression, ctx: &Ctx<'_>) -> bool {
             }
         }
     }
+    // `new Promise(executor)` yields a `DsPromise<T>` (T3 stage 2c), so a
+    // chained `.then`/`.catch` on the constructor result dispatches here.
+    if let Expression::NewExpression(n) = expr {
+        if let Expression::Identifier(id) = &n.callee {
+            return id.name.as_str() == "Promise";
+        }
+    }
     false
 }
 
@@ -136,4 +146,84 @@ fn is_ds_promise_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name)
         .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsPromise"))
+}
+
+/// True when `new Promise(executor)` has a static lowering — the executor
+/// (arg 0) is a non-`async` arrow or a non-`async` non-generator `function`
+/// expression, exactly the shapes [`promise_ctor`] accepts. `classify` queries
+/// this so its `NewExpression` verdict stays in lockstep with the emit (the
+/// classify↔emit drift metatest enforces it); a diverging shape would either
+/// degrade a ctor that maps or map one that phantoms.
+pub(in crate::translator) fn promise_executor_is_static(args: &[Argument]) -> bool {
+    let Some(executor) = args.first().and_then(Argument::as_expression) else {
+        return false;
+    };
+    match executor {
+        // An async executor drops an `await` into the sync wrapper closure.
+        Expression::ArrowFunctionExpression(a) => !a.r#async,
+        Expression::FunctionExpression(f) => !f.r#async && !f.generator,
+        _ => false,
+    }
+}
+
+/// `new Promise((resolve, reject) => { … })` → `__ds::ds_promise_new(closure)`.
+/// The executor runs synchronously under a clonable `DsResolver`; the closure
+/// the translator emits takes a single synthesized `__ds_res: DsResolver<_>`
+/// and a prelude binds the JS `resolve`/`reject` names to resolver-method
+/// closures (`move |v| __ds_res.resolve(v)` / `.reject(v)`). Cloning the
+/// resolver (a cheap `Arc`) lets it escape into a deferred callback
+/// (`setTimeout(() => resolve(x), …)`). The value type `T` is inferred from
+/// the `resolve(value)` call site — Rust propagates it through the resolver
+/// method to `ds_promise_new`'s return.
+///
+/// Returns `None` for a non-function executor, an async/generator executor (a
+/// Promise executor is always called synchronously — an `async` arrow would
+/// drop an `await` into the sync wrapper), or a body-less `FunctionExpression`,
+/// so those fall through to the generic `new` path and surface honestly.
+pub(in crate::translator) fn promise_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
+    let executor = args.first()?.as_expression()?;
+    let (params, body): (&FormalParameters, &FunctionBody) = match executor {
+        // An async/generator executor is not a synchronous Promise executor —
+        // its `await`/`yield` have no place in the sync wrapper closure.
+        Expression::ArrowFunctionExpression(a) if !a.r#async => (&a.params, &a.body),
+        Expression::FunctionExpression(f) if !f.r#async && !f.generator => {
+            (&f.params, f.body.as_deref()?)
+        }
+        _ => return None,
+    };
+    // Translate the executor body with its params registered (so mutation/
+    // flavor analysis sees `resolve`/`reject`), but NOT emitted as Rust params
+    // — the wrapper takes a single `__ds_res`, and the prelude provides the JS
+    // names. `body_block` is the shared body translator (same one a block-body
+    // arrow uses), so the executor body and any other closure body never diverge.
+    let mut block = body_block(params, body, ctx);
+    // Prelude: `let <jsName> = { let __ds_res = __ds_res.clone(); move |v| __ds_res.<m>(v) };`
+    // for each of the first two params (resolve, then reject). Only a plain
+    // identifier param binds (a destructured executor param is vanishingly rare
+    // and has no static lowering here).
+    let mut prelude: Vec<syn::Stmt> = Vec::new();
+    for (i, fp) in params.items.iter().enumerate().take(2) {
+        if !matches!(fp.pattern, BindingPattern::BindingIdentifier(_)) {
+            continue;
+        }
+        let name = bindings::binding_name(&fp.pattern);
+        let method = if i == 0 {
+            format_ident!("resolve")
+        } else {
+            format_ident!("reject")
+        };
+        prelude.push(parse_quote! {
+            let #name = {
+                let __ds_res = __ds_res.clone();
+                move |v| __ds_res.#method(v)
+            };
+        });
+    }
+    // The prelude must run before the executor body (it binds `resolve`/
+    // `reject` the body references); prepend it to the translated block.
+    prelude.append(&mut block.stmts);
+    block.stmts = prelude;
+    Some(parse_quote!(
+        crate::__ds::ds_promise_new(|__ds_res: crate::__ds::DsResolver<_>| #block)
+    ))
 }

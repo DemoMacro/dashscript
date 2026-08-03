@@ -673,7 +673,23 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mut Wal
         // `new Symbol(…)` trip the identifier rule. A global-object constructor
         // (`new Map()`, `new Set()`) is mapped, so its receiver is skipped.
         Expression::NewExpression(n) => {
-            if !is_global_object_callee(&n.callee) {
+            // `new <engine-value-global>(…)` — classify's `NewExpression` arm
+            // owns the verdict for these (`new Promise(executor)` → Mapped;
+            // `new Proxy()`/`new DataView()`/… → Degrade), so the bare callee
+            // is a constructor name, not a value reference. Recursing it would
+            // either push a false-positive bare-identifier degrade (the mapped
+            // `Promise` ctor) or a redundant one (the degrade classify already
+            // recorded). `is_global_object_callee` already skips static-only
+            // ctors (`new Map()`); this extends the skip to engine-value-global
+            // ctors. (`is_global_object_callee` is shared with `CallExpression`,
+            // where a bare `Promise(x)` must still degrade — so the gate lives
+            // here, not in that helper.)
+            let callee_is_engine_global = matches!(
+                &n.callee,
+                Expression::Identifier(id)
+                    if super::globals::is_engine_value_global(id.name.as_str())
+            );
+            if !callee_is_engine_global && !is_global_object_callee(&n.callee) {
                 collect_expr(&n.callee, out, state);
             }
             for arg in &n.arguments {

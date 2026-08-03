@@ -1255,7 +1255,8 @@ fn register_declarator(
             .or_else(|| url_path(n))
             .or_else(|| encoding_ctor_path(n))
             .or_else(|| event_target_path(n))
-            .or_else(|| headers_path(n)),
+            .or_else(|| headers_path(n))
+            .or_else(|| promise_path(n)),
         Some(other) => vec_index_elem_path(other, locals),
         None => return,
     };
@@ -1429,6 +1430,25 @@ fn headers_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     };
     match id.name.as_str() {
         "Headers" => Some(parse_quote!(crate::__ds::DsHeaders)),
+        _ => None,
+    }
+}
+
+/// `new Promise(…)` → `crate::__ds::DsPromise<T>`, so an unannotated `let p =
+/// new Promise(…)` records a `DsPromise` local and a later `p.then(…)` /
+/// `await p` resolves the receiver. The value type `T` is inferred from the
+/// executor's `resolve(value)` call site; `is_ds_promise_local` keys only off
+/// the last path segment, so a placeholder `<serde_json::Value>` (matching the
+/// `Promise.resolve`/`Promise.all` record in [`callee_return_path`]) keeps the
+/// path a valid Rust type without over-committing `T`. Only the `Promise`
+/// callee maps; any other `new` yields `None`.
+fn promise_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    match id.name.as_str() {
+        "Promise" => Some(parse_quote!(crate::__ds::DsPromise<serde_json::Value>)),
         _ => None,
     }
 }

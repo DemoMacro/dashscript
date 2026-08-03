@@ -58,6 +58,29 @@ fn check_flags_new_proxy() {
 }
 
 #[test]
+fn check_bare_new_promise_degrades_unless_awaited() {
+    // A bare (non-awaited) `new Promise(executor)` degrades to the engine: a
+    // sync `fn main` would never poll the future, so a `.then`/`.catch` chain
+    // would silently never run. Only `await new Promise(…)` maps statically
+    // (the await polls it) — guarded by `promise_ctor_only_under_await` in the
+    // classify drift suite. This is the test262-safety invariant: raw promise
+    // fixtures keep running under the engine's microtask loop.
+    let bare = Translator::new()
+        .check("function f(): void { const p = new Promise((resolve) => { resolve(42); }); }");
+    assert!(
+        bare.iter().any(|d| d.message.contains("Promise")),
+        "a bare `new Promise(executor)` should degrade to the engine, got: {bare:?}"
+    );
+    let awaited = Translator::new().check(
+        "async function f(): Promise<void> { await new Promise((resolve) => { resolve(42); }); }",
+    );
+    assert!(
+        awaited.iter().all(|d| !d.message.contains("Promise")),
+        "an awaited `new Promise(executor)` should map statically (no degrade), got: {awaited:?}"
+    );
+}
+
+#[test]
 fn check_flags_reflect_namespace() {
     let diags = Translator::new().check("function f(): boolean { return Reflect.has({}, \"x\"); }");
     assert!(diags.iter().any(|d| d.message.contains("Reflect")));

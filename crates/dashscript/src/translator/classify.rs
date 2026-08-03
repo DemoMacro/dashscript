@@ -23,7 +23,8 @@ use oxc_ast::ast::{
 };
 
 use super::builtins::{
-    temporal_callee_split, temporal_new_maps, temporal_static_maps, temporal_type_of_callee,
+    promise_executor_is_static, temporal_callee_split, temporal_new_maps, temporal_static_maps,
+    temporal_type_of_callee,
 };
 use super::globals::{
     is_engine_value_global, is_global_receiver, is_harness_helper, is_static_only_global,
@@ -228,7 +229,24 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         // `await expr` — lowers to Rust `.await` inside an `async fn` (or the
         // `#[tokio::main] async fn main` a top-level await turns the entry
         // into). The operand recurses, so `await <reflection>` still degrades.
-        Expression::AwaitExpression(a) => classify_expr(&a.argument, ctx),
+        //
+        // `await new Promise(executor)` is the one context a `new Promise(…)`
+        // maps statically: the `.await` polls the `ds_promise_new` future, so a
+        // synchronously-resolving executor (or one settled by a deferred
+        // callback the event loop drains) completes. A bare, non-awaited
+        // `new Promise(…)` does NOT map — a sync `fn main` would never poll the
+        // future, so a `.then`/`.catch` chain would silently never run (an
+        // honest engine degrade, where the microtask loop drives the chain).
+        Expression::AwaitExpression(a) => {
+            if let Expression::NewExpression(n) = &a.argument {
+                if let Expression::Identifier(id) = &n.callee {
+                    if id.name.as_str() == "Promise" && promise_executor_is_static(&n.arguments) {
+                        return Mapping::Mapped;
+                    }
+                }
+            }
+            classify_expr(&a.argument, ctx)
+        }
         // `new Temporal.<Type>(…)` — static ISO-field mapping (the four
         // date/time types) when the args are integer fields; a property-bag
         // `new Temporal.X({…})` or an unmapped type degrades to the engine,
@@ -263,6 +281,26 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
                 // engine; none of these passes statically today, so degrading
                 // cannot regress a static pass. See `UNMAPPED_NEW_GLOBALS`.
                 Expression::Identifier(id) if is_unmapped_new_global(id.name.as_str()) => {
+                    degrade_owned(format!(
+                        "`new {name}()` has no static mapping — runs under the engine",
+                        name = id.name.as_str()
+                    ))
+                }
+                // `new <engine-value-global>(…)` — `Proxy`/`DataView`/`BigInt`/
+                // … have no static `new` lowering (the generic `Foo::new(…)`
+                // emit would phantom, E0433), and `new Promise(executor)` maps
+                // only under `await` (the AwaitExpression arm above) — a bare
+                // one would never have its future polled. So every engine-value-
+                // global `new` degrades here; the engine runs the real
+                // [[Construct]] (and, for `Promise`, the microtask loop a sync
+                // `fn main` lacks). This arm owns the verdict for every
+                // engine-value-global `new`, so `check`'s `NewExpression` walk
+                // skips the bare callee (a constructor name, not a value
+                // reference) for these globals. (`Map`/`Set`/`WeakMap`/`WeakSet`/
+                // the typed arrays/`RegExp`/`TextEncoder`/… are static-only
+                // globals, not engine-value globals, so they reach the generic
+                // Mapped arm and lower via `new_expr`'s special cases.)
+                Expression::Identifier(id) if is_engine_value_global(id.name.as_str()) => {
                     degrade_owned(format!(
                         "`new {name}()` has no static mapping — runs under the engine",
                         name = id.name.as_str()
