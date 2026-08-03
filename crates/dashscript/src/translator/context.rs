@@ -60,6 +60,16 @@ pub struct Locals {
     /// parameter's type is `&crate::__ds::DsEvent` (the dispatch passes `&DsEvent`
     /// by reference). Keyed on the snake-cased binding name.
     pub event_params: HashSet<String>,
+    /// Every binding this function body declares — params plus every
+    /// `var`/`let`/`const` declarator — regardless of whether its type path is
+    /// known. `types` only records a binding when its type path is statically
+    /// derivable (an annotation, a call's return type, …), so a `var x;` (no
+    /// initializer) or `let n = 0` (literal initializer) is absent from `types`
+    /// but present here. This is the set a nested `function` captures against
+    /// (a capture is a reference to an *enclosing binding*, not merely an
+    /// enclosing *typed* binding), so [`functions::nested_fn_should_be_closure`]
+    /// reads this rather than `types`.
+    pub bindings: HashSet<String>,
 }
 
 impl Locals {
@@ -74,6 +84,7 @@ impl Locals {
             number_flavors: HashMap::new(),
             regex_inits: HashMap::new(),
             event_params: HashSet::new(),
+            bindings: HashSet::new(),
         }
     }
 

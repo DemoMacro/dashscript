@@ -667,17 +667,19 @@ fn nested_fn_should_be_closure(
         &registry.ref_params,
     );
     // Captures an outer local: a referenced name that resolves in the
-    // enclosing function's locals (not the nested fn's own params/locals). A
+    // enclosing function's bindings (not the nested fn's own params/locals). A
     // Rust fn item can close over neither a read nor a write, so `use_counts`
     // (reads) and `mutated`/`member_mutated` (writes) are all checked — a
     // pure-write capture like `function h() { x = 1; }` (the WPT
-    // `addEventListener` handler pattern) is E0434 too.
+    // `addEventListener` handler pattern) is E0434 too. `bindings` (not
+    // `types`) is the capture set — a `var x;` / `let n = 0` with no derivable
+    // type path is still a binding a nested fn closes over.
     let captures_outer = analysis
         .use_counts
         .keys()
         .chain(analysis.mutated.iter())
         .chain(analysis.member_mutated.iter())
-        .any(|k| outer.get(k).is_some());
+        .any(|k| outer.bindings.contains(k));
     if !captures_outer {
         return false;
     }
@@ -1056,11 +1058,14 @@ pub(in crate::translator) fn register_local(
     type_annotation: Option<&oxc_ast::ast::TSTypeAnnotation>,
     names: &NameTable<'_>,
 ) {
+    let name = names.of_pattern(pattern).to_string();
+    // Record the binding name even when no type path is derivable (no
+    // annotation) — `bindings` is the set a nested fn captures against.
+    locals.bindings.insert(name.clone());
     let Some(ta) = type_annotation else { return };
     let ty = types::translate_type(&ta.type_annotation);
     let Some(path) = path_of(&ty) else { return };
-    let name = names.of_pattern(pattern);
-    locals.insert(name.to_string(), path);
+    locals.insert(name, path);
 }
 
 /// Build the per-body [`Locals`] for a function or a block-body arrow: register
@@ -1215,6 +1220,11 @@ fn register_declarator(
         return;
     };
     let name = bindings::snake(id.name.as_str()).to_string();
+    // Record the binding name before the type-path logic below can bail (a
+    // `var x;` with no initializer, or `let n = 0` with a literal, yields no
+    // `path`) — `bindings` is the set a nested fn captures against, and it
+    // must include every declared local regardless of derivable type.
+    locals.bindings.insert(name.clone());
     // A regex local (`let re = /pat/flags` or `new RegExp("pat", "flags")`)
     // records its initializer so a later `re.dotAll`/`.source`/`.flags` reads
     // the static property (regress's `Regex` exposes no such fields).

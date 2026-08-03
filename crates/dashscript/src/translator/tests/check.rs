@@ -364,6 +364,28 @@ fn nested_fn_not_capturing_stays_fn_item() {
 }
 
 #[test]
+fn nested_fn_capturing_untyped_outer_local_lowers_to_closure() {
+    // A nested `function` capturing an outer local whose type path is not
+    // derivable — `var x = 0` (a literal initializer yields no `path` in
+    // `register_declarator`), or `var x;` (no initializer) — must still lower to
+    // a closure. The capture set is the enclosing *bindings* (every declared
+    // name), not the typed subset (`types`); the WPT `setInterval`/
+    // `clearInterval` pattern (`var handle; … handle = setInterval(…)`, a nested
+    // callback reading `handle`) hits this, and pre-fix it stayed a fn item and
+    // raised E0434.
+    let src = "function main(): void {\n  var count = 0;\n  function inc(): void { count = count + 1; }\n  inc();\n}";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("fn inc("),
+        "nested fn capturing untyped `var count = 0` must not be a fn item (E0434): {rust}"
+    );
+    assert!(
+        rust.contains("let mut inc = |"),
+        "nested fn capturing untyped outer local (FnMut, it writes count) -> let mut closure: {rust}"
+    );
+}
+
+#[test]
 fn nested_fn_capturing_outer_local_by_write_only_lowers_to_closure() {
     // A nested `function` that only *writes* an outer local (`x = 5`, no read)
     // is still a capture a Rust fn item cannot express (E0434 — a fn item can
