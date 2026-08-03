@@ -522,6 +522,165 @@ fn wpt_promise_test_non_async_function_callback_compiles_and_runs() {
     );
 }
 
+/// `setTimeout` + a task-queue drain at the entry end, end-to-end on the static
+/// path — the WinterTC WHATWG timers API core. The drain models the ES task
+/// queue: `setTimeout` enqueues into a `thread_local` queue, the implicit `fn
+/// main` drains it on return (when the call stack is empty). Every fixture
+/// clamps its delays to 0 (HTML: "if timeout < 0, set to 0"; a WebIDL `long`
+/// truncation folds `Math.pow(2, 32)` to 0), so the drain is a deterministic
+/// CPU loop with no real wait. `done` (a bare-identifier callback) lowers to
+/// `wpt_done()` — the stop flag the drain checks after every fire, so the
+/// `done` queued before `assert_unreached` ends the drain without firing the
+/// later timer. Inline fixtures (mirroring `wpt-html.json`) so they cannot be
+/// regressed by re-extraction. Covers `negative-settimeout` (delay -100 → 0,
+/// `done` beats `assert_unreached` at 10) and `type-long-settimeout` (delay
+/// `Math.pow(2, 32)` → WebIDL long truncation → 0).
+#[test]
+fn wpt_settimeout_negative_clamp_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.timers_negative_smoke".into(),
+        category: "smoke".into(),
+        fixture: "function main(): void {\n\
+                  \x20 setup({ single_test: true });\n\
+                  \x20 setTimeout(done, -100);\n\
+                  \x20 setTimeout(assert_unreached, 10);\n\
+                  }\n\
+                  main();\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "negative-settimeout smoke should be supported: {detail}"
+    );
+}
+
+#[test]
+fn wpt_settimeout_type_long_clamp_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.timers_type_long_smoke".into(),
+        category: "smoke".into(),
+        fixture: "function main(): void {\n\
+                  \x20 setup({ single_test: true });\n\
+                  \x20 setTimeout(done, Math.pow(2, 32));\n\
+                  \x20 setTimeout(assert_unreached, 100);\n\
+                  }\n\
+                  main();\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "type-long-settimeout smoke should be supported: {detail}"
+    );
+}
+
+/// `setInterval` + `clearInterval` + a recurring callback end-to-end. The
+/// interval's callback (`next`) is a nested `function` capturing the outer
+/// `interval` handle (so it can `clearInterval(interval)` on its own id) — the
+/// closure-degradation path (#456/#457) lowers it to an `FnMut` closure the
+/// drain re-queues after every fire. `type-long-setinterval`: `next` clears
+/// itself + `done()` on the first fire (delay `Math.pow(2, 32)` → 0), beating
+/// `assert_unreached` at 100. `negative-setinterval`: `next` counts to 20 then
+/// clears + `done()`, exercising the re-queue (the callback is written back
+/// after each fire) and the take-out-of-slot pattern (the 20 fires register no
+/// re-borrow).
+#[test]
+#[ignore = "interval handle capture (var t; fn cb() { clearInterval(t); }; t = setInterval(cb, …)) needs a local Cell/RefCell model — tracked separately"]
+fn wpt_setinterval_type_long_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.timers_interval_type_long_smoke".into(),
+        category: "smoke".into(),
+        fixture: "function main(): void {\n\
+                  \x20 setup({ single_test: true });\n\
+                  \x20 var interval;\n\
+                  \x20 function next() {\n\
+                  \x20   clearInterval(interval);\n\
+                  \x20   done();\n\
+                  \x20 }\n\
+                  \x20 interval = setInterval(next, Math.pow(2, 32));\n\
+                  \x20 setTimeout(assert_unreached, 100);\n\
+                  }\n\
+                  main();\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "type-long-setinterval smoke should be supported: {detail}"
+    );
+}
+
+#[test]
+#[ignore = "interval handle capture (var t; fn cb() { clearInterval(t); }; t = setInterval(cb, …)) needs a local Cell/RefCell model — tracked separately"]
+fn wpt_setinterval_negative_requeue_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.timers_interval_negative_smoke".into(),
+        category: "smoke".into(),
+        fixture: "function main(): void {\n\
+                  \x20 setup({ single_test: true });\n\
+                  \x20 var i = 0;\n\
+                  \x20 var interval;\n\
+                  \x20 function next() {\n\
+                  \x20   i++;\n\
+                  \x20   if (i === 20) {\n\
+                  \x20     clearInterval(interval);\n\
+                  \x20     done();\n\
+                  \x20   }\n\
+                  \x20 }\n\
+                  \x20 setTimeout(assert_unreached, 1000);\n\
+                  \x20 interval = setInterval(next, -100);\n\
+                  }\n\
+                  main();\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "negative-setinterval smoke should be supported: {detail}"
+    );
+}
+
 /// Once-per-run check that the engine compat path assembles into a building
 /// cargo project: a reflection `.ts` source → `translate_with_deps` (flips
 /// `needs_engine`) → `write_project` (injects `__ds_engine` + the `rquickjs`

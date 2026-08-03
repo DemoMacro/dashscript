@@ -493,3 +493,28 @@ fn sync_entry_stays_sync_without_tokio() {
         "async main emitted for sync entry: {rust}"
     );
 }
+
+#[test]
+fn set_timeout_emits_timer_drain_at_entry_end() {
+    // `setTimeout(cb, delay)` registers a callback on the timer queue; the
+    // entry's last statement drains that queue (the ES event loop's task
+    // queue, run when main returns). `done` as a callback lowers to
+    // `wpt_done` (the stop flag the drain checks after every fire). A WPT
+    // timer fixture wraps the body in `function main`, so the drain scan
+    // covers fn bodies too, not just the top-level `out`.
+    let src = "function main(): void {\n  setTimeout(done, -100);\n  setTimeout(assert_unreached, 10);\n}\nmain();";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("wpt_set_timeout"),
+        "setTimeout dispatch: {rust}"
+    );
+    assert!(
+        rust.contains("wpt_done"),
+        "`done` callback -> wpt_done (stop flag): {rust}"
+    );
+    assert!(
+        rust.contains("wpt_run_timers"),
+        "drain at entry end: {rust}"
+    );
+    assert!(!rust.contains("todo!"), "no todo!: {rust}");
+}

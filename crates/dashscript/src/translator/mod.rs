@@ -233,12 +233,18 @@ pub enum RuntimeDep {
     /// never degraded; marker `__ds::DsHeaders`. Also pulled by `Fetch`
     /// (`DsResponse::headers` returns a `DsHeaders`).
     Headers,
+    /// WHATWG `setTimeout`/`setInterval`/`clearTimeout`/`clearInterval` (HTML
+    /// §8.6 timers, a WinterTC Web API) — the event loop's task queue, modeled
+    /// as a `thread_local` drain run at the entry's end. Pure `std`; never
+    /// degraded; marker `__ds::wpt_set_` (common prefix of `wpt_set_timeout`/
+    /// `wpt_set_interval`).
+    Timers,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 27] = [
+    const ALL: [RuntimeDep; 28] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -266,6 +272,7 @@ impl RuntimeDep {
         RuntimeDep::Fetch,
         RuntimeDep::EventTarget,
         RuntimeDep::Headers,
+        RuntimeDep::Timers,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -333,6 +340,13 @@ impl RuntimeDep {
             // `DsHeaders`), but a `new Headers()` constructor emits this marker
             // directly, so a Headers-only fixture injects the slice.
             RuntimeDep::Headers => Some("__ds::DsHeaders"),
+            // Common prefix of `__ds::wpt_set_timeout` and
+            // `__ds::wpt_set_interval`, so a fixture registering either timer
+            // pulls TIMERS_HELPER (both the scheduling fns and the drain live in
+            // the same slice). `wpt_done`/`wpt_clear_timer`/`wpt_run_timers` do
+            // not by themselves prove a timer was registered (so they do not
+            // pull the slice on their own).
+            RuntimeDep::Timers => Some("__ds::wpt_set_"),
             RuntimeDep::Engine => None,
         }
     }
@@ -454,6 +468,8 @@ impl RuntimeDep {
             // header map is the input only when `DsResponse::headers` builds a
             // view, and `reqwest` is then flagged by `Fetch`, not `Headers`.
             RuntimeDep::Headers => None,
+            // Pure `std` (a `Vec` + `Instant`); no crate.
+            RuntimeDep::Timers => None,
         }
     }
 
@@ -490,6 +506,7 @@ impl RuntimeDep {
             RuntimeDep::Fetch => Some(DS_FETCH_HELPER),
             RuntimeDep::EventTarget => Some(EVENT_TARGET_HELPER),
             RuntimeDep::Headers => Some(HEADERS_HELPER),
+            RuntimeDep::Timers => Some(TIMERS_HELPER),
         }
     }
 }
@@ -1402,6 +1419,30 @@ impl Translator {
                         })
                         .collect();
                     functions::drop_trailing_return(&mut out);
+                    // A `setTimeout`/`setInterval` registers a callback on the
+                    // timer queue; the ES event loop drains that queue once main
+                    // returns (the call stack is empty, the way a browser drains
+                    // between tasks). Emit the drain as the entry's last
+                    // statement — but only when a timer was actually registered.
+                    // A WPT fixture's `setTimeout` sits inside the `function
+                    // main` body (a fn item, not a top-level exec stmt), so the
+                    // scan covers both the entry statements (`out`) and the
+                    // emitted items (fn bodies), looking for the
+                    // `wpt_set_timeout`/`wpt_set_interval` the dispatch emits.
+                    // WPT timer fixtures clamp every delay to 0, so the drain is
+                    // a deterministic CPU loop, not a real wait.
+                    let needs_timer_drain = out
+                        .iter()
+                        .map(|s| quote::ToTokens::to_token_stream(s).to_string())
+                        .chain(
+                            items
+                                .iter()
+                                .map(|i| quote::ToTokens::to_token_stream(i).to_string()),
+                        )
+                        .any(|t| t.contains("wpt_set_timeout") || t.contains("wpt_set_interval"));
+                    if needs_timer_drain {
+                        out.push(syn::parse_quote!(crate::__ds::wpt_run_timers();));
+                    }
                     // An `async function main(): Promise<void>` lowers to an
                     // `async fn __ds_main` item; the implicit `fn main` must
                     // `.await` its call sites (a top-level `main()` is the
@@ -1543,6 +1584,14 @@ impl Translator {
             || deps.has(RuntimeDep::URLPattern)
         {
             deps.insert(RuntimeDep::Error);
+        }
+        // `done()` lowers to `__ds::wpt_done` (sets the timer drain's DONE
+        // flag). `wpt_done` lives in TIMERS_HELPER alongside the queue/drain,
+        // so any fixture that calls `done()` — timer or not — pulls the slice
+        // (the queue/drain are dead code on a non-timer fixture, but `wpt_done`
+        // must resolve). A timer fixture already pulls it via `wpt_set_*`.
+        if probe.contains("__ds::wpt_done") {
+            deps.insert(RuntimeDep::Timers);
         }
         // Per-function degradation pulls the engine runtime (`rquickjs` + the
         // serde marshal layer) plus `serde` with `derive` (every struct/enum is

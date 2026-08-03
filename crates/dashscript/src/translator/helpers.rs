@@ -1605,6 +1605,197 @@ pub fn wpt_assert_approx_equals(actual: f64, expected: f64, epsilon: f64) {
 }
 "#;
 
+/// The WPT timer scheduling helpers — `__ds::wpt_set_timeout`/
+/// `wpt_set_interval`/`wpt_clear_timer`/`wpt_done`/`wpt_run_timers`. ES
+/// `setTimeout`/`setInterval` queue a callback on the event loop's task queue;
+/// the static path models that queue as a `thread_local` drain run at the
+/// entry's end — the moment ES itself drains (main returned, call stack empty).
+/// `done()` sets a flag the drain checks after every fire (HTML "stop"
+/// semantics), so a `setTimeout(assert_unreached, …)` queued before `done`
+/// never runs; `assert_unreached` as a callback panics if it ever fires. WPT's
+/// timer fixtures clamp every delay to 0 (negative, `2^32`-overflow, or
+/// missing), so the drain is a deterministic CPU loop with no real wait; the
+/// `Instant` comparison is kept so a future delay>0 fixture sleeps correctly
+/// without a redesign. Pure `std` — never degraded to the engine (WinterTC's
+/// static-only contract).
+pub(super) const TIMERS_HELPER: &str = r#"
+/// One scheduled timer. `interval_ms = Some(_)` is a recurring `setInterval`;
+/// `None` is a one-shot `setTimeout` (removed after firing). `seq` is the
+/// registration order — the FIFO tiebreak between same-deadline timers (HTML
+/// fires same-deadline timers in registration order).
+struct WptTimer {
+    id: u64,
+    when_ms: u64,
+    seq: u64,
+    interval_ms: ::std::option::Option<u64>,
+    cb: Box<dyn FnMut()>,
+}
+
+thread_local! {
+    static WPT_TIMERS: std::cell::RefCell<Vec<WptTimer>> = std::cell::RefCell::new(Vec::new());
+    static WPT_NEXT_ID: std::cell::Cell<u64> = std::cell::Cell::new(1);
+    static WPT_SEQ: std::cell::Cell<u64> = std::cell::Cell::new(0);
+    static WPT_DONE: std::cell::Cell<bool> = std::cell::Cell::new(false);
+    static WPT_CANCELLED: std::cell::RefCell<std::collections::HashSet<u64>> =
+        std::cell::RefCell::new(std::collections::HashSet::new());
+}
+
+/// HTML timer delay clamp: WebIDL `long` (signed 32-bit) conversion followed by
+/// the "if timeout < 0, set to 0" rule. So `-100 → 0`, `Math.pow(2,32) → 0`
+/// (the low 32 bits are 0), `100 → 100`. A non-finite delay (a missing 2nd arg
+/// is `undefined` → `NaN`) → 0.
+#[inline]
+fn wpt_clamp_delay(delay: f64) -> u64 {
+    if !delay.is_finite() {
+        return 0;
+    }
+    // `as i64` then `as i32` truncates to the low 32 bits (i32 is the WebIDL
+    // `long` type), so 2^32 wraps to 0 the way the browser's timer init does.
+    let int32 = (delay.trunc() as i64) as i32;
+    if int32 < 0 { 0 } else { int32 as u64 }
+}
+
+fn wpt_next_seq() -> u64 {
+    WPT_SEQ.with(|s| {
+        let n = s.get();
+        s.set(n + 1);
+        n
+    })
+}
+
+/// `setTimeout(cb, delay)` — schedule `cb` to fire once after `delay` ms
+/// (clamped). The callback is `FnMut` (a named listener may mutate captured
+/// state, e.g. a counter); a one-shot fires it once then is dropped.
+#[inline]
+pub fn wpt_set_timeout(cb: Box<dyn FnMut()>, delay: f64) {
+    let id = WPT_NEXT_ID.with(|n| {
+        let i = n.get();
+        n.set(i + 1);
+        i
+    });
+    WPT_TIMERS.with(|t| {
+        t.borrow_mut().push(WptTimer {
+            id,
+            when_ms: wpt_clamp_delay(delay),
+            seq: wpt_next_seq(),
+            interval_ms: ::std::option::Option::None,
+            cb,
+        });
+    });
+}
+
+/// `setInterval(cb, delay)` — schedule `cb` to fire repeatedly every `delay` ms
+/// (clamped). Returns the timer id (ES `setInterval` returns a handle for
+/// `clearInterval`).
+#[inline]
+pub fn wpt_set_interval(cb: Box<dyn FnMut()>, delay: f64) -> u64 {
+    let id = WPT_NEXT_ID.with(|n| {
+        let i = n.get();
+        n.set(i + 1);
+        i
+    });
+    let clamped = wpt_clamp_delay(delay);
+    WPT_TIMERS.with(|t| {
+        t.borrow_mut().push(WptTimer {
+            id,
+            when_ms: clamped,
+            seq: wpt_next_seq(),
+            interval_ms: ::std::option::Option::Some(clamped),
+            cb,
+        });
+    });
+    id
+}
+
+/// `clearTimeout(id)` / `clearInterval(id)` — cancel a pending timer. ES keeps
+/// both handle kinds in one id space, so one clear covers both.
+#[inline]
+pub fn wpt_clear_timer(id: u64) {
+    WPT_CANCELLED.with(|c| {
+        c.borrow_mut().insert(id);
+    });
+}
+
+/// `done()` — the WPT single-test "stop" signal. The drain checks this after
+/// every fire and stops, so a callback queued after `done` never fires.
+#[inline]
+pub fn wpt_done() {
+    WPT_DONE.with(|d| d.set(true));
+}
+
+/// Drain the timer queue — the ES event loop's task queue, run at the entry's
+/// end. Fires the earliest-deadline live (non-cancelled) timer by `(deadline,
+/// seq)`, re-queues an interval's next fire, and stops when `done()` was called
+/// or no live timer remains. The callback is taken out of the slot before the
+/// fire so a body that registers another timer (or calls `done`/`clear`) does
+/// not re-borrow the queue and panic. WPT timer fixtures clamp every delay to
+/// 0, so this is a deterministic CPU loop (no real wait); a future delay>0
+/// fixture sleeps via the `Instant` comparison.
+pub fn wpt_run_timers() {
+    let start = ::std::time::Instant::now();
+    loop {
+        if WPT_DONE.with(|d| d.get()) {
+            return;
+        }
+        // Pick the earliest live timer by (deadline, seq).
+        let target = WPT_TIMERS.with(|t| {
+            let v = t.borrow();
+            // Clone the cancelled-id set so the `Ref` borrow ends inside its own
+            // `with` — a `Ref` cannot escape the `with` call (lifetime errors
+            // out). The set is tiny (a handful of `clear*` ids), so the clone
+            // is negligible across the drain's few iterations.
+            let cancelled: std::collections::HashSet<u64> =
+                WPT_CANCELLED.with(|c| c.borrow().clone());
+            v.iter()
+                .filter(|e| !cancelled.contains(&e.id))
+                .min_by_key(|e| (e.when_ms, e.seq))
+                .map(|e| (e.id, e.when_ms))
+        });
+        let Some((id, when_ms)) = target else {
+            return; // no live timers — drain done
+        };
+        // Sleep until the deadline (a no-op when the delay clamped to 0, as in
+        // every WPT timer fixture today).
+        let now_ms = start.elapsed().as_millis() as u64;
+        if when_ms > now_ms {
+            ::std::thread::sleep(::std::time::Duration::from_millis(when_ms - now_ms));
+        }
+        if WPT_DONE.with(|d| d.get()) {
+            return;
+        }
+        // Take the callback out so the fire holds no `WPT_TIMERS` borrow — a
+        // callback that registers another timer / calls `done` / `clear` would
+        // otherwise re-borrow and panic. A one-shot is removed now; an interval
+        // keeps its slot (the callback is written back after the fire).
+        let (interval, mut cb) = WPT_TIMERS.with(|t| {
+            let mut v = t.borrow_mut();
+            let Some(pos) = v.iter().position(|e| e.id == id) else {
+                return (::std::option::Option::None, Box::new(|| ()) as Box<dyn FnMut()>);
+            };
+            let interval = v[pos].interval_ms;
+            let cb = std::mem::replace(&mut v[pos].cb, Box::new(|| ()) as Box<dyn FnMut()>);
+            if interval.is_none() {
+                v.swap_remove(pos);
+            }
+            (interval, cb)
+        });
+        cb();
+        if let ::std::option::Option::Some(ms) = interval {
+            if !WPT_DONE.with(|d| d.get()) {
+                WPT_TIMERS.with(|t| {
+                    let mut v = t.borrow_mut();
+                    if let Some(pos) = v.iter().position(|e| e.id == id) {
+                        v[pos].cb = cb;
+                        v[pos].when_ms = v[pos].when_ms.saturating_add(ms);
+                        v[pos].seq = wpt_next_seq();
+                    }
+                });
+            }
+        }
+    }
+}
+"#;
+
 /// The `serde_json::Value` `DsSameValue` impl — emitted only when both `Assert`
 /// and `SerdeJson` are flagged (see `RuntimeDeps::helper_module`). A scalar JSON
 /// value projects to its `DsCmp`; array/object operands have no static reference

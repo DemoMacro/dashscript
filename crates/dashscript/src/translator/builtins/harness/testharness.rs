@@ -131,8 +131,15 @@ pub(in crate::translator) fn testharness_function(
             Some((name, fut)) => parse_quote!(crate::__ds::wpt_promise_test(#name, #fut).await),
             None => return None,
         },
-        // `setup(fn_or_props)` / `done()` — no-ops on the static path.
-        "setup" | "done" => parse_quote!(()),
+        // `setup(fn_or_props)` is a no-op on the static path (synchronous
+        // fixtures run their `test()` calls in source order; there is no
+        // aggregation step). `done()` sets the timer drain's DONE flag — the
+        // stop signal the drain checks after every fire, so a timer fixture's
+        // final `done()` (or a `done` queued as a `setTimeout` callback) ends
+        // the drain. The flag is harmless on a non-timer fixture (no drain
+        // reads it).
+        "setup" => parse_quote!(()),
+        "done" => parse_quote!(crate::__ds::wpt_done()),
         _ => return None,
     })
 }

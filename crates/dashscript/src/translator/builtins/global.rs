@@ -26,6 +26,9 @@ pub(in crate::translator) fn global_function(
     args: &[Argument],
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
+    if let Some(expr) = super::web::timer_function(id, args, ctx) {
+        return Some(expr);
+    }
     let name: &str = &id.name;
     Some(match name {
         "String" => {
