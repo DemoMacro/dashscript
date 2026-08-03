@@ -237,15 +237,17 @@ fn worker_ctor(arg: &Argument, handler: Expr) -> Expr {
 }
 
 /// `new URLSearchParams(init?)` → `crate::__ds::DsUrlSearchParams::from_query
-/// (init)` (one arg) or `::new()` (no arg). The init may be a `String` or a
-/// `&str` literal — `from_query` is generic over `AsRef<str>`. A
+/// (init)` (one arg) or `::new()` (no arg). The init is coerced via ES
+/// `ToString` (`es_to_string_arg`, same as the instance methods): a `number`/
+/// `null`/`undefined` argument becomes its string form, a `String`/`&str`
+/// passes through — `from_query` is generic over `AsRef<str>`. A
 /// record/sequence/`URLSearchParams` init (ES also accepts those) is not yet
 /// lowered; it falls through to the generic `Foo::new` path and surfaces at
 /// `cargo check` honestly.
 fn url_search_params_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
     match args.first() {
         Some(arg) => {
-            let init = array_elem_arg(arg, ctx);
+            let init = builtins::es_to_string_arg(arg, ctx);
             parse_quote!(crate::__ds::DsUrlSearchParams::from_query(#init))
         }
         None => parse_quote!(crate::__ds::DsUrlSearchParams::new()),

@@ -140,6 +140,20 @@ fn url_search_params_null_inequality_folds_to_true() {
 }
 
 #[test]
+fn url_search_params_ctor_coerces_number_init_to_string() {
+    // ES `ToString` coerces a numeric `URLSearchParams` init before parsing
+    // (`new URLSearchParams(0)` → `from_query("0")`), matching the instance
+    // methods' `es_to_string_arg` — otherwise the ctor fails `from_query`'s
+    // `AsRef<str>` (E0277 `f64: AsRef<str>`). `null`/`undefined` likewise.
+    let src = "function f(): void { var params = new URLSearchParams(0); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("number_to_string"),
+        "a numeric URLSearchParams init should ToString-coerce via number_to_string: {rust}"
+    );
+}
+
+#[test]
 fn translates_nullish_coalescing_to_unwrap_or_else() {
     let src = "function f(m: number | null): number { return m ?? 0; }";
     let rust = Translator::new().translate(src).expect("should translate");
