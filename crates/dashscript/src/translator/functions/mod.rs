@@ -1350,6 +1350,30 @@ pub(in crate::translator) fn translate_body(
     parse_quote!({ #(#out)* })
 }
 
+/// Rewrite `__ds_main()` calls to `__ds_main().await` — used when the entry's
+/// `function main` is `async` (it lowers to an `async fn __ds_main` item), so
+/// the implicit `fn main` must await the returned future for it to resolve.
+/// `syn::visit_mut` recurses through every nesting (`if`/`match`/blocks), not
+/// just bare top-level calls.
+pub(in crate::translator) fn await_main_calls(stmt: &mut Stmt) {
+    use syn::visit_mut::VisitMut;
+    struct MainAwaiter;
+    impl syn::visit_mut::VisitMut for MainAwaiter {
+        fn visit_expr_mut(&mut self, i: &mut Expr) {
+            syn::visit_mut::visit_expr_mut(self, i);
+            if let Expr::Call(call) = i {
+                if let Expr::Path(p) = &*call.func {
+                    if p.path.is_ident("__ds_main") {
+                        let orig = i.clone();
+                        *i = parse_quote! { #orig .await };
+                    }
+                }
+            }
+        }
+    }
+    MainAwaiter.visit_stmt_mut(stmt);
+}
+
 /// Replace a trailing `return expr;` with a bare `expr` (no `return`, no `;`)
 /// so the block's value is the expression — idiomatic Rust, and keeps
 /// clippy::needless_return quiet. A bare `return;` (void) is left untouched.

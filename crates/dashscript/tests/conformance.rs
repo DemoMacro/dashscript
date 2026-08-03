@@ -2466,6 +2466,30 @@ fn strip_main_wrapper(fixture: &str) -> &str {
     s.strip_suffix(SUFFIX).unwrap_or(s)
 }
 
+/// Rewrite the extractor's `function main(): void { … } main();` wrapper to an
+/// `async function main(): Promise<void>` when the body contains a top-level
+/// `await` — the WPT `promise_test(async t => { … await … })` pattern. The
+/// static translator lowers an `async function main` to an `async fn
+/// __ds_main` awaited from a `#[tokio::main] async fn main`, so the body's
+/// `.await` resolves under a runtime; a sync `function main` wrapper would
+/// leave the `.await` inside a non-async fn (E0728). A sync body, or a fixture
+/// not in the wrapped form, is returned unchanged.
+fn rewrap_async_main(fixture: &str) -> String {
+    const PREFIX: &str = "function main(): void {\n";
+    const SUFFIX: &str = "\n}\nmain();\n";
+    let Some(body) = fixture
+        .strip_prefix(PREFIX)
+        .and_then(|s| s.strip_suffix(SUFFIX))
+    else {
+        return fixture.to_string();
+    };
+    if body.contains("await") {
+        format!("async function main(): Promise<void> {{\n{body}\n}}\nmain();\n")
+    } else {
+        fixture.to_string()
+    }
+}
+
 /// Run a fixture on the engine path — QuickJS with the test262 harness
 /// (`sta.js` + `assert.js` + the fixture's `$INCLUDE`s) injected. The
 /// extractor wraps every body as `function main(): void { … } main();` for
@@ -2619,7 +2643,12 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
 /// `AssertionError` (the testharness builtin's prefix) → partial, a build
 /// failure or timeout → unsupported.
 fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str, String) {
-    let diags = Translator::new().check(&raw.fixture);
+    // A WPT fixture whose body `await`s needs an async entry — rewrap the
+    // extractor's sync `function main` wrapper to `async function main` so the
+    // translator emits a `#[tokio::main] async fn main` that resolves the body's
+    // `.await` (see [`rewrap_async_main`]). No-op for sync fixtures.
+    let fixture = rewrap_async_main(&raw.fixture);
+    let diags = Translator::new().check(&fixture);
     if !diags.is_empty() {
         let msg = diags
             .iter()
@@ -2628,7 +2657,7 @@ fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str
             .join(" | ");
         return ("unsupported", msg);
     }
-    let (rust, deps) = match translate_catch(&raw.fixture) {
+    let (rust, deps) = match translate_catch(&fixture) {
         Ok(r) => r,
         // No engine fallback (WinterTC is static-only): a translator failure is
         // an honest partial, not a degrade-to-QuickJS.

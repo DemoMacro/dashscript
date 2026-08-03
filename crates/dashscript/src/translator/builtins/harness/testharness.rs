@@ -182,9 +182,22 @@ fn test_callback_closure(arg: &Argument, ctx: &Ctx<'_>) -> Option<Expr> {
 /// that [`translate_argument`] lowers, called, yields its `Future`). Returns
 /// `None` if arg0 is none of those, or arg1 is not a string literal — the call
 /// then surfaces as a plain E0425, honestly unsupported.
-fn promise_test_callback(args: &[Argument], ctx: &Ctx<'_>) -> Option<(syn::LitStr, syn::Expr)> {
-    let name = match args.get(1)?.as_expression()? {
-        Expression::StringLiteral(s) => syn::LitStr::new(s.value.as_str(), Span::call_site()),
+fn promise_test_callback(args: &[Argument], ctx: &Ctx<'_>) -> Option<(syn::Expr, syn::Expr)> {
+    // `promise_test(async fn, name)` — `name` is a string literal or a template
+    // literal (`` `decompressing ${format} input` ``, the common WPT idiom). A
+    // string literal stays a `&str` literal; a template literal lowers to the
+    // `format!(…)` `translate_argument` emits for any TemplateLiteral, borrowed
+    // (`&…`) to satisfy `wpt_promise_test`'s `&str` name param. A dynamic name
+    // (neither) returns `None` — honestly unsupported.
+    let name: syn::Expr = match args.get(1)?.as_expression()? {
+        Expression::StringLiteral(s) => {
+            let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
+            parse_quote!(#lit)
+        }
+        Expression::TemplateLiteral(_) => {
+            let expr = translate_argument(args.get(1)?, ctx);
+            parse_quote!(&#expr)
+        }
         _ => return None,
     };
     let fut: syn::Expr = match args.first()?.as_expression()? {

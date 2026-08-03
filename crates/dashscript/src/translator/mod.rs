@@ -1356,6 +1356,27 @@ impl Translator {
                         })
                         .collect();
                     functions::drop_trailing_return(&mut out);
+                    // An `async function main(): Promise<void>` lowers to an
+                    // `async fn __ds_main` item; the implicit `fn main` must
+                    // `.await` its call sites (a top-level `main()` is the
+                    // explicit way to run it under pure-TS semantics) and run
+                    // under `#[tokio::main]` so the returned future resolves.
+                    // Rewriting the calls drops `.await` into the entry block,
+                    // so `is_async_entry` below fires on its own; the
+                    // `main_is_async` disjunct is a fallback for an `async
+                    // function main` declared but never called at the top level.
+                    let main_is_async = program.body.iter().any(|s| {
+                        matches!(s,
+                            oxc_ast::ast::Statement::FunctionDeclaration(f)
+                            if f.r#async
+                                && f.id.as_ref().is_some_and(|id| id.name.as_str() == "main")
+                        )
+                    });
+                    if main_is_async {
+                        for stmt in &mut out {
+                            functions::await_main_calls(stmt);
+                        }
+                    }
                     let block: syn::Block = syn::parse_quote!({ #(#out)* });
                     // A top-level `await` (or a top-level call to an async fn
                     // that awaits) needs an async entry —
@@ -1370,9 +1391,10 @@ impl Translator {
                     // `async fn` item in the block also contains `await`, which
                     // over-triggers harmlessly (the runtime starts; the nested
                     // fn is simply not awaited).
-                    let is_async_entry = quote::ToTokens::to_token_stream(&block)
-                        .to_string()
-                        .contains("await");
+                    let is_async_entry = main_is_async
+                        || quote::ToTokens::to_token_stream(&block)
+                            .to_string()
+                            .contains("await");
                     if is_async_entry {
                         syn::parse_quote! {
                             #[tokio::main(flavor = "current_thread")]
