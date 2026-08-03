@@ -289,15 +289,12 @@ fn check_as_bin_entry_allows_top_level_executable() {
 }
 
 #[test]
-fn check_flags_await() {
-    // `await` needs an async runtime DashScript does not have (`fn main` is
-    // sync; decision point 1). Reported honestly rather than lowered to a
-    // run-time `todo!()` that panics.
+fn check_passes_await() {
+    // `await` lowers to `.await` inside an async fn (a top-level await turns
+    // the entry into `#[tokio::main] async fn main`); the operand recurses, so
+    // a reflection operand still surfaces, but a plain `await foo()` does not.
     let diags = Translator::new().check("async function f(): Promise<void> { await foo(); }");
-    assert!(
-        diags.iter().any(|d| d.message.contains("await")),
-        "await not flagged: {diags:?}"
-    );
+    assert!(diags.is_empty(), "await flagged: {diags:?}");
 }
 
 #[test]
@@ -347,5 +344,48 @@ fn check_flags_unmappable_inside_nested_fn() {
             .iter()
             .any(|d| d.message.contains("nested function declaration")),
         "nested fn itself should not be flagged: {diags:?}"
+    );
+}
+
+#[test]
+fn async_fn_lowers_with_tokio_main() {
+    // `async function f(): Promise<T>` → `async fn f() -> T` (the async fn
+    // wraps the return in `Future<Output = T>` itself, so `Promise<T>` is
+    // unwrapped to `T`); a top-level `await` turns the entry into
+    // `#[tokio::main] async fn main`, and `await f()` → `f().await`.
+    let src = "async function getValue(): Promise<string> {\n  return \"tokio\";\n}\nconst x: string = await getValue();\nconsole.log(x);";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("async fn get_value("),
+        "async fn not emitted: {rust}"
+    );
+    assert!(
+        rust.contains("#[tokio::main]"),
+        "tokio main not emitted for top-level await: {rust}"
+    );
+    assert!(
+        rust.contains("async fn main"),
+        "async main not emitted: {rust}"
+    );
+    assert!(rust.contains(".await"), "await not emitted: {rust}");
+    assert!(
+        !rust.contains("todo!"),
+        "no todo! in async lowering: {rust}"
+    );
+}
+
+#[test]
+fn sync_entry_stays_sync_without_tokio() {
+    // A program with no `await` keeps a sync `fn main` and pulls no tokio —
+    // the async runtime is opt-in per entry, not forced on every build.
+    let src = "function f(): number { return 1; }\nconsole.log(f());";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("#[tokio::main]"),
+        "tokio main emitted for sync entry: {rust}"
+    );
+    assert!(
+        !rust.contains("async fn main"),
+        "async main emitted for sync entry: {rust}"
     );
 }

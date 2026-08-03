@@ -187,12 +187,23 @@ pub enum RuntimeDep {
     /// `__ds::DsURLPattern`. Pulls `Error` (for the `DsError` the helper panics).
     /// Instance methods (`test`/`exec`) are not yet lowered.
     URLPattern,
+    /// A `tokio` async runtime — the point WinterTC's asynchronous Web APIs
+    /// (`fetch`/`setTimeout`/Streams/`SubtleCrypto`) and ES `async`/`await`/
+    /// `Promise` introduce a runtime and a thread model. A `.ts` file whose
+    /// top level awaits lowers its implicit entry to `#[tokio::main] async fn
+    /// main`; `async fn` items and `.await` map to native Rust. Pure-Rust
+    /// static track — never degraded to the engine (the engine covers the
+    /// ECMAScript core only). Flags `tokio` (macros + rt-multi-thread) and
+    /// `futures`; no `__ds` helper slice (the runtime is `#[tokio::main]`, not
+    /// a helper module). The marker is the `#[tokio::main]` attribute, which
+    /// only the async entry emits.
+    Tokio,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 22] = [
+    const ALL: [RuntimeDep; 23] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -215,6 +226,7 @@ impl RuntimeDep {
         RuntimeDep::HrTime,
         RuntimeDep::Crypto,
         RuntimeDep::URLPattern,
+        RuntimeDep::Tokio,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -253,6 +265,10 @@ impl RuntimeDep {
             RuntimeDep::HrTime => Some("__ds::perf_now"),
             RuntimeDep::Crypto => Some("__ds::crypto_random_uuid"),
             RuntimeDep::URLPattern => Some("__ds::DsURLPattern"),
+            // The `#[tokio::main]` attribute only the async entry emits — a
+            // `.ts` source cannot produce it any other way, so its presence in
+            // the generated text is the signal that this crate pulls tokio.
+            RuntimeDep::Tokio => Some("#[tokio::main]"),
             RuntimeDep::Engine => None,
         }
     }
@@ -331,6 +347,18 @@ impl RuntimeDep {
             // binds the default engine `R` to `regex::Regex` but does not re-export
             // the crate, so it must be a direct dep of the emitted project.
             RuntimeDep::URLPattern => Some(&[("urlpattern", "\"0.6\""), ("regex", "\"1\"")]),
+            // `tokio` (tokio-rs/tokio) — the async runtime `#[tokio::main]`
+            // expands against. `macros` (the attribute), `rt-multi-thread` (the
+            // scheduler — multi-thread matches the JS event-loop concurrency
+            // model WinterTC async APIs assume). `futures` for the `Future`
+            // trait/`FutureExt` a `Promise` mapping composes over.
+            RuntimeDep::Tokio => Some(&[
+                (
+                    "tokio",
+                    "{ version = \"1\", features = [\"macros\", \"rt-multi-thread\"] }",
+                ),
+                ("futures", "\"0.3\""),
+            ]),
         }
     }
 
@@ -361,6 +389,8 @@ impl RuntimeDep {
             RuntimeDep::HrTime => Some(PERF_HELPER),
             RuntimeDep::Crypto => Some(CRYPTO_HELPER),
             RuntimeDep::URLPattern => Some(URLPATTERN_HELPER),
+            // The runtime is `#[tokio::main]`, not a helper module — no slice.
+            RuntimeDep::Tokio => None,
         }
     }
 }
@@ -1264,8 +1294,25 @@ impl Translator {
                         .collect();
                     functions::drop_trailing_return(&mut out);
                     let block: syn::Block = syn::parse_quote!({ #(#out)* });
-                    syn::parse_quote! {
-                        fn main() #block
+                    // A top-level `await` (or a top-level call to an async fn
+                    // that awaits) needs an async entry — `#[tokio::main] async
+                    // fn main` — so the `.await` resolves under a runtime.
+                    // Detected by scanning the entry block's tokens for `await`;
+                    // a nested `async fn` item in the block also contains
+                    // `await`, which over-triggers harmlessly (the runtime
+                    // starts; the nested fn is simply not awaited).
+                    let is_async_entry = quote::ToTokens::to_token_stream(&block)
+                        .to_string()
+                        .contains("await");
+                    if is_async_entry {
+                        syn::parse_quote! {
+                            #[tokio::main]
+                            async fn main() #block
+                        }
+                    } else {
+                        syn::parse_quote! {
+                            fn main() #block
+                        }
                     }
                 };
                 items.push(main_item);

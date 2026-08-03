@@ -222,10 +222,10 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         Expression::StringLiteral(s) if s.value.as_str().contains('\u{FFFD}') => {
             degrade("a string literal with a lone surrogate needs the engine")
         }
-        // `await expr` — DashScript has no async runtime.
-        Expression::AwaitExpression(_) => {
-            reject("`await` is unsupported (DashScript has no async runtime)")
-        }
+        // `await expr` — lowers to Rust `.await` inside an `async fn` (or the
+        // `#[tokio::main] async fn main` a top-level await turns the entry
+        // into). The operand recurses, so `await <reflection>` still degrades.
+        Expression::AwaitExpression(a) => classify_expr(&a.argument, ctx),
         // `new Temporal.<Type>(…)` — static ISO-field mapping (the four
         // date/time types) when the args are integer fields; a property-bag
         // `new Temporal.X({…})` or an unmapped type degrades to the engine,
@@ -936,8 +936,11 @@ mod tests {
     }
 
     #[test]
-    fn rejects_await() {
-        assert!(matches!(classify_first_expr("await p"), Mapping::Reject(_)));
+    fn maps_await() {
+        // `await expr` lowers to `.await` inside an async fn (or the
+        // `#[tokio::main] async fn main` a top-level await turns the entry
+        // into); the bare operand stays Mapped.
+        assert!(matches!(classify_first_expr("await p"), Mapping::Mapped));
     }
 
     #[test]

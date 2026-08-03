@@ -509,10 +509,21 @@ fn fn_output(func: &Function, registry: &TypeRegistry) -> ReturnType {
         .as_ref()
         .and_then(|ta| match &ta.type_annotation {
             TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) => None,
-            ty => Some(ReturnType::Type(
-                Default::default(),
-                Box::new(types::translate_type_for_signature(ty, registry)),
-            )),
+            ty => {
+                // An `async function f(): Promise<T>` returns `T` — Rust's
+                // `async fn` wraps the return in `Future<Output = T>` itself,
+                // so the ES `Promise<T>` annotation is unwrapped to the inner
+                // type at this position only.
+                let ty = if func.r#async {
+                    types::unwrap_promise(ty)
+                } else {
+                    ty
+                };
+                Some(ReturnType::Type(
+                    Default::default(),
+                    Box::new(types::translate_type_for_signature(ty, registry)),
+                ))
+            }
         })
         .or_else(|| {
             // No return annotation — a `.js` function or an untyped test262
@@ -595,13 +606,18 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
             .map(|p| bindings::type_ident(&p.name.name))
             .collect()
     });
+    // An `async function` lowers to an `async fn` — Rust's async fn wraps the
+    // return in `Future<Output = T>` itself, so the ES `Promise<T>` return
+    // annotation is unwrapped to `T` in `fn_output`. `None` interpolates as
+    // nothing; `Some(quote!(async))` prepends the keyword.
+    let async_kw: Option<TokenStream> = func.r#async.then(|| quote!(async));
     if generics.is_empty() {
         parse_quote! {
-            fn #name(#(#inputs),*) #output #block
+            #async_kw fn #name(#(#inputs),*) #output #block
         }
     } else {
         parse_quote! {
-            fn #name<#(#generics),*>(#(#inputs),*) #output #block
+            #async_kw fn #name<#(#generics),*>(#(#inputs),*) #output #block
         }
     }
 }
@@ -821,7 +837,12 @@ fn arrow_expression_block(
 pub(in crate::translator) fn return_path_of(ta: &oxc_ast::ast::TSTypeAnnotation) -> Option<Path> {
     match &ta.type_annotation {
         TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) => None,
-        ty => path_of(&types::translate_type(ty)),
+        // An async fn's `Promise<T>` annotation unwraps to `T` for the body's
+        // return-path hint — the body returns a `T` value (Rust's `async fn` wraps
+        // the future itself), so `return {…}` borrows `T`'s struct name, not
+        // `Promise<…>`'s path (whose `<T>` would parse as comparison operators).
+        // `unwrap_promise` is a no-op on non-`Promise` types, so sync fns are safe.
+        ty => path_of(&types::translate_type(types::unwrap_promise(ty))),
     }
 }
 

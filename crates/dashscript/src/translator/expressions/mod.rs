@@ -401,6 +401,14 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         // outside a method → a `compile_error!`.
         Expression::ThisExpression(_) => super::context::this_expr(ctx),
         Expression::NewExpression(n) => new::new_expr(n, ctx),
+        // `await expr` → `expr.await` (inside an `async fn`, or the
+        // `#[tokio::main] async fn main` a top-level await turns the entry
+        // into). The operand lowers first; parens keep precedence so a compound
+        // operand (`a + b`) awaits as a whole.
+        Expression::AwaitExpression(a) => {
+            let operand = translate_expr(&a.argument, ctx);
+            parse_quote!((#operand).await)
+        }
         // Unsupported ES/TS constructs. `check` flags these before emit; these
         // explicit arms (vs a `_` wildcard) keep dispatch exhaustive so a
         // future oxc variant lands as a `cargo check` error, never silently.
@@ -408,7 +416,6 @@ pub fn translate_expr(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
         | Expression::ImportMeta(_)
         | Expression::NewTarget(_)
         | Expression::ImportExpression(_)
-        | Expression::AwaitExpression(_)
         | Expression::YieldExpression(_)
         | Expression::PrivateInExpression(_)
         | Expression::JSXElement(_)
@@ -593,6 +600,11 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         Argument::TSSatisfiesExpression(s) => translate_expr(&s.expression, ctx),
         Argument::TSInstantiationExpression(i) => translate_expr(&i.expression, ctx),
         Argument::SequenceExpression(s) => sequence_expr(s, ctx),
+        // `f(await x)` → `f((x).await)` — same lowering as a bare `await`.
+        Argument::AwaitExpression(a) => {
+            let operand = translate_expr(&a.argument, ctx);
+            parse_quote!((#operand).await)
+        }
         // Unsupported ES/TS constructs — explicit arms keep dispatch exhaustive
         // (no `_` wildcard), so a future oxc variant lands as a `cargo check`
         // error rather than silent `todo!()`.
@@ -600,7 +612,6 @@ pub fn translate_argument(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
         | Argument::ImportMeta(_)
         | Argument::NewTarget(_)
         | Argument::ImportExpression(_)
-        | Argument::AwaitExpression(_)
         | Argument::YieldExpression(_)
         | Argument::PrivateInExpression(_)
         | Argument::PrivateFieldExpression(_)

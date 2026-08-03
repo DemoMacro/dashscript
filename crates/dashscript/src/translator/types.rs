@@ -435,6 +435,26 @@ fn rest_element_type(ty: &TSType) -> Type {
     }
 }
 
+/// If `ty` is `Promise<T>`, return the inner `T`; else `ty` unchanged. Used at
+/// an `async fn`'s return-type position: an ES `async function f(): Promise<T>`
+/// maps to a Rust `async fn f() -> T` (the async fn wraps the return in
+/// `Future<Output = T>` itself), so the `Promise<>` wrapper is unwrapped there
+/// only — a `let x: Promise<T>` binding keeps the wrapper.
+pub fn unwrap_promise<'a>(ty: &'a TSType<'a>) -> &'a TSType<'a> {
+    if let TSType::TSTypeReference(r) = ty {
+        if let TSTypeName::IdentifierReference(id) = &r.type_name {
+            if id.name.as_str() == "Promise" {
+                if let Some(args) = r.type_arguments.as_ref() {
+                    if let Some(inner) = args.params.first() {
+                        return inner;
+                    }
+                }
+            }
+        }
+    }
+    ty
+}
+
 fn reference_type(r: &TSTypeReference) -> Type {
     let TSTypeName::IdentifierReference(id) = &r.type_name else {
         return parse_quote!(_);
