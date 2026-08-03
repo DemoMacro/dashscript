@@ -36,7 +36,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "static build: src\\main.rs:7:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:10:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:33:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:34:16: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:35:17: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:47:13: error[E0434]: can't capture dynamic environment in a fn item",
+    "detail": "static build: src\\main.rs:7:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:10:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:55:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:56:16: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:57:17: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:82:13: error[E0434]: can't capture dynamic environment in a fn item",
     "note": ""
   },
   {
@@ -52,7 +52,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "static build: src\\main.rs:6:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:37:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:55:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:74:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:93:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:121:13: error[E0434]: can't capture dynamic environment in a fn item",
+    "detail": "static build: src\\main.rs:6:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:59:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:85:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:109:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:135:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:173:13: error[E0434]: can't capture dynamic environment in a fn item",
     "note": ""
   },
   {
@@ -75,8 +75,8 @@
     "id": "wpt.dom.events.eventtarget-add-remove-listener",
     "layer": "wpt",
     "category": "dom",
-    "status": "partial",
-    "detail": "static build: src\\main.rs:8:18: error[E0433]: cannot find type `EventTarget` in this scope: use of undeclared type `EventTarget`\nsrc\\main.rs:10:25: error[E0433]: cannot find type `Event` in this scope: use of undeclared type `Event`\nsrc\\main.rs:17:17: error[E0433]: cannot find type `Event` in this scope: use of undeclared type `Event`\nsrc\\main.rs:4:13: error[E0599]: no method named `prevent_default` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `f64`, found `bool`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -84,7 +84,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "static build: src\\main.rs:4:18: error[E0433]: cannot find type `EventTarget` in this scope: use of undeclared type `EventTarget`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "\nthread 'main' (30676) panicked at src\\__ds.rs:267:9:\nAssertionError: Expected SameValue(«()», «None») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -92,7 +92,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "static build: src\\main.rs:14:52: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:15:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:30:52: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:31:59: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:32:67: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:33:79: error[E0434]: can't capture dynamic environment in a fn item",
+    "detail": "static build: src\\main.rs:14:52: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:15:13: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:43:52: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:44:59: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:45:67: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:46:79: error[E0434]: can't capture dynamic environment in a fn item",
     "note": ""
   },
   {
@@ -188,7 +188,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "static build: src\\main.rs:48:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:69:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:129:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:19:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:36:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:57:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
+    "detail": "static build: src\\main.rs:48:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:69:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:129:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:7:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:23:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:44:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`",
     "note": ""
   },
   {
@@ -196,7 +196,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "static build: src\\main.rs:52:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:67:17: error[E0425]: cannot find value `range_error` in this scope: not found in this scope\nsrc\\main.rs:89:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:40:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:59:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:96:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
+    "detail": "static build: src\\main.rs:52:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:67:17: error[E0425]: cannot find value `range_error` in this scope: not found in this scope\nsrc\\main.rs:89:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:7:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:48:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:51:17: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -212,7 +212,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "static build: src\\main.rs:220:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:24:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:43:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:59:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:76:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:92:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
+    "detail": "static build: src\\main.rs:220:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:43:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:76:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:121:34: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:6:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:32:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`",
     "note": ""
   },
   {
@@ -236,7 +236,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "static build: src\\main.rs:26:41: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:35:35: error[E0425]: cannot find value `range_error` in this scope: not found in this scope\nsrc\\main.rs:54:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:15:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:29:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:61:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
+    "detail": "static build: src\\main.rs:26:41: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:35:35: error[E0425]: cannot find value `range_error` in this scope: not found in this scope\nsrc\\main.rs:54:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:6:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:23:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:26:17: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -252,7 +252,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "static build: src\\main.rs:55:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:127:42: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:157:35: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:36:46: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:61:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:88:46: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
+    "detail": "static build: src\\main.rs:55:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:127:42: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:157:35: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:36:46: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:88:46: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:5:26: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`",
     "note": ""
   },
   {
@@ -260,7 +260,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "static build: src\\main.rs:51:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:76:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:116:37: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:19:10: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:27:73: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:37:73: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
+    "detail": "static build: src\\main.rs:51:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:76:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:116:37: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:27:73: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:37:73: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:90:49: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
     "note": ""
   },
   {

@@ -94,14 +94,16 @@ pub(in crate::translator) fn event_target_method(
     Some(match name {
         // `et.addEventListener(type, cb[, useCapture|options])` →
         // `et.add_event_listener(type, Box::new(..))`. A `null`/`undefined`
-        // callback (ES ignores it) returns `None` so the call surfaces honestly
-        // rather than boxing a non-callable.
+        // (or absent) callback is a no-op per ES — emit an empty block rather
+        // than boxing a non-callable or falling back to an unmapped call.
         "addEventListener" => {
             let type_ = es_to_string_arg(args.first()?, ctx);
-            let cb = event_listener_callback(args.get(1)?, ctx)?;
-            parse_quote!({
-                #obj.add_event_listener(#type_, #cb);
-            })
+            match args.get(1).and_then(|a| event_listener_callback(a, ctx)) {
+                Some(cb) => parse_quote!({
+                    #obj.add_event_listener(#type_, #cb);
+                }),
+                None => parse_quote!({}),
+            }
         }
         // `et.removeEventListener(type, cb[, options])` → drop `cb`/`options`.
         "removeEventListener" => {

@@ -527,18 +527,36 @@ fn fn_output(func: &Function, registry: &TypeRegistry) -> ReturnType {
         })
         .or_else(|| {
             // No return annotation — a `.js` function or an untyped test262
-            // callback. Default to `-> f64` when the body returns a value,
-            // mirroring the untyped-param-defaults-to-f64 rule so a plain
-            // numeric `add(a, b) { return a + b }` compiles. A void body (no
-            // `return expr`) stays `()`; a non-f64 return (e.g. a `String`)
-            // fails `cargo check` honestly — add an annotation or a `.d.ts`.
-            // Only a top-level `return expr;` is detected; a return nested in
-            // control flow is rarer and surfaces as a Rust type error.
+            // callback. Infer from the top-level `return expr;` statements: a
+            // body whose every return is a `boolean` literal is `-> bool` (an
+            // `addEventListener` listener returning `false`, a predicate) — the
+            // default `-> f64` would clash with `return false` (E0308). A body
+            // returning a value otherwise defaults to `-> f64`, mirroring the
+            // untyped-param-defaults-to-f64 rule so a plain numeric `add(a, b)
+            // { return a + b }` compiles. A void body (no `return expr`) stays
+            // `()`; a non-bool/non-f64 return (e.g. a `String`) fails cargo
+            // check honestly — add an annotation or a `.d.ts`. Only a top-level
+            // `return expr;` is detected; a return nested in control flow is
+            // rarer and surfaces as a Rust type error.
             let body = func.body.as_deref()?;
-            body.statements
+            let returns: Vec<&Expression> = body
+                .statements
                 .iter()
-                .any(|s| matches!(s, Statement::ReturnStatement(ret) if ret.argument.is_some()))
-                .then(|| ReturnType::Type(Default::default(), parse_quote!(f64)))
+                .filter_map(|s| match s {
+                    Statement::ReturnStatement(ret) => ret.argument.as_ref(),
+                    _ => None,
+                })
+                .collect();
+            if returns.is_empty() {
+                None
+            } else if returns
+                .iter()
+                .all(|e| matches!(e, Expression::BooleanLiteral(_)))
+            {
+                Some(ReturnType::Type(Default::default(), parse_quote!(bool)))
+            } else {
+                Some(ReturnType::Type(Default::default(), parse_quote!(f64)))
+            }
         })
         .unwrap_or(ReturnType::Default)
 }
