@@ -320,6 +320,50 @@ fn nested_fn_declaration_lowers_to_nested_item() {
 }
 
 #[test]
+fn nested_fn_capturing_outer_local_lowers_to_closure() {
+    // A nested `function` that captures an outer local has closure semantics
+    // a Rust fn item cannot express (E0434 — `fn helper() { x }` can't close
+    // over `x`), so it lowers to a `let name = |params| -> ret { body };`
+    // closure. Calls resolve unchanged (`helper(args)`).
+    let src = "function main(): void {\n  const x: number = 10;\n  function helper(n: number): number { return n + x; }\n  console.log(helper(5));\n}";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("let helper = |"),
+        "capturing nested fn -> closure binding: {rust}"
+    );
+    assert!(
+        !rust.contains("fn helper("),
+        "capturing nested fn must not be a fn item (E0434): {rust}"
+    );
+}
+
+#[test]
+fn nested_fn_capturing_mut_outer_local_is_mut_closure() {
+    // A nested `function` that mutates a captured binding (`++callCount`) is
+    // FnMut, so the closure binding is `let mut` (a FnMut closure is callable
+    // only through a `mut` binding).
+    let src = "function main(): void {\n  let callCount: number = 0;\n  function listener(e: number): void { ++callCount; }\n  listener(1);\n}";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("let mut listener = |"),
+        "FnMut capturing nested fn -> let mut closure: {rust}"
+    );
+}
+
+#[test]
+fn nested_fn_not_capturing_stays_fn_item() {
+    // A nested `function` that references only its own params stays a Rust fn
+    // item — zero-cost and recursive. The capture-driven closure path must
+    // not grab it.
+    let src = "function main(): void {\n  function helper(n: number): number { return n + 1; }\n  console.log(helper(1));\n}";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("fn helper("),
+        "non-capturing nested fn stays a fn item: {rust}"
+    );
+}
+
+#[test]
 fn check_passes_nested_fn_declaration() {
     // A nested fn declaration is no longer flagged `unsupported` — it lowers
     // to a Rust nested fn item. (A construct inside its body that cannot

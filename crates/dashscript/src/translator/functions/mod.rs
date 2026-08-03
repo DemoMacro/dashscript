@@ -640,6 +640,126 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
     }
 }
 
+/// Whether a nested `function` declaration should lower to a closure rather
+/// than a Rust nested fn item. A nested fn that captures an outer local has
+/// closure semantics a Rust fn item cannot express (`fn helper() { …x }` is
+/// E0434 — a fn item cannot close over its environment), so it must become
+/// `let name = |..| { .. };`. A non-capturing nested fn stays a fn item —
+/// zero-cost, and recursive (a closure cannot name itself). `async`/
+/// `generator`/generic nested fns stay fn items (closures carry no generic
+/// params; rare in the test262/WPT helper convention regardless).
+fn nested_fn_should_be_closure(
+    func: &Function,
+    outer: &Locals,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> bool {
+    if func.r#async || func.generator || func.type_parameters.is_some() {
+        return false;
+    }
+    let Some(body) = func.body.as_deref() else {
+        return false;
+    };
+    let analysis = super::analysis::analyze(
+        &body.statements,
+        names,
+        &registry.mut_methods,
+        &registry.ref_params,
+    );
+    // Captures an outer local: a referenced name that resolves in the
+    // enclosing function's locals (not the nested fn's own params/locals).
+    let captures_outer = analysis.use_counts.keys().any(|k| outer.get(k).is_some());
+    if !captures_outer {
+        return false;
+    }
+    // A self-referential `let name = |..| { name(..) };` cannot compile (the
+    // binding is not in scope inside its own initializer), so a recursive
+    // capturing fn stays a fn item and surfaces E0434 honestly.
+    if let Some(id) = &func.id {
+        let self_name = names.of_binding(id).to_string();
+        if analysis.use_counts.contains_key(&self_name) {
+            return false;
+        }
+    }
+    true
+}
+
+/// Lower a nested `function` declaration to `let [mut] name = |params| -> ret
+/// { body };` — a closure that captures its outer locals. Calls resolve
+/// unchanged (`name(args)`). `mut` is added when the closure mutates a
+/// captured binding (FnMut), so the binding is callable; a non-mutating
+/// closure (Fn) takes a plain `let`.
+fn nested_fn_closure(
+    func: &Function,
+    outer: &Locals,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> Stmt {
+    let name = func
+        .id
+        .as_ref()
+        .map_or_else(|| format_ident!("__ds_anon"), |id| names.of_binding(id));
+    let mut locals = body_locals(&func.params, func.body.as_deref(), registry, names);
+    let inputs: Vec<FnArg> = translate_params(&func.params, &locals, registry, names);
+    let output = fn_output(func, registry);
+    let return_path = func.return_type.as_deref().and_then(return_path_of);
+    let defaults: Vec<Stmt> = func
+        .params
+        .items
+        .iter()
+        .filter_map(|fp| {
+            let init = fp.initializer.as_deref()?;
+            let pname = names.of_pattern(&fp.pattern);
+            let default = expressions::translate_expr(
+                init,
+                &Ctx::new(&locals, registry, &Narrow::default(), names),
+            );
+            Some(parse_quote!(let #pname = #pname.unwrap_or(#default);))
+        })
+        .collect();
+    let body_stmts: &[Statement] = func.body.as_deref().map_or(&[], |b| &b.statements[..]);
+    let mut block = translate_body(
+        body_stmts,
+        &mut locals,
+        registry,
+        &Narrow::default(),
+        return_path.as_ref(),
+        names,
+    );
+    if !defaults.is_empty() {
+        let mut stmts = defaults;
+        stmts.extend(block.stmts);
+        block.stmts = stmts;
+    }
+    // A closure that mutates a captured binding is FnMut and needs a `mut`
+    // binding to call; one that only reads captures is Fn (plain `let`).
+    let analysis = super::analysis::analyze(
+        body_stmts,
+        names,
+        &registry.mut_methods,
+        &registry.ref_params,
+    );
+    let needs_mut = analysis
+        .mutated
+        .iter()
+        .chain(analysis.member_mutated.iter())
+        .any(|k| outer.get(k).is_some());
+    // Free-fn params are `FnArg::Typed(name: type)`; the `name: type` PatType
+    // is a valid closure `Pat`.
+    let pats: Vec<syn::Pat> = inputs
+        .into_iter()
+        .map(|a| match a {
+            FnArg::Typed(t) => syn::Pat::Type(t),
+            FnArg::Receiver(_) => unreachable!("nested fn has no `self`"),
+        })
+        .collect();
+    if needs_mut {
+        parse_quote!(let mut #name = |#(#pats),*| #output #block;)
+    } else {
+        parse_quote!(let #name = |#(#pats),*| #output #block;)
+    }
+}
+
 /// A per-function engine degradation site: keep the Rust signature (params,
 /// return type, generics) but replace the body with a `__ds_engine::call_fn`
 /// invocation. Each argument is marshaled to `serde_json::Value` (every emitted
@@ -1561,12 +1681,18 @@ pub(in crate::translator) fn translate_stmt(
         // that calls only its siblings/params/outer fn items (the
         // test262/WPT `callbackfn` convention) maps directly. A nested fn that
         // captures an outer local (closure semantics a Rust fn item cannot
-        // express) fails `cargo check` honestly; `check` still flags any
-        // unmappable construct inside the body via its recursive walk.
+        // express — E0434) lowers instead to a `let name = |params| -> ret
+        // { body };` closure that captures its environment (calls resolve
+        // unchanged); `check` still flags any unmappable construct inside the
+        // body via its recursive walk.
         Statement::FunctionDeclaration(f) => {
-            vec![Stmt::Item(syn::Item::Fn(translate_function(
-                f, registry, names,
-            )))]
+            if nested_fn_should_be_closure(f, locals, registry, names) {
+                vec![nested_fn_closure(f, locals, registry, names)]
+            } else {
+                vec![Stmt::Item(syn::Item::Fn(translate_function(
+                    f, registry, names,
+                )))]
+            }
         }
         // Top-level-only constructs — declarations and module declarations do
         // not appear in a function body; a nested one stays unmapped (a nested
