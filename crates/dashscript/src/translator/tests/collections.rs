@@ -70,6 +70,24 @@ fn translates_new_uint8_array_from_array_literal() {
 }
 
 #[test]
+fn translates_new_int32_array_to_zeroed_vec() {
+    // `new Int32Array(n)` — a 4-byte-per-element int32 typed array — reuses the
+    // u8 length path with the i32 element type: `vec![0_i32; n as usize]`.
+    let src = "function f(n: number): Int32Array { return new Int32Array(n); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("vec![0_i32;"), "new Int32Array(n): {rust}");
+}
+
+#[test]
+fn translates_new_float64_array_to_zeroed_vec() {
+    // `new Float64Array(n)` — the f64 element type — lowers to
+    // `vec![0_f64; n as usize]`, the same shape with a float zero literal.
+    let src = "function f(n: number): Float64Array { return new Float64Array(n); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("vec![0_f64;"), "new Float64Array(n): {rust}");
+}
+
+#[test]
 fn translates_typed_array_set_to_copy_from_slice() {
     // `buf.set(src, off)` on a `Uint8Array` (`Vec<u8>`) — ES
     // `TypedArray.prototype.set` copies `src`'s bytes into `buf` starting at

@@ -1121,23 +1121,22 @@ fn parse_flags(s: &str) -> oxc_ast::ast::RegExpFlags {
     f
 }
 
-/// `new Uint8Array(…)` / `ArrayBuffer` / `Uint8ClampedArray` → `Vec<u8>`, so an
-/// unannotated `let x = new Uint8Array(3)` records `Vec<u8>` and a later
-/// `x[0] = v` stores the value with a `u8` cast. Mirrors the type mapping;
-/// `None` for any other `new` callee.
+/// `new <TypedArray>(…)` → `Vec<elem>` (Int8Array→Vec<i8>, …, Float64Array→
+/// Vec<f64>), so an unannotated `let x = new Int32Array(3)` records `Vec<i32>`
+/// and a later `x[0] = v` stores the value with an `i32` cast. `ArrayBuffer`
+/// stays `Vec<u8>` (a raw byte buffer). Mirrors the constructor's type mapping
+/// (`typed_array_elem_type`); `None` for any other `new` callee.
 fn typed_array_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     use oxc_ast::ast::Expression;
     let Expression::Identifier(id) = &new_expr.callee else {
         return None;
     };
-    if matches!(
-        id.name.as_str(),
-        "Uint8Array" | "ArrayBuffer" | "Uint8ClampedArray"
-    ) {
-        Some(parse_quote!(Vec<u8>))
-    } else {
-        None
+    if id.name.as_str() == "ArrayBuffer" {
+        return Some(parse_quote!(Vec<u8>));
     }
+    let elem = super::expressions::typed_array_elem_type(id.name.as_str())?;
+    let ty = format_ident!("{}", elem);
+    Some(parse_quote!(Vec<#ty>))
 }
 
 /// `new Set(…)` / `new Map(…)` → the inferred `HashSet<E>` / `HashMap<K, V>`

@@ -453,13 +453,17 @@ fn reference_type(r: &TSTypeReference) -> Type {
             return parse_quote!(Vec<#inner_ty>);
         }
     }
-    // `Uint8Array` / `ArrayBuffer` / `Uint8ClampedArray` (a crypto byte buffer)
-    // → `Vec<u8>` — the ES typed array's element shape is `u8`, so a `sha1()`
-    // return or a `bytesToHex()` param marshals as a Rust byte vec. Other typed
-    // arrays (`Int32Array`, `Float64Array`, …) are a later batch; crypto uses
-    // `Uint8Array`.
-    if matches!(name, "Uint8Array" | "ArrayBuffer" | "Uint8ClampedArray") {
+    // An ES TypedArray name → `Vec<elem>` (`Int8Array`→`Vec<i8>`, …,
+    // `Float64Array`→`Vec<f64>`); `ArrayBuffer` → `Vec<u8>` (a raw byte buffer,
+    // no element type). A `sha1(): Uint8Array` return or a `bytesToHex(buf:
+    // Uint8Array)` param thus marshals as a Rust vec of the element type,
+    // matching the constructor (`new Int32Array(n)` → `Vec<i32>`).
+    if name == "ArrayBuffer" {
         return parse_quote!(Vec<u8>);
+    }
+    if let Some(elem) = super::expressions::typed_array_elem_type(name) {
+        let ty = format_ident!("{}", elem);
+        return parse_quote!(Vec<#ty>);
     }
     // `Record<K, V>` / `Map<K, V>` → `HashMap<K, V>` — the TS record and the ES
     // `Map` both lower to a Rust `HashMap`. (A `Map`'s insertion order is not

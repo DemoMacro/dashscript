@@ -282,9 +282,12 @@ fn bare_engine_value_global_routes_to_engine() {
     // A bare `Promise` value reference has no static mapping — classify marks
     // it DegradeEngine so the enclosing function runs under the engine instead
     // of emitting a phantom `promise` binding (E0425 `partial`). The same holds
-    // for the non-`Uint8` typed arrays (`Int32Array`, …), `DataView`, `Atomics`,
-    // `SharedArrayBuffer`, and `ShadowRealm`.
-    let src = "function f(): number { const p = Promise; const a = Int32Array; return 0; }";
+    // for `BigInt64Array` (a BigInt typed array — no BigInt literal, so unmapped),
+    // `DataView`, `Atomics`, `SharedArrayBuffer`, and `ShadowRealm`. The
+    // integer/float typed arrays (`Int32Array`, …) are NOT here — `new` and the
+    // type annotation map to `Vec<elem>`, so a bare value reference falls through
+    // to the cargo-check-fail engine fallback instead.
+    let src = "function f(): number { const p = Promise; const a = BigInt64Array; return 0; }";
     let diags = Translator::new().check(src);
     let msgs: Vec<String> = diags.iter().map(|d| format!("{d}")).collect();
     assert!(
@@ -294,8 +297,8 @@ fn bare_engine_value_global_routes_to_engine() {
     );
     assert!(
         msgs.iter()
-            .any(|m| m.contains("no static mapping") && m.contains("Int32Array")),
-        "Int32Array as a value should flag for engine degrade: {msgs:?}"
+            .any(|m| m.contains("no static mapping") && m.contains("BigInt64Array")),
+        "BigInt64Array as a value should flag for engine degrade: {msgs:?}"
     );
 }
 

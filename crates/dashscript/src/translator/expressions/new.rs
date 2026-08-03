@@ -1,5 +1,6 @@
 //! `new Foo(args)` → `Foo::new(args)`.
 use oxc_ast::ast::{Argument, ArrayExpressionElement, Expression, NewExpression};
+use quote::format_ident;
 use syn::{parse_quote, Expr, Ident};
 
 use super::super::bindings;
@@ -48,33 +49,36 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                 return worker_ctor(arg, handler);
             }
         }
-        // `new Uint8Array(n)` / `Uint8ClampedArray(n)` / `Int8Array(n)` — an ES
-        // typed array of `u8` elements (a crypto byte buffer). Two constructor
-        // forms lower: a numeric length `new Uint8Array(n)` → `vec![0_u8; n as
-        // usize]` (n zeroed u8s), and `new Uint8Array([1, 2, 3])` → a copy with
-        // each element cast to u8 (the typed-array-from-array case). An empty
-        // `new Uint8Array()` is an empty vec. The element type is `u8` for these
-        // three; other typed arrays (`Int32Array`, …) and a non-array iterable
-        // arg are later work — they fall through to the generic `Foo::new(…)`
-        // path and surface at `cargo check` honestly.
-        if matches!(
-            id.name.as_str(),
-            "Uint8Array" | "Uint8ClampedArray" | "Int8Array"
-        ) {
+        // `new <TypedArray>(n)` / `<TypedArray>([1, 2, 3])` — an ES typed array
+        // of a fixed-width Rust scalar (`Int8Array`→`i8`, …, `Float64Array`→`f64`;
+        // see `typed_array_elem_type`). Two constructor forms lower: a numeric
+        // length `new Int32Array(n)` → `vec![0_i32; n as usize]` (n zeroed
+        // elements), and `new Int32Array([1, 2, 3])` → a copy with each element
+        // cast to the elem type (the typed-array-from-array case). An empty
+        // `new Int32Array()` is an empty vec. `Float16Array` (no stable Rust
+        // `f16`) and the BigInt arrays (DashScript has no BigInt literal) are
+        // not mapped — they fall through to the generic `Foo::new(…)` path and
+        // surface at `cargo check` honestly.
+        if let Some(elem) = super::typed_array_elem_type(id.name.as_str()) {
+            let ty: Ident = format_ident!("{}", elem);
             if n.arguments.is_empty() {
-                return parse_quote!(::std::vec::Vec::<u8>::new());
+                return parse_quote!(::std::vec::Vec::<#ty>::new());
             }
             if n.arguments.len() == 1 {
                 let arg = &n.arguments[0];
-                let elem = array_elem_arg(arg, ctx);
+                let e = array_elem_arg(arg, ctx);
                 if matches!(arg.as_expression(), Some(Expression::ArrayExpression(_))) {
-                    // `new Uint8Array([1, 2, 3])` — copy from a literal array.
+                    // `new Int32Array([1, 2, 3])` — copy from a literal array.
                     return parse_quote!(
-                        (#elem).into_iter().map(|x| x as u8).collect::<::std::vec::Vec<u8>>()
+                        (#e).into_iter().map(|x| x as #ty).collect::<::std::vec::Vec<#ty>>()
                     );
                 }
-                // `new Uint8Array(n)` — n zeroed u8 elements.
-                return parse_quote!(::std::vec![0_u8; (#elem) as usize]);
+                // `new Int32Array(n)` — n zeroed elements. The `0_<ty>` literal
+                // is parsed as a single suffixed literal (not `0_` + ident) so
+                // prettyplease prints `0_u8`/`0_f64`/…, matching the u8 path.
+                let zero: Expr =
+                    syn::parse_str(&format!("0_{elem}")).expect("typed-array zero literal");
+                return parse_quote!(::std::vec![#zero; (#e) as usize]);
             }
         }
         // `new TextEncoder()` / `new TextDecoder()` — the WHATWG Encoding API

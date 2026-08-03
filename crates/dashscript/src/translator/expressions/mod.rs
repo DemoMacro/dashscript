@@ -968,6 +968,26 @@ pub(in crate::translator) fn first_generic_is(
     )
 }
 
+/// The Rust element type of an ES TypedArray constructor name that DashScript
+/// lowers (`Int8Array` → `i8`, …, `Float64Array` → `f64`). Shared by the
+/// constructor (`new Int32Array(n)` → `vec![0_i32; n]`) and the local-type
+/// record (`let x = new Int32Array(3)` → `Vec<i32>`). `Float16Array` (no stable
+/// Rust `f16`) and the BigInt arrays (`BigInt64Array`/`BigUint64Array` —
+/// DashScript has no BigInt literal) are not mapped.
+pub(in crate::translator) fn typed_array_elem_type(name: &str) -> Option<&'static str> {
+    Some(match name {
+        "Int8Array" => "i8",
+        "Uint8Array" | "Uint8ClampedArray" => "u8",
+        "Int16Array" => "i16",
+        "Uint16Array" => "u16",
+        "Int32Array" => "i32",
+        "Uint32Array" => "u32",
+        "Float32Array" => "f32",
+        "Float64Array" => "f64",
+        _ => return None,
+    })
+}
+
 /// True when `path` names a `Vec<u8>` (the target of a `Uint8Array` byte
 /// buffer). Only the bare `Vec<u8>` form matches — a `Vec<f64>` (an ES `Array`)
 /// or any other element type does not.

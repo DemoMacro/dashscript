@@ -50,10 +50,12 @@ pub const GLOBAL_RECEIVERS: &[&str] = &[
 /// embedded engine, where the global exists natively. Disjoint from
 /// [`STATIC_ONLY_GLOBALS`] (which carry call/new/type mappings) and from the
 /// reflection globals `Symbol`/`Proxy`/`WeakRef`/`FinalizationRegistry`
-/// (handled by an earlier explicit arm). The wrapper typed arrays
-/// `Uint8Array`/`Uint8ClampedArray`/`Int8Array` are absent — `new` on them
-/// maps to `Vec<u8>` (`expressions/new`) — as is `ArrayBuffer` (a
-/// type-annotation mapping); flagging either would regress a static mapping.
+/// (handled by an earlier explicit arm). The integer/float typed arrays
+/// (`Int8Array` … `Float64Array`) and `ArrayBuffer` are absent — `new` on them
+/// maps to `Vec<elem>` (`expressions/new`, `typed_array_elem_type`) and a type
+/// annotation to `Vec<elem>` (`types`); flagging either would regress a static
+/// mapping. Only the BigInt typed arrays stay (DashScript has no BigInt
+/// literal, so their element type is unmappable).
 /// `Temporal` IS listed: its static mapping is partial, so a bare `Temporal`
 /// value reference degrades to the engine (which carries the
 /// @js-temporal/polyfill); the `Temporal.X(…)` call / `new Temporal.X(…)`
@@ -67,12 +69,15 @@ pub const ENGINE_VALUE_GLOBALS: &[&str] = &[
     "Promise",
     "Temporal",
     "DataView",
-    "Int16Array",
-    "Uint16Array",
-    "Int32Array",
-    "Uint32Array",
-    "Float32Array",
-    "Float64Array",
+    // BigInt typed arrays — DashScript has no BigInt literal, so the element
+    // type is unmappable (`typed_array_elem_type` returns `None`); any
+    // reference degrades to the engine. The integer/float typed arrays
+    // (`Int8Array` … `Float64Array`) ARE mapped — `new` → `Vec<elem>`
+    // (`expressions/new`) and a type annotation → `Vec<elem>` (`types`) — so
+    // they stay off this list, the way the `u8` trio (`Uint8Array`/…) already
+    // did. A bare value reference to one (`const a = Int32Array`) has no static
+    // value lowering, so it falls through to the generic identifier emit and is
+    // caught by the cargo-check-fail engine fallback (degrade, don't reject).
     "BigInt64Array",
     "BigUint64Array",
     "SharedArrayBuffer",
