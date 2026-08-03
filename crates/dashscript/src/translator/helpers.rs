@@ -386,12 +386,20 @@ impl DsResponse {
     pub fn ok(&self) -> bool {
         self.inner.status().is_success()
     }
-    /// The response headers. ES `response.headers`.
+    /// The response headers. ES `response.headers` — a `DsHeaders` view built
+    /// from the underlying `reqwest` header map (names lowercased, insertion
+    /// order kept so iteration matches the wire order). `DsHeaders` lives in
+    /// `HEADERS_HELPER` (a pure-`std` slice); this conversion is the one bridge
+    /// from `reqwest`'s header map to the standalone `Headers` model.
     #[inline]
     pub fn headers(&self) -> DsHeaders {
-        DsHeaders {
-            inner: self.inner.headers().clone(),
+        let mut entries = ::std::vec::Vec::new();
+        for (k, v) in self.inner.headers().iter() {
+            if let Ok(s) = v.to_str() {
+                entries.push((k.as_str().to_lowercase(), ::std::string::String::from(s)));
+            }
         }
+        DsHeaders { entries }
     }
     /// The body as UTF-8 text. ES `await response.text()` (consumes the body).
     #[inline]
@@ -411,21 +419,6 @@ impl DsResponse {
     #[inline]
     pub async fn array_buffer(self) -> ::std::vec::Vec<u8> {
         self.inner.bytes().await.unwrap_or_default().to_vec()
-    }
-}
-/// Response headers — wraps `reqwest::header::HeaderMap` (re-exported from
-/// the `http` crate). `get(name)` is case-insensitive (HTTP headers are),
-/// returning the first value or `None` (ES `null`).
-pub struct DsHeaders {
-    inner: reqwest::header::HeaderMap,
-}
-impl DsHeaders {
-    #[inline]
-    pub fn get(&self, name: &str) -> ::std::option::Option<::std::string::String> {
-        self.inner
-            .get(name)
-            .and_then(|v| v.to_str().ok())
-            .map(::std::string::String::from)
     }
 }
 /// `fetch(url)` — a GET request returning a `DsResponse`. ES `fetch` returns a
@@ -473,6 +466,121 @@ pub async fn ds_fetch_with<T: reqwest::IntoUrl>(
     }
     DsResponse {
         inner: req.send().await.expect("fetch network error"),
+    }
+}
+"#;
+
+/// WHATWG `Headers` API helper — `__ds::DsHeaders` (FETCH §5.1, a WinterTC Web
+/// API). A header is an ordered list of `(name, value)` pairs with case-
+/// insensitive name lookup (HTTP headers are) — `Vec<(String, String)>` keyed
+/// on the lowercased name, so iteration order matches insertion order (ES
+/// `for_each`/`keys`/`values`/`entries`) and a `get` of a repeated name joins
+/// the values with `", "` (ES semantics). Pure `std` — independent of
+/// `reqwest`'s header map (the one bridge is `DsResponse::headers`, which
+/// builds a `DsHeaders` from a `reqwest::HeaderMap`). Never degraded to the
+/// engine; the `Headers` runtime dep is flagged by the `__ds::DsHeaders`
+/// marker probe.
+pub(super) const HEADERS_HELPER: &str = r#"
+/// WHATWG `Headers` — an ordered, case-insensitive-by-name list of `(name,
+/// value)` pairs. Names are stored lowercased (HTTP header names are case-
+/// insensitive); values are stored as-given (a leading/trailing trim is the
+/// only normalization, matching the common WPT shape). `entries` is public so
+/// `DsResponse::headers` can build a view directly from `reqwest`'s header map.
+pub struct DsHeaders {
+    pub entries: ::std::vec::Vec<(::std::string::String, ::std::string::String)>,
+}
+impl DsHeaders {
+    /// `new Headers()` — an empty header list.
+    pub fn new() -> Self {
+        Self {
+            entries: ::std::vec::Vec::new(),
+        }
+    }
+    /// Build from initial `(name, value)` pairs (the ES `new Headers([[n, v],
+    /// …])` form, or a Record lowered to pairs by the translator). Each pair
+    /// appends with name normalization, so duplicate names accumulate (ES
+    /// `append`, not `set`).
+    pub fn from_pairs(
+        pairs: ::std::vec::Vec<(::std::string::String, ::std::string::String)>,
+    ) -> Self {
+        let mut h = Self::new();
+        for (n, v) in pairs {
+            h.append(n, v);
+        }
+        h
+    }
+    /// `headers.append(name, value)` — add a pair (name lowercased, value
+    /// trimmed). ES append accumulates; it does not replace existing same-name
+    /// entries. Owned `String` params match the translator's `es_to_string_arg`
+    /// lowering (the unified ES `ToString` coercion returns `String`).
+    pub fn append(&mut self, name: ::std::string::String, value: ::std::string::String) {
+        self.entries
+            .push((name.to_ascii_lowercase(), value.trim().to_string()));
+    }
+    /// `headers.delete(name)` — drop every pair whose name matches (case-
+    /// insensitive).
+    pub fn delete(&mut self, name: ::std::string::String) {
+        let l = name.to_ascii_lowercase();
+        self.entries.retain(|(n, _)| n != &l);
+    }
+    /// `headers.get(name)` — the matching values joined by `", "`, or `None`
+    /// (ES `null`) when no pair has the name. Case-insensitive lookup.
+    pub fn get(
+        &self,
+        name: ::std::string::String,
+    ) -> ::std::option::Option<::std::string::String> {
+        let l = name.to_ascii_lowercase();
+        let vs: ::std::vec::Vec<&str> = self
+            .entries
+            .iter()
+            .filter(|(n, _)| n == &l)
+            .map(|(_, v)| v.as_str())
+            .collect();
+        if vs.is_empty() {
+            ::std::option::Option::None
+        } else {
+            ::std::option::Option::Some(vs.join(", "))
+        }
+    }
+    /// `headers.set(name, value)` — replace every same-name pair with one
+    /// `(name, value)` (ES set). Inlined (rather than `delete` + `append`) so
+    /// the owned `name`/`value` are each consumed once.
+    pub fn set(&mut self, name: ::std::string::String, value: ::std::string::String) {
+        let l = name.to_ascii_lowercase();
+        self.entries.retain(|(n, _)| n != &l);
+        self.entries.push((l, value.trim().to_string()));
+    }
+    /// `headers.has(name)` — true iff any pair's name matches (case-
+    /// insensitive).
+    pub fn has(&self, name: ::std::string::String) -> bool {
+        let l = name.to_ascii_lowercase();
+        self.entries.iter().any(|(n, _)| n == &l)
+    }
+    /// `headers.forEach(callback)` — invoke `callback(value, name)` per pair in
+    /// insertion order (ES `forEach` passes value first, then name).
+    pub fn for_each<F: ::std::ops::FnMut(&str, &str)>(&self, mut f: F) {
+        for (n, v) in &self.entries {
+            f(v.as_str(), n.as_str());
+        }
+    }
+    /// `headers.keys()` as a `Vec<String>` (insertion order). The translator
+    /// lowers `headers.keys()` iteration to this; an ES iterator wrapper would
+    /// need a closure state machine the static path avoids.
+    pub fn keys_vec(&self) -> ::std::vec::Vec<::std::string::String> {
+        self.entries.iter().map(|(n, _)| n.clone()).collect()
+    }
+    /// `headers.values()` as a `Vec<String>` (insertion order).
+    pub fn values_vec(&self) -> ::std::vec::Vec<::std::string::String> {
+        self.entries.iter().map(|(_, v)| v.clone()).collect()
+    }
+    /// `headers.entries()` as a `Vec<(String, String)>` (insertion order).
+    pub fn entries_vec(&self) -> ::std::vec::Vec<(::std::string::String, ::std::string::String)> {
+        self.entries.clone()
+    }
+}
+impl ::std::default::Default for DsHeaders {
+    fn default() -> Self {
+        Self::new()
     }
 }
 "#;

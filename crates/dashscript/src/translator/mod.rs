@@ -228,12 +228,17 @@ pub enum RuntimeDep {
     /// degraded; marker `__ds::DsEvent` (common prefix of `DsEventTarget`/
     /// `DsEvent`/`DsEventInit`, so any one pulls the slice).
     EventTarget,
+    /// WHATWG `Headers` (FETCH §5.1, a WinterTC Web API) — an ordered, case-
+    /// insensitive-by-name `(name, value)` list (`DsHeaders`). Pure `std`;
+    /// never degraded; marker `__ds::DsHeaders`. Also pulled by `Fetch`
+    /// (`DsResponse::headers` returns a `DsHeaders`).
+    Headers,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 26] = [
+    const ALL: [RuntimeDep; 27] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -260,6 +265,7 @@ impl RuntimeDep {
         RuntimeDep::Promise,
         RuntimeDep::Fetch,
         RuntimeDep::EventTarget,
+        RuntimeDep::Headers,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -322,6 +328,11 @@ impl RuntimeDep {
             // init literal) pulls EVENT_TARGET_HELPER (all three structs live in
             // the same slice).
             RuntimeDep::EventTarget => Some("__ds::DsEvent"),
+            // `__ds::DsHeaders` — the WHATWG `Headers` model (FETCH §5.1).
+            // Also pulled in by `Fetch` (`DsResponse::headers` returns a
+            // `DsHeaders`), but a `new Headers()` constructor emits this marker
+            // directly, so a Headers-only fixture injects the slice.
+            RuntimeDep::Headers => Some("__ds::DsHeaders"),
             RuntimeDep::Engine => None,
         }
     }
@@ -439,6 +450,10 @@ impl RuntimeDep {
             // EventTarget/Event is pure `std` (`Arc<Mutex<Vec<…>>>` pub/sub +
             // `Cell` interior mutability) — no cargo dep.
             RuntimeDep::EventTarget => None,
+            // Pure `std` (`Vec<(String, String)>`); no crate. A `reqwest`
+            // header map is the input only when `DsResponse::headers` builds a
+            // view, and `reqwest` is then flagged by `Fetch`, not `Headers`.
+            RuntimeDep::Headers => None,
         }
     }
 
@@ -474,6 +489,7 @@ impl RuntimeDep {
             RuntimeDep::Promise => Some(DS_PROMISE_HELPER),
             RuntimeDep::Fetch => Some(DS_FETCH_HELPER),
             RuntimeDep::EventTarget => Some(EVENT_TARGET_HELPER),
+            RuntimeDep::Headers => Some(HEADERS_HELPER),
         }
     }
 }
@@ -598,6 +614,16 @@ impl RuntimeDeps {
         // fixture (no serde_json dep) never references `serde_json::Value`.
         if self.has(RuntimeDep::Assert) && self.has(RuntimeDep::SerdeJson) {
             src.push_str(ASSERT_VALUE_HELPER);
+            any = true;
+        }
+        // `DsResponse::headers` returns a `DsHeaders` (defined in
+        // `HEADERS_HELPER`), so a fetch-using fixture needs the Headers slice
+        // even when it does not itself lower a `new Headers()` — otherwise the
+        // `DsHeaders` return type is undefined (E0433). A `Headers`-only
+        // fixture already emits `HEADERS_HELPER` via its own marker; this only
+        // fills the gap when `Fetch` is present without `Headers`.
+        if self.has(RuntimeDep::Fetch) && !self.has(RuntimeDep::Headers) {
+            src.push_str(HEADERS_HELPER);
             any = true;
         }
         any.then_some(src)

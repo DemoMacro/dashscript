@@ -16,6 +16,7 @@ mod console;
 mod crypto;
 mod encoding;
 mod eventtarget;
+mod headers;
 mod hr_time;
 mod url;
 mod urlpattern;
@@ -28,6 +29,7 @@ pub(in crate::translator) use encoding::{
 pub(in crate::translator) use eventtarget::{
     event_init, event_target_ctor_type, event_target_method,
 };
+pub(in crate::translator) use headers::{headers_ctor, headers_ctor_type, headers_method};
 pub(in crate::translator) use hr_time::perf_method;
 pub(in crate::translator) use url::{
     url_ctor_type, url_search_params_method, url_search_params_on_url_method, url_static_method,

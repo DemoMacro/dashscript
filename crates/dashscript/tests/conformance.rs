@@ -385,6 +385,51 @@ fn wpt_eventtarget_compiles_and_runs() {
     );
 }
 
+/// `new Headers()` / `.append` / `.set` / `.get` / `.has` / `.delete` + a
+/// Record init end-to-end on the static path — the WinterTC WHATWG FETCH
+/// `Headers` API core. Covers the semantics a naive `HashMap<String, String>`
+/// gets wrong: names are case-insensitive (`append("Content-Type", …)` then
+/// `append("content-type", …)` combine, read back via either casing), `append`
+/// joins duplicate-name values with `", "` (ES `get` order), `set` overwrites,
+/// and a Record `{ "X-Test": "v" }` init lowercases the key. Inline fixture
+/// (not from `data/wpt/`) so it cannot be regressed by re-extraction.
+#[test]
+fn wpt_headers_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.headers_smoke".into(),
+        category: "smoke".into(),
+        fixture: "test(() => {\n\
+                  \x20 const h = new Headers();\n\
+                  \x20 h.append(\"Content-Type\", \"text/plain\");\n\
+                  \x20 h.append(\"content-type\", \"application/json\");\n\
+                  \x20 assert_equals(h.get(\"Content-Type\"), \"text/plain, application/json\");\n\
+                  \x20 h.set(\"CONTENT-TYPE\", \"text/html\");\n\
+                  \x20 assert_equals(h.get(\"content-type\"), \"text/html\");\n\
+                  \x20 assert_true(h.has(\"Content-Type\"));\n\
+                  \x20 h.delete(\"content-type\");\n\
+                  \x20 assert_false(h.has(\"Content-Type\"));\n\
+                  \x20 const h2 = new Headers({ \"X-Test\": \"value\" });\n\
+                  \x20 assert_equals(h2.get(\"x-test\"), \"value\");\n\
+                  }, \"headers-core\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "Headers smoke should be supported: {detail}"
+    );
+}
+
 /// `promise_test(async () => { … }, "n")` end-to-end: the async callback lowers
 /// to `wpt_promise_test("n", async move { … }).await` under `#[tokio::main]`,
 /// so this verifies the full Stage 2 chain — translate → cargo build (pulls

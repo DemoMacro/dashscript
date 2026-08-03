@@ -1097,7 +1097,8 @@ fn register_declarator(
             .or_else(|| url_search_params_path(n))
             .or_else(|| url_path(n))
             .or_else(|| encoding_ctor_path(n))
-            .or_else(|| event_target_path(n)),
+            .or_else(|| event_target_path(n))
+            .or_else(|| headers_path(n)),
         Some(other) => vec_index_elem_path(other, locals),
         None => return,
     };
@@ -1256,6 +1257,21 @@ fn event_target_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     match id.name.as_str() {
         "EventTarget" => Some(parse_quote!(crate::__ds::DsEventTarget)),
         "Event" => Some(parse_quote!(crate::__ds::DsEvent)),
+        _ => None,
+    }
+}
+
+/// `new Headers(init?)` → `crate::__ds::DsHeaders`, so an unannotated
+/// `let h = new Headers(…)` records the type and a later `h.get`/`h.set`/…
+/// dispatches through `headers_method` (the receiver resolves to `DsHeaders`).
+/// Any other `new` yields `None`.
+fn headers_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    match id.name.as_str() {
+        "Headers" => Some(parse_quote!(crate::__ds::DsHeaders)),
         _ => None,
     }
 }

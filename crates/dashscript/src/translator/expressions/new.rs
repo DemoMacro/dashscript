@@ -142,6 +142,17 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                 _ => unreachable!(),
             };
         }
+        // `new Headers(init?)` — the WHATWG FETCH `Headers` API (a WinterTC Web
+        // API). `init` may be absent, a Record `{ name: value, … }`, or a
+        // `[[name, value], …]` sequence; each name/value is ToString-coerced.
+        // Intercepted before the generic `Foo::new` path (which would emit
+        // `Headers::new` — E0433). The `Headers` runtime dep is flagged by the
+        // `__ds::DsHeaders` marker probe; a non-record/non-sequence init panics
+        // the `TypeError` ES throws. Instance methods (`.get`/`.set`/…) dispatch
+        // in the call path.
+        if builtins::headers_ctor_type(id.name.as_str()).is_some() {
+            return builtins::headers_ctor(n.arguments.as_slice(), ctx);
+        }
         // `new DOMException(message[, name])` — the WinterTC/HTML `DOMException`
         // (a Web API, never the engine). Unlike `new Error(msg)` — where `name`
         // derives from the constructor — a `DOMException`'s `name` is the SECOND

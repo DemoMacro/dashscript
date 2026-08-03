@@ -573,6 +573,15 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::event_target_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `h.get(name)` / `h.has(name)` / `h.set(name, value)` / `h.append(…)` /
+        // `h.delete(name)` / `h.forEach(cb)` / `h.keys()` / `h.values()` /
+        // `h.entries()` on a `DsHeaders` local (`new Headers(…)` binding) — the
+        // WinterTC WHATWG FETCH `Headers` API. Dispatched after the local-typed
+        // method tables (a `DsHeaders` receiver never matches `Vec`/`HashMap`/…);
+        // each name/value arg is ToString-coerced; iteration returns a `Vec`.
+        if let Some(expr) = builtins::headers_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         // `d.toString()` / `d.toJSON()` / `d.equals(o)` on a `Temporal.<Type>`
         // local (`temporal_rs::<Type>`). Dispatched on the receiver's resolved
         // type; a non-Temporal receiver or unmapped name falls through.

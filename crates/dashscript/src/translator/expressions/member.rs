@@ -844,6 +844,19 @@ pub(in crate::translator) fn is_event_local(expr: &Expression, ctx: &Ctx<'_>) ->
         .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsEvent"))
 }
 
+/// True when `expr` is a local whose type is `crate::__ds::DsHeaders` (a
+/// `new Headers(…)` binding, or `response.headers()`), so `headers.append`/
+/// `get`/`set`/`delete`/`has`/`forEach`/`keys`/`values`/`entries` lower to the
+/// wrapper's inherent methods.
+pub(in crate::translator) fn is_headers_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsHeaders"))
+}
+
 /// The `__ds::DsUrl` accessor method name for an ES `URL` component property,
 /// or `None` for any other name (the access falls through to a struct field).
 /// Each ES property maps to a same-named zero-arg Rust method (`url.href` →
