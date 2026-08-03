@@ -364,6 +364,44 @@ fn nested_fn_not_capturing_stays_fn_item() {
 }
 
 #[test]
+fn nested_fn_capturing_outer_local_by_write_only_lowers_to_closure() {
+    // A nested `function` that only *writes* an outer local (`x = 5`, no read)
+    // is still a capture a Rust fn item cannot express (E0434 — a fn item can
+    // close over neither a read nor a write). So it lowers to a closure; the
+    // write makes it FnMut, so the binding is `let mut`. The WPT
+    // `addEventListener` handler pattern (`function handler() { invoked = true; }`
+    // inside a `test(function () { var invoked = …; })` callback) hits this.
+    let src = "function main(): void {\n  let x: number = 0;\n  function setter(): void { x = 5; }\n  setter();\n  console.log(x);\n}";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("let mut setter = |"),
+        "pure-write capturing nested fn -> let mut closure: {rust}"
+    );
+    assert!(
+        !rust.contains("fn setter("),
+        "pure-write capturing nested fn must not be a fn item (E0434): {rust}"
+    );
+}
+
+#[test]
+fn nested_fn_inside_function_expression_callback_closes_over_outer() {
+    // A nested `function` *inside a function-expression callback* (`test(function
+    // () { var x; function h() { x++; … } })` — the WPT `addEventListener`/
+    // `test()` pattern) closes over the callback's locals, so it must lower to
+    // a closure too (one more scope level than the direct-nested case).
+    let src = "function main(): void {\n  const cb = function () {\n    var count: number = 0;\n    function handler(): void { count++; console.log(count); }\n    handler();\n  };\n  cb();\n}";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("fn handler("),
+        "handler inside callback closure must close over count, not be a fn item (E0434): {rust}"
+    );
+    assert!(
+        rust.contains("let mut handler = |") || rust.contains("let handler = |"),
+        "handler inside callback -> closure: {rust}"
+    );
+}
+
+#[test]
 fn check_passes_nested_fn_declaration() {
     // A nested fn declaration is no longer flagged `unsupported` — it lowers
     // to a Rust nested fn item. (A construct inside its body that cannot

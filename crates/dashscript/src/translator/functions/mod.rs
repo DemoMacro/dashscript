@@ -667,8 +667,17 @@ fn nested_fn_should_be_closure(
         &registry.ref_params,
     );
     // Captures an outer local: a referenced name that resolves in the
-    // enclosing function's locals (not the nested fn's own params/locals).
-    let captures_outer = analysis.use_counts.keys().any(|k| outer.get(k).is_some());
+    // enclosing function's locals (not the nested fn's own params/locals). A
+    // Rust fn item can close over neither a read nor a write, so `use_counts`
+    // (reads) and `mutated`/`member_mutated` (writes) are all checked — a
+    // pure-write capture like `function h() { x = 1; }` (the WPT
+    // `addEventListener` handler pattern) is E0434 too.
+    let captures_outer = analysis
+        .use_counts
+        .keys()
+        .chain(analysis.mutated.iter())
+        .chain(analysis.member_mutated.iter())
+        .any(|k| outer.get(k).is_some());
     if !captures_outer {
         return false;
     }
