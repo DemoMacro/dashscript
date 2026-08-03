@@ -47,6 +47,12 @@ pub(in crate::translator) fn text_decoder_method(
         return None;
     }
     let recv = translate_expr(&sm.object, ctx);
-    let bytes = translate_argument(args.first()?, ctx);
+    // `decoder.decode()` with no args is the ES "flush the stream" call —
+    // equivalent to `decoder.decode(new Uint8Array())`. The streaming instance
+    // buffer is not modeled, so this decodes an empty buffer.
+    let bytes = match args.first() {
+        Some(arg) => translate_argument(arg, ctx),
+        None => parse_quote!(::std::vec::Vec::<u8>::new()),
+    };
     Some(parse_quote!(#recv.decode(#bytes)))
 }

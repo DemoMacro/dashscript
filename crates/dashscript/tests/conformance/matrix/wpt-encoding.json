@@ -204,7 +204,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:166:50: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:187:50: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:228:50: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:239:50: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:250:50: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:281:50: error[E0061]: this method takes 1 argument but 0 arguments were supplied",
+    "detail": "\nthread 'main' (46160) panicked at src\\__ds.rs:314:9:\nAssertionError: Expected SameValue(«\"�\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
