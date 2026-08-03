@@ -199,6 +199,46 @@ fn promise_test_named_callback_lowers() {
 }
 
 #[test]
+fn promise_test_non_async_function_callback_lowers() {
+    // `promise_test(function () { return promise }, name)` — a NON-async
+    // callback returning a promise (a common WPT idiom: WPT awaits the
+    // returned promise). The callback lowers to a closure, called `()` to
+    // yield its return value, and `.await`ed inside `async move { … }` so the
+    // result is `Output = ()` (matching `wpt_promise_test`). Covers the 167
+    // fetch/webcryptoapi/fileapi fixtures that use this shape.
+    let src = "promise_test(function() { return Promise.resolve(1); }, \"nonasync\");";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("wpt_promise_test"),
+        "non-async callback should lower to wpt_promise_test: {rust}"
+    );
+    assert!(
+        rust.contains("async move") && rust.contains(".await"),
+        "non-async callback should wrap in async move {{ f().await }}: {rust}"
+    );
+    assert!(
+        rust.contains("ds_promise_resolve"),
+        "callback body (Promise.resolve) lowers: {rust}"
+    );
+    assert!(
+        rust.contains("async fn main"),
+        "main should be async: {rust}"
+    );
+}
+
+#[test]
+fn check_passes_promise_test_non_async_function_callback() {
+    // A non-async function callback is Mapped (the emit wraps it) — check
+    // produces no diagnostics.
+    let src = "promise_test(function() { return Promise.resolve(1); }, \"n\");";
+    let diags = Translator::new().check(src);
+    assert!(
+        diags.is_empty(),
+        "non-async promise_test flagged: {diags:?}"
+    );
+}
+
+#[test]
 fn check_passes_promise_test_named_callback() {
     // A named async-function reference is Mapped (slice 2c) — check produces
     // no diagnostics.

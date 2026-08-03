@@ -281,11 +281,11 @@ pub(super) const DS_PROMISE_HELPER: &str = r#"
 /// A JS `Promise<T>` — a boxed, single-threaded `Future<Output = T>`. Boxing
 /// unifies the distinct anonymous types of `ready`/`join_all`/`async {}` so a
 /// Promise value has one Rust type at every site.
-type DsPromise<T> = ::std::pin::Pin<::std::boxed::Box<dyn ::std::future::Future<Output = T>>>;
+pub type DsPromise<T> = ::std::pin::Pin<::std::boxed::Box<dyn ::std::future::Future<Output = T>>>;
 
 /// `Promise.resolve(x)` — a Promise fulfilled with `x`. `futures::future::ready`
 /// wraps the value; boxing unifies the type.
-fn ds_promise_resolve<T: 'static>(x: T) -> DsPromise<T> {
+pub fn ds_promise_resolve<T: 'static>(x: T) -> DsPromise<T> {
     ::std::boxed::Box::pin(::futures::future::ready(x))
 }
 
@@ -293,7 +293,7 @@ fn ds_promise_resolve<T: 'static>(x: T) -> DsPromise<T> {
 /// `join_all` awaits every input (no reject short-circuit yet); an empty input
 /// fulfills with `[]`. Each input must already be a `DsPromise<T>` (the call
 /// emit wraps a non-Promise element via `ds_promise_resolve`).
-fn ds_promise_all<T: 'static>(
+pub fn ds_promise_all<T: 'static>(
     futs: ::std::vec::Vec<DsPromise<T>>,
 ) -> DsPromise<::std::vec::Vec<T>> {
     ::std::boxed::Box::pin(::futures::future::join_all(futs))

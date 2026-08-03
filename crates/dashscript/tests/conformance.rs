@@ -397,6 +397,38 @@ fn wpt_promise_test_named_callback_compiles_and_runs() {
     );
 }
 
+/// `promise_test(function () { return promise }, name)` — the NON-async
+/// callback that *returns* a promise (a common WPT idiom: WPT awaits the
+/// returned promise) — end-to-end on the static path, sibling to the async
+/// smokes above. The callback lowers to a closure, called `()` to yield its
+/// `DsPromise<T>`, `.await`ed inside `async move { … }` so the result is
+/// `Output = ()` (matching `wpt_promise_test`). Covers the 167
+/// fetch/webcryptoapi/fileapi fixtures that use this shape; a failure here
+/// means the non-async lowering regressed.
+#[test]
+fn wpt_promise_test_non_async_function_callback_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.promise_nonasync_smoke".into(),
+        category: "smoke".into(),
+        fixture: "promise_test(function() { return Promise.resolve(1); }, \"nonasync\");\n".into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "promise_test non-async-callback smoke should be supported: {detail}"
+    );
+}
+
 /// Once-per-run check that the engine compat path assembles into a building
 /// cargo project: a reflection `.ts` source → `translate_with_deps` (flips
 /// `needs_engine`) → `write_project` (injects `__ds_engine` + the `rquickjs`

@@ -194,6 +194,21 @@ fn promise_test_callback(args: &[Argument], ctx: &Ctx<'_>) -> Option<(syn::LitSt
             let callee = translate_argument(args.first()?, ctx);
             parse_quote!((#callee)())
         }
+        // `promise_test(function () { return promise }, name)` — a NON-async
+        // callback that returns a promise (a common WPT idiom: WPT awaits the
+        // returned promise). Lower it to a closure, call it, and `.await` the
+        // returned promise, wrapped in `async move { … }` so the result is
+        // `Output = ()` (matching `wpt_promise_test`). A callback whose body
+        // does not return a future surfaces honestly as a compile error on
+        // `.await` (the static path's partial).
+        Expression::FunctionExpression(f) => {
+            let cl = super::super::super::expressions::function_expr_to_closure(f, ctx);
+            parse_quote!(async move { (#cl)().await; })
+        }
+        Expression::ArrowFunctionExpression(arrow) => {
+            let cl = super::super::super::expressions::arrow_expr(arrow, ctx, false);
+            parse_quote!(async move { (#cl)().await; })
+        }
         _ => return None,
     };
     Some((name, fut))
