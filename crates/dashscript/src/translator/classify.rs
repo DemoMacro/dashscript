@@ -869,29 +869,58 @@ fn degrade_owned(msg: String) -> Mapping {
 fn raw_has_lone_surrogate(raw: Option<&str>) -> bool {
     let Some(raw) = raw else { return true };
     let b = raw.as_bytes();
+    // Collect (start, end, code_point) for every `\u…` escape, in source order.
+    let mut esc: Vec<(usize, usize, u32)> = Vec::new();
     let mut i = 0;
     while i + 2 < b.len() {
         if b[i] == b'\\' && b[i + 1] == b'u' {
-            let (start, end) = if b[i + 2] == b'{' {
+            // (hex_slice_start, hex_slice_end, escape_end_after) — `after` is
+            // the index past the whole escape, so adjacency (a high surrogate
+            // immediately followed by a low one, nothing between) compares
+            // `esc[idx].1 == esc[idx+1].0`.
+            let (hs, he, after) = if b[i + 2] == b'{' {
                 match raw[i + 3..].find('}') {
-                    Some(c) => (i + 3, i + 3 + c),
+                    Some(c) => (i + 3, i + 3 + c, i + 3 + c + 1),
                     None => break,
                 }
             } else if i + 5 < b.len() && b[i + 2..i + 6].iter().all(|c| c.is_ascii_hexdigit()) {
-                (i + 2, i + 6)
+                (i + 2, i + 6, i + 6)
             } else {
                 i += 1;
                 continue;
             };
-            if let Ok(cp) = u32::from_str_radix(&raw[start..end], 16) {
-                if (0xD800..=0xDFFF).contains(&cp) {
-                    return true;
-                }
+            if let Ok(cp) = u32::from_str_radix(&raw[hs..he], 16) {
+                esc.push((i, after, cp));
             }
-            i = end;
+            i = after;
         } else {
             i += 1;
         }
+    }
+    // A high surrogate (0xD800–0xDBFF) immediately followed — adjacent in the
+    // source, nothing between the two escapes — by a low surrogate
+    // (0xDC00–0xDFFF) is a valid UTF-16 pair (e.g. `😀` = 😀) that decodes to
+    // a scalar value Rust `&str` can hold, so it is NOT lone. Any other
+    // surrogate is a lone surrogate (Rust `&str` cannot represent it); oxc
+    // decodes a lone surrogate in `value` to U+FFFD, which is why the raw
+    // source — not the decoded value — is the only place the two can be told
+    // apart (see the `StringLiteral` arm above).
+    let mut idx = 0;
+    while idx < esc.len() {
+        let &(_s, end, cp) = &esc[idx];
+        if (0xD800..=0xDBFF).contains(&cp) {
+            if idx + 1 < esc.len() {
+                let &(ns, _ne, ncp) = &esc[idx + 1];
+                if ns == end && (0xDC00..=0xDFFF).contains(&ncp) {
+                    idx += 2; // valid pair — skip both
+                    continue;
+                }
+            }
+            return true; // lone high surrogate
+        } else if (0xDC00..=0xDFFF).contains(&cp) {
+            return true; // lone low surrogate (a paired low is consumed above)
+        }
+        idx += 1;
     }
     false
 }
@@ -906,6 +935,28 @@ mod tests {
 
     fn classify_first_expr_in_loop(src: &str) -> Mapping {
         classify_first_expr_ctx(src, true, &HashMap::new())
+    }
+
+    #[test]
+    fn raw_surrogate_pair_vs_lone() {
+        // Valid UTF-16 pairs (emoji etc.) decode to a scalar Rust `&str` can
+        // hold — NOT lone, regardless of escape form.
+        assert!(!raw_has_lone_surrogate(Some(r#"😀"#))); // 😀
+        assert!(!raw_has_lone_surrogate(Some(r#"\u{D83D}\u{DE00}"#)));
+        assert!(!raw_has_lone_surrogate(Some(r#"😀!"#))); // pair + ascii
+                                                          // Lone surrogates — Rust `&str` cannot represent them.
+        assert!(raw_has_lone_surrogate(Some(r#"\uD800"#))); // lone high
+        assert!(raw_has_lone_surrogate(Some(r#"\uDE00"#))); // lone low
+        assert!(raw_has_lone_surrogate(Some(r#"\u{D800}"#))); // braced lone high
+        assert!(raw_has_lone_surrogate(Some(r#"\uD83Dx\uDE00"#))); // split (not adjacent)
+        assert!(raw_has_lone_surrogate(Some(r#"\uD800\uD900"#))); // two highs
+                                                                  // A genuine U+FFFD escape is NOT a surrogate.
+        assert!(!raw_has_lone_surrogate(Some(r#"�"#)));
+        assert!(!raw_has_lone_surrogate(Some(r#"\u{FFFD}"#)));
+        // No raw ⇒ cannot prove either way, treat as needing the engine.
+        assert!(raw_has_lone_surrogate(None));
+        // Plain ascii, nothing to flag.
+        assert!(!raw_has_lone_surrogate(Some(r#"hello"#)));
     }
 
     fn classify_first_expr_ctx(
