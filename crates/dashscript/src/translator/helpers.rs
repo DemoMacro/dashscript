@@ -1059,6 +1059,35 @@ pub fn wpt_assert_throws<R>(expected: &str, f: impl FnOnce() -> R) {
 pub fn wpt_assert_unreached() {
     panic!("AssertionError: unreachable");
 }
+
+/// WPT `assert_array_equals(actual, expected[, msg])` — panics an
+/// `AssertionError` if the arrays differ in length or any element pair is not
+/// SameValue. Operands coerce from `&Vec<T>`/`&[T]` (`Vec: Deref<Target =
+/// [T]>`); element comparison goes through `DsSameValue` (SameValue, not
+/// `==`), mirroring test262's `compareArray` semantics WPT matches. Different
+/// element types across the two operands fail inference (E0308) — the static
+/// path's honest partial.
+#[inline]
+pub fn wpt_assert_array_equals<T: DsSameValue, U: DsSameValue>(
+    actual: &[T],
+    expected: &[U],
+) {
+    if actual.len() != expected.len() {
+        panic!(
+            "AssertionError: array length {} !== {}",
+            actual.len(),
+            expected.len()
+        );
+    }
+    for (i, (a, b)) in actual.iter().zip(expected.iter()).enumerate() {
+        if !a.ds_cmp().same(&b.ds_cmp()) {
+            panic!(
+                "AssertionError: array[{}] Expected SameValue(«{:?}», «{:?}») to be true",
+                i, a, b
+            );
+        }
+    }
+}
 "#;
 
 /// The `serde_json::Value` `DsSameValue` impl — emitted only when both `Assert`

@@ -50,6 +50,16 @@ pub(in crate::translator) fn testharness_function(
             let b = super::assert_operand(args.get(1)?, ctx);
             parse_quote!(crate::__ds::wpt_assert_not_equals(&(#a), &(#b)))
         }
+        // `assert_array_equals(actual, expected[, msg])` — length + per-element
+        // SameValue. The operands deref from `&Vec<T>`/`&[T]`; the optional `msg`
+        // (arg 2) is dropped. Different element types across actual/expected
+        // fail inference (E0308) — an honest partial the static path leaves to
+        // the fixture's other asserts.
+        "assert_array_equals" => {
+            let a = super::assert_operand(args.first()?, ctx);
+            let b = super::assert_operand(args.get(1)?, ctx);
+            parse_quote!(crate::__ds::wpt_assert_array_equals(&(#a), &(#b)))
+        }
         // `assert_true(x)` / `assert_false(x)` — WPT requires `actual === true`
         // (resp. `=== false`) strictly, which is SameValue against the boolean.
         // Routing through `wpt_assert_equals` accepts any `DsSameValue` operand

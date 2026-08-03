@@ -244,6 +244,7 @@ pub const TESTHARNESS_MAPPED_GLOBALS: &[&str] = &[
     "done",
     "assert_equals",
     "assert_not_equals",
+    "assert_array_equals",
     "assert_true",
     "assert_false",
     "assert_throws_dom",
@@ -260,9 +261,9 @@ pub fn is_testharness_mapped(name: &str) -> bool {
 
 /// WPT testharness functions with NO static lowering — the async forms
 /// (`async_test`/`promise_test`, which need a runtime/tokio the static path
-/// does not ship) and the composite asserts (`assert_array_equals`/
-/// `assert_object_equals`/`assert_approx_equals`/…, whose operands are not
-/// plain `DsSameValue` scalars). Unlike test262's degrade-don't-reject, WinterTC
+/// does not ship) and the composite asserts (`assert_object_equals`/
+/// `assert_approx_equals`/…, whose operands are not plain `DsSameValue`
+/// scalars or arrays of them). Unlike test262's degrade-don't-reject, WinterTC
 /// is static-only — a fixture using one of these is honestly `unsupported`, not
 /// engine-degraded. Growing [`TESTHARNESS_MAPPED_GLOBALS`] (add a `__ds::wpt_*`
 /// helper + a `testharness_function` arm, then move the name here→there) is how
@@ -270,7 +271,6 @@ pub fn is_testharness_mapped(name: &str) -> bool {
 pub const TESTHARNESS_REJECTED_GLOBALS: &[&str] = &[
     "async_test",
     "promise_test",
-    "assert_array_equals",
     "assert_object_equals",
     "assert_approx_equals",
     "assert_less",

@@ -74,3 +74,25 @@ fn check_rejects_async_test() {
         "async_test should be flagged unsupported: {diags:?}"
     );
 }
+
+#[test]
+fn assert_array_equals_lowers_to_wpt_helper() {
+    // `assert_array_equals(actual, expected)` → `wpt_assert_array_equals(&a,
+    // &b)` — length + per-element SameValue. The operands deref from
+    // `&Vec<T>` (`a: number[]` → `Vec<f64>`).
+    let src = "function f(a: number[], b: number[]): void { assert_array_equals(a, b); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("wpt_assert_array_equals"),
+        "assert_array_equals should lower to wpt_assert_array_equals: {rust}"
+    );
+}
+
+#[test]
+fn check_passes_assert_array_equals() {
+    // `assert_array_equals` is now Mapped (moved from the composite-rejected
+    // set) — check produces no diagnostics.
+    let diags = Translator::new()
+        .check("function f(a: number[], b: number[]): void { assert_array_equals(a, b); }");
+    assert!(diags.is_empty(), "assert_array_equals flagged: {diags:?}");
+}
