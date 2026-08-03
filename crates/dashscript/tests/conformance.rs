@@ -343,6 +343,48 @@ fn wpt_testharness_compiles_and_runs() {
     );
 }
 
+/// `new EventTarget()` / `new Event(type, init)` / `addEventListener`/
+/// `removeEventListener`/`dispatchEvent`/`preventDefault` end-to-end on the
+/// static path — the WinterTC DOM Events API core loop. A named-function
+/// listener (`function listener(evt) { evt.preventDefault(); }`) whose `evt`
+/// parameter is inferred as `&DsEvent` (the per-body scan in `analysis.rs`),
+/// wrapped in a discard-return adapter so it satisfies `Box<dyn FnMut(&DsEvent)>`;
+/// `dispatchEvent` returns `false` after `preventDefault` on a cancelable event,
+/// `true` once the listener is removed. Inline fixture (not from `data/wpt/`)
+/// so it cannot be regressed by re-extraction.
+#[test]
+fn wpt_eventtarget_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.eventtarget_smoke".into(),
+        category: "smoke".into(),
+        fixture: "function listener(evt) { evt.preventDefault(); }\n\
+                  test(() => {\n\
+                  \x20 const et = new EventTarget();\n\
+                  \x20 et.addEventListener(\"x\", listener, false);\n\
+                  \x20 const event = new Event(\"x\", { cancelable: true });\n\
+                  \x20 assert_false(et.dispatchEvent(event));\n\
+                  \x20 et.removeEventListener(\"x\", listener);\n\
+                  \x20 assert_true(et.dispatchEvent(new Event(\"x\", { cancelable: true })));\n\
+                  }, \"add-remove-listener\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "EventTarget smoke should be supported: {detail}"
+    );
+}
+
 /// `promise_test(async () => { … }, "n")` end-to-end: the async callback lowers
 /// to `wpt_promise_test("n", async move { … }).await` under `#[tokio::main]`,
 /// so this verifies the full Stage 2 chain — translate → cargo build (pulls

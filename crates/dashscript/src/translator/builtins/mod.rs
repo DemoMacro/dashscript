@@ -65,9 +65,10 @@ pub(in crate::translator) use typed_array::typed_array_method;
 
 pub(in crate::translator) use harness::{assert_call, assert_method, testharness_function};
 pub(in crate::translator) use web::{
-    console_method, crypto_method, encoding_ctor_type, perf_method, text_decoder_method,
-    text_encoder_method, url_ctor_type, url_search_params_method, url_search_params_on_url_method,
-    url_static_method, urlpattern_ctor_type,
+    console_method, crypto_method, encoding_ctor_type, event_init, event_target_ctor_type,
+    event_target_method, perf_method, text_decoder_method, text_encoder_method, url_ctor_type,
+    url_search_params_method, url_search_params_on_url_method, url_static_method,
+    urlpattern_ctor_type,
 };
 
 use oxc_ast::ast::{Argument, Expression};

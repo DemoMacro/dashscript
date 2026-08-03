@@ -563,6 +563,16 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::text_encoder_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `et.addEventListener(type, cb[, useCapture|options])` /
+        // `removeEventListener(type, cb[, options])` / `dispatchEvent(event)` on
+        // a `DsEventTarget` local (`new EventTarget()` binding) — the WinterTC
+        // WHATWG DOM Events API. Dispatched after the local-typed method tables
+        // (a `DsEventTarget` receiver never matches `Vec`/`HashMap`/…); the
+        // listener callback is wrapped in a discard-return adapter so any
+        // callback shape type-checks against `Box<dyn FnMut(&DsEvent)>`.
+        if let Some(expr) = builtins::event_target_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         // `d.toString()` / `d.toJSON()` / `d.equals(o)` on a `Temporal.<Type>`
         // local (`temporal_rs::<Type>`). Dispatched on the receiver's resolved
         // type; a non-Temporal receiver or unmapped name falls through.

@@ -219,12 +219,21 @@ pub enum RuntimeDep {
     /// core deno_fetch uses; never degraded to the engine. Flags `reqwest`;
     /// marker `__ds::ds_fetch`.
     Fetch,
+    /// WHATWG `EventTarget`/`Event` — the WinterTC (Ecma TC55) DOM Events API
+    /// (`new EventTarget()`, `new Event(type, init)`, `addEventListener`/
+    /// `removeEventListener`/`dispatchEvent`, `preventDefault`). A pub/sub backed
+    /// by `Arc<Mutex<Vec<Box<dyn FnMut(&DsEvent)>>>>` (ES EventTargets are shared,
+    /// mutable, single-threaded); `event.type`/`.bubbles`/`.cancelable`/
+    /// `.defaultPrevented` map to `DsEvent` accessors. Pure `std` — never
+    /// degraded; marker `__ds::DsEvent` (common prefix of `DsEventTarget`/
+    /// `DsEvent`/`DsEventInit`, so any one pulls the slice).
+    EventTarget,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 25] = [
+    const ALL: [RuntimeDep; 26] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -250,6 +259,7 @@ impl RuntimeDep {
         RuntimeDep::Tokio,
         RuntimeDep::Promise,
         RuntimeDep::Fetch,
+        RuntimeDep::EventTarget,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -306,6 +316,12 @@ impl RuntimeDep {
             RuntimeDep::Tokio => Some("#[tokio::main(flavor = \"current_thread\")]"),
             RuntimeDep::Promise => Some("__ds::ds_promise_"),
             RuntimeDep::Fetch => Some("__ds::ds_fetch"),
+            // Common prefix of `__ds::DsEventTarget`, `__ds::DsEvent`, and
+            // `__ds::DsEventInit`, so a fixture using any one of the three
+            // (`new EventTarget()`, `new Event(…)`, or a `{ bubbles, cancelable }`
+            // init literal) pulls EVENT_TARGET_HELPER (all three structs live in
+            // the same slice).
+            RuntimeDep::EventTarget => Some("__ds::DsEvent"),
             RuntimeDep::Engine => None,
         }
     }
@@ -420,6 +436,9 @@ impl RuntimeDep {
                 // `Response.json()` parses the body via `serde_json::Value`.
                 ("serde_json", "\"1\""),
             ]),
+            // EventTarget/Event is pure `std` (`Arc<Mutex<Vec<…>>>` pub/sub +
+            // `Cell` interior mutability) — no cargo dep.
+            RuntimeDep::EventTarget => None,
         }
     }
 
@@ -454,6 +473,7 @@ impl RuntimeDep {
             RuntimeDep::Tokio => None,
             RuntimeDep::Promise => Some(DS_PROMISE_HELPER),
             RuntimeDep::Fetch => Some(DS_FETCH_HELPER),
+            RuntimeDep::EventTarget => Some(EVENT_TARGET_HELPER),
         }
     }
 }

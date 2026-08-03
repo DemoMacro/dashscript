@@ -234,6 +234,23 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             };
         }
     }
+    // `event.type`/`.bubbles`/`.cancelable`/`.defaultPrevented`/`.timeStamp` on
+    // a `DsEvent` local (`new Event(…)` binding) → the matching accessor or
+    // field. ES exposes these as properties; `type` is a Rust keyword so
+    // `event.type` rewrites to `event.type_()` (a `String`), and
+    // `defaultPrevented` to `event.default_prevented()` (the `Cell` read);
+    // `bubbles`/`cancelable` (`bool`) and `timeStamp` (`f64`) are plain fields.
+    if is_event_local(&sm.object, ctx) {
+        let obj = translate_expr(&sm.object, ctx);
+        match field_name {
+            "type" => return parse_quote!(#obj.type_()),
+            "defaultPrevented" => return parse_quote!(#obj.default_prevented()),
+            "bubbles" => return parse_quote!(#obj.bubbles),
+            "cancelable" => return parse_quote!(#obj.cancelable),
+            "timeStamp" => return parse_quote!(#obj.timestamp),
+            _ => {}
+        }
+    }
     // `url.searchParams` as a standalone read (assigned/passed, not chained
     // into a method call or `.size`) — a live view sharing the URL's query
     // (an `Rc<RefCell<url::Url>>` clone), so mutations through the view are
@@ -798,6 +815,33 @@ pub(in crate::translator) fn is_text_decoder_local(expr: &Expression, ctx: &Ctx<
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name)
         .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "TextDecoder"))
+}
+
+/// True when `expr` is a local whose type is `crate::__ds::DsEventTarget` (a
+/// `new EventTarget()` binding), so `et.addEventListener`/`removeEventListener`/
+/// `dispatchEvent` lower to the wrapper's inherent methods.
+pub(in crate::translator) fn is_event_target_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(|p| {
+        p.segments
+            .last()
+            .is_some_and(|s| s.ident == "DsEventTarget")
+    })
+}
+
+/// True when `expr` is a local whose type is `crate::__ds::DsEvent` (a
+/// `new Event(...)` binding), so `event.type`/`.bubbles`/`.cancelable`/
+/// `.defaultPrevented`/`.timeStamp` lower to the wrapper's accessors/fields.
+pub(in crate::translator) fn is_event_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsEvent"))
 }
 
 /// The `__ds::DsUrl` accessor method name for an ES `URL` component property,

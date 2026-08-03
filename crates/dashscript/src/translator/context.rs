@@ -53,6 +53,13 @@ pub struct Locals {
     /// access reads the static property. Keyed on the snake-cased binding name
     /// (the same key as `types`). Absent for any other initializer shape.
     pub regex_inits: HashMap<String, RegexInit>,
+    /// Parameters inferred to be a WHATWG `Event` (a callback argument an
+    /// `addEventListener` listener receives): the body calls
+    /// `param.preventDefault()`/`stopPropagation()`/`stopImmediatePropagation()`
+    /// — methods unique to `DsEvent`, so the inference is unambiguous. Such a
+    /// parameter's type is `&crate::__ds::DsEvent` (the dispatch passes `&DsEvent`
+    /// by reference). Keyed on the snake-cased binding name.
+    pub event_params: HashSet<String>,
 }
 
 impl Locals {
@@ -66,6 +73,7 @@ impl Locals {
             use_counts: HashMap::new(),
             number_flavors: HashMap::new(),
             regex_inits: HashMap::new(),
+            event_params: HashSet::new(),
         }
     }
 

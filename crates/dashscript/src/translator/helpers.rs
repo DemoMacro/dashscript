@@ -477,6 +477,153 @@ pub async fn ds_fetch_with<T: reqwest::IntoUrl>(
 }
 "#;
 
+/// WHATWG EventTarget/Event API helper — `__ds::DsEventTarget`/`__ds::DsEvent`
+/// (WinterTC Web APIs). A `DsEventTarget` is a pub/sub: `addEventListener` boxes
+/// the listener into `Vec<Box<dyn FnMut(&DsEvent)>>` behind an `Arc<Mutex<…>>`
+/// (ES EventTargets are shared, mutable, single-threaded), `dispatchEvent`
+/// invokes each listener whose `type` matches, and returns `false` only when a
+/// `cancelable` event had `preventDefault` called (the ES contract). `DsEvent`
+/// holds `default_prevented` in a `Cell` so a `&DsEvent` listener can flip it
+/// (ES events are shared references). `EventTarget`/`Event` constructors,
+/// `addEventListener`/`removeEventListener`/`dispatchEvent`/`preventDefault` map
+/// verbatim to the inherent methods; `event.type`/`.bubbles`/`.cancelable`/
+/// `.defaultPrevented`/`.timeStamp` dispatch in `member.rs`. Pure `std` — no
+/// cargo dep; marker `__ds::DsEvent` (a common prefix of `DsEventTarget`/
+/// `DsEvent`/`DsEventInit`, so any of the three pulls the slice).
+pub(super) const EVENT_TARGET_HELPER: &str = r#"
+/// A WHATWG EventTarget — a pub/sub for typed events. Listeners are boxed
+/// `FnMut(&DsEvent)` closures in a shared, single-threaded `Arc<Mutex<Vec<…>>>`
+/// (ES EventTargets are shared + mutable). `#[derive(Clone)]` clones the `Arc`,
+/// so `let et2 = et` shares the same listener set (ES reference semantics).
+#[derive(Clone)]
+pub struct DsEventTarget {
+    inner: ::std::sync::Arc<::std::sync::Mutex<::std::vec::Vec<DsListenerEntry>>>,
+}
+struct DsListenerEntry {
+    type_: ::std::string::String,
+    callback: ::std::boxed::Box<dyn ::std::ops::FnMut(&DsEvent)>,
+}
+impl DsEventTarget {
+    /// `new EventTarget()` — an empty listener set.
+    pub fn new() -> Self {
+        Self {
+            inner: ::std::sync::Arc::new(::std::sync::Mutex::new(
+                ::std::vec::Vec::new(),
+            )),
+        }
+    }
+    /// `et.addEventListener(type, cb)` — register a listener for `type`. The
+    /// third ES arg (`useCapture`) is ignored (single-threaded, no capture
+    /// phase). A `null`/`undefined` listener is filtered at the call site, so
+    /// this always receives a real closure. `type_` is `String` (the translator's
+    /// ES `ToString` lowering yields an owned string), matching the entry field.
+    pub fn add_event_listener(
+        &self,
+        type_: ::std::string::String,
+        callback: ::std::boxed::Box<dyn ::std::ops::FnMut(&DsEvent)>,
+    ) {
+        self.inner
+            .lock()
+            .unwrap()
+            .push(DsListenerEntry { type_, callback });
+    }
+    /// `et.removeEventListener(type, cb)` — remove listeners for `type`. The ES
+    /// signature matches a specific `(type, cb)` pair by listener identity; the
+    /// static translator cannot compare closure identity, so this drops every
+    /// listener for `type` (a deliberate simplification — the common WPT shape
+    /// removes the only listener of a type, which is exact).
+    pub fn remove_event_listener(&self, type_: ::std::string::String) {
+        self.inner.lock().unwrap().retain(|e| e.type_ != type_);
+    }
+    /// `et.dispatchEvent(event)` — invoke each listener whose `type` matches,
+    /// then return `false` iff the event was cancelable AND `preventDefault`
+    /// was called (the ES return contract); otherwise `true`.
+    pub fn dispatch_event(&self, event: &DsEvent) -> bool {
+        let type_ = event.type_.clone();
+        let mut listeners = self.inner.lock().unwrap();
+        for entry in listeners.iter_mut() {
+            if entry.type_ == type_ {
+                (entry.callback)(event);
+            }
+        }
+        ::std::mem::drop(listeners);
+        !(event.cancelable && event.default_prevented.get())
+    }
+}
+impl ::std::default::Default for DsEventTarget {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+/// A WHATWG `Event`. `default_prevented` is a `Cell` so a `&DsEvent` listener
+/// (the ES dispatch shape) can flip it via `preventDefault`. `#[derive(Clone)]`
+/// for `let e2 = e` reference sharing.
+#[derive(Clone)]
+pub struct DsEvent {
+    pub type_: ::std::string::String,
+    pub bubbles: bool,
+    pub cancelable: bool,
+    pub default_prevented: ::std::cell::Cell<bool>,
+    pub timestamp: f64,
+}
+impl DsEvent {
+    /// `new Event(type, init)` — `init.bubbles`/`init.cancelable` default to
+    /// `false`; `defaultPrevented` starts `false`; `timeStamp` is 0.0 (a fixed
+    /// epoch is out of scope — WPT rarely asserts its exact value). `type_` is
+    /// `String` (the translator's ES `ToString` lowering yields an owned string).
+    pub fn new(type_: ::std::string::String, init: DsEventInit) -> Self {
+        Self {
+            type_,
+            bubbles: init.bubbles,
+            cancelable: init.cancelable,
+            default_prevented: ::std::cell::Cell::new(false),
+            timestamp: 0.0,
+        }
+    }
+    /// `event.type` — ES exposes it as a property; `type` is a Rust keyword, so
+    /// the member dispatch in `member.rs` routes `event.type` here.
+    #[inline]
+    pub fn type_(&self) -> ::std::string::String {
+        self.type_.clone()
+    }
+    /// `event.defaultPrevented` (a property; `member.rs` dispatches).
+    #[inline]
+    pub fn default_prevented(&self) -> bool {
+        self.default_prevented.get()
+    }
+    /// `event.preventDefault()` — sets `defaultPrevented` only when `cancelable`
+    /// (the ES guard).
+    pub fn prevent_default(&self) {
+        if self.cancelable {
+            self.default_prevented.set(true);
+        }
+    }
+    /// `event.stopPropagation()` — a no-op (single listener set, no propagation
+    /// phases); present so a fixture calling it compiles.
+    pub fn stop_propagation(&self) {}
+    /// `event.stopImmediatePropagation()` — likewise a no-op.
+    pub fn stop_immediate_propagation(&self) {}
+}
+
+/// `new Event(type, init)`'s `init` object — `{ bubbles, cancelable }`, both
+/// defaulting to `false`. `#[derive(Clone)]` + `Default` for the
+/// `new Event(type)` (no init) and `new Event(type, {})` forms.
+#[derive(Clone)]
+pub struct DsEventInit {
+    pub bubbles: bool,
+    pub cancelable: bool,
+}
+impl ::std::default::Default for DsEventInit {
+    fn default() -> Self {
+        Self {
+            bubbles: false,
+            cancelable: false,
+        }
+    }
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through

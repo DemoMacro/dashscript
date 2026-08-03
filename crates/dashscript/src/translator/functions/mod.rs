@@ -857,17 +857,28 @@ pub(in crate::translator) fn translate_params(
         .iter()
         .map(|fp| {
             let pat = names.of_pattern(&fp.pattern);
+            let pat_str = pat.to_string();
             // An unannotated parameter (common in test262 callbacks like
             // `callbackfn(val, idx, obj)`) defaults to `f64`: Rust fn params
             // need a concrete type (`_` is E0121), and a DashScript `number` is
             // `f64`. A parameter the body actually uses as a string/array/bool
             // then fails cargo check (a partial) — honest, and rarer than the
-            // self-contained number callback it now lets compile.
+            // self-contained number callback it now lets compile. The one
+            // exception: a parameter the body uses as a WHATWG `Event` (its
+            // listener body calls `preventDefault`/`stopPropagation`/…) infers
+            // to `&DsEvent` — an `addEventListener` callback receives the event
+            // by reference, and the per-body scan in `analysis.rs` flags it.
             let ty = fp
                 .type_annotation
                 .as_ref()
                 .map(|ta| types::translate_type_for_signature(&ta.type_annotation, registry))
-                .unwrap_or_else(|| parse_quote!(f64));
+                .unwrap_or_else(|| {
+                    if locals.event_params.contains(&pat_str) {
+                        parse_quote!(&crate::__ds::DsEvent)
+                    } else {
+                        parse_quote!(f64)
+                    }
+                });
             // An optional (`?:`) or default-initialized parameter is `Option<T>`
             // — callers pass `None` for a missing/`undefined` argument, and the
             // body sees the parameter as `Option<T>` (narrowed on truthiness).
@@ -876,7 +887,6 @@ pub(in crate::translator) fn translate_params(
             } else {
                 ty
             };
-            let pat_str = pat.to_string();
             // A member-mutated, non-rebound parameter is a reference parameter
             // (`&mut T`): ES arrays/objects pass by reference, so `c[i] = v`
             // inside the function is visible to the caller. A rebound parameter
@@ -966,6 +976,7 @@ pub(in crate::translator) fn body_locals(
     locals.mutated = analysis.mutated;
     locals.member_mutated = analysis.member_mutated;
     locals.use_counts = analysis.use_counts;
+    locals.event_params = analysis.event_params;
     // Number-flavor inference (i64 vs f64): which `number` locals hold only
     // pure integers. Conservative — a `: number` annotation or any fractional /
     // division / `Math.*` value forces `F64` in `flavor::infer`.
@@ -1085,7 +1096,8 @@ fn register_declarator(
             .or_else(|| collection_local_path(n))
             .or_else(|| url_search_params_path(n))
             .or_else(|| url_path(n))
-            .or_else(|| encoding_ctor_path(n)),
+            .or_else(|| encoding_ctor_path(n))
+            .or_else(|| event_target_path(n)),
         Some(other) => vec_index_elem_path(other, locals),
         None => return,
     };
@@ -1226,6 +1238,24 @@ fn encoding_ctor_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     match id.name.as_str() {
         "TextEncoder" => Some(parse_quote!(crate::__ds::TextEncoder)),
         "TextDecoder" => Some(parse_quote!(crate::__ds::TextDecoder)),
+        _ => None,
+    }
+}
+
+/// `new EventTarget()` / `new Event(…)` → the `__ds::DsEvent*` Rust type, so an
+/// unannotated `let et = new EventTarget()` (or `let e = new Event("x")`)
+/// records the type and a later `et.addEventListener`/`et.dispatchEvent`
+/// dispatches through `event_target_method` (the receiver resolves to
+/// `DsEventTarget`), and `event.type`/`.defaultPrevented`/… through the event
+/// member dispatch. Either ctor maps; any other `new` yields `None`.
+fn event_target_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    match id.name.as_str() {
+        "EventTarget" => Some(parse_quote!(crate::__ds::DsEventTarget)),
+        "Event" => Some(parse_quote!(crate::__ds::DsEvent)),
         _ => None,
     }
 }

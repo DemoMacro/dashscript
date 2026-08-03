@@ -125,6 +125,23 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if builtins::urlpattern_ctor_type(id.name.as_str()).is_some() {
             return urlpattern_ctor(n.arguments.as_slice(), ctx);
         }
+        // `new EventTarget()` / `new Event(type[, init])` — the WHATWG DOM
+        // Events API (a WinterTC Web API). `EventTarget` is argless; `Event`
+        // takes a type string + an optional `{ bubbles, cancelable }` init.
+        // Intercepted before the generic `Foo::new` path (which would emit
+        // `EventTarget::new`/`Event::new` — E0433, no such Rust types). The
+        // `EventTarget` runtime dep is flagged by the `__ds::DsEvent` marker
+        // probe, which injects `DsEventTarget`/`DsEvent`/`DsEventInit` into
+        // `__ds.rs`. Instance methods (`addEventListener`/`dispatchEvent`/…)
+        // dispatch in the call path; event properties (`.type`/`.bubbles`/…) in
+        // the member path.
+        if builtins::event_target_ctor_type(id.name.as_str()).is_some() {
+            return match id.name.as_str() {
+                "EventTarget" => parse_quote!(crate::__ds::DsEventTarget::new()),
+                "Event" => event_ctor(n.arguments.as_slice(), ctx),
+                _ => unreachable!(),
+            };
+        }
         // `new DOMException(message[, name])` — the WinterTC/HTML `DOMException`
         // (a Web API, never the engine). Unlike `new Error(msg)` — where `name`
         // derives from the constructor — a `DOMException`'s `name` is the SECOND
@@ -408,7 +425,27 @@ fn urlpattern_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
     }
 }
 
-/// `new Map([[k, v], …])` → `HashMap::from([(k, v), …])` — a literal initial
+/// `new Event(type[, init])` → `crate::__ds::DsEvent::new(type, init)`. The type
+/// is ToString-coerced (`es_to_string_arg`, so a non-string type still satisfies
+/// `AsRef<str>`); the optional `init` object's `bubbles`/`cancelable`
+/// BooleanLiteral fields lower to `DsEventInit` (absent or non-literal → `false`,
+/// the ES default), and a missing `init` lowers to `DsEventInit::default()`. ES
+/// `new Event()` (no args) throws `TypeError`; the no-arg case panics with the
+/// same class name (the WPT verdict reads the prefix), rather than emitting a
+/// phantom `Event::new` (E0433).
+fn event_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
+    let Some(type_arg) = args.first() else {
+        return parse_quote!(::core::panic!(
+            "TypeError: Event constructor requires at least 1 argument"
+        ));
+    };
+    let type_ = builtins::es_to_string_arg(type_arg, ctx);
+    let init = match args.get(1).and_then(|a| a.as_expression()) {
+        Some(Expression::ObjectExpression(obj)) => builtins::event_init(obj),
+        _ => parse_quote!(crate::__ds::DsEventInit::default()),
+    };
+    parse_quote!(crate::__ds::DsEvent::new(#type_, #init))
+}
 /// map of [key, value] pairs. Each element must be a 2-element array literal;
 /// `None` otherwise (spread / non-array / wrong arity), so anything else falls
 /// through to the generic `Map::new(…)` path. A numeric key (detected from the

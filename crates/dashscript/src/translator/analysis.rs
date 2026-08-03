@@ -48,6 +48,15 @@ const MUTATORS: &[&str] = &[
     "append",
 ];
 
+/// Method names unique to a WHATWG `Event` (`DsEvent`): a parameter the body
+/// uses as their receiver is inferred to be an `Event` callback argument (an
+/// `addEventListener` listener's `evt`), so its type becomes `&DsEvent`.
+const EVENT_METHODS: &[&str] = &[
+    "preventDefault",
+    "stopPropagation",
+    "stopImmediatePropagation",
+];
+
 /// The body facts: the set of mutated bindings and per-local read counts.
 #[derive(Default)]
 pub(super) struct Analysis {
@@ -67,6 +76,11 @@ pub(super) struct Analysis {
     /// semantics); a *local* still takes `let mut` (it owns the value).
     pub member_mutated: HashSet<String>,
     pub use_counts: HashMap<String, u32>,
+    /// Parameters inferred to be a WHATWG `Event` (an `addEventListener`
+    /// callback argument): the body calls `param.preventDefault()`/
+    /// `stopPropagation()`/`stopImmediatePropagation()` — `DsEvent`-unique
+    /// methods, so the root identifier is the param's per-symbol Rust name.
+    pub event_params: HashSet<String>,
     /// True when the body assigns/updates a member of `this` (e.g. `this.x = 1`
     /// or `this.n++`) — the enclosing method needs `&mut self`.
     pub mutates_this: bool,
@@ -267,6 +281,14 @@ fn walk_expr(expr: &Expression, names: &NameTable, a: &mut Analysis) {
 /// (e.g. `a.b.c()` reads `a.b`).
 fn walk_callee(callee: &Expression, names: &NameTable, a: &mut Analysis) {
     if let Expression::StaticMemberExpression(sm) = callee {
+        // `evt.preventDefault()`/`stopPropagation()`/`stopImmediatePropagation()`
+        // — `DsEvent`-unique methods, so an identifier receiver is inferred to
+        // be an `Event` callback parameter.
+        if EVENT_METHODS.contains(&sm.property.name.as_str()) {
+            if let Expression::Identifier(id) = &sm.object {
+                a.event_params.insert(names.of_reference(id).to_string());
+            }
+        }
         let is_mutator = MUTATORS.contains(&sm.property.name.as_str())
             || a.mut_methods.contains(sm.property.name.as_str());
         if is_mutator {
