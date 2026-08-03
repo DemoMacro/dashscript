@@ -70,6 +70,40 @@ fn translates_new_uint8_array_from_array_literal() {
 }
 
 #[test]
+fn translates_new_uint8_array_from_member_source() {
+    // `new Uint8Array(t.bytes)` — a member-access source (a `Vec<f64>`
+    // property) lowers to a from-iterable copy with a u8 cast, not the
+    // length path `(t.bytes) as usize` (E0605: a Vec cannot be cast to usize).
+    let src = "interface T { bytes: number[]; } function f(t: T): Uint8Array { return new Uint8Array(t.bytes); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("map(|x| x as u8)"),
+        "new Uint8Array(t.bytes) copies with a u8 cast: {rust}"
+    );
+    assert!(
+        !rust.contains("as usize"),
+        "member source must not take the length path: {rust}"
+    );
+}
+
+#[test]
+fn translates_new_uint8_array_from_vec_local() {
+    // `new Uint8Array(buf)` where `buf: number[]` (a `Vec<f64>` local) takes
+    // the from-iterable path. A `number` local still takes the length path
+    // (covered by `translates_new_uint8_array_to_zeroed_vec`).
+    let src = "function f(buf: number[]): Uint8Array { return new Uint8Array(buf); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("map(|x| x as u8)"),
+        "new Uint8Array(buf) copies with a u8 cast: {rust}"
+    );
+    assert!(
+        !rust.contains("as usize"),
+        "Vec local must not take the length path: {rust}"
+    );
+}
+
+#[test]
 fn translates_new_int32_array_to_zeroed_vec() {
     // `new Int32Array(n)` — a 4-byte-per-element int32 typed array — reuses the
     // u8 length path with the i32 element type: `vec![0_i32; n as usize]`.

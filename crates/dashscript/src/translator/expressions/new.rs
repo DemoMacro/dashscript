@@ -70,8 +70,26 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
             if n.arguments.len() == 1 {
                 let arg = &n.arguments[0];
                 let e = array_elem_arg(arg, ctx);
-                if matches!(arg.as_expression(), Some(Expression::ArrayExpression(_))) {
-                    // `new Int32Array([1, 2, 3])` — copy from a literal array.
+                // A from-iterable source: an array literal
+                // (`new Int32Array([1, 2, 3])`), a member access
+                // (`new Uint8Array(t.bytes)` on a `Vec<f64>` property), or a
+                // local known to be a `Vec<T>` (`new Uint8Array(buf)`). Each
+                // element is cast to the typed array's elem type. The
+                // numeric-length path (`vec![0; n as usize]`) is for a numeric
+                // arg — a `NumericLiteral`, a `BinaryExpression` like
+                // `h.length + 4`, or a known-number/unknown local — so a `Vec`
+                // arg never takes `(Vec) as usize` (E0605).
+                let from_iterable = match arg.as_expression() {
+                    Some(Expression::ArrayExpression(_)) => true,
+                    Some(expr) if expr.as_member_expression().is_some() => true,
+                    Some(Expression::Identifier(id)) => {
+                        let name = bindings::snake(&id.name).to_string();
+                        ctx.local_type(&name)
+                            .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "Vec"))
+                    }
+                    _ => false,
+                };
+                if from_iterable {
                     return parse_quote!(
                         (#e).into_iter().map(|x| x as #ty).collect::<::std::vec::Vec<#ty>>()
                     );
