@@ -1078,6 +1078,22 @@ pub fn wpt_assert_unreached() {
     panic!("AssertionError: unreachable");
 }
 
+/// WPT `promise_test(async fn, name)` — awaits the callback's future. The
+/// callback lowers to `async move { body }`, so a panic inside it (an assert
+/// failure) propagates through the `.await` as usual — fail-fast, the verdict
+/// keys off the `AssertionError:` prefix (the `name` is dropped, same as
+/// `test()`). Runs on the static path under `#[tokio::main]`: a top-level
+/// `promise_test(async () => { … }, "n")` emits
+/// `__ds::wpt_promise_test("n", async move { … }).await`, and that `.await`
+/// makes the entry's `main` async (see `translator/mod.rs`). The future needs
+/// no `Send` bound — the entry uses a single-thread runtime.
+pub async fn wpt_promise_test<F>(_name: &str, fut: F)
+where
+    F: std::future::Future<Output = ()>,
+{
+    fut.await;
+}
+
 /// WPT `assert_array_equals(actual, expected[, msg])` — panics an
 /// `AssertionError` if the arrays differ in length or any element pair is not
 /// SameValue. Operands coerce from `&Vec<T>`/`&[T]` (`Vec: Deref<Target =

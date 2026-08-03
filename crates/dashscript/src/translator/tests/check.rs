@@ -360,7 +360,7 @@ fn async_fn_lowers_with_tokio_main() {
         "async fn not emitted: {rust}"
     );
     assert!(
-        rust.contains("#[tokio::main]"),
+        rust.contains("#[tokio::main"),
         "tokio main not emitted for top-level await: {rust}"
     );
     assert!(
@@ -381,7 +381,7 @@ fn sync_entry_stays_sync_without_tokio() {
     let src = "function f(): number { return 1; }\nconsole.log(f());";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        !rust.contains("#[tokio::main]"),
+        !rust.contains("#[tokio::main"),
         "tokio main emitted for sync entry: {rust}"
     );
     assert!(

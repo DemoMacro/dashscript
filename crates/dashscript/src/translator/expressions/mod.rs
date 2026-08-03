@@ -1067,6 +1067,30 @@ fn closure_pats(params: &oxc_ast::ast::FormalParameters, borrow: bool) -> Vec<Pa
         .collect()
 }
 
+/// Translate a function/arrow body to its Rust `Block`, with the per-body
+/// `Locals` from `body_locals` (the shared source of truth). Shared by a
+/// sync closure ([`closure_block_body`] wraps it as `|params| { block }`) and
+/// by `promise_test`'s async callback (wrapped as `async move { block }`).
+/// Parameters register into `Locals` (so mutation/flavor analysis sees them),
+/// but no parameter *bindings* are emitted here — the caller decides how `params`
+/// surface (`|p0, …|` for a closure, dropped for an `async move` block whose
+/// callback parameter the body does not name).
+pub(in crate::translator) fn body_block(
+    params: &oxc_ast::ast::FormalParameters,
+    body: &FunctionBody,
+    ctx: &Ctx<'_>,
+) -> syn::Block {
+    let mut locals = super::functions::body_locals(params, Some(body), ctx.registry(), ctx.names());
+    super::functions::translate_body(
+        &body.statements[..],
+        &mut locals,
+        ctx.registry(),
+        &Narrow::default(),
+        None,
+        ctx.names(),
+    )
+}
+
 /// Build `|params| { body }` — the closure shared by a block-body arrow and a
 /// non-async, non-generator `FunctionExpression` (same `FormalParameters` +
 /// `FunctionBody` shape). The per-body `Locals` come from `body_locals`, the
@@ -1078,15 +1102,7 @@ fn closure_block_body(
     borrow_params: bool,
 ) -> Expr {
     let pats = closure_pats(params, borrow_params);
-    let mut locals = super::functions::body_locals(params, Some(body), ctx.registry(), ctx.names());
-    let block = super::functions::translate_body(
-        &body.statements[..],
-        &mut locals,
-        ctx.registry(),
-        &Narrow::default(),
-        None,
-        ctx.names(),
-    );
+    let block = body_block(params, body, ctx);
     parse_quote!(|#(#pats),*| #block)
 }
 

@@ -337,6 +337,36 @@ fn wpt_testharness_compiles_and_runs() {
     );
 }
 
+/// `promise_test(async () => { … }, "n")` end-to-end: the async callback lowers
+/// to `wpt_promise_test("n", async move { … }).await` under `#[tokio::main]`,
+/// so this verifies the full Stage 2 chain — translate → cargo build (pulls
+/// tokio + futures) → run (the future awaits, the assert holds, exit 0). A
+/// failure here means the async lowering, the tokio wiring, or the helper
+/// signature regressed.
+#[test]
+fn wpt_promise_test_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.promise_smoke".into(),
+        category: "smoke".into(),
+        fixture: "promise_test(async () => { assert_equals(1, 1); }, \"trivial async\");\n".into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "promise_test smoke should be supported: {detail}"
+    );
+}
+
 /// Once-per-run check that the engine compat path assembles into a building
 /// cargo project: a reflection `.ts` source → `translate_with_deps` (flips
 /// `needs_engine`) → `write_project` (injects `__ds_engine` + the `rquickjs`

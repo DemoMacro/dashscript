@@ -240,6 +240,7 @@ pub fn is_harness_helper(name: &str) -> bool {
 /// `$INCLUDE` helpers, which DO degrade — different harness, different layer).
 pub const TESTHARNESS_MAPPED_GLOBALS: &[&str] = &[
     "test",
+    "promise_test",
     "setup",
     "done",
     "assert_equals",
@@ -259,18 +260,19 @@ pub fn is_testharness_mapped(name: &str) -> bool {
     TESTHARNESS_MAPPED_GLOBALS.contains(&name)
 }
 
-/// WPT testharness functions with NO static lowering — the async forms
-/// (`async_test`/`promise_test`, which need a runtime/tokio the static path
-/// does not ship) and the composite asserts (`assert_object_equals`/
-/// `assert_approx_equals`/…, whose operands are not plain `DsSameValue`
-/// scalars or arrays of them). Unlike test262's degrade-don't-reject, WinterTC
-/// is static-only — a fixture using one of these is honestly `unsupported`, not
-/// engine-degraded. Growing [`TESTHARNESS_MAPPED_GLOBALS`] (add a `__ds::wpt_*`
-/// helper + a `testharness_function` arm, then move the name here→there) is how
-/// WinterTC coverage expands.
+/// WPT testharness functions with NO static lowering — `async_test` (which
+/// needs `t.step_func` manual step management the static path does not model)
+/// and the composite asserts (`assert_object_equals`/`assert_approx_equals`/…,
+/// whose operands are not plain `DsSameValue` scalars or arrays of them).
+/// `promise_test` is mapped — it lowers to `wpt_promise_test(name, async move {
+/// … }).await` under `#[tokio::main]` (see `testharness_function`). Unlike
+/// test262's degrade-don't-reject, WinterTC is static-only — a fixture using
+/// one of these is honestly `unsupported`, not engine-degraded. Growing
+/// [`TESTHARNESS_MAPPED_GLOBALS`] (add a `__ds::wpt_*` helper + a
+/// `testharness_function` arm, then move the name here→there) is how WinterTC
+/// coverage expands.
 pub const TESTHARNESS_REJECTED_GLOBALS: &[&str] = &[
     "async_test",
-    "promise_test",
     "assert_object_equals",
     "assert_approx_equals",
     "assert_less",

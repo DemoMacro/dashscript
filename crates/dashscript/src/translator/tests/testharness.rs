@@ -96,3 +96,49 @@ fn check_passes_assert_array_equals() {
         .check("function f(a: number[], b: number[]): void { assert_array_equals(a, b); }");
     assert!(diags.is_empty(), "assert_array_equals flagged: {diags:?}");
 }
+
+#[test]
+fn promise_test_lowers_to_async_await() {
+    // `promise_test(async () => { assert_equals(1, 1); }, "n")` — the async
+    // callback's body lowers to `async move { … }`, awaited via
+    // `wpt_promise_test`. The top-level `.await` makes the entry's `main` async
+    // under `#[tokio::main]` (Stage 1 wired async main; Stage 2 wires the
+    // promise_test lowering). The callback's name arg is dropped (the verdict
+    // keys off the `AssertionError:` prefix).
+    let src = "promise_test(async () => { assert_equals(1, 1); }, \"basic\");";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("wpt_promise_test"),
+        "promise_test should lower to wpt_promise_test: {rust}"
+    );
+    assert!(
+        rust.contains("async move"),
+        "promise_test callback body should wrap in async move: {rust}"
+    );
+    assert!(
+        rust.contains(".await"),
+        "promise_test should .await the future: {rust}"
+    );
+    assert!(
+        rust.contains("#[tokio::main"),
+        "top-level await should make main async under tokio: {rust}"
+    );
+    assert!(
+        rust.contains("async fn main"),
+        "main should be async: {rust}"
+    );
+    assert!(
+        !rust.contains("todo!"),
+        "no todo! in promise_test lowering: {rust}"
+    );
+}
+
+#[test]
+fn check_passes_promise_test() {
+    // `promise_test` is now Mapped (Stage 2 moved it from the async-rejected
+    // set, now that tokio ships on the static path) — check produces no
+    // diagnostics.
+    let diags =
+        Translator::new().check("promise_test(async () => { assert_equals(1, 1); }, \"x\");");
+    assert!(diags.is_empty(), "promise_test flagged: {diags:?}");
+}

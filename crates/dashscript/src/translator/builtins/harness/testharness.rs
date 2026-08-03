@@ -90,6 +90,20 @@ pub(in crate::translator) fn testharness_function(
             Some(f) => parse_quote!((#f)()),
             None => return None,
         },
+        // `promise_test(async fn, name)` → `wpt_promise_test(name, async move {
+        // body }).await`. The async callback's body lowers via `body_block`
+        // (the same per-body `Locals` as a closure) wrapped in `async move`;
+        // the `.await` makes the entry's `main` async (Stage 1 detects it). The
+        // callback's `t` parameter is dropped — a body that names it surfaces
+        // as E0425 (honest partial); most `promise_test` bodies use the global
+        // `assert_*` and do not name `t`. A non-async/non-expression callback,
+        // or a non-literal name, returns `None` (honest unsupported).
+        "promise_test" => match promise_test_callback(args, ctx) {
+            Some((name, body)) => {
+                parse_quote!(crate::__ds::wpt_promise_test(#name, async move #body).await)
+            }
+            None => return None,
+        },
         // `setup(fn_or_props)` / `done()` — no-ops on the static path.
         "setup" | "done" => parse_quote!(()),
         _ => return None,
@@ -131,4 +145,27 @@ fn test_callback_closure(arg: &Argument, ctx: &Ctx<'_>) -> Option<Expr> {
         }
         _ => None,
     }
+}
+
+/// `promise_test(async fn, name)` → the `(name, body)` pair: `name` is a string
+/// literal, and `body` is the async callback's body lowered to a Rust `Block`
+/// (via [`expressions::body_block`]) ready to wrap in `async move { … }`.
+/// Returns `None` if arg0 is not an async arrow/function-expression, or arg1 is
+/// not a string literal — the call then surfaces as a plain E0425, honestly
+/// unsupported.
+fn promise_test_callback(args: &[Argument], ctx: &Ctx<'_>) -> Option<(syn::LitStr, syn::Block)> {
+    let name = match args.get(1)?.as_expression()? {
+        Expression::StringLiteral(s) => syn::LitStr::new(s.value.as_str(), Span::call_site()),
+        _ => return None,
+    };
+    let body = match args.first()?.as_expression()? {
+        Expression::ArrowFunctionExpression(arrow) if arrow.r#async => {
+            super::super::super::expressions::body_block(&arrow.params, &arrow.body, ctx)
+        }
+        Expression::FunctionExpression(f) if f.r#async => {
+            super::super::super::expressions::body_block(&f.params, f.body.as_deref()?, ctx)
+        }
+        _ => return None,
+    };
+    Some((name, body))
 }
