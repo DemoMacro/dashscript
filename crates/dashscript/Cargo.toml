@@ -47,5 +47,6 @@ path = "bin/main.rs"
 [dev-dependencies]
 rquickjs = { workspace = true }
 temporal_rs = "0.2"
+urlpattern = "0.6"
 tempfile = { workspace = true }
 wait-timeout = { workspace = true }

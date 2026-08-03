@@ -179,12 +179,20 @@ pub enum RuntimeDep {
     /// `crypto`/`self.crypto` both lower to `__ds::crypto_random_uuid` (the
     /// `uuid` crate's `new_v4`, pure-Rust — never degraded).
     Crypto,
+    /// WHATWG URLPattern — `new URLPattern(input[, baseURL])` (a WinterTC Web
+    /// API). A string `input` is a constructor string; an undefined/absent input
+    /// is the empty pattern; `new URLPattern(new URL(…))` uses the URL's href.
+    /// A pattern that fails to compile (an unclosed group) panics a `TypeError`.
+    /// Backed by the `urlpattern` crate (denoland's WHATWG reference); marker
+    /// `__ds::DsURLPattern`. Pulls `Error` (for the `DsError` the helper panics).
+    /// Instance methods (`test`/`exec`) are not yet lowered.
+    URLPattern,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 21] = [
+    const ALL: [RuntimeDep; 22] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -206,6 +214,7 @@ impl RuntimeDep {
         RuntimeDep::Base64,
         RuntimeDep::HrTime,
         RuntimeDep::Crypto,
+        RuntimeDep::URLPattern,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -243,6 +252,7 @@ impl RuntimeDep {
             RuntimeDep::Base64 => Some("__ds::b64_"),
             RuntimeDep::HrTime => Some("__ds::perf_now"),
             RuntimeDep::Crypto => Some("__ds::crypto_random_uuid"),
+            RuntimeDep::URLPattern => Some("__ds::DsURLPattern"),
             RuntimeDep::Engine => None,
         }
     }
@@ -313,6 +323,14 @@ impl RuntimeDep {
             // `uuid` (uuid-rs/uuid) — `crypto.randomUUID()` is RFC 4122 v4.
             // The `v4` feature enables `Uuid::new_v4` (backed by `getrandom`).
             RuntimeDep::Crypto => Some(&[("uuid", "{ version = \"1\", features = [\"v4\"] }")]),
+            // `urlpattern` (denoland/rust-urlpattern) — the WHATWG URLPattern
+            // reference. `new URLPattern(…)` wraps `urlpattern::UrlPattern`; a
+            // pattern that fails to compile panics a `TypeError` (ES error class).
+            // `regex` is named explicitly because `parse_constructor_string<R:
+            // RegExp>` needs a turbofish (`::<regex::Regex>`) — urlpattern 0.6
+            // binds the default engine `R` to `regex::Regex` but does not re-export
+            // the crate, so it must be a direct dep of the emitted project.
+            RuntimeDep::URLPattern => Some(&[("urlpattern", "\"0.6\""), ("regex", "\"1\"")]),
         }
     }
 
@@ -342,6 +360,7 @@ impl RuntimeDep {
             RuntimeDep::Base64 => Some(BASE64_HELPER),
             RuntimeDep::HrTime => Some(PERF_HELPER),
             RuntimeDep::Crypto => Some(CRYPTO_HELPER),
+            RuntimeDep::URLPattern => Some(URLPATTERN_HELPER),
         }
     }
 }
@@ -1335,7 +1354,10 @@ impl Translator {
         // `assert_throws` is unused but still must type-check).
         // WPT asserts (`wpt_assert_throws`) share the same `catch_quiet`/
         // `DsError` machinery, so a WPT-only fixture pulls ERROR_HELPER too.
-        if deps.has(RuntimeDep::Assert) || deps.has(RuntimeDep::WptAssert) {
+        if deps.has(RuntimeDep::Assert)
+            || deps.has(RuntimeDep::WptAssert)
+            || deps.has(RuntimeDep::URLPattern)
+        {
             deps.insert(RuntimeDep::Error);
         }
         // Per-function degradation pulls the engine runtime (`rquickjs` + the

@@ -231,6 +231,43 @@ pub fn crypto_random_uuid() -> String {
 }
 "#;
 
+/// WHATWG URLPattern API helper — `__ds::DsURLPattern`. A `new URLPattern(input)`
+/// (a WinterTC Web API) lowers here. A string `input` is parsed as a WHATWG
+/// URLPattern constructor string (`UrlPatternInit::parse_constructor_string`);
+/// an undefined/absent `input` is the empty pattern (every component `*`,
+/// `UrlPatternInit::default`). `new URLPattern(new URL(…))` lowers to `from_str`
+/// on the URL's href (the dispatcher ToString's the URL). A pattern that fails
+/// to compile (an unclosed `(` group, …) panics a `TypeError` — the ES URLPattern
+/// constructor's error class (`panic_any(DsError)`). Backed by the `urlpattern`
+/// crate (denoland's WHATWG reference); the `URLPattern` runtime dep pulls it
+/// and this slice, plus `Error` (for `DsError`). Pure-Rust — WinterTC never
+/// degrades a Web API to the engine. Instance methods (`test`/`exec`) are not
+/// yet lowered.
+pub(super) const URLPATTERN_HELPER: &str = r#"pub struct DsURLPattern(pub urlpattern::UrlPattern);
+impl DsURLPattern {
+    /// `new URLPattern("pattern")` — parse the constructor string, then compile
+    /// the pattern. Either failure panics a `TypeError` (the ES error class).
+    pub fn from_str(s: &str) -> Self {
+        // `parse_constructor_string<R: RegExp>` returns `UrlPatternInit` (which
+        // carries no `R`), so `R` cannot be inferred from context — name the
+        // default engine explicitly. urlpattern 0.6 binds `R = regex::Regex`.
+        let init = urlpattern::UrlPatternInit::parse_constructor_string::<regex::Regex>(s, None)
+            .unwrap_or_else(|_| ::std::panic::panic_any(DsError::new("TypeError", "Invalid URLPattern")));
+        Self(urlpattern::UrlPattern::parse(init, urlpattern::UrlPatternOptions::default())
+            .unwrap_or_else(|_| ::std::panic::panic_any(DsError::new("TypeError", "Invalid URLPattern"))))
+    }
+    /// `new URLPattern(undefined, undefined)` / `new URLPattern()` — the empty
+    /// pattern (every component `*`).
+    pub fn empty() -> Self {
+        Self(urlpattern::UrlPattern::parse(
+            urlpattern::UrlPatternInit::default(),
+            urlpattern::UrlPatternOptions::default(),
+        )
+        .unwrap_or_else(|_| ::std::panic::panic_any(DsError::new("TypeError", "Invalid URLPattern"))))
+    }
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through

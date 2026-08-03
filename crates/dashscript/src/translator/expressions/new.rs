@@ -103,6 +103,16 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                 _ => url_search_params_ctor(n.arguments.as_slice(), ctx),
             };
         }
+        // `new URLPattern(input[, baseURL])` — the WHATWG URLPattern API (a
+        // WinterTC Web API). A string `input` is a constructor string; an
+        // undefined/absent input is the empty pattern; any other expression
+        // (`new URL(…)`, a variable) is ToString'd. Intercepted before the
+        // generic `Foo::new` path (which would emit `URLPattern::new` — E0433).
+        // The `URLPattern` runtime dep is flagged by the `__ds::DsURLPattern`
+        // marker probe; a pattern that fails to compile panics a `TypeError`.
+        if builtins::urlpattern_ctor_type(id.name.as_str()).is_some() {
+            return urlpattern_ctor(n.arguments.as_slice(), ctx);
+        }
         // `new Error("msg")` / `new TypeError(msg)` / `new Test262Error(msg)` —
         // an ES native Error constructor (or the test262 harness's
         // `Test262Error`). `throw new <X>(<literal>)` is intercepted earlier by
@@ -258,6 +268,35 @@ fn url_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
         (None, _) => parse_quote!(::core::panic!(
             "TypeError: URL constructor requires at least 1 argument"
         )),
+    }
+}
+
+/// `new URLPattern(input[, baseURL])` → `crate::__ds::DsURLPattern::from_str
+/// (input)` (a string input) or `::empty()` (undefined/absent). Any non-string
+/// first arg (`new URL(…)`, a variable) is ToString'd, then `from_str` — ES
+/// coerces the input, and a `URL` is its href. A pattern that fails to compile
+/// (an unclosed group) panics a `TypeError` inside `from_str`. The optional
+/// `baseURL` (arg 1) is dropped — a base only matters for a relative pattern,
+/// and the common case is an absolute one (YAGNI until a fixture needs it).
+fn urlpattern_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
+    use oxc_ast::ast::Argument as Arg;
+    let Some(arg0) = args.first() else {
+        return parse_quote!(crate::__ds::DsURLPattern::empty());
+    };
+    match arg0 {
+        Arg::Identifier(id) if id.name.as_str() == "undefined" => {
+            parse_quote!(crate::__ds::DsURLPattern::empty())
+        }
+        Arg::StringLiteral(s) => {
+            let lit = syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
+            parse_quote!(crate::__ds::DsURLPattern::from_str(#lit))
+        }
+        _ => {
+            // Any other expression (`new URL(…)`, a variable, …) — ToString,
+            // then `from_str` (a `URL` is its href; the rest ES-coerces).
+            let e = array_elem_arg(arg0, ctx);
+            parse_quote!(crate::__ds::DsURLPattern::from_str(&(#e).to_string()))
+        }
     }
 }
 
