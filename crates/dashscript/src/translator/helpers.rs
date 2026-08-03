@@ -337,6 +337,20 @@ impl DsResponse {
     pub async fn text(self) -> ::std::string::String {
         self.inner.text().await.unwrap_or_default()
     }
+    /// The body parsed as JSON. ES `await response.json()` (consumes the body);
+    /// a body that fails to parse yields `null` (ES would reject the promise
+    /// with a `SyntaxError` — the `null` prefix is what the harness reads).
+    #[inline]
+    pub async fn json(self) -> ::serde_json::Value {
+        let body = self.inner.text().await.unwrap_or_default();
+        ::serde_json::from_str(&body).unwrap_or(::serde_json::Value::Null)
+    }
+    /// The body as raw bytes. ES `await response.arrayBuffer()` (consumes the
+    /// body).
+    #[inline]
+    pub async fn array_buffer(self) -> ::std::vec::Vec<u8> {
+        self.inner.bytes().await.unwrap_or_default().to_vec()
+    }
 }
 /// Response headers — wraps `reqwest::header::HeaderMap` (re-exported from
 /// the `http` crate). `get(name)` is case-insensitive (HTTP headers are),

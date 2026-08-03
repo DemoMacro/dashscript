@@ -265,6 +265,37 @@ fn fetch_init_object_lowers_to_ds_fetch_with() {
 }
 
 #[test]
+fn fetch_response_body_methods_lower_to_async_fns() {
+    // `await r.json()` / `await r.arrayBuffer()` — the Response body methods —
+    // reflow through the generic method-call emit as `r.json()` /
+    // `r.array_buffer()` (snake_case), with the caller's `await` supplying the
+    // `.await` (both are async fns that consume the body). `json` parses via
+    // `serde_json::Value`, so the Fetch dep pulls `serde_json`.
+    let src = "async function f(url: string): Promise<void> {\n  const r = await fetch(url);\n  const j = await r.json();\n  const b = await r.arrayBuffer();\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("r.json()") && rust.contains("r.array_buffer()"),
+        "r.json()/r.arrayBuffer() → r.json()/r.array_buffer(), got:\n{rust}"
+    );
+    assert!(
+        rust.contains(".await"),
+        "body methods are async → .await, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Fetch),
+        "body methods stay under the Fetch dep, got deps: {deps:?}"
+    );
+    let mut toml = String::from("[dependencies]\n");
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(
+        toml.contains("serde_json"),
+        "json() pulls serde_json into Cargo.toml: {toml}"
+    );
+}
+
+#[test]
 fn structured_clone_lowers_to_clone_no_dep() {
     // `structuredClone(v)` (WinterTC deep clone) lowers to `v.clone()` — no
     // runtime dep (DashScript values are `Clone`); a non-`Clone` value surfaces

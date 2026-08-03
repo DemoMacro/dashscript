@@ -399,10 +399,11 @@ impl RuntimeDep {
             // Content-Type charset; `http2` is the default ALPN. reqwest pulls
             // tokio itself for its async runtime (the fixture already depends
             // on tokio via `Tokio`; `append_dep` dedupes the overlap).
-            RuntimeDep::Fetch => Some(&[(
-                "reqwest",
-                "{ version = \"0.12\", default-features = false, features = [\"rustls-tls\", \"charset\", \"http2\"] }",
-            )]),
+            RuntimeDep::Fetch => Some(&[
+                ("reqwest", "{ version = \"0.12\", default-features = false, features = [\"rustls-tls\", \"charset\", \"http2\"] }"),
+                // `Response.json()` parses the body via `serde_json::Value`.
+                ("serde_json", "1.0"),
+            ]),
         }
     }
 

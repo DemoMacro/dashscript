@@ -59,8 +59,10 @@ implicit `fn main`, which DashScript emits as a single-thread
 `#[tokio::main]` async entry (no `Send` bounds — matching JavaScript's
 single-thread semantics). `fetch(url)` → `ds_fetch`; `fetch(url, init)` with a
 plain object `init` → `ds_fetch_with` (method/body/headers extracted,
-ToString-coerced). `Response.status/.ok/.headers`, and the `reqwest`
-dependency are injected by the `Fetch` runtime dep.
+ToString-coerced). `Response.status/.ok/.headers` are zero-arg accessors;
+`await r.text()`/`.json()`/`.arrayBuffer()` are async body-draining fns
+(`arrayBuffer` → `array_buffer`). `reqwest` (and `serde_json` for `json`) are
+injected by the `Fetch` runtime dep.
 
 ## License
 
