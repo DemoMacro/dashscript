@@ -2059,6 +2059,18 @@ impl DsDisplay for str {
     }
 }
 
+/// `&T` displays as `T` — a template-literal interpolation or `+` concat of a
+/// borrowed value (a `for…of` loop variable bound by reference, a `&String`
+/// field, etc.) reaches `display(&expr)` as a `&T`. Without this a borrowed
+/// operand surfaces as `E0277: the trait bound \`&String: DsDisplay\` is not
+/// satisfied`; the blanket forwards so any `T: DsDisplay` borrows for free.
+impl<T: DsDisplay + ?Sized> DsDisplay for &T {
+    #[inline]
+    fn ds_display(&self) -> String {
+        (**self).ds_display()
+    }
+}
+
 impl DsDisplay for bool {
     #[inline]
     fn ds_display(&self) -> String {
