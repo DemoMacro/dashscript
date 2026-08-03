@@ -16,7 +16,9 @@ use oxc_ast::ast::{Argument, Expression, StaticMemberExpression};
 use syn::{parse_quote, Expr, Type};
 
 use super::super::super::context::Ctx;
-use super::super::super::expressions::{is_url_local, is_url_search_params_local, translate_expr};
+use super::super::super::expressions::{
+    is_url_local, is_url_search_params_local, translate_argument, translate_expr,
+};
 use super::super::es_to_string_arg;
 
 /// The Rust type a WHATWG URL API constructor builds, if `name` is one:
@@ -92,6 +94,13 @@ pub(in crate::translator) fn url_search_params_method(
         }
         "sort" if args.is_empty() => parse_quote!({ #obj.sort(); }),
         "toString" if args.is_empty() => parse_quote!(#obj.to_string()),
+        // `forEach(cb)` → `for_each(cb)`: value-first/key-second. The callback
+        // lowers via `function_expr_to_closure` (a `function`/arrow arg); the
+        // optional `thisArg` (arg 1) is reflection the static path drops.
+        "forEach" => {
+            let cb = translate_argument(args.first()?, ctx);
+            parse_quote!(#obj.for_each(#cb))
+        }
         _ => return None,
     })
 }
@@ -158,6 +167,10 @@ pub(in crate::translator) fn url_search_params_on_url_method(
         }
         "sort" if args.is_empty() => parse_quote!({ #url.sp_sort(); }),
         "toString" if args.is_empty() => parse_quote!(#url.sp_to_string()),
+        "forEach" => {
+            let cb = translate_argument(args.first()?, ctx);
+            parse_quote!(#url.sp_for_each(#cb))
+        }
         _ => return None,
     })
 }

@@ -476,6 +476,13 @@ impl DsUrl {
             .extend_pairs(p.iter().map(|(k, v)| (k.as_str(), v.as_str())))
             .finish()
     }
+    /// `url.searchParams.forEach(cb)` — see `DsUrlSearchParams::for_each`.
+    /// Same value-first/key-second order; operates on the URL's live query.
+    pub fn sp_for_each<F: Fn(String, String)>(&self, f: F) {
+        for (k, v) in self.sp_pairs() {
+            f(v, k);
+        }
+    }
     /// `url.searchParams` — a live view of this URL's query. Returns a
     /// `DsUrlSearchParams` sharing the same ref-counted `url::Url` (an `Rc`
     /// clone), so a mutation through the view (`params.append(…)`) is
@@ -694,6 +701,17 @@ impl DsUrlSearchParams {
     #[inline]
     pub fn is_empty(&self) -> bool {
         self.len() == 0
+    }
+    /// `params.forEach(cb)` — invoke `cb(value, key)` for each pair in
+    /// insertion order. WHATWG URLSearchParams uses value-first/key-second
+    /// order (the opposite of `Map.forEach`); the third callback arg (the
+    /// params object) and `thisArg` are reflection the static path drops.
+    /// `cb` takes owned `String`s so `keys.push(key)` type-checks against a
+    /// `Vec<String>` accumulator (the `assert_array_equals` operand shape).
+    pub fn for_each<F: Fn(String, String)>(&self, f: F) {
+        for (k, v) in dsq_pairs(&self.0) {
+            f(v, k);
+        }
     }
 }
 impl ::core::fmt::Display for DsUrlSearchParams {
