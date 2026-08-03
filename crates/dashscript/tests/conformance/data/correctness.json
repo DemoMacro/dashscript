@@ -63,6 +63,24 @@
       "expect": "supported",
       "expect_output": "abc",
       "note": "structuredClone(v) -> v.clone() (DashScript values are Clone); a primitive clone is itself"
+    },
+    {
+      "id": "correctness.performance_now_positive",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { const t: number = performance.now(); console.log(t > 0); }\nmain();\n",
+      "expect": "supported",
+      "expect_output": "true",
+      "note": "WinterTC hr-time: performance.now() returns a monotonic ms value > 0"
+    },
+    {
+      "id": "correctness.self_performance_now",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { const a: number = self.performance.now(); const b: number = self.performance.now(); console.log(b - a >= 0); }\nmain();\n",
+      "expect": "supported",
+      "expect_output": "true",
+      "note": "WinterTC self global alias: self.performance.now() lowers the same as performance.now(); monotonic difference is non-negative"
     }
   ]
 }

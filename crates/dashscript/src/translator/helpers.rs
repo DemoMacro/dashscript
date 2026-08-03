@@ -200,6 +200,25 @@ pub fn b64_decode<S: AsRef<str>>(s: S) -> String {
 }
 "#;
 
+/// High Resolution Time helper — `__ds::perf_now`. The WinterTC (W3C hr-time)
+/// `performance.now()` returns a monotonic DOMHighResTimeStamp (milliseconds
+/// since the process timeOrigin). The hr-time spec constrains monotonicity and
+/// non-negativity, not an absolute epoch, so the timeOrigin is approximated as
+/// the first call (a function-local `static OnceLock<Instant>`, lazily
+/// initialised — pure `std`, no cargo dep). `performance.now()` and
+/// `self.performance.now()` (the WinterTC `self` global-object alias) both
+/// lower here.
+pub(super) const PERF_HELPER: &str = r#"
+/// `performance.now()` — a monotonic DOMHighResTimeStamp (ms). The epoch is
+/// the first call (function-local static), so the value is positive and the
+/// difference of two readings is non-negative: the hr-time guarantees.
+pub fn perf_now() -> f64 {
+    static EPOCH: ::std::sync::OnceLock<::std::time::Instant> = ::std::sync::OnceLock::new();
+    let epoch = EPOCH.get_or_init(::std::time::Instant::now);
+    epoch.elapsed().as_secs_f64() * 1000.0
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through

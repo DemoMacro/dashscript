@@ -21,6 +21,14 @@ interface console {
   error(...data: any[]): void; // Print to stderr (lowers to `eprintln!`).
 }
 
+// performance — the WinterTC (W3C hr-time) High Resolution Time global.
+// `now()` returns a monotonic DOMHighResTimeStamp (ms since timeOrigin);
+// WinterTC's `self` is the global-object alias, so `self.performance.now()`
+// works the same (`hr_time.rs`, static Rust — never degraded).
+interface performance {
+  now(): number; // Monotonic milliseconds since timeOrigin.
+}
+
 // Math — the global math namespace (`math.rs`).
 interface Math {
   PI: number; // The ratio π ≈ 3.14159.
@@ -134,6 +142,7 @@ declare function Number(x: unknown): number; // The numeric form of `x`.
 declare function atob(s: string): string; // Base64-decode a string (forgiving: whitespace stripped, missing padding padded).
 declare function btoa(s: string): string; // Base64-encode the string's Latin-1 bytes (code units > U+00FF throw).
 declare function structuredClone<T>(value: T): T; // Deep-clone a cloneable value (primitives, records, arrays).
+declare var self: any; // WinterTC global-object alias (`self === globalThis`); `self.<global>` reaches the same global.
 declare var undefined: any; // The absent value.
 declare var Infinity: number; // Positive infinity.
 declare var NaN: number; // Not-a-Number.

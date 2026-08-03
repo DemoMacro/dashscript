@@ -473,6 +473,15 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
                 return expr;
             }
         }
+        // `performance.now()` — the WinterTC (W3C hr-time) High Resolution
+        // Time API. The receiver is the global `performance` object, optionally
+        // via the WinterTC `self` alias (`self.performance.now()`); both lower
+        // to `__ds::perf_now()`. Dispatched before the array/string/… method
+        // tables: a global-object receiver never matches a local-typed one, so
+        // the order is safe.
+        if let Some(expr) = builtins::perf_method(sm) {
+            return expr;
+        }
         if let Some(expr) = builtins::array_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }

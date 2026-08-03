@@ -191,6 +191,40 @@ fn structured_clone_lowers_to_clone_no_dep() {
 }
 
 #[test]
+fn perf_now_emits_hr_time_helper_no_cargo_dep() {
+    // `performance.now()` (WinterTC hr-time) lowers to `__ds::perf_now`; the
+    // `__ds::perf_now` marker flags the `HrTime` dep, which ships the helper
+    // (a function-local `static OnceLock<Instant>` epoch — pure `std`, so no
+    // cargo crate). The WinterTC `self` global-object alias lands on the same
+    // helper, so `self.performance.now()` and `performance.now()` are identical.
+    let src = "function f(): number { return self.performance.now(); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::perf_now"),
+        "self.performance.now() → __ds::perf_now, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::HrTime),
+        "HrTime dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module()
+            .is_some_and(|s| { s.contains("pub fn perf_now") && s.contains("OnceLock") }),
+        "HrTime dep ships perf_now helper, got helper: {:?}",
+        deps.helper_module()
+    );
+    // Pure `std` — HrTime appends no cargo crate.
+    let mut toml = String::from("[dependencies]\n");
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(
+        !toml.contains("= \""),
+        "HrTime pulls no cargo crate, got Cargo.toml: {toml}"
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);
