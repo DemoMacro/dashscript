@@ -1392,11 +1392,23 @@ pub(in crate::translator) fn translate_stmt(
         // Unsupported control flow (`labeled:` / `with`) — `check` flags these;
         // the explicit arm keeps dispatch exhaustive (no `_` wildcard).
         Statement::LabeledStatement(_) | Statement::WithStatement(_) => vec![],
+        // A nested `function` declaration lowers to a Rust nested fn item —
+        // Rust permits `fn outer() { fn inner() {} }`, so a hoisted TS helper
+        // that calls only its siblings/params/outer fn items (the
+        // test262/WPT `callbackfn` convention) maps directly. A nested fn that
+        // captures an outer local (closure semantics a Rust fn item cannot
+        // express) fails `cargo check` honestly; `check` still flags any
+        // unmappable construct inside the body via its recursive walk.
+        Statement::FunctionDeclaration(f) => {
+            vec![Stmt::Item(syn::Item::Fn(translate_function(
+                f, registry, names,
+            )))]
+        }
         // Top-level-only constructs — declarations and module declarations do
         // not appear in a function body; a nested one stays unmapped (a nested
-        // function declaration is rarer and `check` flags it).
-        Statement::FunctionDeclaration(_)
-        | Statement::ClassDeclaration(_)
+        // class/type/interface/enum/module/import/export is rarer and `check`
+        // flags it).
+        Statement::ClassDeclaration(_)
         | Statement::TSTypeAliasDeclaration(_)
         | Statement::TSInterfaceDeclaration(_)
         | Statement::TSEnumDeclaration(_)

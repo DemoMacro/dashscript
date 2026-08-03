@@ -299,3 +299,53 @@ fn check_flags_await() {
         "await not flagged: {diags:?}"
     );
 }
+
+#[test]
+fn nested_fn_declaration_lowers_to_nested_item() {
+    // A nested `function` declaration (the test262/WPT helper convention)
+    // lowers to a Rust nested fn item — `fn main { fn helper(..) {..} }` is
+    // valid Rust, and a sibling call (`caller` → `helper`) resolves at the
+    // enclosing scope.
+    let src = "function main(): void {\n  function helper(x: number): number { return x + 1; }\n  function caller(): number { return helper(41); }\n  caller();\n}";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("fn helper("),
+        "nested helper not emitted: {rust}"
+    );
+    assert!(
+        rust.contains("fn caller("),
+        "nested caller not emitted: {rust}"
+    );
+    assert!(
+        !rust.contains("todo!"),
+        "no todo! in nested fn lowering: {rust}"
+    );
+}
+
+#[test]
+fn check_passes_nested_fn_declaration() {
+    // A nested fn declaration is no longer flagged `unsupported` — it lowers
+    // to a Rust nested fn item. (A construct inside its body that cannot
+    // lower — reflection, await, … — is still flagged by the recursive walk.)
+    let diags = Translator::new()
+        .check("function main(): void {\n  function helper(x: number): number { return x + 1; }\n  helper(1);\n}");
+    assert!(diags.is_empty(), "nested fn flagged: {diags:?}");
+}
+
+#[test]
+fn check_flags_unmappable_inside_nested_fn() {
+    // A nested fn itself lowers, but an unmappable construct inside its body
+    // (`instanceof` reflection) is still surfaced by the recursive walk.
+    let diags = Translator::new()
+        .check("function main(): void {\n  function f(x: unknown): boolean { return x instanceof Array; }\n}");
+    assert!(
+        diags.iter().any(|d| d.message.contains("instanceof")),
+        "instanceof inside nested fn not flagged: {diags:?}"
+    );
+    assert!(
+        !diags
+            .iter()
+            .any(|d| d.message.contains("nested function declaration")),
+        "nested fn itself should not be flagged: {diags:?}"
+    );
+}

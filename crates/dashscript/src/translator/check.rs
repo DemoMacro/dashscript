@@ -425,19 +425,11 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>, state: &m
     if let Some(f) = top_level_function(stmt) {
         if let Some(body) = &f.body {
             for s in &body.statements {
-                // A nested `function` declaration (the test262 `callbackfn`
-                // convention) has no Rust mapping — a Rust `fn` item cannot
-                // sit inside another fn body in a way the translator lowers,
-                // so the declaration is dropped and the call site then fails
-                // `cargo check` (E0425 partial). Flag it here so it is
-                // reported as `unsupported` rather than as a partial.
-                if let Statement::FunctionDeclaration(nested) = s {
-                    out.push(err(
-                        "nested function declaration is unsupported — move it to \
-                         module scope, or use an arrow function for a callback",
-                        nested.span,
-                    ));
-                }
+                // A nested `function` declaration now lowers to a Rust nested
+                // fn item (see `translate_stmt`), so it is no longer flagged
+                // here. `collect_unsupported(s)` still recurses into a nested
+                // fn body so any unmappable construct inside (reflection,
+                // async, …) surfaces as usual.
                 collect_unsupported(s, out, state);
             }
         }
