@@ -367,6 +367,36 @@ fn wpt_promise_test_compiles_and_runs() {
     );
 }
 
+/// `promise_test(namedFn, name)` — the named-async-function-reference form
+/// (slice 2c) — end-to-end on the static path, sibling to the inline-async
+/// smoke above. The async callback is a top-level `async function` declaration
+/// referenced by name; it must lower to `wpt_promise_test(name, run()).await`
+/// and run supported (exit 0).
+#[test]
+fn wpt_promise_test_named_callback_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.promise_named_smoke".into(),
+        category: "smoke".into(),
+        fixture:
+            "async function run(): Promise<void> { assert_equals(1, 1); }\npromise_test(run, \"named\");\n".into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "promise_test named-callback smoke should be supported: {detail}"
+    );
+}
+
 /// Once-per-run check that the engine compat path assembles into a building
 /// cargo project: a reflection `.ts` source → `translate_with_deps` (flips
 /// `needs_engine`) → `write_project` (injects `__ds_engine` + the `rquickjs`

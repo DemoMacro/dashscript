@@ -90,18 +90,18 @@ pub(in crate::translator) fn testharness_function(
             Some(f) => parse_quote!((#f)()),
             None => return None,
         },
-        // `promise_test(async fn, name)` → `wpt_promise_test(name, async move {
-        // body }).await`. The async callback's body lowers via `body_block`
-        // (the same per-body `Locals` as a closure) wrapped in `async move`;
-        // the `.await` makes the entry's `main` async (Stage 1 detects it). The
-        // callback's `t` parameter is dropped — a body that names it surfaces
-        // as E0425 (honest partial); most `promise_test` bodies use the global
-        // `assert_*` and do not name `t`. A non-async/non-expression callback,
-        // or a non-literal name, returns `None` (honest unsupported).
+        // `promise_test(async fn, name)` → `wpt_promise_test(name, future).await`,
+        // where `future` is the callback's `Future` — an inline async
+        // arrow/function-expression lowers to `async move { body }` (its body
+        // via `body_block`), or a named async-function reference lowers to
+        // `named_fn()` (slice 2c). The `.await` makes the entry's `main` async
+        // (Stage 1 detects it). The callback's `t` parameter is dropped — a
+        // body that names it surfaces as a compile error (honest partial); most
+        // `promise_test` bodies use the global `assert_*` and do not name `t`.
+        // A non-async/non-expression callback, or a non-literal name, returns
+        // `None` (honest unsupported).
         "promise_test" => match promise_test_callback(args, ctx) {
-            Some((name, body)) => {
-                parse_quote!(crate::__ds::wpt_promise_test(#name, async move #body).await)
-            }
+            Some((name, fut)) => parse_quote!(crate::__ds::wpt_promise_test(#name, #fut).await),
             None => return None,
         },
         // `setup(fn_or_props)` / `done()` — no-ops on the static path.
@@ -147,25 +147,41 @@ fn test_callback_closure(arg: &Argument, ctx: &Ctx<'_>) -> Option<Expr> {
     }
 }
 
-/// `promise_test(async fn, name)` → the `(name, body)` pair: `name` is a string
-/// literal, and `body` is the async callback's body lowered to a Rust `Block`
-/// (via [`expressions::body_block`]) ready to wrap in `async move { … }`.
-/// Returns `None` if arg0 is not an async arrow/function-expression, or arg1 is
-/// not a string literal — the call then surfaces as a plain E0425, honestly
-/// unsupported.
-fn promise_test_callback(args: &[Argument], ctx: &Ctx<'_>) -> Option<(syn::LitStr, syn::Block)> {
+/// `promise_test(async fn, name)` → the `(name, future)` pair: `name` is a
+/// string literal, and `future` is the callback lowered to a Rust expression
+/// that evaluates to a `Future` — `async move { … }` for an inline async
+/// arrow/function-expression (its body via [`expressions::body_block`]), or
+/// `named_fn()` for a reference to an async function declaration (the fn item
+/// that [`translate_argument`] lowers, called, yields its `Future`). Returns
+/// `None` if arg0 is none of those, or arg1 is not a string literal — the call
+/// then surfaces as a plain E0425, honestly unsupported.
+fn promise_test_callback(args: &[Argument], ctx: &Ctx<'_>) -> Option<(syn::LitStr, syn::Expr)> {
     let name = match args.get(1)?.as_expression()? {
         Expression::StringLiteral(s) => syn::LitStr::new(s.value.as_str(), Span::call_site()),
         _ => return None,
     };
-    let body = match args.first()?.as_expression()? {
+    let fut: syn::Expr = match args.first()?.as_expression()? {
         Expression::ArrowFunctionExpression(arrow) if arrow.r#async => {
-            super::super::super::expressions::body_block(&arrow.params, &arrow.body, ctx)
+            let block =
+                super::super::super::expressions::body_block(&arrow.params, &arrow.body, ctx);
+            parse_quote!(async move #block)
         }
         Expression::FunctionExpression(f) if f.r#async => {
-            super::super::super::expressions::body_block(&f.params, f.body.as_deref()?, ctx)
+            let block =
+                super::super::super::expressions::body_block(&f.params, f.body.as_deref()?, ctx);
+            parse_quote!(async move #block)
+        }
+        // `promise_test(namedFn, name)` — a reference to an async function
+        // declaration. `translate_argument` lowers the identifier to the Rust
+        // fn-item path; calling it `()` yields its `Future` (a Rust async fn
+        // item is `fn() -> impl Future`). A callback that names the `t`
+        // parameter has no static test-object model — its signature then
+        // mismatches the `()` call and surfaces as an honest compile error.
+        Expression::Identifier(_) => {
+            let callee = translate_argument(args.first()?, ctx);
+            parse_quote!((#callee)())
         }
         _ => return None,
     };
-    Some((name, body))
+    Some((name, fut))
 }

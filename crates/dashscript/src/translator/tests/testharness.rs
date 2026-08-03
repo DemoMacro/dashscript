@@ -142,3 +142,38 @@ fn check_passes_promise_test() {
         Translator::new().check("promise_test(async () => { assert_equals(1, 1); }, \"x\");");
     assert!(diags.is_empty(), "promise_test flagged: {diags:?}");
 }
+
+#[test]
+fn promise_test_named_callback_lowers() {
+    // `promise_test(namedFn, name)` — a reference to an async function
+    // declaration. The fn item is called `()` to yield its `Future` (a Rust
+    // async fn item is `fn() -> impl Future`); the top-level `.await` makes
+    // the entry's `main` async under `#[tokio::main]`. The inline-async form
+    // (slice 2a) covers `promise_test(async () => …)`; this covers the named
+    // reference form (slice 2c).
+    let src = "async function runTest(): Promise<void> { console.log(\"x\"); }\npromise_test(runTest, \"named\");";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("wpt_promise_test"),
+        "named callback should lower to wpt_promise_test: {rust}"
+    );
+    assert!(
+        rust.contains("(run_test)()"),
+        "named callback should call the fn item: {rust}"
+    );
+    assert!(rust.contains(".await"), "should await: {rust}");
+    assert!(
+        rust.contains("async fn main"),
+        "main should be async: {rust}"
+    );
+    assert!(!rust.contains("todo!"), "no todo!: {rust}");
+}
+
+#[test]
+fn check_passes_promise_test_named_callback() {
+    // A named async-function reference is Mapped (slice 2c) — check produces
+    // no diagnostics.
+    let src = "async function runTest(): Promise<void> { console.log(\"x\"); }\npromise_test(runTest, \"n\");";
+    let diags = Translator::new().check(src);
+    assert!(diags.is_empty(), "named promise_test flagged: {diags:?}");
+}
