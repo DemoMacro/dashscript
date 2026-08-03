@@ -555,6 +555,14 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::text_decoder_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `encoder.encode()` / `encoder.encode(undefined)` on a `TextEncoder`
+        // (a local or an inline `new TextEncoder()`) — the ES `encode(input =
+        // "")` default lowers to an empty byte sequence. A supplied value
+        // falls through to a plain call. Dispatched after `typed_array_method`
+        // and `text_decoder_method`; `encode` is not a collection method.
+        if let Some(expr) = builtins::text_encoder_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         // `d.toString()` / `d.toJSON()` / `d.equals(o)` on a `Temporal.<Type>`
         // local (`temporal_rs::<Type>`). Dispatched on the receiver's resolved
         // type; a non-Temporal receiver or unmapped name falls through.

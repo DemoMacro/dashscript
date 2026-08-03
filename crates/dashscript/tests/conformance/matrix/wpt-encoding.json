@@ -4,7 +4,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "static build: src\\main.rs:20:47: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:24:54: error[E0308]: mismatched types: expected `String`, found `Option<_>`\nsrc\\main.rs:52:55: error[E0609]: no field `slice` on type `Vec<_>`: unknown field\nsrc\\main.rs:60:61: error[E0609]: no field `buffer` on type `Vec<u8>`: unknown field\nsrc\\main.rs:64:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:73:5: error[E0308]: arguments to this function are incorrect",
+    "detail": "static build: src\\main.rs:52:55: error[E0609]: no field `slice` on type `Vec<_>`: unknown field\nsrc\\main.rs:60:61: error[E0609]: no field `buffer` on type `Vec<u8>`: unknown field\nsrc\\main.rs:64:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:73:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:82:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:55:43: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
     "note": ""
   },
   {
@@ -204,7 +204,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "\nthread 'main' (46160) panicked at src\\__ds.rs:314:9:\nAssertionError: Expected SameValue(«\"�\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "\nthread 'main' (6340) panicked at src\\__ds.rs:314:9:\nAssertionError: Expected SameValue(«\"�\"», «\"\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {

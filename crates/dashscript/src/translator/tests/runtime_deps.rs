@@ -140,6 +140,26 @@ fn text_encoder_encode_flags_encoding_dep_and_ships_structs() {
 }
 
 #[test]
+fn text_encoder_encode_default_arg_lowers_to_empty_string() {
+    // `TextEncoder.prototype.encode(input = "")` — both a missing argument and
+    // an explicit `undefined` trigger the ES default (JS default-parameter
+    // semantics, not `String(undefined)`), and `""` UTF-8 encodes to `[]`.
+    // The inline `new TextEncoder().encode()` form (the common WPT shape) and
+    // the one-literal-arg case must both reach the `String::new()` lowering; a
+    // supplied string keeps the plain `.encode(s.to_string())` call.
+    let src = "const a = new TextEncoder().encode();\nconst b = new TextEncoder().encode(undefined);\nconst c = new TextEncoder().encode(\"hi\");";
+    let rust = Translator::new().translate(src).expect("translate");
+    assert!(
+        rust.matches("encode(::std::string::String::new())").count() == 2,
+        "encode() and encode(undefined) → encode(String::new()), got:\n{rust}"
+    );
+    assert!(
+        rust.contains("encode(\"hi\".to_string())"),
+        "encode(\"hi\") keeps the plain ToString call, got:\n{rust}"
+    );
+}
+
+#[test]
 fn text_decoder_ctor_and_decode_route_through_encoding_rs() {
     // `new TextDecoder(label?, options?)` resolves `label` via
     // `encoding_rs::Encoding::for_label` (so a non-UTF-8 label like "utf-16le"
