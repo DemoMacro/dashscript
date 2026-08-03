@@ -1338,8 +1338,10 @@ pub enum DsCmp<'a> {
     Num(f64),
     Bool(bool),
     Str(&'a str),
-    Unit,
-    /// `undefined` — an `Option<T>`'s `None`, or `serde_json::Value::Null`.
+    /// `undefined` — an `Option<T>`'s `None`, a `serde_json::Value::Null`, or the
+    /// `()` a void-returning function yields. ES `void fn()` is `undefined`, so
+    /// a void return and an `undefined` literal are the same value and must
+    /// compare SameValue-equal (`assert_equals(fn(), undefined)` holds).
     Undefined,
 }
 
@@ -1355,8 +1357,8 @@ impl DsCmp<'_> {
             }
             (DsCmp::Bool(a), DsCmp::Bool(b)) => a == b,
             (DsCmp::Str(a), DsCmp::Str(b)) => *a == *b,
-            (DsCmp::Unit, DsCmp::Unit) => true,
-            // `undefined` SameValue `undefined` (an Option's None, or Null).
+            // `undefined` SameValue `undefined` (an Option's None, a Null, or the
+            // `()` a void-returning function yields — all project to Undefined).
             (DsCmp::Undefined, DsCmp::Undefined) => true,
             _ => false,
         }
@@ -1481,10 +1483,14 @@ impl DsSameValue for &str {
     }
 }
 
+/// The `()` a void-returning function yields — ES `void fn()` is `undefined`,
+/// so it projects to [`DsCmp::Undefined`] and `assert_equals(fn(), undefined)`
+/// holds. An `undefined` literal lowers to `Option::<()>::None`, which also
+/// projects to `Undefined`, so the two forms of ES `undefined` compare equal.
 impl DsSameValue for () {
     #[inline]
     fn ds_cmp(&self) -> DsCmp<'_> {
-        DsCmp::Unit
+        DsCmp::Undefined
     }
 }
 

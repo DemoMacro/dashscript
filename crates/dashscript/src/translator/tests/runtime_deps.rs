@@ -1566,6 +1566,34 @@ fn assert_same_value_cross_form_string_operands() {
 }
 
 #[test]
+fn assert_same_value_void_return_equals_undefined() {
+    // `assert.sameValue(f(), undefined)` where `f` is a `void` function — ES
+    // `void fn()` is `undefined`, so a void return (the Rust `()` the call
+    // lowers to) and an `undefined` literal (an `Option::None`) must be
+    // SameValue-equal. Both project to `DsCmp::Undefined`; a split `Unit` kind
+    // for `()` would make this assert fail (the eventtarget-addeventlistener
+    // WPT fixture regressed on exactly `SameValue(«()», «None»)`).
+    let src = "function f(): void {} function main(): void { assert.sameValue(f(), undefined); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("__ds::assert_same_value"),
+        "void-return assert still lowers, got:\n{rust}"
+    );
+    let helper = deps.helper_module().expect("Assert dep ships a helper");
+    assert!(
+        helper.contains("impl DsSameValue for ()"),
+        "helper keeps a unit impl, got helper: {helper:?}"
+    );
+    assert!(
+        !helper.contains("DsCmp::Unit"),
+        "helper must not split a void return into its own DsCmp kind (it is \
+         undefined), got helper: {helper:?}"
+    );
+}
+
+#[test]
 fn object_is_distinguishes_neg_zero() {
     // `Object.is(0, -0)` → false: ES SameValue treats +0 and -0 as distinct,
     // where Rust `==` says `0.0 == -0.0`. The f64 lowering emits a sign check
