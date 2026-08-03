@@ -172,6 +172,45 @@ fn atob_btoa_flag_base64_dep_and_ships_helpers() {
 }
 
 #[test]
+fn fetch_lowers_to_ds_fetch_flags_reqwest() {
+    // `fetch(url)` (WinterTC Web API) maps to `__ds::ds_fetch(url)`; the
+    // `__ds::ds_fetch` marker flags the `Fetch` dep, which pulls `reqwest` and
+    // ships `DsResponse`/`DsHeaders`/`ds_fetch` in `__ds`. `await fetch(url)`
+    // and `await r.text()` lower to native Rust `.await` (the async fn body is
+    // already an async context).
+    let src = "async function f(url: string): Promise<void> { const r = await fetch(url); await r.text(); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::ds_fetch"),
+        "fetch → __ds::ds_fetch, got:\n{rust}"
+    );
+    assert!(
+        rust.contains(".text()") && rust.contains(".await"),
+        "await fetch(url)/r.text() → .await, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Fetch),
+        "Fetch dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module().is_some_and(|s| {
+            s.contains("pub async fn ds_fetch")
+                && s.contains("pub struct DsResponse")
+                && s.contains("pub struct DsHeaders")
+        }),
+        "Fetch dep ships DsResponse/DsHeaders/ds_fetch",
+    );
+    let mut toml = String::from("[dependencies]\n");
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(
+        toml.contains("reqwest"),
+        "reqwest crate in Cargo.toml: {toml}"
+    );
+}
+
+#[test]
 fn structured_clone_lowers_to_clone_no_dep() {
     // `structuredClone(v)` (WinterTC deep clone) lowers to `v.clone()` — no
     // runtime dep (DashScript values are `Clone`); a non-`Clone` value surfaces

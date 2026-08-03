@@ -119,6 +119,16 @@ pub(in crate::translator) fn global_function(
             let v = translate_argument(args.first()?, ctx);
             parse_quote!(#v.clone())
         }
+        // `fetch(url)` — WinterTC (Ecma TC55) Web API. ES `fetch` returns
+        // `Promise<Response>`; `await fetch(url)` lowers to `__ds::ds_fetch(url)`
+        // (the caller's `await` supplies the `.await`). A string URL is the
+        // common form; a `Request` object arg has no static lowering here — it
+        // falls through to a plain call and surfaces honestly at `cargo check`.
+        // See `DS_FETCH_HELPER`.
+        "fetch" => {
+            let url = translate_argument(args.first()?, ctx);
+            parse_quote!(crate::__ds::ds_fetch(#url))
+        }
         _ => return None,
     })
 }

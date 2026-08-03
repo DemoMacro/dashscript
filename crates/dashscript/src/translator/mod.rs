@@ -209,12 +209,20 @@ pub enum RuntimeDep {
     /// (test262) or `unsupported` (WinterTC). Flags `futures` (also pulled by
     /// `Tokio` — `append_dep` dedupes the overlap); marker `__ds::ds_promise_`.
     Promise,
+    /// WHATWG `fetch(url)` — a WinterTC (Ecma TC55) Web API. ES `fetch` returns
+    /// `Promise<Response>`; `await fetch(url)` lowers to `__ds::ds_fetch(url)`
+    /// (a `DsResponse`), the caller's `await` driving it. `Response` properties
+    /// (`status`/`ok`/`headers`/`text`) map to `DsResponse` methods. Backed by
+    /// `reqwest` (rustls-tls, pure-Rust TLS — no system OpenSSL), the same HTTP
+    /// core deno_fetch uses; never degraded to the engine. Flags `reqwest`;
+    /// marker `__ds::ds_fetch`.
+    Fetch,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 24] = [
+    const ALL: [RuntimeDep; 25] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -239,6 +247,7 @@ impl RuntimeDep {
         RuntimeDep::URLPattern,
         RuntimeDep::Tokio,
         RuntimeDep::Promise,
+        RuntimeDep::Fetch,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -290,6 +299,7 @@ impl RuntimeDep {
             // any value type compiles).
             RuntimeDep::Tokio => Some("#[tokio::main(flavor = \"current_thread\")]"),
             RuntimeDep::Promise => Some("__ds::ds_promise_"),
+            RuntimeDep::Fetch => Some("__ds::ds_fetch"),
             RuntimeDep::Engine => None,
         }
     }
@@ -382,6 +392,17 @@ impl RuntimeDep {
             // `futures` — `Promise.resolve`/`all` compose over `ready`/`join_all`.
             // Also pulled by `Tokio` (`append_dep` dedupes the overlap).
             RuntimeDep::Promise => Some(&[("futures", "\"0.3\"")]),
+            // `reqwest` — the WHATWG fetch HTTP core (deno_fetch's engine).
+            // `rustls-tls` uses pure-Rust TLS (rustls + webpki-roots), so the
+            // emitted project needs no system OpenSSL/schannel and builds the
+            // same on every target. `charset` lets `Response::text()` honor a
+            // Content-Type charset; `http2` is the default ALPN. reqwest pulls
+            // tokio itself for its async runtime (the fixture already depends
+            // on tokio via `Tokio`; `append_dep` dedupes the overlap).
+            RuntimeDep::Fetch => Some(&[(
+                "reqwest",
+                "{ version = \"0.12\", default-features = false, features = [\"rustls-tls\", \"charset\", \"http2\"] }",
+            )]),
         }
     }
 
@@ -415,6 +436,7 @@ impl RuntimeDep {
             // The runtime is `#[tokio::main]`, not a helper module — no slice.
             RuntimeDep::Tokio => None,
             RuntimeDep::Promise => Some(DS_PROMISE_HELPER),
+            RuntimeDep::Fetch => Some(DS_FETCH_HELPER),
         }
     }
 }

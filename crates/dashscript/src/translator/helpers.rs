@@ -300,6 +300,77 @@ pub fn ds_promise_all<T: 'static>(
 }
 "#;
 
+/// WHATWG `fetch` API helper — `__ds::DsResponse`/`__ds::ds_fetch`. A WinterTC
+/// (Ecma TC55) Web API: ES `fetch(url)` returns `Promise<Response>`; this slice
+/// holds the `DsResponse`/`DsHeaders` wrappers + the `ds_fetch` async fn that
+/// `await fetch(url)` lowers to. Backed by `reqwest` (deno_fetch's HTTP core,
+/// the crate Deno/servo reach for) — pure-Rust static track, never degraded to
+/// the engine. reqwest auto-switches its backend on `wasm32` (browser `fetch`
+/// via wasm-bindgen), so one slice covers the native and the future wasm target.
+pub(super) const DS_FETCH_HELPER: &str = r#"
+/// A `fetch()` `Response` — wraps `reqwest::Response`. The body is a one-shot
+/// stream (ES semantics), so `text` consumes `self`; `status`/`ok`/`headers`
+/// borrow `&self` (the ES properties do not drain the body).
+pub struct DsResponse {
+    inner: reqwest::Response,
+}
+impl DsResponse {
+    /// HTTP status code (e.g. 200). ES `response.status` is a number.
+    #[inline]
+    pub fn status(&self) -> f64 {
+        self.inner.status().as_u16() as f64
+    }
+    /// True iff the status is a 2xx. ES `response.ok`.
+    #[inline]
+    pub fn ok(&self) -> bool {
+        self.inner.status().is_success()
+    }
+    /// The response headers. ES `response.headers`.
+    #[inline]
+    pub fn headers(&self) -> DsHeaders {
+        DsHeaders {
+            inner: self.inner.headers().clone(),
+        }
+    }
+    /// The body as UTF-8 text. ES `await response.text()` (consumes the body).
+    #[inline]
+    pub async fn text(self) -> ::std::string::String {
+        self.inner.text().await.unwrap_or_default()
+    }
+}
+/// Response headers — wraps `reqwest::HeaderMap`. `get(name)` is case-insensitive
+/// (HTTP headers are), returning the first value or `None` (ES `null`).
+pub struct DsHeaders {
+    inner: reqwest::HeaderMap,
+}
+impl DsHeaders {
+    #[inline]
+    pub fn get(&self, name: &str) -> ::std::option::Option<::std::string::String> {
+        self.inner
+            .get(name)
+            .and_then(|v| v.to_str().ok())
+            .map(::std::string::String::from)
+    }
+}
+/// `fetch(url)` — a GET request returning a `DsResponse`. ES `fetch` returns a
+/// `Promise<Response>`; this async fn is what `await fetch(url)` lowers to (the
+/// caller's `await` supplies the `.await`). A 3s timeout keeps a fixture aimed
+/// at a WPT test server that does not exist in this environment from hanging
+/// the conformance harness. A network failure panics (ES would reject the
+/// promise with a `TypeError`; the panic prefix is what the harness reads).
+pub async fn ds_fetch<T: reqwest::IntoUrl>(url: T) -> DsResponse {
+    let resp = reqwest::Client::builder()
+        .timeout(::std::time::Duration::from_secs(3))
+        .build()
+        .expect("reqwest client build")
+        .get(url)
+        .send()
+        .await
+        .expect("fetch network error");
+    DsResponse { inner: resp }
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through
