@@ -81,6 +81,15 @@
       "expect": "supported",
       "expect_output": "true",
       "note": "WinterTC self global alias: self.performance.now() lowers the same as performance.now(); monotonic difference is non-negative"
+    },
+    {
+      "id": "correctness.url_can_parse",
+      "category": "correctness",
+      "source": "manual",
+      "fixture": "function main(): void { console.log(URL.canParse(\"https://example.com/\")); console.log(URL.canParse(\"a\", \"https://b/\")); console.log(URL.canParse(\"not a url\")); }\nmain();\n",
+      "expect": "supported",
+      "expect_output": "true\ntrue\nfalse",
+      "note": "WinterTC URL.canParse: absolute URL → true; 'a' resolves against base https://b/ → true; 'not a url' (no base, has spaces) → false"
     }
   ]
 }

@@ -29,6 +29,15 @@ interface performance {
   now(): number; // Monotonic milliseconds since timeOrigin.
 }
 
+// URL — the WinterTC (WHATWG URL) static methods on the `URL` constructor
+// object (`url.rs`). Instance accessors (`href`/`origin`/`searchParams`/…) and
+// `new URL(…)` are not namespace members; completion surfaces them from the
+// receiver's inferred type. `URL.parse` returns `null` on a parse failure.
+interface URL {
+  canParse(url: string, base?: string): boolean; // True iff `url` parses (optionally resolved against `base`).
+  parse(url: string, base?: string): URL | null; // Parse `url` (optionally against `base`); `null` on failure.
+}
+
 // Math — the global math namespace (`math.rs`).
 interface Math {
   PI: number; // The ratio π ≈ 3.14159.

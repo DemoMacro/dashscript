@@ -21,5 +21,5 @@ pub(in crate::translator) use console::console_method;
 pub(in crate::translator) use encoding::encoding_ctor_type;
 pub(in crate::translator) use hr_time::perf_method;
 pub(in crate::translator) use url::{
-    url_ctor_type, url_search_params_method, url_search_params_on_url_method,
+    url_ctor_type, url_search_params_method, url_search_params_on_url_method, url_static_method,
 };

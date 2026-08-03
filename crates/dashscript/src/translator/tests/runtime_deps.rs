@@ -225,6 +225,35 @@ fn perf_now_emits_hr_time_helper_no_cargo_dep() {
 }
 
 #[test]
+fn url_static_methods_emit_url_dep_helpers() {
+    // `URL.canParse` / `URL.parse` (WinterTC WHATWG URL static methods) lower to
+    // `DsUrl::can_parse[_with_base]` / `DsUrl::parse_opt[_with_base]` (associated
+    // functions, not instance methods — no `&self`). Emitting them under
+    // `__ds::DsUrl` carries the `Url` marker so the runtime dep fires (the same
+    // dep `new URL(…)` pulls); the `URL` constructor identifier is intercepted,
+    // so no `URL`/`url` fall-through appears in the output.
+    let src = "function f(): boolean { return URL.canParse(\"https://x\", \"https://b/\"); }\nfunction g(p: string): void { const u = URL.parse(p); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::DsUrl::can_parse_with_base")
+            && rust.contains("crate::__ds::DsUrl::parse_opt"),
+        "URL.canParse/parse → DsUrl::can_parse/parse_opt, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Url),
+        "Url dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module()
+            .is_some_and(|s| s.contains("pub fn can_parse") && s.contains("pub fn parse_opt")),
+        "Url dep ships can_parse/parse_opt associated fns, got helper: {:?}",
+        deps.helper_module()
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);

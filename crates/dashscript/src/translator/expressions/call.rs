@@ -482,6 +482,14 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::perf_method(sm) {
             return expr;
         }
+        // `URL.canParse(url, base?)` / `URL.parse(url, base?)` — the WinterTC
+        // WHATWG URL static methods on the `URL` constructor object. The callee
+        // is the `URL` identifier (not a local), so this dispatch fires before
+        // the local-typed method tables; a non-`URL` receiver falls through.
+        // `URL.parse` lowers to `Option<DsUrl>` (ES `null` on parse failure).
+        if let Some(expr) = builtins::url_static_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         if let Some(expr) = builtins::array_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }

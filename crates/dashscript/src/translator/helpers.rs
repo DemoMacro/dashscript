@@ -464,6 +464,58 @@ impl ::serde::Serialize for DsUrl {
         s.serialize_str(&self.0.borrow().to_string())
     }
 }
+// ---- `URL.<static>` as `DsUrl` associated functions ----
+// The `URL` constructor object's static methods are not instance methods (no
+// `&self`) — they are associated functions on `DsUrl`, so the emit carries the
+// `__ds::DsUrl` marker and the `Url` runtime dep fires (the helper slice ships
+// alongside the `DsUrl` type, the same dep `new URL(…)` pulls). `URL.parse`
+// returns `Option<DsUrl>` (ES `null` on a parse failure, not a throw);
+// `URL.canParse` is the boolean form. ES `ToString` is applied at the call
+// site, so an `undefined` argument arrives as the string `\"undefined\"`, which
+// fails to parse (matching `URL.canParse(undefined)` → false).
+impl DsUrl {
+    /// `URL.canParse(url)` — true iff `url` parses as an absolute URL.
+    pub fn can_parse<S: ::std::convert::AsRef<str>>(url: S) -> bool {
+        url::Url::parse(url.as_ref()).is_ok()
+    }
+    /// `URL.canParse(url, base)` — true iff `url` resolves against `base`. A
+    /// `base` that is itself unparseable fails the whole parse (returns false).
+    pub fn can_parse_with_base<U: ::std::convert::AsRef<str>, B: ::std::convert::AsRef<str>>(
+        url: U,
+        base: B,
+    ) -> bool {
+        match url::Url::parse(base.as_ref()) {
+            ::std::result::Result::Ok(b) => url::Url::options()
+                .base_url(::std::option::Option::Some(&b))
+                .parse(url.as_ref())
+                .is_ok(),
+            ::std::result::Result::Err(_) => false,
+        }
+    }
+    /// `URL.parse(url)` — `Some(DsUrl)` on success, `None` on failure (ES
+    /// `null`). Each call builds a fresh `Rc<RefCell<Url>>`, so
+    /// `URL.parse(x) !== URL.parse(x)` (object identity differs), matching the
+    /// WPT `unique object` assertion.
+    pub fn parse_opt<S: ::std::convert::AsRef<str>>(url: S) -> ::std::option::Option<DsUrl> {
+        url::Url::parse(url.as_ref())
+            .ok()
+            .map(|u| Self(::std::rc::Rc::new(::std::cell::RefCell::new(u))))
+    }
+    /// `URL.parse(url, base)` — resolve `url` against `base`, `None` on failure.
+    pub fn parse_opt_with_base<U: ::std::convert::AsRef<str>, B: ::std::convert::AsRef<str>>(
+        url: U,
+        base: B,
+    ) -> ::std::option::Option<DsUrl> {
+        match url::Url::parse(base.as_ref()) {
+            ::std::result::Result::Ok(b) => url::Url::options()
+                .base_url(::std::option::Option::Some(&b))
+                .parse(url.as_ref())
+                .ok()
+                .map(|u| Self(::std::rc::Rc::new(::std::cell::RefCell::new(u)))),
+            ::std::result::Result::Err(_) => ::std::option::Option::None,
+        }
+    }
+}
 pub struct DsUrlSearchParams(DsUrlRef);
 impl DsUrlSearchParams {
     /// `new URLSearchParams(s)` — parse `s` as

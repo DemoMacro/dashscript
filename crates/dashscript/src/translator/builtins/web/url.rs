@@ -162,6 +162,51 @@ pub(in crate::translator) fn url_search_params_on_url_method(
     })
 }
 
+/// `URL.<static method>(...)` — a static method on the `URL` constructor object
+/// (a WinterTC WHATWG URL API). The callee is `<URL>.<method>`, where `URL` is
+/// the constructor identifier — not translated as a value (it has no Rust
+/// binding, only the `DsUrl` type and the `url` crate), so the dispatch
+/// intercepts it and lowers directly to the `__ds::url_*` free helper. Each
+/// argument is coerced via ES `ToString` (`es_to_string_arg`), so a `number` or
+/// `undefined` argument type-checks against the helper's `AsRef<str>`.
+/// `URL.parse` lowers to `Option<DsUrl>` (ES `null` on a parse failure, not a
+/// throw). Returns `None` for a non-`URL` receiver or an unmapped name, so the
+/// call falls through to a plain method call (cargo check rejects it honestly).
+pub(in crate::translator) fn url_static_method(
+    sm: &StaticMemberExpression,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    match &sm.object {
+        Expression::Identifier(id) if id.name.as_str() == "URL" => {}
+        _ => return None,
+    }
+    let name = sm.property.name.as_str();
+    Some(match name {
+        "canParse" => {
+            let url = es_to_string_arg(args.first()?, ctx);
+            match args.get(1) {
+                None => parse_quote!(crate::__ds::DsUrl::can_parse(#url)),
+                Some(base) => {
+                    let base = es_to_string_arg(base, ctx);
+                    parse_quote!(crate::__ds::DsUrl::can_parse_with_base(#url, #base))
+                }
+            }
+        }
+        "parse" => {
+            let url = es_to_string_arg(args.first()?, ctx);
+            match args.get(1) {
+                None => parse_quote!(crate::__ds::DsUrl::parse_opt(#url)),
+                Some(base) => {
+                    let base = es_to_string_arg(base, ctx);
+                    parse_quote!(crate::__ds::DsUrl::parse_opt_with_base(#url, #base))
+                }
+            }
+        }
+        _ => return None,
+    })
+}
+
 /// Whether the optional second argument of `has`/`delete` is absent or the
 /// `undefined` global — the ES2024 fallback condition: both treat an
 /// absent-or-undefined `value` as no value filter (name only).
