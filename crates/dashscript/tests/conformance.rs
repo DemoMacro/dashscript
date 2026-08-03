@@ -2729,7 +2729,14 @@ fn rewrap_async_main(fixture: &str) -> String {
     else {
         return fixture.to_string();
     };
-    if body.contains("await") {
+    // `await` in the body, OR a `promise_test(...)` call: the harness builtin
+    // lowers `promise_test` to `wpt_promise_test(name, fut).await`, dropping
+    // `.await` into the body even when the source has no `await` keyword (a
+    // non-async callback that returns a promise). Either way the body runs in
+    // an async main so the injected `.await` resolves under tokio; without
+    // this the await lands in a sync `fn main` (E0728).
+    let needs_async = body.contains("await") || body.contains("promise_test(");
+    if needs_async {
         format!("async function main(): Promise<void> {{\n{body}\n}}\nmain();\n")
     } else {
         fixture.to_string()
