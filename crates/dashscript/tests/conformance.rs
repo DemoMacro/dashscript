@@ -130,20 +130,24 @@ fn conformance_matrix() {
     // unset → test262 skipped (correctness + translator-tests always run, so a
     // bare `cargo test` stays fast). A category can be large (Object is ~1.5k
     // fixtures) — `DASH_TEST262=<n>` caps each category at n fixtures.
-    let cats: Vec<String> = std::env::var("DASH_TEST262_CATEGORIES")
-        .map(|s| {
-            s.split(',')
-                .map(|c| c.trim().to_lowercase())
-                .filter(|c| !c.is_empty())
-                .collect()
-        })
-        .unwrap_or_default();
+    let test262_dir = conformance_dir().join("data").join("test262");
+    let cats: Vec<String> = match std::env::var("DASH_TEST262_CATEGORIES") {
+        // `=all` discovers every `data/test262/<cat>.json` at runtime, so a full
+        // run is one short env var — not a hand-maintained comma list, and never
+        // a bare `"all"` treated as a category name that silently runs nothing.
+        Ok(s) if s.trim().eq_ignore_ascii_case("all") => discover_categories(&test262_dir),
+        Ok(s) => s
+            .split(',')
+            .map(|c| c.trim().to_lowercase())
+            .filter(|c| !c.is_empty())
+            .collect(),
+        Err(_) => Vec::new(),
+    };
     let limit = match std::env::var("DASH_TEST262") {
         Ok(v) if v == "all" || v == "0" => usize::MAX,
         Ok(v) => v.parse().unwrap_or(usize::MAX),
         Err(_) => usize::MAX,
     };
-    let test262_dir = conformance_dir().join("data").join("test262");
     let mut test262_features: Vec<RawFeature> = Vec::new();
     for cat in &cats {
         let path = test262_dir.join(format!("{cat}.json"));
@@ -171,20 +175,22 @@ fn conformance_matrix() {
     // pure-Rust (no engine fallback): the harness runs the static path only, so
     // a Web API not yet mapped surfaces honestly as unsupported/partial — the
     // baseline for the API-implementation backlog. `DASH_WPT=<n>` caps each dir.
-    let wpt_cats: Vec<String> = std::env::var("DASH_WPT_CATEGORIES")
-        .map(|s| {
-            s.split(',')
-                .map(|c| c.trim().to_lowercase())
-                .filter(|c| !c.is_empty())
-                .collect()
-        })
-        .unwrap_or_default();
+    let wpt_dir = conformance_dir().join("data").join("wpt");
+    let wpt_cats: Vec<String> = match std::env::var("DASH_WPT_CATEGORIES") {
+        // `=all` discovers every `data/wpt/<dir>.json` at runtime (see above).
+        Ok(s) if s.trim().eq_ignore_ascii_case("all") => discover_categories(&wpt_dir),
+        Ok(s) => s
+            .split(',')
+            .map(|c| c.trim().to_lowercase())
+            .filter(|c| !c.is_empty())
+            .collect(),
+        Err(_) => Vec::new(),
+    };
     let wpt_limit = match std::env::var("DASH_WPT") {
         Ok(v) if v == "all" || v == "0" => usize::MAX,
         Ok(v) => v.parse().unwrap_or(usize::MAX),
         Err(_) => usize::MAX,
     };
-    let wpt_dir = conformance_dir().join("data").join("wpt");
     let mut wpt_features: Vec<RawFeature> = Vec::new();
     for cat in &wpt_cats {
         let path = wpt_dir.join(format!("{cat}.json"));
@@ -2715,6 +2721,28 @@ fn conformance_dir() -> std::path::PathBuf {
     Path::new(env!("CARGO_MANIFEST_DIR"))
         .join("tests")
         .join("conformance")
+}
+
+/// Every `<name>.json` stem in `dir` (sorted, lowercased) — the runtime
+/// category list behind `DASH_TEST262_CATEGORIES=all` / `DASH_WPT_CATEGORIES=all`,
+/// so a full run is one env var rather than a hand-maintained comma list that
+/// silently runs nothing when a new category file is added but not listed.
+fn discover_categories(dir: &Path) -> Vec<String> {
+    let mut cats: Vec<String> = fs::read_dir(dir)
+        .into_iter()
+        .flatten()
+        .filter_map(|e| e.ok())
+        .filter_map(|e| {
+            let p = e.path();
+            if p.extension().is_some_and(|x| x == "json") {
+                p.file_stem().map(|s| s.to_string_lossy().to_lowercase())
+            } else {
+                None
+            }
+        })
+        .collect();
+    cats.sort();
+    cats
 }
 
 /// Write one matrix file per test262 category + one each for translator-tests
