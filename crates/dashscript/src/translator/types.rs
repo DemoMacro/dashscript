@@ -516,6 +516,18 @@ fn reference_type(r: &TSTypeReference) -> Type {
             return parse_quote!(::std::collections::HashSet<#inner_ty>);
         }
     }
+    // A WinterTC Web API global constructor used as a type annotation
+    // (`const p: URLPattern = …`, `const u: URL = …`, `… : URLSearchParams`)
+    // → its `__ds::Ds*` wrapper — the same type the `new` lowering builds, so
+    // the annotation and the constructor agree. Otherwise the bare `URLPattern`
+    // / `URL` name emits as an unresolved Rust type (E0433) and the fixture
+    // falls to `partial`.
+    if let Some(ty) = super::builtins::url_ctor_type(name) {
+        return ty;
+    }
+    if let Some(ty) = super::builtins::urlpattern_ctor_type(name) {
+        return ty;
+    }
     // A named reference with type arguments (`Packer<TFile>`, `Promise<T>`)
     // keeps its arguments — a generic return type is what cross-file singleton
     // inference instantiates from. Readonly/Array/Record/Map/Set above already

@@ -790,3 +790,28 @@ fn record_of_unknown_member_preserves_structure() {
     );
     assert!(!rust.contains("HashMap<String, _>"), "got:\n{rust}");
 }
+
+#[test]
+fn web_api_type_annotation_maps_to_ds_wrapper() {
+    // A WinterTC Web API global constructor used as a type annotation
+    // (`u: URL`, `s: URLSearchParams`, `p: URLPattern`) maps to its
+    // `__ds::Ds*` wrapper — the same type `new` builds — instead of emitting
+    // the bare `URL`/`URLSearchParams`/`URLPattern` name (an unresolved Rust
+    // type → E0433, which dropped the urlpattern-constructor fixture to
+    // `partial`). `DsUrl,` (trailing comma) distinguishes the first param
+    // from `DsUrlSearchParams`.
+    let src = "function f(u: URL, s: URLSearchParams, p: URLPattern): void {}";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("crate::__ds::DsUrl,"),
+        "URL annotation -> DsUrl: {rust}"
+    );
+    assert!(
+        rust.contains("crate::__ds::DsUrlSearchParams"),
+        "URLSearchParams annotation -> DsUrlSearchParams: {rust}"
+    );
+    assert!(
+        rust.contains("crate::__ds::DsURLPattern"),
+        "URLPattern annotation -> DsURLPattern: {rust}"
+    );
+}
