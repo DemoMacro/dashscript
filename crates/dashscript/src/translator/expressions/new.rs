@@ -117,6 +117,46 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if builtins::urlpattern_ctor_type(id.name.as_str()).is_some() {
             return urlpattern_ctor(n.arguments.as_slice(), ctx);
         }
+        // `new DOMException(message[, name])` — the WinterTC/HTML `DOMException`
+        // (a Web API, never the engine). Unlike `new Error(msg)` — where `name`
+        // derives from the constructor — a `DOMException`'s `name` is the SECOND
+        // argument and defaults to `"Error"` when absent. `name` must be a string
+        // literal (the legacy DOMException name set: `"NetworkError"`/
+        // `"NotFoundError"`/…) to lower to the `&'static str` `DsError::new`
+        // expects; it reuses the `DsError` value model `new Error` maps to, so as
+        // a value `e.name`/`e.message`/`e.toString()` work (a later `e.name` reads
+        // the `DsError` field via Rust type inference). A non-literal `name` or a
+        // spread message arg has no static form and falls through to the generic
+        // `Foo::new` path (E0433 — honest). Intercepted before `error_ctor_name`
+        // (DOMException is not an Error subclass) and the generic path.
+        if id.name.as_str() == "DOMException" {
+            let name: Option<syn::LitStr> = match n.arguments.get(1) {
+                None => Some(syn::LitStr::new("Error", proc_macro2::Span::call_site())),
+                Some(Argument::StringLiteral(s)) => {
+                    let v = s.value.to_string();
+                    Some(syn::LitStr::new(&v, proc_macro2::Span::call_site()))
+                }
+                Some(_) => None,
+            };
+            let msg_is_spread = matches!(n.arguments.first(), Some(Argument::SpreadElement(_)));
+            if let (Some(name), false) = (name, msg_is_spread) {
+                let msg: Expr = match n.arguments.first() {
+                    // A string-literal message lowers verbatim (`"m"`: `&str` is
+                    // `impl Into<String>`); any other expression is ToString'd.
+                    Some(Argument::StringLiteral(s)) => {
+                        let lit =
+                            syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
+                        parse_quote!(#lit)
+                    }
+                    Some(arg) => {
+                        let e = array_elem_arg(arg, ctx);
+                        parse_quote!((#e).to_string())
+                    }
+                    None => parse_quote!(::std::string::String::new()),
+                };
+                return parse_quote!(crate::__ds::DsError::new(#name, #msg));
+            }
+        }
         // `new Error("msg")` / `new TypeError(msg)` / `new Test262Error(msg)` —
         // an ES native Error constructor (or the test262 harness's
         // `Test262Error`). `throw new <X>(<literal>)` is intercepted earlier by

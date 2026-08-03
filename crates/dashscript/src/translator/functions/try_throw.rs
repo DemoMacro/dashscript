@@ -147,30 +147,56 @@ pub(super) fn throw_stmt(
     parse_quote!(::std::panic::panic_any(crate::__ds::DsError::new("Error", format!("{}", #e)));)
 }
 
-/// `(name, message)` for `throw new X("msg")` / `throw "msg"` — `name` is the
-/// ES error class ("RangeError"/"Error"/…), `message` the rendered string
-/// expression. `None` for a non-literal message or an unrecognized error
-/// class, so the caller falls back to `throw expr` → `DsError { "Error", … }`.
-fn thrown_error(arg: &Expression) -> Option<(&'static str, Expr)> {
-    use syn::parse_quote;
+/// `(name, message)` for `throw new X("msg")` / `throw new DOMException("msg",
+/// "Name")` / `throw "msg"` — `name`/`message` are rendered string expressions
+/// (the ES error class as a string literal, plus the message). `None` for a
+/// non-literal message/name or an unrecognized error class, so the caller falls
+/// back to `throw expr` → `DsError { "Error", … }`. A `DOMException`'s `name`
+/// is its SECOND arg (default `"Error"`), so it has its own arm; the ES Error
+/// classes derive `name` from the constructor.
+fn thrown_error(arg: &Expression) -> Option<(Expr, Expr)> {
     if let Expression::StringLiteral(s) = arg {
         let lit = syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
-        return Some(("Error", parse_quote!(#lit)));
+        return Some((parse_quote!("Error"), parse_quote!(#lit)));
     }
     let Expression::NewExpression(new) = arg else {
         return None;
     };
-    let name = match &new.callee {
-        Expression::Identifier(id) => match id.name.as_str() {
-            "Error" => "Error",
-            "RangeError" => "RangeError",
-            "TypeError" => "TypeError",
-            "SyntaxError" => "SyntaxError",
-            "ReferenceError" => "ReferenceError",
-            "EvalError" => "EvalError",
-            "URIError" => "URIError",
-            _ => return None,
-        },
+    let Expression::Identifier(id) = &new.callee else {
+        return None;
+    };
+    // `throw new DOMException(message[, name])` — a WinterTC/HTML Web API error
+    // whose `name` is the SECOND arg (default `"Error"`), unlike `new Error`
+    // where `name` is the constructor. Both args must be string literals (or
+    // absent) for a static lower. Reuses the `DsError` payload, so
+    // `catch (e) { e.name }` recovers the DOMException's name.
+    if id.name.as_str() == "DOMException" {
+        let name: Expr = match new.arguments.get(1) {
+            None => parse_quote!("Error"),
+            Some(Argument::StringLiteral(s)) => {
+                let lit = syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
+                parse_quote!(#lit)
+            }
+            Some(_) => return None,
+        };
+        let message: Expr = match new.arguments.first() {
+            Some(Argument::StringLiteral(s)) => {
+                let lit = syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
+                parse_quote!(#lit)
+            }
+            Some(_) => return None,
+            None => parse_quote!(""),
+        };
+        return Some((name, message));
+    }
+    let name: Expr = match id.name.as_str() {
+        "Error" => parse_quote!("Error"),
+        "RangeError" => parse_quote!("RangeError"),
+        "TypeError" => parse_quote!("TypeError"),
+        "SyntaxError" => parse_quote!("SyntaxError"),
+        "ReferenceError" => parse_quote!("ReferenceError"),
+        "EvalError" => parse_quote!("EvalError"),
+        "URIError" => parse_quote!("URIError"),
         _ => return None,
     };
     let message: Expr = match new.arguments.first() {

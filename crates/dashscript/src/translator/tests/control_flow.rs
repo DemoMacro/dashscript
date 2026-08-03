@@ -109,6 +109,41 @@ fn translates_throw_string_to_panic() {
 }
 
 #[test]
+fn translates_throw_new_dom_exception_to_panic() {
+    // `throw new DOMException("msg", "NetworkError")` — the name is the SECOND
+    // arg (a WinterTC/HTML Web API error), preserved in the panicked DsError so
+    // a `catch (e) { e.name }` recovers "NetworkError", not "Error".
+    let src = "function f(): void { throw new DOMException(\"boom\", \"NetworkError\"); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("panic_any(crate::__ds::DsError::new(\"NetworkError\", \"boom\"))"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
+fn translates_new_dom_exception_value() {
+    // `new DOMException("m", "DataError")` as a value → a DsError carrying the
+    // second-arg name; absent, the name defaults to "Error".
+    let with_name = "function f(): void { let e = new DOMException(\"m\", \"DataError\"); }";
+    let rust = Translator::new()
+        .translate(with_name)
+        .expect("should translate");
+    assert!(
+        rust.contains("crate::__ds::DsError::new(\"DataError\", \"m\")"),
+        "got:\n{rust}"
+    );
+    let default_name = "function f(): void { let e = new DOMException(\"m\"); }";
+    let rust = Translator::new()
+        .translate(default_name)
+        .expect("should translate");
+    assert!(
+        rust.contains("crate::__ds::DsError::new(\"Error\", \"m\")"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_try_catch_to_catch_unwind() {
     let src =
         "function f(): void { try { throw new Error(\"oops\"); } catch (e) { console.log(e); } }";
