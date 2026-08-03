@@ -129,11 +129,19 @@ pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
 }
 ";
 
-/// WHATWG Encoding API helpers — `__ds::TextEncoder`/`__ds::TextDecoder`. The
-/// Encoding API is UTF-8 only, so no encoding table: `encode` is
-/// `String::into_bytes` (zero-copy), `decode` is `String::from_utf8_lossy`
-/// (invalid bytes become U+FFFD, matching the ES `fatal: false` default). Both
-/// structs are stateless, so a single shared instance is sound.
+/// WHATWG Encoding API helpers — `__ds::TextEncoder`/`__ds::TextDecoder`, a
+/// WinterTC Web API backed by the `encoding_rs` crate (the WHATWG Encoding
+/// Standard reference implementation). `TextEncoder` is UTF-8 only (the sole
+/// encoding the Encoding API guarantees for encode), so `encode` is
+/// `String::into_bytes` (zero-copy). `TextDecoder` carries a resolved
+/// `encoding_rs::Encoding` (looked up from the ctor `label`), and `decode`
+/// routes through `enc.decode()` (BOM-stripped, replacement) or
+/// `decode_without_bom_handling()` when `ignoreBOM: true`; `fatal: true`
+/// promotes a replacement (`had_errors`) to a panicked `TypeError` (ES: a
+/// fatal decoder throws on an invalid byte sequence). Streaming state (the ES
+/// `decode(…, { stream })` instance buffer) is not modeled — each call decodes
+/// an independent buffer (the dispatch drops the `stream` option), matching
+/// every fixture that does not split a multi-byte sequence across calls.
 pub(super) const ENCODING_HELPER: &str = "\
 pub struct TextEncoder { pub encoding: &'static str }
 impl TextEncoder {
@@ -146,15 +154,34 @@ impl TextEncoder {
         s.into_bytes()
     }
 }
-pub struct TextDecoder { pub encoding: &'static str }
+pub struct TextDecoder {
+    pub encoding: &'static str,
+    pub fatal: bool,
+    pub ignore_bom: bool,
+    enc: &'static encoding_rs::Encoding,
+}
 impl TextDecoder {
-    #[inline]
-    pub fn new() -> Self {
-        TextDecoder { encoding: \"utf-8\" }
+    pub fn new(label: String, fatal: bool, ignore_bom: bool) -> Self {
+        let enc = encoding_rs::Encoding::for_label(label.as_bytes())
+            .unwrap_or(encoding_rs::UTF_8);
+        TextDecoder { encoding: enc.name(), fatal, ignore_bom, enc }
     }
-    #[inline]
     pub fn decode(&self, bytes: Vec<u8>) -> String {
-        String::from_utf8_lossy(&bytes).into_owned()
+        let (s, had_errors) = if self.ignore_bom {
+            self.enc.decode_without_bom_handling(&bytes)
+        } else {
+            self.enc.decode(&bytes)
+        };
+        if self.fatal && had_errors {
+            ::std::panic::panic_any(crate::__ds::DsError::new(
+                \"TypeError\",
+                format!(
+                    \"The encoded data was not valid for encoding \\\"{}\\\"\",
+                    self.encoding,
+                ),
+            ));
+        }
+        s
     }
 }
 ";

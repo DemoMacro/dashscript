@@ -90,12 +90,14 @@ pub enum RuntimeDep {
     /// object → `"[object Object]"`. Pure `std` — no cargo dep.
     Display,
     /// A WHATWG Encoding API constructor (`new TextEncoder()` / `new
-    /// TextDecoder()`) — a WinterTC Web API. UTF-8 only (the sole encoding the
-    /// Encoding API guarantees); `.encode`/`.decode` route through
-    /// `__ds::TextEncoder`/`__ds::TextDecoder` backed by `String::into_bytes`
-    /// and `String::from_utf8_lossy`. Pure `std` — no cargo dep. The marker is
-    /// `__ds::TextEncoder`; the helper slice defines both structs, so a file
-    /// that uses either gets both.
+    /// TextDecoder(…)` — a WinterTC Web API. `TextEncoder` is UTF-8 only (the
+    /// sole encoding the Encoding API guarantees for encode);
+    /// `__ds::TextEncoder::encode` is `String::into_bytes`. `TextDecoder`
+    /// resolves its `label` to a `encoding_rs::Encoding` and decodes through
+    /// it (BOM handling + `fatal`/`ignoreBOM` options); backed by the
+    /// `encoding_rs` crate. The marker is `__ds::Text` (a common prefix of
+    /// `__ds::TextEncoder`/`__ds::TextDecoder`), so the helper slice defining
+    /// both structs is injected whenever a file uses either.
     Encoding,
     /// A WHATWG URL API `URLSearchParams` (a WinterTC Web API). `new
     /// URLSearchParams("a=b&c=d")` parses an `application/x-www-form-urlencoded`
@@ -350,7 +352,11 @@ impl RuntimeDep {
             RuntimeDep::ArrayHelper => None,
             RuntimeDep::Truthy => None,
             RuntimeDep::Display => None,
-            RuntimeDep::Encoding => None,
+            // `encoding_rs` (Mozilla) — the WHATWG Encoding Standard reference
+            // implementation `TextDecoder` resolves labels through and decodes
+            // (UTF-8/UTF-16/single-byte/multi-byte/CJK). `TextEncoder` is UTF-8
+            // only and stays `String::into_bytes` (no crate path).
+            RuntimeDep::Encoding => Some(&[("encoding_rs", "\"0.8\"")]),
             // `url` (servo/url) — the WHATWG URL reference parser `DsUrl`
             // wraps. `serde` provides the `Serialize` trait for
             // `JSON.stringify(url)` / `url.toJSON()`. `form_urlencoded` is the

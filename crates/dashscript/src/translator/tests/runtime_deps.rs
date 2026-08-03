@@ -116,7 +116,8 @@ fn text_encoder_encode_flags_encoding_dep_and_ships_structs() {
     // API) maps to `__ds::TextEncoder::new()`; `.encode(str)` returns the UTF-8
     // bytes as a `Vec<u8>`. The `__ds::TextEncoder` marker flags the `Encoding`
     // dep, which ships both `TextEncoder` and `TextDecoder` structs in `__ds.rs`
-    // (pure `std` — `String::into_bytes`, no cargo crate).
+    // (`TextEncoder` is `String::into_bytes`; `TextDecoder` is backed by the
+    // `encoding_rs` crate, pulled by the same dep).
     let src = "const e = new TextEncoder();\nconst b = e.encode(\"hi\");\nconsole.log(b.length);";
     let (rust, deps) = Translator::new()
         .translate_with_deps(src)
@@ -135,6 +136,45 @@ fn text_encoder_encode_flags_encoding_dep_and_ships_structs() {
         }),
         "Encoding dep ships both structs, got helper: {:?}",
         deps.helper_module()
+    );
+}
+
+#[test]
+fn text_decoder_ctor_and_decode_route_through_encoding_rs() {
+    // `new TextDecoder(label?, options?)` resolves `label` via
+    // `encoding_rs::Encoding::for_label` (so a non-UTF-8 label like "utf-16le"
+    // works, not just the prior hard-coded UTF-8); `options.fatal` lowers to
+    // the `bool` ctor param. `decode(bytes, { stream })` drops the `stream`
+    // option (the streaming instance buffer is not modeled). The Encoding dep
+    // pulls `encoding_rs` and ships the `TextDecoder` struct.
+    let src = "function f(): void {\n    const d = new TextDecoder(\"utf-16le\", { fatal: true });\n    const s = d.decode([72, 0], { stream: false });\n    console.log(s);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::TextDecoder::new(") && rust.contains("\"utf-16le\""),
+        "new TextDecoder(label, {{fatal}}) → __ds::TextDecoder::new(label, fatal, ignore_bom), got:\n{rust}"
+    );
+    // `fatal: true` lowers to a `true` ctor param. prettyplease wraps the
+    // multi-line call, so the two bools land on separate lines — check the
+    // ctor slice (everything before `.decode(`) carries a `true`.
+    let ctor_end = rust.find(".decode(").expect("decode emits");
+    assert!(
+        rust[..ctor_end].contains("true"),
+        "fatal option lowers to the ctor bool param, got:\n{rust}"
+    );
+    assert!(
+        deps.helper_module()
+            .is_some_and(|s| s.contains("encoding_rs::Encoding::for_label")),
+        "TextDecoder resolves labels via encoding_rs, got helper: {:?}",
+        deps.helper_module()
+    );
+    // `decode` dispatch drops the `{ stream }` second arg, so the emitted call
+    // carries no object literal.
+    assert!(rust.contains(".decode("), "decode emits, got:\n{rust}");
+    assert!(
+        !rust.contains("stream"),
+        "decode stream option is dropped, got:\n{rust}"
     );
 }
 

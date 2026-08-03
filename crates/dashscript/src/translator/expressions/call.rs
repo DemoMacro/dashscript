@@ -546,6 +546,15 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::typed_array_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `decoder.decode(bytes[, options])` on a `TextDecoder` local (a
+        // WinterTC Web API). The ES `decode` second arg `{ stream }` (a
+        // streaming instance buffer) is dropped — the static decode is
+        // stateless per call. Dispatched after `typed_array_method` (a
+        // `Vec<u8>` receiver is not a `TextDecoder`); `decode` is not a
+        // collection method, so the order is safe.
+        if let Some(expr) = builtins::text_decoder_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         // `d.toString()` / `d.toJSON()` / `d.equals(o)` on a `Temporal.<Type>`
         // local (`temporal_rs::<Type>`). Dispatched on the receiver's resolved
         // type; a non-Temporal receiver or unmapped name falls through.

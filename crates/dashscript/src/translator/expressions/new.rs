@@ -1,5 +1,8 @@
 //! `new Foo(args)` → `Foo::new(args)`.
-use oxc_ast::ast::{Argument, ArrayExpressionElement, Expression, NewExpression};
+use oxc_ast::ast::{
+    Argument, ArrayExpressionElement, Expression, NewExpression, ObjectExpression,
+    ObjectPropertyKind, PropertyKey,
+};
 use quote::format_ident;
 use syn::{parse_quote, Expr, Ident};
 
@@ -89,6 +92,11 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         // runtime dep is flagged by the `__ds::TextEncoder` marker probe, which
         // injects both struct defs into `__ds.rs`.
         if builtins::encoding_ctor_type(id.name.as_str()).is_some() {
+            // `new TextDecoder(label?, options?)` carries a label and
+            // `{ fatal, ignoreBOM }` options; `new TextEncoder()` is argless.
+            if id.name.as_str() == "TextDecoder" {
+                return text_decoder_ctor(n.arguments.as_slice(), ctx);
+            }
             let name = bindings::type_ident(&id.name);
             return parse_quote!(crate::__ds::#name::new());
         }
@@ -240,6 +248,60 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
     // where `i` is an `i64` counter) is site-cast via `array_elem_arg`.
     let args: Vec<Expr> = n.arguments.iter().map(|a| array_elem_arg(a, ctx)).collect();
     parse_quote!(#name::new(#(#args),*))
+}
+
+/// `new TextDecoder(label?, options?)` →
+/// `crate::__ds::TextDecoder::new(label, fatal, ignore_bom)`. The label
+/// (default `"utf-8"`) resolves at runtime via `encoding_rs::for_label`; the
+/// `options` object's `fatal`/`ignoreBOM` BooleanLiteral fields lower to the
+/// `bool` ctor params (absent or non-literal → `false`, the ES default). A
+/// non-string-literal label is ToString'd so a variable label still resolves.
+fn text_decoder_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
+    let label: Expr = match args.first() {
+        None => parse_quote!(::std::string::String::from("utf-8")),
+        Some(Argument::StringLiteral(s)) => {
+            let lit = syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());
+            parse_quote!(::std::string::String::from(#lit))
+        }
+        Some(arg) => {
+            let e = array_elem_arg(arg, ctx);
+            parse_quote!((#e).to_string())
+        }
+    };
+    let (fatal, ignore_bom) = match args.get(1) {
+        Some(Argument::ObjectExpression(obj)) => decode_options(obj),
+        _ => (parse_quote!(false), parse_quote!(false)),
+    };
+    parse_quote!(crate::__ds::TextDecoder::new(#label, #fatal, #ignore_bom))
+}
+
+/// `{ fatal: bool, ignoreBOM: bool }` → `(fatal, ignore_bom)` bool exprs. Only
+/// BooleanLiteral field values lower statically (the common fixture shape); a
+/// non-literal value or absent field defaults to `false`.
+fn decode_options(obj: &ObjectExpression) -> (Expr, Expr) {
+    let mut fatal: Expr = parse_quote!(false);
+    let mut ignore_bom: Expr = parse_quote!(false);
+    for kind in &obj.properties {
+        let ObjectPropertyKind::ObjectProperty(p) = kind else {
+            continue;
+        };
+        let name = match &p.key {
+            PropertyKey::StaticIdentifier(id) => id.name.as_str(),
+            PropertyKey::StringLiteral(s) => s.value.as_str(),
+            _ => continue,
+        };
+        let value = match &p.value {
+            Expression::BooleanLiteral(b) => b.value,
+            _ => continue,
+        };
+        let lit = syn::LitBool::new(value, proc_macro2::Span::call_site());
+        match name {
+            "fatal" => fatal = parse_quote!(#lit),
+            "ignoreBOM" => ignore_bom = parse_quote!(#lit),
+            _ => {}
+        }
+    }
+    (fatal, ignore_bom)
 }
 
 /// `new Worker(handler)` constructor selection (Direction D).

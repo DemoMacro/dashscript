@@ -788,6 +788,18 @@ pub(in crate::translator) fn is_url_local(expr: &Expression, ctx: &Ctx<'_>) -> b
         .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsUrl"))
 }
 
+/// True when `expr` is a local whose type is `crate::__ds::TextDecoder` (a
+/// `new TextDecoder(...)` binding), so `decoder.decode(bytes, options?)` can
+/// drop the `options` arg (the ES `stream` instance buffer is not modeled).
+pub(in crate::translator) fn is_text_decoder_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "TextDecoder"))
+}
+
 /// The `__ds::DsUrl` accessor method name for an ES `URL` component property,
 /// or `None` for any other name (the access falls through to a struct field).
 /// Each ES property maps to a same-named zero-arg Rust method (`url.href` →

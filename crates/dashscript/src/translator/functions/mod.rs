@@ -1084,7 +1084,8 @@ fn register_declarator(
         Some(Expression::NewExpression(n)) => typed_array_path(n)
             .or_else(|| collection_local_path(n))
             .or_else(|| url_search_params_path(n))
-            .or_else(|| url_path(n)),
+            .or_else(|| url_path(n))
+            .or_else(|| encoding_ctor_path(n)),
         Some(other) => vec_index_elem_path(other, locals),
         None => return,
     };
@@ -1209,6 +1210,23 @@ fn url_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
         Some(parse_quote!(crate::__ds::DsUrl))
     } else {
         None
+    }
+}
+
+/// `new TextEncoder()` / `new TextDecoder(…)` → the `__ds::Text*` Rust type, so
+/// an unannotated `let d = new TextDecoder("…")` records the type and a later
+/// `d.decode(…)` dispatches through `text_decoder_method` (the receiver resolves
+/// to `crate::__ds::TextDecoder`). Either encoding ctor maps; any other `new`
+/// yields `None`.
+fn encoding_ctor_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    match id.name.as_str() {
+        "TextEncoder" => Some(parse_quote!(crate::__ds::TextEncoder)),
+        "TextDecoder" => Some(parse_quote!(crate::__ds::TextDecoder)),
+        _ => None,
     }
 }
 
