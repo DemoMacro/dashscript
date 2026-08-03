@@ -212,14 +212,17 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         }
         // `123n` — BigInt literals.
         Expression::BigIntLiteral(_) => reject("`BigInt` literals are unsupported"),
-        // A string literal containing a lone surrogate (`"\uD800"`) — oxc
-        // decodes the lone surrogate to U+FFFD (Rust `&str` cannot represent
+        // A string literal carrying a real lone surrogate (`"\uD800"`) — oxc
+        // decodes the surrogate to U+FFFD in `value` (Rust `&str` cannot hold
         // surrogates), so the static string diverges from ES and any regex/
-        // char/length op on it is wrong. Degrade so QuickJS (which allows
-        // lone surrogates) carries the real semantics. A genuine U+FFFD char
-        // also matches; degrading it is harmless — the engine runs U+FFFD
-        // fine, so the verdict stays `supported`.
-        Expression::StringLiteral(s) if s.value.as_str().contains('\u{FFFD}') => {
+        // char/length op on it is wrong. Degrade so QuickJS (which allows lone
+        // surrogates) carries the real semantics. Only a *real* surrogate
+        // degrades: oxc decodes both `\uD800` and a genuine `�` to the
+        // same U+FFFD in `value`, so checking `value` over-degrades real-U+FFFD
+        // fixtures (WPT `textdecoder-eof`'s expected `"�"`), which on the
+        // no-engine WinterTC path turns a sound compile into an unsupported.
+        // The raw source preserves the escape, so detect it there.
+        Expression::StringLiteral(s) if raw_has_lone_surrogate(s.raw.as_deref()) => {
             degrade("a string literal with a lone surrogate needs the engine")
         }
         // `await expr` — lowers to Rust `.await` inside an `async fn` (or the
@@ -853,6 +856,44 @@ fn degrade(msg: &'static str) -> Mapping {
 
 fn degrade_owned(msg: String) -> Mapping {
     Mapping::DegradeEngine(Cow::Owned(msg))
+}
+
+/// True when a JS string literal's *raw source* carries a lone-surrogate
+/// `\u`-escape (`\uD800`–`\uDFFF`, braced or 4-hex). oxc decodes a lone
+/// surrogate to U+FFFD in the literal's `value` (Rust `&str` cannot hold
+/// surrogates), which is indistinguishable there from a genuine `�` — so
+/// `value.contains(U+FFFD)` over-degrades real-U+FFFD fixtures. The raw source
+/// preserves the original escape, so a lone surrogate is detectable there. `None`
+/// (no raw) conservatively degrades — oxc always carries raw for a parsed
+/// literal, so this only fires for synthesized nodes.
+fn raw_has_lone_surrogate(raw: Option<&str>) -> bool {
+    let Some(raw) = raw else { return true };
+    let b = raw.as_bytes();
+    let mut i = 0;
+    while i + 2 < b.len() {
+        if b[i] == b'\\' && b[i + 1] == b'u' {
+            let (start, end) = if b[i + 2] == b'{' {
+                match raw[i + 3..].find('}') {
+                    Some(c) => (i + 3, i + 3 + c),
+                    None => break,
+                }
+            } else if i + 5 < b.len() && b[i + 2..i + 6].iter().all(|c| c.is_ascii_hexdigit()) {
+                (i + 2, i + 6)
+            } else {
+                i += 1;
+                continue;
+            };
+            if let Ok(cp) = u32::from_str_radix(&raw[start..end], 16) {
+                if (0xD800..=0xDFFF).contains(&cp) {
+                    return true;
+                }
+            }
+            i = end;
+        } else {
+            i += 1;
+        }
+    }
+    false
 }
 
 #[cfg(test)]
