@@ -246,12 +246,22 @@ pub enum RuntimeDep {
     /// `DsResolver`); pure `std`, never degraded; marker `__ds::DsReadableStream`.
     /// `pull`/`cancel`/`tee`/BYOB are out of scope (honest partials).
     Streams,
+    /// WHATWG `CompressionStream` (Streams standard, a WinterTC Web API) — the
+    /// compression side. `new CompressionStream(format)` + `cs.writable.getWriter()
+    /// .write(bytes)`/`.close()` + `cs.readable.getReader()` + `await reader.read()`.
+    /// The transform is **internal** (`flate2`, never a user closure — this avoids
+    /// the `'static`-capture blocker that gates a general `WritableStream` user
+    /// sink); a one-shot model buffers writes, compresses on `close()`, and reads
+    /// one chunk. Backed by `flate2`; pure-Rust static track, never degraded;
+    /// marker `__ds::DsCompressionStream`. `DecompressionStream`/`brotli`/true
+    /// streaming are out of scope (honest partials).
+    Compression,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 29] = [
+    const ALL: [RuntimeDep; 30] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -281,6 +291,7 @@ impl RuntimeDep {
         RuntimeDep::Headers,
         RuntimeDep::Timers,
         RuntimeDep::Streams,
+        RuntimeDep::Compression,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -356,6 +367,7 @@ impl RuntimeDep {
             // pull the slice on their own).
             RuntimeDep::Timers => Some("__ds::wpt_set_"),
             RuntimeDep::Streams => Some("__ds::DsReadableStream"),
+            RuntimeDep::Compression => Some("__ds::DsCompressionStream"),
             RuntimeDep::Engine => None,
         }
     }
@@ -482,7 +494,15 @@ impl RuntimeDep {
             // Pure `std` (the `Arc<Mutex<VecDeque<…>>>` queue + `Waker`); no
             // crate. The boxed `read()` future is spelled inline (`Pin<Box<dyn
             // Future>>`), so a Streams-only fixture pulls no `futures`/Promise.
+            // Pure `std` (the `Arc<Mutex<VecDeque<…>>>` queue + `Waker`); no
+            // crate. The boxed `read()` future is spelled inline (`Pin<Box<dyn
+            // Future>>`), so a Streams-only fixture pulls no `futures`/Promise.
             RuntimeDep::Streams => None,
+            // `flate2` (rust-lang/flate2) — the WHATWG compression core
+            // (`gzip`/`deflate`/`deflate-raw`). Pure-Rust DEFLATE (miniz_oxide by
+            // default, no C); the one-shot `GzEncoder`/`ZlibEncoder`/
+            // `DeflateEncoder` `ds_compress` composes over.
+            RuntimeDep::Compression => Some(&[("flate2", "\"1\"")]),
         }
     }
 
@@ -521,6 +541,7 @@ impl RuntimeDep {
             RuntimeDep::Headers => Some(HEADERS_HELPER),
             RuntimeDep::Timers => Some(TIMERS_HELPER),
             RuntimeDep::Streams => Some(DS_STREAMS_HELPER),
+            RuntimeDep::Compression => Some(DS_COMPRESSION_HELPER),
         }
     }
 }

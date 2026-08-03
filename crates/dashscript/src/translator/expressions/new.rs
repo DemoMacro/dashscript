@@ -197,6 +197,19 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if builtins::streams_ctor_type(id.name.as_str()).is_some() {
             return builtins::readable_stream_ctor(n.arguments.as_slice(), ctx);
         }
+        // `new CompressionStream(format)` — the WHATWG Streams compression API
+        // (a WinterTC Web API). The transform is internal (`flate2`), so the
+        // `writable`/`readable` sides lower as plain field access + generic
+        // method calls; only the constructor needs a dispatch arm. A
+        // `gzip`/`deflate`/`deflate-raw` literal maps; `brotli` or a non-literal
+        // format returns `None` and falls through to the generic `Foo::new`
+        // path (E0433 — honest unsupported). Intercepted before the generic path
+        // (which would emit `CompressionStream::new` — E0433).
+        if builtins::compression_ctor_type(id.name.as_str()).is_some() {
+            if let Some(ctor) = builtins::compression_stream_ctor(n.arguments.as_slice()) {
+                return ctor;
+            }
+        }
         // `new DOMException(message[, name])` — the WinterTC/HTML `DOMException`
         // (a Web API, never the engine). Unlike `new Error(msg)` — where `name`
         // derives from the constructor — a `DOMException`'s `name` is the SECOND

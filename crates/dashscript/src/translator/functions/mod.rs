@@ -1466,6 +1466,8 @@ fn streams_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     };
     if id.name.as_str() == "ReadableStream" {
         Some(parse_quote!(crate::__ds::DsReadableStream))
+    } else if id.name.as_str() == "CompressionStream" {
+        Some(parse_quote!(crate::__ds::DsCompressionStream))
     } else {
         None
     }
@@ -1569,6 +1571,27 @@ fn callee_return_path(
         {
             Some(parse_quote!(crate::__ds::DsPromise<serde_json::Value>))
         }
+        // `cs.writable.getWriter()` → `DsCompressionWriter` /
+        // `cs.readable.getReader()` → `DsCompressionReader` (a WinterTC Web API),
+        // so an unannotated `let writer = cs.writable.getWriter()` — receiver is
+        // the `writable`/`readable` field of a `DsCompressionStream` local —
+        // records the type and a later `writer.write(…)`/`.close()`/
+        // `reader.read()` dispatches through `compression_method`. Scoped before
+        // the `ReadableStream` `getReader` arm: a `cs.readable.getReader()`
+        // receiver is a field access (`cs.readable`), not an Identifier, so it
+        // never matched that arm's `DsReadableStream` local check anyway.
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "getWriter"
+                && is_compression_field(&sm.object, "writable", locals) =>
+        {
+            Some(parse_quote!(crate::__ds::DsCompressionWriter))
+        }
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "getReader"
+                && is_compression_field(&sm.object, "readable", locals) =>
+        {
+            Some(parse_quote!(crate::__ds::DsCompressionReader))
+        }
         // `rs.getReader()` → `crate::__ds::DsReadableStreamDefaultReader`
         // (a WinterTC Web API), so an unannotated `let reader = rs.getReader()`
         // — on a `DsReadableStream` local — records the type and a later
@@ -1593,6 +1616,28 @@ fn callee_return_path(
         }
         _ => None,
     }
+}
+
+/// True when `expr` is `<DsCompressionStream local>.<side>` (the `writable`/
+/// `readable` field), so `cs.writable.getWriter()`/`cs.readable.getReader()`
+/// records the writer/reader return type. Used by `callee_return_path`.
+fn is_compression_field(expr: &oxc_ast::ast::Expression, side: &str, locals: &Locals) -> bool {
+    use oxc_ast::ast::Expression;
+    let Expression::StaticMemberExpression(f) = expr else {
+        return false;
+    };
+    if f.property.name.as_str() != side {
+        return false;
+    }
+    let Expression::Identifier(id) = &f.object else {
+        return false;
+    };
+    let name = bindings::snake(id.name.as_str()).to_string();
+    locals.get(&name).is_some_and(|p| {
+        p.segments
+            .last()
+            .is_some_and(|s| s.ident == "DsCompressionStream")
+    })
 }
 
 pub(in crate::translator) fn translate_body(

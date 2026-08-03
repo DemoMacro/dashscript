@@ -661,6 +661,198 @@ impl<T> ::std::future::Future for DsReadFuture<T> {
 }
 "#;
 
+/// WHATWG `CompressionStream` helper — `__ds::DsCompressionStream`. A WinterTC
+/// (Ecma TC55) Web API: the compression side of the Streams standard. Unlike a
+/// user-sink `WritableStream`, the transform is **internal** (`flate2`, never a
+/// user closure), so this avoids the `'static`-capture blocker that gates a
+/// general `WritableStream` user sink (a `write` callback capturing outer
+/// mutable state is not `'static`). The model is one-shot: `writer.write(bytes)`
+/// appends to an internal buffer; `writer.close()` compresses the buffer
+/// (`flate2`) into the output; `reader.read()` returns the one compressed chunk
+/// then `{ done: true }`. Backed by `flate2`; pure-Rust static track, never
+/// degraded. `DecompressionStream`, `brotli`, true streaming, and backpressure
+/// are out of scope (an honest partial when met).
+pub(super) const DS_COMPRESSION_HELPER: &str = r#"
+/// The WHATWG compression format. `gzip`/`deflate` (zlib-wrapped)/`deflate-raw`
+/// (raw DEFLATE) map to `flate2`; `brotli` is out of scope (no static mapping —
+/// the fixture's `new CompressionStream("brotli")` is an honest unsupported).
+/// `Copy` so `close()` can read `state.format` through a `MutexGuard` (a move
+/// out of the guard's `&mut` is impossible) before the one-shot compress.
+#[derive(Clone, Copy)]
+pub enum DsCompressionFormat {
+    Gzip,
+    Deflate,
+    DeflateRaw,
+}
+
+struct DsCompressionState {
+    input: ::std::vec::Vec<u8>,
+    output: ::std::option::Option<::std::vec::Vec<u8>>,
+    delivered: bool,
+    format: DsCompressionFormat,
+    closed: bool,
+}
+
+/// `new CompressionStream(format)` — a byte transform stream. `writable`/
+/// `readable` are pub fields (cloned views over the shared state) so
+/// `cs.writable`/`cs.readable` lower as plain field access.
+pub struct DsCompressionStream {
+    pub writable: DsCompressionWritable,
+    pub readable: DsCompressionReadable,
+}
+
+/// `cs.writable` — the writable side. `getWriter()` returns a writer.
+pub struct DsCompressionWritable {
+    state: ::std::sync::Arc<::std::sync::Mutex<DsCompressionState>>,
+}
+
+/// `writer` from `cs.writable.getWriter()`. `write(bytes)` appends to the
+/// internal buffer; `close()` runs the one-shot `flate2` compression.
+pub struct DsCompressionWriter {
+    state: ::std::sync::Arc<::std::sync::Mutex<DsCompressionState>>,
+}
+
+/// `cs.readable` — the readable side. `getReader()` returns a reader.
+pub struct DsCompressionReadable {
+    state: ::std::sync::Arc<::std::sync::Mutex<DsCompressionState>>,
+}
+
+/// `reader` from `cs.readable.getReader()`.
+pub struct DsCompressionReader {
+    state: ::std::sync::Arc<::std::sync::Mutex<DsCompressionState>>,
+}
+
+/// `{ done, value }` from `await reader.read()`. `value` is the one compressed
+/// chunk (`Some(bytes)`), then `None` once delivered.
+pub struct DsCompressionReadResult {
+    pub done: bool,
+    pub value: ::std::option::Option<::std::vec::Vec<u8>>,
+}
+
+impl DsCompressionStream {
+    /// `new CompressionStream(format)`.
+    pub fn new(format: DsCompressionFormat) -> DsCompressionStream {
+        let state = ::std::sync::Arc::new(::std::sync::Mutex::new(DsCompressionState {
+            input: ::std::vec::Vec::new(),
+            output: ::std::option::Option::None,
+            delivered: false,
+            format,
+            closed: false,
+        }));
+        DsCompressionStream {
+            writable: DsCompressionWritable { state: state.clone() },
+            readable: DsCompressionReadable { state },
+        }
+    }
+}
+
+impl DsCompressionWritable {
+    /// `cs.writable.getWriter()`.
+    pub fn get_writer(&self) -> DsCompressionWriter {
+        DsCompressionWriter { state: self.state.clone() }
+    }
+}
+
+impl DsCompressionWriter {
+    /// `writer.write(chunk)` — append the chunk's bytes to the internal buffer.
+    pub fn write(
+        &self,
+        chunk: ::std::vec::Vec<u8>,
+    ) -> ::std::pin::Pin<::std::boxed::Box<dyn ::std::future::Future<Output = ()>>> {
+        let state = self.state.clone();
+        ::std::boxed::Box::pin(async move {
+            let mut g = state.lock().expect("compression state poisoned");
+            g.input.extend_from_slice(&chunk);
+        })
+    }
+    /// `writer.close()` — run the one-shot `flate2` compression of the buffered
+    /// input, storing the result for the reader. Idempotent on an already-closed
+    /// stream.
+    pub fn close(
+        self,
+    ) -> ::std::pin::Pin<::std::boxed::Box<dyn ::std::future::Future<Output = ()>>> {
+        let state = self.state.clone();
+        ::std::boxed::Box::pin(async move {
+            let mut g = state.lock().expect("compression state poisoned");
+            if !g.closed {
+                g.closed = true;
+                let format = g.format;
+                let input = ::std::mem::take(&mut g.input);
+                g.output = ::std::option::Option::Some(ds_compress(format, input));
+            }
+        })
+    }
+}
+
+impl DsCompressionReadable {
+    /// `cs.readable.getReader()`.
+    pub fn get_reader(&self) -> DsCompressionReader {
+        DsCompressionReader { state: self.state.clone() }
+    }
+}
+
+impl DsCompressionReader {
+    /// `reader.read()` — the compressed chunk once `close()` has run, then
+    /// `{ done: true }`. A `read()` before `close()` resolves `{ done: true }`
+    /// (the one-shot model does not pend awaiting a close — the fixtures always
+    /// `write`→`close`→`read`, so the output is ready by the time this polls).
+    pub fn read(
+        &self,
+    ) -> ::std::pin::Pin<
+        ::std::boxed::Box<dyn ::std::future::Future<Output = DsCompressionReadResult>>,
+    > {
+        let state = self.state.clone();
+        ::std::boxed::Box::pin(async move {
+            let mut g = state.lock().expect("compression state poisoned");
+            if !g.delivered {
+                if let ::std::option::Option::Some(out) = g.output.take() {
+                    g.delivered = true;
+                    return DsCompressionReadResult {
+                        done: false,
+                        value: ::std::option::Option::Some(out),
+                    };
+                }
+            }
+            DsCompressionReadResult { done: true, value: ::std::option::Option::None }
+        })
+    }
+}
+
+/// One-shot `flate2` compression of `input` per `format`. `gzip` →
+/// `GzEncoder`, `deflate` (zlib-wrapped) → `ZlibEncoder`, `deflate-raw` (raw
+/// DEFLATE) → `DeflateEncoder`. A compression error is impossible for an
+/// in-memory `Vec<u8>` sink (no I/O), so the `expect`s are unreachable.
+fn ds_compress(format: DsCompressionFormat, input: ::std::vec::Vec<u8>) -> ::std::vec::Vec<u8> {
+    use ::std::io::Write as _;
+    match format {
+        DsCompressionFormat::Gzip => {
+            let mut e = ::flate2::write::GzEncoder::new(
+                ::std::vec::Vec::new(),
+                ::flate2::Compression::default(),
+            );
+            e.write_all(&input).expect("gzip encode");
+            e.finish().expect("gzip finish")
+        }
+        DsCompressionFormat::Deflate => {
+            let mut e = ::flate2::write::ZlibEncoder::new(
+                ::std::vec::Vec::new(),
+                ::flate2::Compression::default(),
+            );
+            e.write_all(&input).expect("deflate encode");
+            e.finish().expect("deflate finish")
+        }
+        DsCompressionFormat::DeflateRaw => {
+            let mut e = ::flate2::write::DeflateEncoder::new(
+                ::std::vec::Vec::new(),
+                ::flate2::Compression::default(),
+            );
+            e.write_all(&input).expect("deflate-raw encode");
+            e.finish().expect("deflate-raw finish")
+        }
+    }
+}
+"#;
+
 /// WHATWG `fetch` API helper — `__ds::DsResponse`/`__ds::ds_fetch`. A WinterTC
 /// (Ecma TC55) Web API: ES `fetch(url)` returns `Promise<Response>`; this slice
 /// holds the `DsResponse`/`DsHeaders` wrappers + the `ds_fetch` async fn that

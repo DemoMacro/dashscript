@@ -12,6 +12,7 @@
 //! WinterTC surface lands here as Tier-1 static mappings (see the WinterTC
 //! roadmap, task #408).
 
+mod compression;
 mod console;
 mod crypto;
 mod encoding;
@@ -23,6 +24,9 @@ mod timers;
 mod url;
 mod urlpattern;
 
+pub(in crate::translator) use compression::{
+    compression_ctor_type, compression_method, compression_stream_ctor,
+};
 pub(in crate::translator) use console::console_method;
 pub(in crate::translator) use crypto::crypto_method;
 pub(in crate::translator) use encoding::{

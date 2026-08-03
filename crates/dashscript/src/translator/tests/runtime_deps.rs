@@ -1742,3 +1742,66 @@ fn readable_stream_get_reader_and_read_lower_to_async() {
         "Streams dep must flag, got deps: {deps:?}"
     );
 }
+
+#[test]
+fn compression_stream_gzip_lowers_to_new() {
+    // `new CompressionStream("gzip")` — the WHATWG Streams compression API (a
+    // WinterTC Web API). The internal `flate2` transform avoids the
+    // `'static`-capture blocker that gates a user-sink `WritableStream`, so the
+    // model is one-shot: `writer.write(bytes)` buffers, `writer.close()`
+    // compresses, `reader.read()` yields the single chunk. The
+    // `__ds::DsCompressionStream` marker flags the `Compression` dep, which
+    // ships `DsCompressionStream`/`DsCompressionFormat`/`ds_compress` in
+    // `__ds.rs` backed by `flate2` (pure-Rust static track, never degraded).
+    let src = "function f(): void { const cs = new CompressionStream(\"gzip\"); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::DsCompressionStream::new(")
+            && rust.contains("crate::__ds::DsCompressionFormat::Gzip"),
+        "new CompressionStream(\"gzip\") → DsCompressionStream::new(Gzip), got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Compression),
+        "Compression dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module().is_some_and(|s| {
+            s.contains("pub struct DsCompressionStream")
+                && s.contains("pub enum DsCompressionFormat")
+                && s.contains("fn ds_compress(")
+        }),
+        "Compression dep ships the stream/format/compress types, got helper: {:?}",
+        deps.helper_module()
+    );
+    // `flate2` cargo crate (gzip/deflate/deflate-raw backends).
+    let mut toml = String::from("[dependencies]\n");
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(
+        toml.contains("flate2"),
+        "Compression pulls flate2, got Cargo.toml: {toml}"
+    );
+}
+
+#[test]
+fn compression_stream_brotli_falls_through() {
+    // `new CompressionStream("brotli")` — brotli has no `flate2` backend, so
+    // `compression_stream_ctor` returns `None` and the construct falls through
+    // to the generic `Foo::new` path (E0433 — an honest unsupported: the
+    // fixture's `CompressionStream("brotli")` runs under the engine fallback).
+    // No `DsCompressionStream` is emitted, so the `Compression` dep does not
+    // flag and `flate2` is not pulled.
+    let src = "function f(): void { const cs = new CompressionStream(\"brotli\"); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        !rust.contains("DsCompressionStream"),
+        "brotli must not emit DsCompressionStream, got:\n{rust}"
+    );
+    assert!(
+        !deps.has(RuntimeDep::Compression),
+        "brotli must not flag Compression dep, got deps: {deps:?}"
+    );
+}

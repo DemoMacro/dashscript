@@ -556,6 +556,42 @@ fn wpt_readable_stream_push_source_compiles_and_runs() {
     );
 }
 
+/// `new CompressionStream("gzip")` + `cs.writable.getWriter()` + `writer.write(
+/// bytes)` + `writer.close()` + `cs.readable.getReader()` + `await reader.read()`
+/// — the WHATWG Streams compression one-shot transform, end-to-end on the
+/// static path. The constructor lowers to `DsCompressionStream::new(Gzip)`; the
+/// `writable`/`readable` fields are plain `pub` field access; `getWriter()`/
+/// `getReader()` → `get_writer()`/`get_reader()` (their callee-return paths type
+/// the writer/reader locals); `writer.write(bytes)` buffers, `writer.close()`
+/// runs the one-shot `flate2` compression, and `reader.read()` yields the
+/// single compressed chunk `{ done: false, value: Some(…) }`. A failure here
+/// means the `Compression` helper, the field-receiver dispatch, or the
+/// `flate2` integration regressed. WinterTC Web APIs never degrade — pure
+/// static Rust backed by `flate2`'s default `miniz_oxide` (safe Rust) backend.
+#[test]
+fn wpt_compression_stream_gzip_round_trip_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.compression_gzip_smoke".into(),
+        category: "smoke".into(),
+        fixture: "async function compress(): Promise<void> {\n  const cs = new CompressionStream(\"gzip\");\n  const writer = cs.writable.getWriter();\n  await writer.write(new Uint8Array([72, 101, 108, 108, 111]));\n  await writer.close();\n  const reader = cs.readable.getReader();\n  const chunk = await reader.read();\n  assert_equals(chunk.done, false);\n}\npromise_test(compress, \"gzip round-trip\");\n".into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "compression stream gzip round-trip smoke should be supported: {detail}"
+    );
+}
+
 /// `await new Promise(executor)` — the Promise constructor on the static track,
 /// end-to-end. A bare `new Promise(…)` degrades to the engine (a sync `fn main`
 /// never polls the future); only the awaited form maps, because the `.await`

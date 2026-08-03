@@ -591,6 +591,17 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::streams_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `cs.writable.getWriter()` / `writer.write(chunk)` / `writer.close()` /
+        // `cs.readable.getReader()` / `reader.read()` on a `DsCompressionStream`
+        // / `DsCompressionWriter` / `DsCompressionReader` local — the WinterTC
+        // WHATWG Streams compression API (one-shot `flate2` transform). The
+        // `writable`/`readable` receiver is a field access on a
+        // `DsCompressionStream` local; the writer/reader receiver is the local
+        // `callee_return_path` typed. Dispatched after `streams_method` (a
+        // compression receiver never matches the `DsReadableStream`/… locals).
+        if let Some(expr) = builtins::compression_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         // `d.toString()` / `d.toJSON()` / `d.equals(o)` on a `Temporal.<Type>`
         // local (`temporal_rs::<Type>`). Dispatched on the receiver's resolved
         // type; a non-Temporal receiver or unmapped name falls through.
