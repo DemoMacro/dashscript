@@ -1629,10 +1629,22 @@ fn path_of(ty: &Type) -> Option<syn::Path> {
 /// Build `let [mut] name[: Type] [= init];` from parts.
 fn build_local(name: &Ident, mutable: bool, ty: Option<&Type>, init: Option<&Expr>) -> Stmt {
     let mut tokens: TokenStream = quote!(let);
-    if mutable {
+    // `_` is Rust's wildcard pattern token, not an identifier — `quote!(#name)`
+    // emits it as `Ident("_")`, which syn rejects ("expected identifier, found
+    // keyword `_`"). A JS discard (`[_] = arr`, `var _`, …) maps to Rust's
+    // `let _`, so interpolate the literal `_` and drop `mut` (a wildcard cannot
+    // rebind). Any later reference to `_` then surfaces as a normal E0425 the
+    // conformance harness routes to the engine fallback — degrade, don't reject
+    // — instead of panicking the translator.
+    let is_wild = name == "_";
+    if mutable && !is_wild {
         tokens.extend(quote!(mut));
     }
-    tokens.extend(quote!(#name));
+    if is_wild {
+        tokens.extend(quote!(_));
+    } else {
+        tokens.extend(quote!(#name));
+    }
     if let Some(ty) = ty {
         tokens.extend(quote!(: #ty));
     }
