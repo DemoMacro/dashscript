@@ -81,3 +81,43 @@ fn promise_other_static_methods_stay_degraded() {
         );
     }
 }
+
+#[test]
+fn promise_then_on_resolve_call_lowers_to_ds_promise_then() {
+    // `Promise.resolve(x).then(cb)` → `ds_promise_then(ds_promise_resolve(x), cb)`.
+    // The receiver is a `Promise.resolve(..)` call (a DsPromise value), so
+    // `.then` lowers to the combinator rather than degrading to the engine.
+    let src = "function f(): void { const p = Promise.resolve(42).then((x) => x + 1); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::ds_promise_then")
+            && rust.contains("crate::__ds::ds_promise_resolve"),
+        "Promise.resolve(..).then(cb) → ds_promise_then(ds_promise_resolve(..), cb), got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Promise),
+        "Promise dep must flag, got deps: {deps:?}"
+    );
+    let helper = deps.helper_module().expect("Promise dep ships a helper");
+    assert!(
+        helper.contains("fn ds_promise_then"),
+        "Promise dep ships ds_promise_then, got helper: {helper:?}"
+    );
+}
+
+#[test]
+fn promise_then_on_promise_local_lowers_to_ds_promise_then() {
+    // `const p = Promise.resolve(x); p.then(cb)` — the local `p` has resolved
+    // type `DsPromise`, so `.then` dispatches on the receiver type rather than
+    // falling through to a phantom method binding (E0425).
+    let src = "function f(): void {\n  const p = Promise.resolve(42);\n  const q = p.then((x) => x + 1);\n}";
+    let (rust, _deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::ds_promise_then"),
+        "p.then(cb) on a DsPromise local → ds_promise_then, got:\n{rust}"
+    );
+}

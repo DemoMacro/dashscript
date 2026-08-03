@@ -298,6 +298,21 @@ pub fn ds_promise_all<T: 'static>(
 ) -> DsPromise<::std::vec::Vec<T>> {
     ::std::boxed::Box::pin(::futures::future::join_all(futs))
 }
+
+/// `p.then(onFulfilled)` — fulfills with the callback's return value. ES `then`
+/// returns a Promise and `Promise.resolve`s the callback's value; this static
+/// track models the common shape where the callback returns a plain value or
+/// runs for side effects (returning `()`). A callback that itself returns a
+/// Promise (a thenable chain) is not flattened — it yields a
+/// `DsPromise<DsPromise<U>>`, an honest partial. `onRejected` (arg 1) is not
+/// modelled: a rejected input propagates by panicking through the `.await`, so
+/// a reject-path fixture stays partial rather than mis-stating the verdict.
+pub fn ds_promise_then<T: 'static, U: 'static, F: 'static + FnOnce(T) -> U>(
+    fut: DsPromise<T>,
+    f: F,
+) -> DsPromise<U> {
+    ::std::boxed::Box::pin(async move { f(fut.await) })
+}
 "#;
 
 /// WHATWG `fetch` API helper — `__ds::DsResponse`/`__ds::ds_fetch`. A WinterTC

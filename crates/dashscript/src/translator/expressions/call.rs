@@ -552,6 +552,13 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::temporal_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `p.then(onFulfilled)` on a `DsPromise<T>` receiver — a `Promise`
+        // instance method (T3 stage 2b). Dispatched on the receiver (a
+        // resolved `DsPromise` local or a `Promise.resolve(..)`/`.all([..])`
+        // call); a non-Promise receiver or an unmapped name falls through.
+        if let Some(expr) = builtins::promise_instance_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         if let Some(method) = builtins::map_method(&sm.property.name) {
             // `obj.opt_field.push(..)` — the field is `Option<Vec<..>>`; route
             // through `get_or_insert_with(Default::default)` so the method lands

@@ -1295,6 +1295,20 @@ fn callee_return_path(
         {
             Some(parse_quote!(serde_json::Value))
         }
+        // `Promise.resolve(x)` / `Promise.all([..])` → `crate::__ds::DsPromise<T>`
+        // (the static track, T3 stage 2a), so a `let p = Promise.resolve(x)`
+        // records a `DsPromise` local and a later `p.then(…)` dispatches on the
+        // receiver type. The element type `T` varies per call site;
+        // `is_ds_promise_local` keys only off the last path segment, so a
+        // placeholder `<serde_json::Value>` keeps the path a valid Rust type
+        // without over-committing the inferred `T` (the `.then` closure's
+        // parameter type is inferred from the receiver, not this path).
+        Expression::StaticMemberExpression(sm)
+            if super::builtins::is_ident(&sm.object, "Promise")
+                && matches!(sm.property.name.as_str(), "resolve" | "all") =>
+        {
+            Some(parse_quote!(crate::__ds::DsPromise<serde_json::Value>))
+        }
         _ => None,
     }
 }
