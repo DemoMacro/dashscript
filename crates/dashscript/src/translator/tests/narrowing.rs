@@ -240,3 +240,43 @@ fn url_ctor_emits_dsurl_parse() {
         "JSON.stringify(url) should emit serde_json::to_string: {rust}"
     );
 }
+
+#[test]
+fn abort_controller_abort_flips_signal_aborted() {
+    // `new AbortController()` + `controller.abort()` + `controller.signal.aborted`
+    // — the chained signal access (`is_abort_signal_receiver` matches
+    // `controller.signal` inline) lowers without an intermediate binding.
+    let src =
+        "function f(): boolean { const c = new AbortController(); c.abort(); return c.signal.aborted; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("DsAbortController::new()"),
+        "new AbortController() should emit DsAbortController::new(): {rust}"
+    );
+    assert!(
+        rust.contains(".abort();"),
+        "controller.abort() should emit .abort(): {rust}"
+    );
+    assert!(
+        rust.contains(".signal().aborted()"),
+        "controller.signal.aborted should lower inline to .signal().aborted(): {rust}"
+    );
+}
+
+#[test]
+fn abort_signal_via_binding_then_aborted() {
+    // `const s = controller.signal; s.aborted` — the binding shape: the
+    // declarator records `s` as `DsAbortSignal` (via `abort_signal_access_path`),
+    // so `s.aborted` resolves the receiver as a DsAbortSignal Identifier local.
+    let src =
+        "function f(): boolean { const c = new AbortController(); const s = c.signal; return s.aborted; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains(".signal()"),
+        "controller.signal should emit .signal(): {rust}"
+    );
+    assert!(
+        rust.contains(".aborted()"),
+        "s.aborted should emit .aborted(): {rust}"
+    );
+}

@@ -33,7 +33,7 @@ pub(in crate::translator) use encoding::{
     encoding_ctor_type, text_decoder_method, text_encoder_method,
 };
 pub(in crate::translator) use eventtarget::{
-    event_init, event_target_ctor_type, event_target_method,
+    abort_method, event_init, event_target_ctor_type, event_target_method,
 };
 pub(in crate::translator) use headers::{headers_ctor, headers_ctor_type, headers_method};
 pub(in crate::translator) use hr_time::perf_method;

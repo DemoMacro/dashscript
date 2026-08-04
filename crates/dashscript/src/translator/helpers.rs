@@ -1313,6 +1313,115 @@ impl ::std::default::Default for DsEventInit {
 }
 "#;
 
+/// WHATWG AbortController/AbortSignal API helper — `__ds::DsAbortController`/
+/// `__ds::DsAbortSignal` (a WinterTC Web API). `controller.abort()` flips a
+/// shared `Arc<Mutex<bool>>` to `true` (the `signal.aborted` flag) and fires the
+/// `"abort"` event to the signal's embedded `DsEventTarget` (an `AbortSignal`
+/// extends `EventTarget`). `#[derive(Clone)]` clones the `Arc`, so
+/// `controller.signal` returns a signal sharing the same flag and listeners (ES
+/// reference semantics). Reuses `DsEventTarget`/`DsEvent`/`DsEventInit` from
+/// `EVENT_TARGET_HELPER` (the dep resolution pulls `EventTarget` alongside —
+/// see `mod.rs`); pure `std`, no cargo dep; marker `__ds::DsAbort`.
+pub(super) const DS_ABORT_HELPER: &str = r#"
+/// A WHATWG `AbortSignal` — the read-only side of an `AbortController`. Carries
+/// the `aborted` flag (an `Arc<Mutex<bool>>` shared with the controller) and an
+/// embedded `DsEventTarget` (ES `AbortSignal` extends `EventTarget`, so
+/// `signal.addEventListener("abort", cb)` / `removeEventListener` /
+/// `dispatchEvent` route there). `#[derive(Clone)]` clones the `Arc`, so
+/// `controller.signal` returns a signal sharing the same flag and listeners.
+#[derive(Clone)]
+pub struct DsAbortSignal {
+    aborted: ::std::sync::Arc<::std::sync::Mutex<bool>>,
+    target: DsEventTarget,
+}
+impl DsAbortSignal {
+    /// `signal.aborted` (a property; `member.rs` dispatches). ES exposes the
+    /// boolean flag as a property; the Rust accessor reads the shared flag.
+    #[inline]
+    pub fn aborted(&self) -> bool {
+        *self.aborted.lock().unwrap()
+    }
+    /// `signal.addEventListener(type, cb)` — register a listener (usually
+    /// `"abort"`) on the embedded EventTarget. Same `Box<dyn FnMut(&DsEvent)>`
+    /// callback shape as `DsEventTarget::add_event_listener`.
+    pub fn add_event_listener(
+        &self,
+        type_: ::std::string::String,
+        callback: ::std::boxed::Box<dyn ::std::ops::FnMut(&DsEvent)>,
+    ) {
+        self.target.add_event_listener(type_, callback);
+    }
+    /// `signal.removeEventListener(type, cb)` — drop listeners for `type` on the
+    /// embedded EventTarget.
+    pub fn remove_event_listener(&self, type_: ::std::string::String) {
+        self.target.remove_event_listener(type_);
+    }
+    /// `signal.dispatchEvent(event)` — dispatch on the embedded EventTarget.
+    pub fn dispatch_event(&self, event: &DsEvent) -> bool {
+        self.target.dispatch_event(event)
+    }
+    /// Flip `aborted` to `true` and fire the `"abort"` event once. ES queues the
+    /// event as a microtask; this static model fires it synchronously on
+    /// `controller.abort()` — the common WPT shape (assert `aborted` / a
+    /// listener fired right after `abort()`) passes; a fixture depending on the
+    /// microtask ordering is an honest partial. The guard is dropped before
+    /// dispatch so a listener that itself reads `aborted` re-locks cleanly.
+    fn signal_abort(&self) {
+        let mut guard = self.aborted.lock().unwrap();
+        if !*guard {
+            *guard = true;
+            ::std::mem::drop(guard);
+            let evt = DsEvent::new(
+                ::std::string::String::from("abort"),
+                DsEventInit::default(),
+            );
+            self.target.dispatch_event(&evt);
+        }
+    }
+}
+impl ::std::default::Default for DsAbortSignal {
+    fn default() -> Self {
+        Self {
+            aborted: ::std::sync::Arc::new(::std::sync::Mutex::new(false)),
+            target: DsEventTarget::new(),
+        }
+    }
+}
+
+/// A WHATWG `AbortController` — the write side. `controller.abort()` flips the
+/// shared `aborted` flag (and fires `"abort"`); `controller.signal` returns a
+/// clone of the signal (sharing the flag and listeners). `#[derive(Clone)]` for
+/// `let c2 = c` reference sharing.
+#[derive(Clone)]
+pub struct DsAbortController {
+    signal: DsAbortSignal,
+}
+impl DsAbortController {
+    /// `new AbortController()` — a fresh, un-aborted signal.
+    pub fn new() -> Self {
+        Self {
+            signal: DsAbortSignal::default(),
+        }
+    }
+    /// `controller.signal` (a property; `member.rs` dispatches) — returns a
+    /// signal sharing the same flag and listeners (ES reference semantics).
+    #[inline]
+    pub fn signal(&self) -> DsAbortSignal {
+        self.signal.clone()
+    }
+    /// `controller.abort([reason])` — flip `aborted` and fire `"abort"` once.
+    /// The ES `reason` arg is dropped (the common WPT shape does not read it).
+    pub fn abort(&self) {
+        self.signal.signal_abort();
+    }
+}
+impl ::std::default::Default for DsAbortController {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through

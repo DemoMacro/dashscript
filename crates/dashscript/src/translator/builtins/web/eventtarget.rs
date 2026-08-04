@@ -24,7 +24,10 @@ use oxc_ast::ast::{
 use syn::{parse_quote, Expr, Type};
 
 use super::super::super::context::Ctx;
-use super::super::super::expressions::{is_event_target_local, translate_argument, translate_expr};
+use super::super::super::expressions::{
+    is_abort_controller_receiver, is_abort_signal_receiver, is_event_target_local,
+    translate_argument, translate_expr,
+};
 use super::super::es_to_string_arg;
 
 /// The Rust type a WHATWG EventTarget API constructor builds, if `name` is one:
@@ -35,6 +38,7 @@ pub(in crate::translator) fn event_target_ctor_type(name: &str) -> Option<Type> 
     match name {
         "EventTarget" => Some(parse_quote!(crate::__ds::DsEventTarget)),
         "Event" => Some(parse_quote!(crate::__ds::DsEvent)),
+        "AbortController" => Some(parse_quote!(crate::__ds::DsAbortController)),
         _ => None,
     }
 }
@@ -120,6 +124,56 @@ pub(in crate::translator) fn event_target_method(
         }
         _ => return None,
     })
+}
+
+/// AbortController/AbortSignal instance methods, dispatched on the receiver's
+/// resolved type. `controller.abort()` flips the shared flag; `signal.
+/// addEventListener`/`removeEventListener`/`dispatchEvent` route to the signal's
+/// embedded EventTarget (an `AbortSignal` extends `EventTarget`). Returns `None`
+/// for any other receiver/name (the call falls through to a plain method call →
+/// cargo check honestly). The ES `reason` arg of `abort` and the `useCapture`/
+/// `options` arg of `addEventListener`/`removeEventListener` are dropped
+/// (single-threaded, no capture phase — same simplification as `DsEventTarget`).
+pub(in crate::translator) fn abort_method(
+    sm: &StaticMemberExpression,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    let name = sm.property.name.as_str();
+    if is_abort_controller_receiver(&sm.object, ctx) {
+        let obj = translate_expr(&sm.object, ctx);
+        return match name {
+            // `controller.abort([reason])` — flip `aborted` + fire "abort". The
+            // ES `reason` arg is dropped (the common WPT shape does not read it).
+            "abort" => Some(parse_quote!({ #obj.abort(); })),
+            _ => None,
+        };
+    }
+    if is_abort_signal_receiver(&sm.object, ctx) {
+        let obj = translate_expr(&sm.object, ctx);
+        return match name {
+            // `signal.addEventListener(type, cb)` → the embedded EventTarget,
+            // via the same discard-return adapter as `DsEventTarget`. A `null`/
+            // `undefined` (or absent) callback is a no-op per ES.
+            "addEventListener" => {
+                let type_ = es_to_string_arg(args.first()?, ctx);
+                match args.get(1).and_then(|a| event_listener_callback(a, ctx)) {
+                    Some(cb) => Some(parse_quote!({ #obj.add_event_listener(#type_, #cb); })),
+                    None => Some(parse_quote!({})),
+                }
+            }
+            "removeEventListener" => {
+                let type_ = es_to_string_arg(args.first()?, ctx);
+                Some(parse_quote!({ #obj.remove_event_listener(#type_); }))
+            }
+            "dispatchEvent" => {
+                let event = translate_argument(args.first()?, ctx);
+                Some(parse_quote!(#obj.dispatch_event(&#event)))
+            }
+            _ => None,
+        };
+    }
+    None
 }
 
 /// Lower an `addEventListener` callback argument to a `Box<dyn FnMut(&DsEvent)>`

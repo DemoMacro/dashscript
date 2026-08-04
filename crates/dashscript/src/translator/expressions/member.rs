@@ -251,6 +251,21 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             _ => {}
         }
     }
+    // `controller.signal` on a DsAbortController local → the signal clone (a
+    // `DsAbortSignal`); `signal.aborted` on a DsAbortSignal value (an Identifier
+    // local or a chained `controller.signal`) → the bool flag. ES exposes both
+    // as properties; the Rust wrapper's accessors are methods, so
+    // `controller.signal` → `controller.signal()` and `signal.aborted` →
+    // `signal.aborted()`. The signal receiver check accepts a chained
+    // `controller.signal` so `controller.signal.aborted` lowers inline.
+    if is_abort_controller_receiver(&sm.object, ctx) && field_name == "signal" {
+        let obj = translate_expr(&sm.object, ctx);
+        return parse_quote!(#obj.signal());
+    }
+    if field_name == "aborted" && is_abort_signal_receiver(&sm.object, ctx) {
+        let obj = translate_expr(&sm.object, ctx);
+        return parse_quote!(#obj.aborted());
+    }
     // `url.searchParams` as a standalone read (assigned/passed, not chained
     // into a method call or `.size`) — a live view sharing the URL's query
     // (an `Rc<RefCell<url::Url>>` clone), so mutations through the view are
@@ -856,6 +871,51 @@ pub(in crate::translator) fn is_event_local(expr: &Expression, ctx: &Ctx<'_>) ->
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name)
         .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsEvent"))
+}
+
+/// True when `expr` evaluates to a `crate::__ds::DsAbortController` value —
+/// an Identifier local (`let c = new AbortController()`), so
+/// `controller.signal`/`.abort()` dispatch through the wrapper. The controller
+/// is always a binding (ES has no expression yielding a fresh controller save
+/// `new AbortController()`), so this checks an Identifier only.
+pub(in crate::translator) fn is_abort_controller_receiver(
+    expr: &Expression,
+    ctx: &Ctx<'_>,
+) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(|p| {
+        p.segments
+            .last()
+            .is_some_and(|s| s.ident == "DsAbortController")
+    })
+}
+
+/// True when `expr` evaluates to a `crate::__ds::DsAbortSignal` value — an
+/// Identifier local (`let s = controller.signal`) OR a chained
+/// `controller.signal` access (a `DsAbortController` receiver's `.signal`
+/// property), so `signal.aborted`/`.addEventListener("abort", …)` dispatch
+/// through the wrapper. The chained shape is why this matches a member
+/// expression, not just an Identifier — WPT fixtures commonly write
+/// `controller.signal.aborted` inline.
+pub(in crate::translator) fn is_abort_signal_receiver(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    match expr {
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            ctx.local_type(&name).is_some_and(|p| {
+                p.segments
+                    .last()
+                    .is_some_and(|s| s.ident == "DsAbortSignal")
+            })
+        }
+        // `controller.signal` — a DsAbortController local's `.signal` access.
+        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "signal" => {
+            is_abort_controller_receiver(&sm.object, ctx)
+        }
+        _ => false,
+    }
 }
 
 /// True when `expr` is a local whose type is `crate::__ds::DsHeaders` (a

@@ -385,6 +385,49 @@ fn wpt_eventtarget_compiles_and_runs() {
     );
 }
 
+/// `new AbortController()` + `controller.signal` (both a binding and a chained
+/// read) + `signal.aborted` (before/after) + `controller.abort()` end-to-end on
+/// the static path — the WinterTC WHATWG DOM Abort API core. Covers the two
+/// receiver shapes (a `DsAbortSignal` Identifier local, and a chained
+/// `controller.signal`) and the abort semantics (the shared flag flips). The
+/// `signal.addEventListener("abort", cb)` EventTarget-inheritance path is
+/// emitted by `abort_method` (it routes to the embedded `DsEventTarget`); a
+/// listener whose body calls a `DsEvent`-unique method (`preventDefault`, …) is
+/// inferred as `&DsEvent` by `analysis.rs`, the same path EventTarget uses.
+/// Inline fixture (not from `data/wpt/`) so it cannot be regressed by
+/// re-extraction.
+#[test]
+fn wpt_abort_controller_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.abort_smoke".into(),
+        category: "smoke".into(),
+        fixture: "test(() => {\n\
+                  \x20 const controller = new AbortController();\n\
+                  \x20 const signal = controller.signal;\n\
+                  \x20 assert_false(signal.aborted);\n\
+                  \x20 controller.abort();\n\
+                  \x20 assert_true(signal.aborted);\n\
+                  \x20 assert_true(controller.signal.aborted);\n\
+                  }, \"abort-controller-core\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "AbortController smoke should be supported: {detail}"
+    );
+}
+
 /// `new Headers()` / `.append` / `.set` / `.get` / `.has` / `.delete` + a
 /// Record init end-to-end on the static path — the WinterTC WHATWG FETCH
 /// `Headers` API core. Covers the semantics a naive `HashMap<String, String>`

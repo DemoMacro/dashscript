@@ -256,12 +256,21 @@ pub enum RuntimeDep {
     /// marker `__ds::DsCompressionStream`. `DecompressionStream`/`brotli`/true
     /// streaming are out of scope (honest partials).
     Compression,
+    /// WHATWG `AbortController`/`AbortSignal` (DOM standard, a WinterTC Web API)
+    /// — `new AbortController()` + `controller.signal`/`.abort()` +
+    /// `signal.aborted`/`.addEventListener("abort", cb)`. A shared
+    /// `Arc<Mutex<bool>>` flag (the `aborted` state) + an embedded
+    /// `DsEventTarget` (an `AbortSignal` extends `EventTarget`); pure `std`,
+    /// never degraded; marker `__ds::DsAbort` (common prefix of
+    /// `DsAbortController`/`DsAbortSignal`). The dep resolution pulls
+    /// `EventTarget` alongside (the signal reuses `DsEventTarget`/`DsEvent`).
+    AbortController,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 30] = [
+    const ALL: [RuntimeDep; 31] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -292,6 +301,7 @@ impl RuntimeDep {
         RuntimeDep::Timers,
         RuntimeDep::Streams,
         RuntimeDep::Compression,
+        RuntimeDep::AbortController,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -368,6 +378,14 @@ impl RuntimeDep {
             RuntimeDep::Timers => Some("__ds::wpt_set_"),
             RuntimeDep::Streams => Some("__ds::DsReadableStream"),
             RuntimeDep::Compression => Some("__ds::DsCompressionStream"),
+            // Common prefix of `__ds::DsAbortController` and `__ds::DsAbortSignal`,
+            // so a fixture using either the controller (`new AbortController()`)
+            // or the signal (`controller.signal` / an annotated binding) pulls
+            // DS_ABORT_HELPER (both structs live in the same slice). The signal
+            // reuses `DsEventTarget`/`DsEvent` from EVENT_TARGET_HELPER, which
+            // the dep resolution pulls alongside (see the `AbortController` arm
+            // after the marker probe) — without it, `DsEventTarget` is E0433.
+            RuntimeDep::AbortController => Some("__ds::DsAbort"),
             RuntimeDep::Engine => None,
         }
     }
@@ -503,6 +521,10 @@ impl RuntimeDep {
             // default, no C); the one-shot `GzEncoder`/`ZlibEncoder`/
             // `DeflateEncoder` `ds_compress` composes over.
             RuntimeDep::Compression => Some(&[("flate2", "\"1\"")]),
+            // AbortController/AbortSignal is pure `std` (`Arc<Mutex<bool>>` +
+            // the embedded `DsEventTarget`); no crate. `DsEventTarget` comes
+            // from EVENT_TARGET_HELPER, pulled by the dep resolution.
+            RuntimeDep::AbortController => None,
         }
     }
 
@@ -542,6 +564,7 @@ impl RuntimeDep {
             RuntimeDep::Timers => Some(TIMERS_HELPER),
             RuntimeDep::Streams => Some(DS_STREAMS_HELPER),
             RuntimeDep::Compression => Some(DS_COMPRESSION_HELPER),
+            RuntimeDep::AbortController => Some(DS_ABORT_HELPER),
         }
     }
 }
@@ -1619,6 +1642,15 @@ impl Translator {
             || deps.has(RuntimeDep::URLPattern)
         {
             deps.insert(RuntimeDep::Error);
+        }
+        // DS_ABORT_HELPER's `DsAbortSignal` embeds a `DsEventTarget` and its
+        // methods take `&DsEvent` callbacks (an `AbortSignal` extends
+        // `EventTarget`), so any AbortController-bearing fixture must also pull
+        // EVENT_TARGET_HELPER, or `DsEventTarget`/`DsEvent`/`DsEventInit` are
+        // E0433. The marker probe catches `__ds::DsAbort` (the controller/signal
+        // emit) but not the transitive EventTarget use inside the helper source.
+        if deps.has(RuntimeDep::AbortController) {
+            deps.insert(RuntimeDep::EventTarget);
         }
         // `done()` lowers to `__ds::wpt_done` (sets the timer drain's DONE
         // flag). `wpt_done` lives in TIMERS_HELPER alongside the queue/drain,

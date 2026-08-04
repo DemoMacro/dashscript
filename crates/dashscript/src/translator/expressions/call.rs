@@ -573,6 +573,16 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::event_target_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `controller.abort()` / `signal.addEventListener("abort", cb)` /
+        // `signal.removeEventListener(…)` / `signal.dispatchEvent(…)` on a
+        // DsAbortController / DsAbortSignal value (a local or a chained
+        // `controller.signal`) — the WinterTC WHATWG DOM Abort API. Dispatched
+        // right after the EventTarget table (a signal receiver never matches a
+        // DsEventTarget); the abort listener reuses the EventTarget callback
+        // adapter so any callback shape type-checks against `Box<dyn FnMut(&DsEvent)>`.
+        if let Some(expr) = builtins::abort_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         // `h.get(name)` / `h.has(name)` / `h.set(name, value)` / `h.append(…)` /
         // `h.delete(name)` / `h.forEach(cb)` / `h.keys()` / `h.values()` /
         // `h.entries()` on a `DsHeaders` local (`new Headers(…)` binding) — the

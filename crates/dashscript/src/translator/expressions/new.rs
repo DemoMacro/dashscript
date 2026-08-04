@@ -172,6 +172,7 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
             return match id.name.as_str() {
                 "EventTarget" => parse_quote!(crate::__ds::DsEventTarget::new()),
                 "Event" => event_ctor(n.arguments.as_slice(), ctx),
+                "AbortController" => parse_quote!(crate::__ds::DsAbortController::new()),
                 _ => unreachable!(),
             };
         }

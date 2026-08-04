@@ -1255,10 +1255,13 @@ fn register_declarator(
             .or_else(|| url_path(n))
             .or_else(|| encoding_ctor_path(n))
             .or_else(|| event_target_path(n))
+            .or_else(|| abort_path(n))
             .or_else(|| headers_path(n))
             .or_else(|| promise_path(n))
             .or_else(|| streams_path(n)),
-        Some(other) => vec_index_elem_path(other, locals),
+        Some(other) => {
+            vec_index_elem_path(other, locals).or_else(|| abort_signal_access_path(other, locals))
+        }
         None => return,
     };
     if let Some(path) = path {
@@ -1474,6 +1477,49 @@ fn streams_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     } else {
         None
     }
+}
+
+/// `new AbortController()` → `crate::__ds::DsAbortController`, so an unannotated
+/// `let c = new AbortController()` records the type and a later `c.signal`/
+/// `c.abort()` resolves the receiver. Only the `AbortController` callee maps;
+/// any other `new` yields `None`.
+fn abort_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    match id.name.as_str() {
+        "AbortController" => Some(parse_quote!(crate::__ds::DsAbortController)),
+        _ => None,
+    }
+}
+
+/// `controller.signal` → `crate::__ds::DsAbortSignal`, so an unannotated
+/// `let s = controller.signal` records the signal type and a later
+/// `s.aborted`/`s.addEventListener(…)` resolves the receiver. The init must be a
+/// `.signal` member access on a `DsAbortController` local; any other shape
+/// yields `None` (a chained `controller.signal.aborted` needs no binding — the
+/// member dispatch's `is_abort_signal_receiver` matches it inline).
+fn abort_signal_access_path(init: &oxc_ast::ast::Expression, locals: &Locals) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::StaticMemberExpression(sm) = init else {
+        return None;
+    };
+    if sm.property.name.as_str() != "signal" {
+        return None;
+    }
+    let Expression::Identifier(id) = &sm.object else {
+        return None;
+    };
+    let ctrl_path = locals.get(&bindings::snake(id.name.as_str()).to_string())?;
+    let is_controller = ctrl_path
+        .segments
+        .last()
+        .is_some_and(|s| s.ident == "DsAbortController");
+    if !is_controller {
+        return None;
+    }
+    Some(parse_quote!(crate::__ds::DsAbortSignal))
 }
 
 /// `arr[i]` where `arr` is a tracked `Vec<T>` (or `Option<Vec<T>>`) local → `T`,
