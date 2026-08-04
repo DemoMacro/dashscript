@@ -11,10 +11,13 @@
 //!   `scripts/extract-test262.mjs`. The conformance layer: each fixture's body
 //!   is wrapped verbatim in `function main(): void { … }` (asserts kept as-is),
 //!   and the verdict is **assert-driven** — no Node oracle. The static path
-//!   (`Translator::check` → `cargo build` → run the probe) and the engine path
-//!   (in-process QuickJS with the test262 harness injected) each run it; exit 0
-//!   / no throw = every assert held = `supported`, a thrown `Test262Error`
-//!   (assert mismatch) = `partial`, a build failure or timeout = `unsupported`.
+//!   (`Translator::check` → `cargo build` → run the probe). A degrading fixture
+//!   (`needs_engine`) takes the same compile path: the emitted binary embeds a
+//!   `__ds_engine` QuickJS that runs the body with the test262 assert family
+//!   registered as a production builtin (Javy register pattern). Verdict:
+//!   exit 0 = every assert held = `supported`, a thrown `Test262Error` =
+//!   `partial`, a `ReferenceError` (a host global DashScript does not ship) /
+//!   build failure / timeout = `unsupported`.
 //! - `correctness.json` — hand-written correctness cases (the *only* hand-written
 //!   fixtures). Each carries `expect` + `expect_output`; the runner cargo-runs
 //!   the emitted program and compares stdout. Asserted (regression guard).
@@ -84,22 +87,6 @@ struct RawFeature {
     /// unshipped-feature short-circuit in `run_test262`.
     #[serde(default)]
     features: Vec<String>,
-    /// test262 `includes:` frontmatter (`$INCLUDE`) — harness files the
-    /// extractor did not inline (propertyHelper.js, isConstructor.js, …). The
-    /// engine path injects the matching harness before the fixture so reference
-    /// semantics (reflection, compareArray) run under the test262 harness.
-    #[serde(default)]
-    includes: Vec<String>,
-    /// test262 `flags:` frontmatter (`onlyStrict`, `noStrict`, `module`,
-    /// `async`, `generated`). The engine path honors `onlyStrict` — the
-    /// fixture is evaluated under QuickJS strict mode (`JS_EVAL_FLAG_STRICT`),
-    /// which gives the spec-mandated poison-pill behavior for
-    /// `Function.prototype.caller`/`arguments` plus the strict-only
-    /// assignment / deletion / duplicate-parameter / octal-literal / `with`
-    /// errors. Without it, `onlyStrict` fixtures run sloppy and those asserts
-    /// fail (e.g. `fn.caller` returns `null` instead of throwing `TypeError`).
-    #[serde(default)]
-    flags: Vec<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
@@ -330,8 +317,6 @@ fn wpt_testharness_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -372,8 +357,6 @@ fn wpt_eventtarget_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -407,8 +390,6 @@ fn wpt_eventtarget_self_global_this_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -445,8 +426,6 @@ fn wpt_custom_event_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -484,8 +463,6 @@ fn wpt_url_search_params_iter_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -527,8 +504,6 @@ fn wpt_abort_controller_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -572,8 +547,6 @@ fn wpt_headers_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -612,8 +585,6 @@ fn wpt_blob_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -647,8 +618,6 @@ fn wpt_blob_text_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -690,8 +659,6 @@ fn wpt_file_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -724,8 +691,6 @@ fn wpt_file_text_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -768,8 +733,6 @@ fn wpt_form_data_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -804,8 +767,6 @@ fn wpt_subtle_digest_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -848,8 +809,6 @@ fn wpt_subtle_hmac_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -893,8 +852,6 @@ fn wpt_subtle_aes_gcm_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -941,8 +898,6 @@ fn wpt_subtle_generate_key_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -984,8 +939,6 @@ fn wpt_subtle_derive_bits_pbkdf2_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1025,8 +978,6 @@ fn wpt_subtle_export_key_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1072,8 +1023,6 @@ fn wpt_subtle_derive_key_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1115,8 +1064,6 @@ fn wpt_subtle_derive_bits_hkdf_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1160,8 +1107,6 @@ fn wpt_subtle_aes_cbc_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1208,8 +1153,6 @@ fn wpt_subtle_aes_kw_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1248,8 +1191,6 @@ fn wpt_request_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1290,8 +1231,6 @@ fn wpt_response_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1320,8 +1259,6 @@ fn wpt_promise_test_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1350,8 +1287,6 @@ fn wpt_promise_test_named_callback_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1382,8 +1317,6 @@ fn wpt_promise_test_non_async_function_callback_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1416,8 +1349,6 @@ fn wpt_readable_stream_push_source_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1452,8 +1383,6 @@ fn wpt_compression_stream_gzip_round_trip_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1486,8 +1415,6 @@ fn wpt_decompression_stream_gzip_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1519,8 +1446,6 @@ fn wpt_await_new_promise_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1562,8 +1487,6 @@ fn wpt_settimeout_negative_clamp_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1592,8 +1515,6 @@ fn wpt_settimeout_type_long_clamp_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1638,8 +1559,6 @@ fn wpt_setinterval_type_long_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1678,8 +1597,6 @@ fn wpt_setinterval_negative_requeue_compiles_and_runs() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1717,8 +1634,6 @@ fn wpt_queue_microtask_runs_before_timer() {
         expect_output: None,
         note: String::new(),
         features: Vec::new(),
-        includes: Vec::new(),
-        flags: Vec::new(),
     };
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
@@ -1731,13 +1646,14 @@ fn wpt_queue_microtask_runs_before_timer() {
     );
 }
 
-/// Once-per-run check that the engine compat path assembles into a building
-/// cargo project: a reflection `.ts` source → `translate_with_deps` (flips
-/// `needs_engine`) → `write_project` (injects `__ds_engine` + the `rquickjs`
-/// dep) → `cargo check`. The in-process `engine_eval` path skips cargo per
-/// fixture, so this smoke test is the verification the per-fixture cargo check
-/// used to provide — not repeated 1600×, just once. Fails loudly if the engine
-/// Rust template, the `__ds_engine` module, or the dep wiring regresses.
+/// Once-per-run check that a degrading fixture's emit assembles into a
+/// building cargo project: a reflection `.ts` source → `translate_with_deps`
+/// (flips `needs_engine`) → `write_project` (injects `__ds_engine` +
+/// `wire_web_apis` + the `rquickjs` dep) → `cargo check`. Every degrading
+/// fixture now takes this same compile path (the binary's embedded QuickJS
+/// runs the body); this smoke test verifies the emit once, ahead of the
+/// per-fixture runs. Fails loudly if the engine Rust template, the
+/// `__ds_engine` module, or the dep wiring regresses.
 #[test]
 fn engine_path_compiles_to_valid_rust_project() {
     // Top-level reflection → whole-program `run` path. The emitted crate is a
@@ -2276,6 +2192,13 @@ fn cargo_run_full(project: &Path, target_dir: &Path) -> (RunOutcome, String) {
     let snippet = stderr.chars().take(200).collect::<String>();
     if snippet.contains("Test262Error") || snippet.contains("AssertionError") {
         (RunOutcome::AssertFailed(snippet), String::new())
+    } else if snippet.contains("ReferenceError") {
+        // A degraded body referenced a host global the engine (and DashScript)
+        // does not ship — `$262`/`$DONE`/`ShadowRealm`/a Temporal polyfill/… The
+        // `throw_msg` extractor surfaces the thrown `ReferenceError: …` as the
+        // panic's leading stderr line, so this is honestly `unsupported`, not a
+        // half-working `partial`.
+        (RunOutcome::ReferenceError(snippet), String::new())
     } else {
         (
             RunOutcome::RunError(format!("exit {}: {}", status, snippet)),
@@ -2285,31 +2208,19 @@ fn cargo_run_full(project: &Path, target_dir: &Path) -> (RunOutcome, String) {
 }
 
 /// Verdict from running a compiled probe binary. Assert-driven: a test262
-/// fixture's asserts all hold → `Ok` (supported); a thrown `Test262Error` →
-/// `AssertFailed` (partial); a build or timeout → `BuildFailed`/`Timeout`
-/// (unsupported); any other non-zero exit → `RunError` (partial).
+/// fixture's asserts all hold → `Ok` (supported); a thrown `Test262Error`/
+/// `AssertionError` → `AssertFailed` (partial); a degraded body's
+/// `ReferenceError` (a host global the engine — and DashScript — lacks:
+/// `$262`/`$DONE`/`ShadowRealm`/…) → `ReferenceError` (unsupported); a build
+/// or timeout → `BuildFailed`/`Timeout` (unsupported); any other non-zero
+/// exit → `RunError` (partial).
 enum RunOutcome {
     Ok,
     AssertFailed(String),
+    ReferenceError(String),
     BuildFailed(String),
     Timeout,
     RunError(String),
-}
-
-/// Verdict from running a fixture's JS under the embedded engine. The engine
-/// throws a `Test262Error` (defined by `sta.js`, thrown by `assert.js`) on an
-/// assert mismatch → `AssertFailed`; any other throw → `OtherError`; clean
-/// completion → `Ok`.
-enum EngineOutcome {
-    Ok,
-    AssertFailed(String),
-    OtherError(String),
-    /// The engine lacks a surface needed to run the fixture to completion, but
-    /// not as a JS built-in (those surface as `ReferenceError` via `OtherError`).
-    /// Today: a `$DONE` async fixture whose promise chain did not resolve under
-    /// the engine's microtask drain (needs a host event loop the engine lacks).
-    /// Honestly `unsupported`, like the `ReferenceError` case.
-    EngineLimitation(String),
 }
 
 /// Map a compiled-probe verdict to a (status, detail) row. No Node oracle: the
@@ -2319,1802 +2230,11 @@ fn judge_run(o: RunOutcome) -> (&'static str, String) {
     match o {
         RunOutcome::Ok => ("supported", String::new()),
         RunOutcome::AssertFailed(d) => ("partial", d),
+        RunOutcome::ReferenceError(d) => ("unsupported", format!("engine lacks built-in: {d}")),
         RunOutcome::BuildFailed(d) => ("unsupported", format!("cargo build failed: {d}")),
         RunOutcome::Timeout => ("unsupported", "timed out".into()),
         RunOutcome::RunError(d) => ("partial", format!("runtime error: {d}")),
     }
-}
-
-/// Map an engine verdict to a (status, detail) row, tagging supported engine
-/// runs so the matrix records the compat path honestly.
-fn judge_engine(o: EngineOutcome) -> (&'static str, String) {
-    match o {
-        EngineOutcome::Ok => ("supported", "via rquickjs engine".to_string()),
-        EngineOutcome::AssertFailed(d) => ("partial", format!("Test262Error: {d}")),
-        EngineOutcome::OtherError(d) => {
-            // A ReferenceError from the engine means QuickJS lacks a built-in
-            // or global the fixture exercises (Temporal, the $262 agent API,
-            // $DONE async callback, ShadowRealm, …) — DashScript does not
-            // ship that surface either, so it is honestly `unsupported`, not
-            // a half-working `partial`. ~95% of engine OtherErrors are
-            // ReferenceErrors. Other throws (TypeError, RangeError, …) stay
-            // `partial`: they may be real semantic gaps a translator fix
-            // could close.
-            if d.starts_with("ReferenceError") {
-                ("unsupported", format!("engine lacks built-in: {d}"))
-            } else {
-                ("partial", format!("engine error: {d}"))
-            }
-        }
-        EngineOutcome::EngineLimitation(d) => {
-            ("unsupported", format!("engine lacks async surface: {d}"))
-        }
-    }
-}
-
-/// Minimal host output surface for the engine path — no-ops. The verdict is
-/// exit/throw-driven (a `Test262Error` is the single failure signal), so output
-/// is irrelevant; these just keep a fixture that calls `console.log` or the
-/// test262 host `print` (e.g. `Array.print = print`) from throwing
-/// `ReferenceError: console is not defined` / `print is not defined`.
-const CONSOLE_PRELUDE: &str =
-    "this.console = { log: function () {} };\nthis.print = function () {};\n";
-
-/// Minimal `$262` host-defined agent (test262 host API). `detachArrayBuffer`
-/// is host-implemented (Rust via `__ds_detach` — JS cannot detach an
-/// ArrayBuffer); `createRealm`/`evalScript` are best-effort stubs returning
-/// the current global (cross-realm-isolation fixtures honestly degrade to
-/// `partial`, never fake a pass).
-///
-/// `$262.agent` is a **synchronous single-threaded simulation**, not real
-/// worker threads. `atomicsHelper.js` reads `$262.agent.getReport` at
-/// include-eval top level, so an absent `agent` makes every atomics fixture
-/// that `$INCLUDE`s it fail at the harness (`Exception generated by QuickJS`)
-/// before its body runs. The sim avoids that: `start` evals the agent script
-/// in the current context immediately (so `report(...)` enqueues before
-/// `start` returns), `broadcast` synchronously fires the registered
-/// `receiveBroadcast` callback, and `getReport` drains the queue. A blocking
-/// `Atomics.wait` inside an agent script has no concurrent waker in one
-/// thread; the per-fixture timeout bounds any such case, and `sleep`
-/// accumulates a budget (over which it throws `Test262Error`) so the
-/// `getReport`/`waitUntil` retry loops can never busy-hang. Fixtures whose
-/// semantics need true parallel wake ordering stay `partial` — honest, not a
-/// fake pass.
-const AGENT_262_PRELUDE: &str = r#"
-// Simulated monotonic clock (ms). In one thread Atomics.wait always runs to
-// its full timeout (no concurrent waker), so it advances this clock by the
-// timeout — `$262.agent.monotonicNow` then reports a lapse consistent with
-// the "timed-out" outcome the no-spurious-wakeup fixtures assert on.
-var __ds_atomics_clock = 0;
-// Single-threaded Atomics.wait: with no concurrent waker, a blocking wait
-// would deadlock the main thread (an agent script's `Atomics.wait` runs
-// synchronously inside `start`/`broadcast`). Return immediately instead —
-// "not-equal" when the precondition fails, else "timed-out", the only
-// terminating outcome without a concurrent waker. The simulated clock is
-// advanced by the timeout so duration/lapse assertions hold. Best-effort:
-// if `Atomics.wait` is non-configurable the define throws and is swallowed
-// (the original blocks, bounded by the harness timeout).
-(function () {
-  if (typeof Atomics === 'undefined') return;
-  try {
-    Object.defineProperty(Atomics, 'wait', {
-      value: function (ta, index, value, timeout) {
-        // ES ValidateSharedIntegerTypedArray(ta, onlyInt32=false): ta must be
-        // an Int32Array OR BigInt64Array view on a SharedArrayBuffer, validated
-        // before index/value/timeout coercion (Atomics.wait accepts both — the
-        // BigInt64 path carries a BigInt value). The single-thread sim
-        // overrides native wait; re-add these checks so the
-        // "validate-arraytype-before-*", "non-int32-typedarray",
-        // "non-shared-bufferdata", "not-a-typedarray", "not-an-object", and
-        // "null-bufferdata" fixtures still throw TypeError. Index/value/timeout
-        // coercion stays native (delegated to Atomics.load below), so bad-range
-        // still raises RangeError.
-        var isInt32 = (typeof Int32Array !== 'undefined' && ta instanceof Int32Array);
-        var isBig64 = (typeof BigInt64Array !== 'undefined' && ta instanceof BigInt64Array);
-        if (!isInt32 && !isBig64) throw new TypeError("Atomics.wait requires a shared Int32Array or BigInt64Array");
-        if (!(ta.buffer instanceof SharedArrayBuffer)) throw new TypeError("Atomics.wait requires a SharedArrayBuffer");
-        if (Atomics.load(ta, index) !== value) return "not-equal";
-        var t = (timeout === undefined) ? Infinity : Number(timeout);
-        if (t > 0 && isFinite(t)) __ds_atomics_clock += t;
-        return "timed-out";
-      },
-      writable: true, configurable: true,
-    });
-  } catch (e) { /* best effort — original blocks, harness timeout bounds it */ }
-})();
-var $262 = (function () {
-  function evalScript(src) { return (0, eval)(src); }
-  var __reports = [];
-  var __nulls = 0;
-  var __rb = null;
-  var __sleep = 0;
-  var __BUDGET = 2000;
-  function __agentSleep(ms) {
-    __sleep += ms;
-    if (__sleep > __BUDGET) throw new Test262Error("agent synchronous sleep budget exceeded");
-  }
-  return {
-    detachArrayBuffer: function (buffer) { __ds_detach(buffer); },
-    evalScript: evalScript,
-    createRealm: function () {
-      return { evalScript: evalScript, global: globalThis, $262: null };
-    },
-    global: globalThis,
-    IsHTMLDDA: null,
-    agent: {
-      start: function (script) { (0, eval)(script); },
-      report: function (s) { __reports.push(s === undefined ? "" : String(s)); },
-      getReport: function () {
-        var r = __reports.shift() || null;
-        // `atomicsHelper.js` wraps this in a `while ((r=getReport())==null)
-        // { sleep(1); }` busy-loop. A synchronously-started agent enqueues
-        // its report before this is called, so the happy path returns on the
-        // first call. When no report ever arrives (a fixture whose agent
-        // script's `Atomics.wait` timed out under the single-thread patch but
-        // whose main thread still expects "ok"), bound the loop so it fails
-        // fast as `partial` instead of churning against the sleep budget.
-        if (r === null && ++__nulls > 50) {
-          throw new Test262Error("agent getReport exhausted (no report enqueued)");
-        }
-        return r;
-      },
-      sleep: __agentSleep,
-      broadcast: function (buf) {
-        if (__rb) { var fn = __rb; __rb = null; fn(buf); }
-      },
-      receiveBroadcast: function (fn) { __rb = fn; },
-      leaving: function () {},
-      timeout: 1000,
-      timeouts: { yield: 100, small: 200, long: 1000, huge: 10000 },
-      tryYield: function () { __agentSleep(100); },
-      trySleep: function (ms) { __agentSleep(ms); },
-      waitUntil: function (ta, index, expected) {
-        var n = 0;
-        while (Atomics.load(ta, index) !== expected) {
-          __agentSleep(1);
-          // A synchronously-started agent has already run `Atomics.add` on
-          // `index` before this is called, so the happy path doesn't loop.
-          // Bound the retry so a fixture whose agent never reports stays
-          // `partial` fast instead of churning against the sleep budget.
-          if (++n > 200) {
-            throw new Test262Error("agent waitUntil exhausted (RUNNING never reached)");
-          }
-        }
-      },
-      // Host-defined monotonic clock (atomicsHelper.js does not provide it).
-      // Returns the simulated time advanced by Atomics.wait, so the
-      // duration/lapse assertions in the no-spurious-wakeup fixtures hold.
-      monotonicNow: function () { return __ds_atomics_clock; },
-    },
-  };
-})();
-"#;
-
-/// `$262.AbstractModuleSource` (tc39 `source-phase-imports` proposal, ES2026).
-/// The host exposes the abstract constructor on `$262`; QuickJS-NG ships no
-/// source-phase-imports, so a fixture referencing it reads `typeof undefined`.
-/// The stub is spec-faithful, not a fake pass: an abstract constructor that
-/// throws `TypeError` on call/construct, with the built-in property descriptors
-/// the 8-fixture suite checks — `length`/`name` non-writable, the `prototype`
-/// property non-writable + non-configurable, and
-/// `prototype[Symbol.toStringTag]` as a get-only accessor returning
-/// `undefined` unless `this` carries a `[[ModuleSourceClassName]]` slot (the
-/// stub's prototype never does, matching spec steps 2-3 of
-/// get [@@toStringTag]).
-const ABSTRACT_MODULE_SOURCE_PRELUDE: &str = r#"
-(function () {
-  if (typeof $262 === 'undefined' || $262 === null) return;
-  function AbstractModuleSource() { throw new TypeError(); }
-  Object.defineProperty(AbstractModuleSource, 'length', { writable: false });
-  Object.defineProperty(AbstractModuleSource, 'name', { writable: false });
-  Object.defineProperty(AbstractModuleSource, 'prototype', { writable: false });
-  Object.defineProperty(AbstractModuleSource.prototype, Symbol.toStringTag, {
-    get: function () { return undefined; },
-    configurable: true,
-  });
-  $262.AbstractModuleSource = AbstractModuleSource;
-})();
-"#;
-
-/// `Atomics.waitAsync` polyfill. QuickJS-NG lacks it (`typeof` is `"undefined"`),
-/// so the ~100 test262 `waitAsync` fixtures fail at the first assert. Only the
-/// validation + non-blocking paths are covered (the `-agent` variants need real
-/// worker threads and stay partial). Validation is delegated to `Atomics.wait`
-/// with a 0-timeout probe: it throws the spec-required TypeError (not a waitable
-/// shared typed array) / RangeError (out-of-bounds index) / TypeError (Symbol
-/// value) *before* QuickJS's main-thread "cannot block in this thread" check.
-/// That "cannot block" throw (which happens regardless of value/timeout on the
-/// main thread) is swallowed — it only signals validation passed — and the
-/// result is computed directly: value mismatch → `{async:false,"not-equal"}`;
-/// match with timeout ≤ 0 → `{async:false,"timed-out"}`; match with timeout > 0
-/// → `{async:true, Promise<"timed-out">}` (no agent can wake, so the promise
-/// resolves — the fixtures check the resolved value, not the timing).
-const WAITASYNC_PRELUDE: &str = r#"
-if (typeof Atomics !== 'undefined' && Atomics !== null
-    && typeof Atomics.wait === 'function'
-    && typeof Atomics.waitAsync !== 'function') {
-  Atomics.waitAsync = function (typedArray, index, value, timeout) {
-    try {
-      Atomics.wait(typedArray, index, value, 0);
-    } catch (e) {
-      if (!/cannot block/.test(String(e))) throw e;
-    }
-    var t = Number(timeout);
-    if (t !== t) t = Infinity;
-    var current = typedArray[index];
-    var coerced = (typeof current === 'bigint') ? BigInt(value) : (value | 0);
-    if (current !== coerced) return { async: false, value: 'not-equal' };
-    if (t <= 0) return { async: false, value: 'timed-out' };
-    // Mirror the single-threaded Atomics.wait: a finite timeout always runs
-    // to completion (no concurrent waker), so advance the simulated clock
-    // the no-spurious-wakeup fixtures measure via monotonicNow. Guarded so
-    // the polyfill stays self-contained when injected without the $262 prelude
-    // (the waitasync unit test).
-    if (isFinite(t) && typeof __ds_atomics_clock !== 'undefined') __ds_atomics_clock += t;
-    return { async: true, value: Promise.resolve('timed-out') };
-  };
-}
-"#;
-
-/// `Promise.allKeyed` / `Promise.allSettledKeyed` (tc39 `await-dictionary`
-/// proposal). QuickJS-NG ships neither, so a fixture touching them hits
-/// `TypeError: cannot read property 'call' of undefined` on
-/// `Promise.allKeyed.call(Ctor, …)`. The polyfill mirrors `Promise.all` /
-/// `allSettled` over the input object's own enumerable string-keyed properties:
-/// `Constructor.resolve` is fetched once (a getter observes a single `get`),
-/// each value is resolved then `.then`'d with a per-key resolve/reject element,
-/// and the result is a `null`-prototype object keyed identically. Element
-/// functions are arrows (no `prototype`, not constructible, `length` 1) routed
-/// through `anon` so their `name` is `""` — variable assignment would infer the
-/// variable name; passing the arrow as an argument does not, which matches the
-/// spec's built-in element functions (`verifyProperty` checks length / name /
-/// prototype / constructor / extensibility).
-const ALLKEYED_PRELUDE: &str = r#"
-(function () {
-  if (typeof Promise === 'undefined' || Promise === null) return;
-  function anon(fn) {
-    Object.defineProperty(fn, 'name', { value: '', configurable: true });
-    return fn;
-  }
-  // Shared by allKeyed / allSettledKeyed — only the per-key settle differs.
-  function makeKeyed(allSettled) {
-    return function (input) {
-      var C = this;
-      var keys = Object.keys(input);
-      var result = Object.create(null);
-      var remaining = keys.length;
-      // NewPromiseCapability: construct, then verify the executor installed
-      // callable resolve/reject. A Constructor that never calls the executor
-      // (the `fn1` case in capability-executor-not-callable) leaves them
-      // undefined, which ECMA-262 turns into a synchronous TypeError — raised
-      // before Get(constructor, "resolve") runs (a getter there must not fire).
-      var capability = { resolve: undefined, reject: undefined };
-      var promise = new C(function (resolve, reject) {
-        if (capability.resolve !== undefined) return;
-        capability.resolve = resolve;
-        capability.reject = reject;
-      });
-      if (typeof capability.resolve !== 'function') throw new TypeError();
-      if (typeof capability.reject !== 'function') throw new TypeError();
-      var resolveFn = C.resolve;
-      if (typeof resolveFn !== 'function') throw new TypeError();
-      if (remaining === 0) { capability.resolve(result); return promise; }
-      keys.forEach(function (key) {
-        var alreadyCalled = false;
-        var resolveElement = anon((x) => {
-          if (alreadyCalled) return;
-          alreadyCalled = true;
-          result[key] = allSettled ? { status: 'fulfilled', value: x } : x;
-          if (--remaining === 0) capability.resolve(result);
-        });
-        var rejectElement = anon((e) => {
-          if (alreadyCalled) return;
-          alreadyCalled = true;
-          if (allSettled) {
-            result[key] = { status: 'rejected', reason: e };
-            if (--remaining === 0) capability.resolve(result);
-          } else {
-            capability.reject(e);
-          }
-        });
-        var nextPromise = resolveFn.call(C, input[key]);
-        // A thenable goes through `.then`; a non-thenable primitive (the
-        // `ctx-ctor` fixtures return one from Constructor.resolve) resolves
-        // the element directly — `Invoke(primitive, "then")` would throw.
-        if (nextPromise !== null
-            && (typeof nextPromise === 'object' || typeof nextPromise === 'function')
-            && typeof nextPromise.then === 'function') {
-          nextPromise.then(resolveElement, rejectElement);
-        } else {
-          resolveElement(nextPromise);
-        }
-      });
-      return promise;
-    };
-  }
-  // `Promise.allKeyed`/`allSettledKeyed` are not constructors (ECMA-262 built-in
-  // methods have no [[Construct]]). Wrapping as a concise method removes
-  // [[Construct]] — `new X()` throws TypeError, `isConstructor(X)` is false —
-  // while `this` (the SpeciesConstructor receiver) and `arguments` still pass
-  // through to the impl. `length` is preserved by the declared `(input)` param.
-  if (typeof Promise.allKeyed !== 'function') {
-    var _ak = makeKeyed(false);
-    Promise.allKeyed = ({ allKeyed(input) { return _ak.apply(this, arguments); } }).allKeyed;
-  }
-  if (typeof Promise.allSettledKeyed !== 'function') {
-    var _ask = makeKeyed(true);
-    Promise.allSettledKeyed = ({ allSettledKeyed(input) { return _ask.apply(this, arguments); } }).allSettledKeyed;
-  }
-})();
-"#;
-
-/// Host-defined `$DONE` async-completion callback (test262 host API). test262
-/// async fixtures signal completion by calling `$DONE()` (success) or
-/// `$DONE(error)` (failure); `asyncHelpers.js`'s `asyncTest` also requires
-/// `$DONE` on `globalThis` before it runs (else "asyncTest called without async
-/// flag"). Like `$262`, the runner injects it — `doneprintHandle.js` is one
-/// (print-based) implementation, but the canonical model is host injection.
-/// Records the verdict to `__ds_done_value`: `null` until called, `""` on
-/// success, `"Test262Error: …"` on failure (prefixed so `judge_engine` maps an
-/// unexpected async rejection to `partial`, matching synchronous throws).
-/// Injected after `$INCLUDE`s so it wins over `doneprintHandle.js`'s print-based
-/// `$DONE` (the harness defines no `print`). `engine_eval` drains the runtime's
-/// pending jobs after the synchronous eval so promise reactions
-/// (`.then($DONE)`, `asyncTest`) actually fire `$DONE`.
-const DONE_PRELUDE: &str = r#"
-var __ds_done_value = null;
-var $DONE = function (error) {
-  if (__ds_done_value !== null) return;  // first call wins; ignore repeats
-  __ds_done_value = error ? ("Test262Error: " + String(error)) : "";
-};
-"#;
-
-/// `Error.prototype.stack` as an accessor (tc39 `error-stack-accessor` proposal).
-/// QuickJS-NG ships no own `stack` slot on `Error.prototype` (each instance gets
-/// an own data property at construction), so
-/// `Object.getOwnPropertyDescriptor(Error.prototype, 'stack')` is `undefined` and
-/// the `.get`/`.set` access crashes the ~29 `error.prototype.stack.{getter,setter}-*`
-/// fixtures. The proposal makes it an accessor whose get/set are bound to the
-/// `[[ErrorData]]` slot: get returns the trace for Error instances (undefined
-/// otherwise, TypeError for a non-object `this`); set creates an own data
-/// property (TypeError for non-object `this`, non-string value, or an existing
-/// own accessor/non-writable data). The slot check is approximated with a
-/// `WeakMap` populated by wrapping every native Error constructor: at
-/// construction the QuickJS-set own `stack` is captured into the map and the own
-/// property deleted (the proposal model — an instance carries no own `stack`).
-/// Injected before `$INCLUDE`s so `nativeErrors.js` captures the wrappers in its
-/// constructor arrays. Cross-realm variants stay partial: `$262.createRealm`
-/// returns the same global, so the `notSameValue` realm precondition fails
-/// regardless of this polyfill.
-const ERROR_STACK_ACCESSOR_PRELUDE: &str = r#"
-(function () {
-  'use strict';
-  var d = Object.getOwnPropertyDescriptor(Error.prototype, 'stack');
-  if (d !== undefined && typeof d.get === 'function') return;
-  var traces = new WeakMap();
-  function wrap(name) {
-    var O = globalThis[name];
-    if (typeof O !== 'function') return;
-    var Wrapper = function () {
-      var args = Array.prototype.slice.call(arguments);
-      var nt = (typeof new.target === 'function') ? new.target : Wrapper;
-      var err = Reflect.construct(O, args, nt);
-      var s = err.stack;
-      if (typeof s === 'string') traces.set(err, s);
-      try { delete err.stack; } catch (e) {}
-      return err;
-    };
-    Wrapper.prototype = O.prototype;
-    Object.setPrototypeOf(Wrapper, O);
-    // Keep `instance.constructor === <Ctor>` true after the global binding is
-    // replaced: assert.throws checks `thrown.constructor === expectedCtor` by
-    // identity, so the prototype's `.constructor` must point at the Wrapper.
-    try { O.prototype.constructor = Wrapper; } catch (e) {}
-    try { Object.defineProperty(Wrapper, 'name', { value: name, configurable: true }); } catch (e) {}
-    globalThis[name] = Wrapper;
-  }
-  ['Error', 'EvalError', 'RangeError', 'ReferenceError', 'SyntaxError',
-   'TypeError', 'URIError', 'AggregateError', 'SuppressedError'].forEach(wrap);
-  // Method-shorthand accessors carry no [[Construct]] slot, so `isConstructor`
-  // reports false — matching the proposal's built-in (non-constructor) get/set.
-  var _stack = {
-    get() {
-      if (this === null || (typeof this !== 'object' && typeof this !== 'function'))
-        throw new TypeError();
-      return traces.has(this) ? traces.get(this) : undefined;
-    },
-    set(value) {
-      if (this === null || (typeof this !== 'object' && typeof this !== 'function'))
-        throw new TypeError();
-      if (typeof value !== 'string') throw new TypeError();
-      var own = Object.getOwnPropertyDescriptor(this, 'stack');
-      if (own === undefined) {
-        Object.defineProperty(this, 'stack', {
-          value: value, writable: true, enumerable: true, configurable: true
-        });
-      } else if ('get' in own || 'set' in own || !own.writable) {
-        throw new TypeError();
-      } else {
-        Object.defineProperty(this, 'stack', { value: value });
-      }
-    },
-  };
-  Object.defineProperty(Error.prototype, 'stack', {
-    get: _stack.get, set: _stack.set, enumerable: false, configurable: true,
-  });
-})();
-"#;
-
-/// The two harness files every test262 fixture needs: `sta.js` defines
-/// `Test262Error` (the assert-failure exception), `assert.js` defines the
-/// `assert.*` family that throws it. Injected on the engine path before any
-/// fixture, so a clean run means every assert held.
-const HARNESS_STA: &str = include_str!("conformance/data/harness/sta.js");
-const HARNESS_ASSERT: &str = include_str!("conformance/data/harness/assert.js");
-
-/// Minimal WPT `testharness.js` shim — `test`/`assert_equals`/`assert_true`/
-/// `assert_false`/`assert_not_equals`/`assert_array_equals`/`assert_own_property`/
-/// `assert_throws`/`setup`/`done`/`async_test`/`promise_test`. The full WPT
-/// testharness is ~1kloc (DOM-aware, async-queue, multi-test aggregation); this
-/// subset covers the synchronous + promise-based patterns the engine-path WPT
-/// fixtures use, where a thrown `AssertionError` = a failed assert (partial)
-/// and a clean eval = every assert held (supported). Mirrors Javy's "JS shim
-/// for the API surface, native for the compute" split — the testharness here is
-/// the shim, and the Web APIs (`TextEncoder`/…) are native builtins (see
-/// [`TEXT_ENCODING_PRELUDE`]).
-const WPT_TESTHARNESS_PRELUDE: &str = r#"
-function AssertionError(msg) { this.name = "AssertionError"; this.message = msg; }
-AssertionError.prototype = Object.create(Error.prototype);
-AssertionError.prototype.constructor = AssertionError;
-function __ds_fmt(v) {
-  try { return typeof v === "string" ? "«" + v + "»" : String(v); }
-  catch (e) { return "<unprintable>"; }
-}
-function __ds_same(a, b) {
-  if (a === b) return true;
-  if (a !== 0 || b !== 0) return false;
-  return 1 / a === 1 / b; // SameValue(±0, ∓0)
-}
-globalThis.assert_equals = function (actual, expected, msg) {
-  if (!__ds_same(actual, expected))
-    throw new AssertionError(msg + " Expected " + __ds_fmt(expected) + " but got " + __ds_fmt(actual));
-};
-globalThis.assert_true = function (actual, msg) { assert_equals(actual, true, msg); };
-globalThis.assert_false = function (actual, msg) { assert_equals(actual, false, msg); };
-globalThis.assert_not_equals = function (actual, unexpected, msg) {
-  if (__ds_same(actual, unexpected))
-    throw new AssertionError(msg + " Expected not " + __ds_fmt(unexpected) + " but got " + __ds_fmt(actual));
-};
-globalThis.assert_array_equals = function (actual, expected, msg) {
-  if (!Array.isArray(actual) || !Array.isArray(expected))
-    throw new AssertionError(msg + " both args must be arrays");
-  if (actual.length !== expected.length)
-    throw new AssertionError(msg + " lengths differ, expected " + expected.length + " got " + actual.length);
-  for (var i = 0; i < expected.length; i++)
-    if (!__ds_same(actual[i], expected[i]))
-      throw new AssertionError(msg + " at index " + i + " expected " + __ds_fmt(expected[i]) + " got " + __ds_fmt(actual[i]));
-};
-globalThis.assert_own_property = function (obj, prop, msg) {
-  if (!Object.prototype.hasOwnProperty.call(obj, prop))
-    throw new AssertionError(msg + " expected own property " + __ds_fmt(prop));
-};
-globalThis.assert_throws = function (code, fn, msg) {
-  var thrown = false, exc;
-  try { fn(); } catch (e) { thrown = true; exc = e; }
-  if (!thrown) throw new AssertionError(msg + " did not throw");
-  if (typeof code === "function") {
-    if (!(exc instanceof code)) throw new AssertionError(msg + " threw wrong type: " + __ds_fmt(exc));
-  } else if (code && typeof code === "object") {
-    if (String(exc.name) !== String(code.name)) throw new AssertionError(msg + " name mismatch: " + __ds_fmt(exc));
-  } else if (typeof code === "string") {
-    if (String(exc.name) !== code) throw new AssertionError(msg + " name mismatch: " + __ds_fmt(exc));
-  }
-};
-var __ds_tests = [];
-globalThis.test = function (fn, name, props) {
-  try { fn(); }
-  catch (e) {
-    if (e && e.name === "AssertionError") throw e;
-    throw new AssertionError(name + ": harness threw " + __ds_fmt(e));
-  }
-};
-globalThis.setup = function (fn, props) { try { fn && fn(); } catch (e) { throw e; } };
-globalThis.done = function () {};
-globalThis.async_test = function (fn, name, props) {
-  var t = { done: function () {}, step: function (f) { try { f(); } catch (e) { throw e; } } };
-  try { if (fn) fn(t); } catch (e) { throw e; }
-  return t;
-};
-globalThis.promise_test = function (fn, name) {
-  var p;
-  try { p = fn(); } catch (e) { throw e; }
-  if (p && typeof p.then === "function") {
-    p.then(null, function (e) { throw new AssertionError(name + ": promise rejected " + __ds_fmt(e)); });
-  }
-};
-// `self` — WinterTC §5 global alias for globalThis. WPT fixtures reach Web
-// APIs through `self.` (e.g. `self.URL`, `self.crypto`) rather than the bare
-// global; without the alias the engine throws `ReferenceError: self is not
-// defined` — the single largest engine-path blocker across the WPT suite.
-if (!globalThis.self) globalThis.self = globalThis;
-// `assert_throws_js(constructor, fn)` — fn must throw an instance of `ctor`.
-// `assert_throws_dom(name, fn)` — fn must throw a DOMException whose `name`
-// matches; QuickJS-NG has no DOMException, so match by the `name` property
-// (the field WinterTC's DsError carries).
-// `assert_throws_exactly(value, fn)` — fn must throw `=== value`.
-globalThis.assert_throws_js = function (ctor, fn, msg) {
-  var thrown = false, exc;
-  try { fn(); } catch (e) { thrown = true; exc = e; }
-  if (!thrown) throw new AssertionError((msg || "") + " did not throw");
-  if (!(exc instanceof ctor))
-    throw new AssertionError((msg || "") + " threw wrong type: " + __ds_fmt(exc));
-};
-globalThis.assert_throws_dom = function (name, fn, msg) {
-  var thrown = false, exc;
-  try { fn(); } catch (e) { thrown = true; exc = e; }
-  if (!thrown) throw new AssertionError((msg || "") + " did not throw");
-  if (String(exc && exc.name) !== String(name))
-    throw new AssertionError((msg || "") + " DOMException name mismatch: " + __ds_fmt(exc));
-};
-globalThis.assert_throws_exactly = function (expected, fn, msg) {
-  var thrown = false, exc;
-  try { fn(); } catch (e) { thrown = true; exc = e; }
-  if (!thrown) throw new AssertionError((msg || "") + " did not throw");
-  if (exc !== expected)
-    throw new AssertionError((msg || "") + " threw wrong value: " + __ds_fmt(exc));
-};
-// `promise_rejects_js(test, ctor, promise, msg)` — assert `promise` rejects
-// with an instance of `ctor`. Returns a promise the harness drains via the
-// microtask loop; a non-matching rejection throws AssertionError on drain.
-globalThis.promise_rejects_js = function (_t, ctor, promise, msg) {
-  return promise.then(
-    function () { throw new AssertionError((msg || "") + " promise should reject"); },
-    function (e) {
-      if (!(e instanceof ctor))
-        throw new AssertionError((msg || "") + " wrong rejection type: " + __ds_fmt(e));
-    }
-  );
-};
-// `format_value(v)` — WPT diagnostic pretty-printer (strings quoted, objects
-// JSON-ish). Used by some fixtures' own diagnostic helpers; a verdict only
-// depends on it when a fixture asserts on its output.
-globalThis.format_value = function (v) {
-  if (typeof v === "string") return "\"" + String(v) + "\"";
-  if (v && typeof v === "object") { try { return JSON.stringify(v); } catch (e) { return String(v); } }
-  return String(v);
-};
-// `assert_inherits(obj, prop)` — WPT IDL helper: the property must be on the
-// prototype chain but NOT an own property.
-globalThis.assert_inherits = function (obj, prop, msg) {
-  if (Object.prototype.hasOwnProperty.call(obj, prop))
-    throw new AssertionError((msg || "") + " expected inherited but found own property " + __ds_fmt(prop));
-  if (!(prop in obj))
-    throw new AssertionError((msg || "") + " expected inherited property " + __ds_fmt(prop));
-};
-"#;
-
-/// `TextEncoder`/`TextDecoder` as a Javy-style split: a JS shim (this prelude,
-/// adapted from Javy's `apis/text_encoding/text-encoding.js`) defining the two
-/// classes, delegating the compute to native `__ds_encode_utf8`/`__ds_decode_utf8`
-/// Rust builtins (registered by [`engine_eval`]). UTF-8 only — the WHATWG
-/// Encoding Standard's common case (Javy's own subset). Multi-encoding fixtures
-/// stay `partial` honestly; the static path's `encoding_rs`-backed
-/// `DsTextEncoder`/`DsTextDecoder` carries the full surface for hot code.
-const TEXT_ENCODING_PRELUDE: &str = r#"
-(function () {
-  class TextDecoder {
-    constructor(label, options) {
-      label = (label === undefined ? "utf-8" : String(label)).trim().toLowerCase();
-      var accepted = ["utf-8","utf8","unicode-1-1-utf-8","unicode11utf8","unicode20utf8","x-unicode20utf8"];
-      if (!accepted.includes(label)) throw new RangeError("The encoding label provided must be utf-8");
-      options = options || {};
-      Object.defineProperties(this, {
-        encoding: { value: "utf-8", enumerable: true, writable: false },
-        fatal: { value: !!options.fatal, enumerable: true, writable: false },
-        ignoreBOM: { value: !!options.ignoreBOM, enumerable: true, writable: false },
-      });
-    }
-    decode(input, options) {
-      if (input === undefined) return "";
-      options = options || {};
-      var byteOffset = input.byteOffset || 0;
-      var byteLength = input.byteLength;
-      var buf = input;
-      if (ArrayBuffer.isView(input)) buf = input.buffer;
-      if (!(buf instanceof ArrayBuffer)) throw new TypeError("The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
-      return __ds_decode_utf8(buf, byteOffset, byteLength, this.fatal, this.ignoreBOM);
-    }
-  }
-  class TextEncoder {
-    constructor() {
-      Object.defineProperties(this, { encoding: { value: "utf-8", enumerable: true } });
-    }
-    encode(input) {
-      if (input === undefined) input = "";
-      input = String(input);
-      return new Uint8Array(__ds_encode_utf8(input));
-    }
-    encodeInto(source, destination) {
-      var bytes = __ds_encode_utf8(String(source));
-      var n = Math.min(bytes.length, destination.length);
-      for (var i = 0; i < n; i++) destination[i] = bytes[i];
-      return { read: source.length, written: n };
-    }
-  }
-  globalThis.TextDecoder = TextDecoder;
-  globalThis.TextEncoder = TextEncoder;
-})();
-"#;
-
-/// `crypto.getRandomValues(arr)` / `crypto.randomUUID()` — WinterTC §5 WebCrypto
-/// globals for the engine path. Pure-JS shim (QuickJS `Math.random` PRNG): WPT
-/// behavior tests verify the return shape (same typed array, length, byte range,
-/// run-to-run variation, the 65536-byte QuotaExceededError cap) — not CSPRNG
-/// quality — so a PRNG fill passes them. The static path's getrandom-backed
-/// impl stays the CSPRNG source for production; `subtle` is a bare object here
-/// (its methods land in a later batch — fixtures calling `subtle.digest` stay
-/// partial honestly).
-const CRYPTO_SHIM: &str = r#"
-if (!globalThis.crypto) {
-  globalThis.crypto = {
-    getRandomValues: function (arr) {
-      if (arr == null) return arr;
-      if (arr.length > 65536) throw new RangeError("getRandomValues byte length must not exceed 65536");
-      for (var i = 0; i < arr.length; i++) arr[i] = (Math.random() * 256) | 0;
-      return arr;
-    },
-    randomUUID: function () {
-      var b = new Uint8Array(16);
-      this.getRandomValues(b);
-      b[6] = (b[6] & 0x0f) | 0x40;
-      b[8] = (b[8] & 0x3f) | 0x80;
-      var h = [];
-      for (var i = 0; i < 16; i++) { var s = b[i].toString(16); h.push(s.length < 2 ? "0" + s : s); }
-      return h.slice(0,4).join("") + "-" + h.slice(4,6).join("") + "-" + h.slice(6,8).join("") + "-" + h.slice(8,10).join("") + "-" + h.slice(10,16).join("");
-    },
-    subtle: {}
-  };
-}
-"#;
-
-/// Minimal `Intl` stub injected before the polyfill. rquickjs's QuickJS-NG
-/// build ships without `Intl`, but the polyfill's factory reads
-/// `Intl.DateTimeFormat` / `Intl.DurationFormat` to layer its Temporal-aware
-/// formatting on top of the native one — so the bare global must exist when
-/// the factory runs. The stub returns empty/identity results and is shaped so
-/// the polyfill can `extends Intl.DateTimeFormat`. Temporal fixtures that stay
-/// in ISO space (the majority) never call into it; locale-aware ones degrade
-/// to `partial` honestly rather than crashing the prelude.
-const INTL_STUB: &str = r#"
-if (!globalThis.Intl) {
-  function __ds_fmt() {
-    function F() {}
-    F.prototype.format = function () { return ''; };
-    F.prototype.formatToParts = function () { return []; };
-    F.prototype.formatRange = function () { return ''; };
-    F.prototype.formatRangeToParts = function () { return []; };
-    F.prototype.resolvedOptions = function () { return { calendar: 'iso8601', locale: 'en', numberingSystem: 'latn', timeZone: 'UTC' }; };
-    F.supportedLocalesOf = function () { return []; };
-    return F;
-  }
-  // DateTimeFormat must yield a parseable en-US numeric+era string: the
-  // polyfill's GetFormatterParts splits the output on non-word chars and
-  // expects exactly 7 parts (month/day/year era hour/minute/second) to bisect
-  // named-time-zone DST offsets. The generic __ds_fmt stub returns '' which
-  // throws RangeError "expected 7 parts", so format a real UTC date.
-  function __ds_dtf() {
-    return {
-      format: function (date) {
-        var d = typeof date === 'number' ? new Date(date) : date instanceof Date ? date : new Date(+date || Date.now());
-        var y = d.getUTCFullYear();
-        var era = y < 1 ? 'BC' : 'AD';
-        var ay = y < 1 ? 1 - y : y;
-        function p(x) { return x < 10 ? '0' + x : '' + x; }
-        return d.getUTCMonth() + 1 + '/' + d.getUTCDate() + '/' + ay + ' ' + era + ' ' + p(d.getUTCHours()) + ':' + p(d.getUTCMinutes()) + ':' + p(d.getUTCSeconds());
-      },
-      formatToParts: function () { return []; },
-      formatRange: function () { return ''; },
-      formatRangeToParts: function () { return []; },
-      resolvedOptions: function () { return { calendar: 'iso8601', locale: 'en-US', numberingSystem: 'latn', timeZone: 'UTC' }; },
-    };
-  }
-  __ds_dtf.supportedLocalesOf = function () { return []; };
-  globalThis.Intl = {
-    DateTimeFormat: __ds_dtf,
-    NumberFormat: __ds_fmt(),
-    DurationFormat: __ds_fmt(),
-    Collator: function () { this.compare = function (a, b) { a = String(a); b = String(b); return a < b ? -1 : a > b ? 1 : 0; }; },
-    getCanonicalLocales: function (x) { return Array.isArray(x) ? x : [x]; },
-  };
-}
-"#;
-
-/// The `@js-temporal/polyfill` UMD build (ISC, © ECMA International) — vendored
-/// under `data/vendor/`. QuickJS-NG does not ship `Temporal`, so a fixture that
-/// touches the Temporal API would otherwise `ReferenceError` on the engine path.
-/// This polyfill is the TC39 proposal's reference JS implementation, validated
-/// by `@js-temporal/temporal-test262-runner` against the full Temporal test262
-/// suite — so injecting it gives the engine path a spec-conformant Temporal
-/// rather than a hand-written stub, and `assert.sameValue` runs against the
-/// reference semantics. The UMD wrapper mounts its exports on
-/// `globalThis.temporal.{Temporal,Intl,toTemporalInstant}`; [`TEMPORAL_EXPOSE`]
-/// re-exposes them under the spec-global names a fixture expects.
-const TEMPORAL_POLYFILL: &str = include_str!("conformance/data/vendor/temporal-polyfill.umd.js");
-
-/// Re-expose the polyfill's exports under the spec-global names. The UMD build
-/// mounts on `globalThis.temporal`; a test262 fixture writes `Temporal.X`, so
-/// `globalThis.Temporal` must alias `globalThis.temporal.Temporal`. Also
-/// installs `Date.prototype.toTemporalInstant` (a spec global) — guarded so a
-/// QuickJS build without `Date` degrades rather than crashes the prelude.
-const TEMPORAL_EXPOSE: &str = "\
-globalThis.Temporal = globalThis.temporal.Temporal;
-try { var _tti = globalThis.temporal.toTemporalInstant; Date.prototype.toTemporalInstant = ({ toTemporalInstant() { return _tti.apply(this, arguments); } }).toTemporalInstant; } catch (e) {}
-";
-
-/// Strip the default `prototype` own property from non-constructor Temporal
-/// built-ins. The @js-temporal/polyfill defines static methods (`from`,
-/// `compare`) and prototype methods (`add`, `with`, …) as plain functions,
-/// which in JS carry a default `prototype`. ECMA-262 requires built-in
-/// Replace the non-constructor Temporal built-ins (static methods like
-/// `Duration.compare`, prototype methods like `Duration.prototype.add`) with
-/// prototype-less forwarders so the surface matches ECMA-262, where a
-/// non-constructor built-in carries *no* `prototype` own property — the test262
-/// `.builtin` fixtures assert `hasOwnProperty("prototype") === false`.
-///
-/// `delete` cannot work here: a plain function's `prototype` is created with
-/// `configurable: false`, so `delete` is a silent no-op in sloppy mode. The only
-/// way to produce a function with no `prototype` that still preserves dynamic
-/// `this` (needed for prototype methods) is a method-shorthand function
-/// (ECMA-262: a method definition is non-constructable and gets no `prototype`).
-/// Direct `eval` keeps the captured `fn` in lexical scope so the shorthand can
-/// forward `fn.apply(this, arguments)`. Named constructors keep `prototype`; the
-/// `constructor` back-reference on each prototype is skipped so a ctor never
-/// loses it via that alias.
-const TEMPORAL_NON_CTOR_STRIP: &str = r#"
-(function () {
-  var CTORS = { PlainDate:1, PlainTime:1, PlainDateTime:1, ZonedDateTime:1,
-               Instant:1, Duration:1, PlainYearMonth:1, PlainMonthDay:1,
-               Calendar:1, TimeZone:1 };
-  function protoless(fn, name) {
-    var holder = eval('({ __call() { return fn.apply(this, arguments); } })');
-    var w = holder.__call;
-    // Function `name`/`length` are configurable — restore the originals so the
-    // `.name`/`.length` fixtures still hold after wrapping.
-    try { Object.defineProperty(w, 'name', { value: name }); } catch (e) {}
-    try { Object.defineProperty(w, 'length', { value: fn.length }); } catch (e) {}
-    return w;
-  }
-  function setFn(o, k, fn) {
-    var d = Object.getOwnPropertyDescriptor(o, k);
-    if (!d) { try { o[k] = fn; } catch (e) {} return; }
-    if (d.configurable) {
-      try {
-        Object.defineProperty(o, k, {
-          value: fn, writable: true, enumerable: d.enumerable, configurable: true
-        });
-        return;
-      } catch (e) {}
-    }
-    if (d.writable || 'set' in d) { try { o[k] = fn; } catch (e) {} }
-  }
-  function walk(o, skipCtors) {
-    if (!o || (typeof o !== 'object' && typeof o !== 'function')) return;
-    var names = Object.getOwnPropertyNames(o);
-    for (var i = 0; i < names.length; i++) {
-      var k = names[i];
-      if (k === 'constructor') continue;
-      var v; try { v = o[k]; } catch (e) { continue; }
-      if (typeof v === 'function' && !(skipCtors && CTORS[k])) setFn(o, k, protoless(v, k));
-    }
-  }
-  if (typeof Temporal === 'undefined') return;
-  walk(Temporal, true);
-  for (var c in CTORS) {
-    var C = Temporal[c];
-    if (!C) continue;
-    walk(C, false);
-    if (C.prototype) walk(C.prototype, false);
-  }
-  if (Temporal.Now) walk(Temporal.Now, false);
-})();
-"#;
-
-/// The rest of the bundled harness, looked up by `$INCLUDE` name (a fixture's
-/// `includes:` frontmatter) and injected on the engine path — `propertyHelper`
-/// (reflection/verifyProperty), `compareArray`, `deepEqual`, `isConstructor`
-/// (the `new X()` throws check), `byteConversionValues`. Unknown includes are
-/// skipped (a referenced-but-missing helper surfaces as a `ReferenceError`
-/// engine error → partial, an honest signal).
-const HARNESS_FILES: &[(&str, &str)] = &[
-    (
-        "compareArray.js",
-        include_str!("conformance/data/harness/compareArray.js"),
-    ),
-    (
-        "deepEqual.js",
-        include_str!("conformance/data/harness/deepEqual.js"),
-    ),
-    (
-        "propertyHelper.js",
-        include_str!("conformance/data/harness/propertyHelper.js"),
-    ),
-    (
-        "isConstructor.js",
-        include_str!("conformance/data/harness/isConstructor.js"),
-    ),
-    (
-        "byteConversionValues.js",
-        include_str!("conformance/data/harness/byteConversionValues.js"),
-    ),
-    (
-        "testTypedArray.js",
-        include_str!("conformance/data/harness/testTypedArray.js"),
-    ),
-    (
-        "temporalHelpers.js",
-        include_str!("conformance/data/harness/temporalHelpers.js"),
-    ),
-    (
-        "detachArrayBuffer.js",
-        include_str!("conformance/data/harness/detachArrayBuffer.js"),
-    ),
-    (
-        "resizableArrayBufferUtils.js",
-        include_str!("conformance/data/harness/resizableArrayBufferUtils.js"),
-    ),
-    (
-        "asyncHelpers.js",
-        include_str!("conformance/data/harness/asyncHelpers.js"),
-    ),
-    (
-        "atomicsHelper.js",
-        include_str!("conformance/data/harness/atomicsHelper.js"),
-    ),
-    (
-        "testAtomics.js",
-        include_str!("conformance/data/harness/testAtomics.js"),
-    ),
-    (
-        "promiseHelper.js",
-        include_str!("conformance/data/harness/promiseHelper.js"),
-    ),
-    (
-        "proxyTrapsHelper.js",
-        include_str!("conformance/data/harness/proxyTrapsHelper.js"),
-    ),
-    (
-        "nativeErrors.js",
-        include_str!("conformance/data/harness/nativeErrors.js"),
-    ),
-    (
-        "regExpUtils.js",
-        include_str!("conformance/data/harness/regExpUtils.js"),
-    ),
-    ("nans.js", include_str!("conformance/data/harness/nans.js")),
-    (
-        "wellKnownIntrinsicObjects.js",
-        include_str!("conformance/data/harness/wellKnownIntrinsicObjects.js"),
-    ),
-    (
-        "dateConstants.js",
-        include_str!("conformance/data/harness/dateConstants.js"),
-    ),
-    (
-        "compareIterator.js",
-        include_str!("conformance/data/harness/compareIterator.js"),
-    ),
-    (
-        "iteratorZipUtils.js",
-        include_str!("conformance/data/harness/iteratorZipUtils.js"),
-    ),
-    (
-        "nativeFunctionMatcher.js",
-        include_str!("conformance/data/harness/nativeFunctionMatcher.js"),
-    ),
-];
-
-fn harness_source(name: &str) -> Option<&'static str> {
-    HARNESS_FILES
-        .iter()
-        .find(|(n, _)| *n == name)
-        .map(|(_, s)| *s)
-}
-
-/// Minimal `ShadowRealm` polyfill. QuickJS-NG ships no ShadowRealm, so a fixture
-/// touching it would ReferenceError. `new ShadowRealm()` allocates an isolated
-/// rquickjs `Context` (a separate realm with its own intrinsics and
-/// globalThis), held in a per-`engine_eval` registry keyed by an opaque id the
-/// instance carries as `__ds_realm`. `evaluate(src)` evals in that realm and
-/// returns the result when it is a spec-primitive, or a `TypeError` for a
-/// non-primitive / an error thrown inside the realm (per the spec). When
-/// `evaluate` resolves to a callable, it returns a WrappedFunction — a fresh
-/// outer-realm function that re-enters the inner realm on each call,
-/// marshalling primitive args in and a primitive (or another WrappedFunction)
-/// out, throwing `TypeError` for non-primitive args or returns (per the spec).
-/// Callable args (functions passed into a wrapped call) are NOT wrapped back —
-/// a callable arg throws `TypeError` (the bidirectional case is out of scope;
-/// fixtures needing it degrade honestly). `importValue` runs the spec's
-/// synchronous validation (realm check, `ToString(specifier)`, `exportName`
-/// must be a string) so the validation-focused fixtures pass, then rejects
-/// with a `TypeError` — the engine path has no module loader, so a fixture
-/// expecting a real import stays honestly `partial`, while the four expecting
-/// a `TypeError` rejection pass. The registry is cleared at the end of each
-/// `engine_eval` (`RealmsGuard`) so inner realms (and their runtimes) drop
-/// with the fixture — no cross-fixture residue.
-const SHADOWREALM_PRELUDE: &str = r#"
-function ShadowRealm() { this.__ds_realm = __ds_sr_create(); }
-ShadowRealm.prototype = {
-  constructor: ShadowRealm,
-  evaluate(src) { return __ds_sr_evaluate(this.__ds_realm, src); },
-  importValue(specifier, exportName) {
-    if (!(this instanceof ShadowRealm)) {
-      throw new TypeError("ShadowRealm.prototype.importValue called on incompatible receiver");
-    }
-    specifier = String(specifier);
-    if (typeof exportName !== "string") {
-      throw new TypeError("ShadowRealm.prototype.importValue requires exportName to be a string");
-    }
-    return Promise.reject(new TypeError("ShadowRealm importValue: module loading is not supported"));
-  },
-};
-"#;
-
-/// Per-realm helpers for the ShadowRealm polyfill, implementing
-/// `CopyNameAndLength` (sec-copynameandlength). `__ds_wfn_read_meta` runs in
-/// the *inner* realm where the wrapped callable lives: it reads the target's
-/// `length` (HasOwnProperty + Get; the spec algorithm with argCount=0 —
-/// +Infinity→+∞, -Infinity/negative→0, else max(ToIntegerOrInfinity, 0)) and
-/// `name` (coerced to String, empty if absent/non-String), returning `[length,
-/// name]`. A throwing access — a revoked Proxy, a throwing `length`/`name`
-/// accessor, or a `getOwnPropertyDescriptor` trap that throws — surfaces here;
-/// the Rust caller catches it and converts the throw to a TypeError at the
-/// `evaluate` boundary. `hasOwnProperty` (not `[[HasProperty]]`) is what
-/// reaches a proxy's `[[GetOwnProperty]]`: QuickJS's proxy `[[Get]]` recurses
-/// on the target when no `get` trap is set, so a plain `.length`/`.name` would
-/// miss a `getOwnPropertyDescriptor`-trap throw. `__ds_wfn_set_meta` runs in
-/// the *outer* realm: it stamps the copied length/name onto the wrapper as own
-/// data properties with SetFunctionLength/SetFunctionName descriptors (writable
-/// false, enumerable false, configurable true).
-const SR_INNER_PRELUDE: &str = r#"
-globalThis.__ds_wfn_read_meta = function (fn) {
-  var L = 0;
-  if (Object.prototype.hasOwnProperty.call(fn, "length")) {
-    var tl = fn.length;
-    if (typeof tl === "number") {
-      if (tl === Infinity) L = Infinity;
-      else if (tl === -Infinity) L = 0;
-      else { var ti = Math.trunc(tl); L = ti < 0 ? 0 : ti; }
-    }
-  }
-  var name = "";
-  if (Object.prototype.hasOwnProperty.call(fn, "name")) {
-    var tn = fn.name;
-    name = (typeof tn === "string") ? tn : "";
-  }
-  return [L, name];
-};
-globalThis.__ds_wfn_set_meta = function (fn, len, name) {
-  Object.defineProperty(fn, "length", {value: len, writable: false, enumerable: false, configurable: true});
-  Object.defineProperty(fn, "name", {value: name, writable: false, enumerable: false, configurable: true});
-};
-"#;
-
-/// A value lifted out of a ShadowRealm's `evaluate` (or a wrapped call's
-/// return) — a spec-primitive, or a `WrappedFn` handle to an inner-realm
-/// callable. Marshalled across realms: extracted in the inner realm, rebuilt
-/// in the outer realm during [`rquickjs::IntoJs`] conversion (a JS value
-/// cannot be shared across runtimes — undefined behavior — so only primitives
-/// and callable handles cross). Callable *arguments* to a wrapped call are not
-/// wrapped back — the bidirectional case needs a `Ctx`→`Context` conversion
-/// rquickjs does not expose, so a callable arg throws `TypeError` (honest
-/// `partial`) rather than faking a pass.
-enum SrPrim {
-    Und,
-    Null,
-    Bool(bool),
-    Num(f64),
-    Str(String),
-    /// A callable the inner realm produced — registered there under
-    /// `__ds_wfn_<fn_id>` and re-exposed in the outer realm as a
-    /// WrappedFunction (`into_js` builds the outer closure capturing the ids).
-    WrappedFn {
-        realm: u32,
-        fn_id: u32,
-        /// Copied from the inner-realm target via CopyNameAndLength — stamped
-        /// onto the outer wrapper as its own `length`/`name` data properties.
-        length: f64,
-        name: String,
-    },
-    /// Non-primitive result, or a runtime error thrown inside the realm — both
-    /// must surface as a `TypeError` to the outer realm per the ShadowRealm spec.
-    TypeError,
-    /// The source text failed to *parse* in the inner realm — per spec this
-    /// surfaces as a `SyntaxError` (not the `TypeError` that wraps runtime
-    /// throws). Distinguished from a runtime throw by a pre-parse step.
-    SyntaxError,
-}
-
-impl<'js> rquickjs::IntoJs<'js> for SrPrim {
-    fn into_js(self, ctx: &rquickjs::Ctx<'js>) -> rquickjs::Result<rquickjs::Value<'js>> {
-        use rquickjs::function::{Args, Rest};
-        use rquickjs::{Ctx, Exception, Function, Value};
-        Ok(match self {
-            SrPrim::Und => Value::new_undefined(ctx.clone()),
-            SrPrim::Null => Value::new_null(ctx.clone()),
-            SrPrim::Bool(b) => Value::new_bool(ctx.clone(), b),
-            SrPrim::Num(n) => Value::new_float(ctx.clone(), n),
-            SrPrim::Str(s) => return s.into_js(ctx),
-            SrPrim::WrappedFn {
-                realm,
-                fn_id,
-                length,
-                name,
-            } => {
-                // Build a fresh outer-realm function that re-enters the inner
-                // realm on each call. Args are marshalled to primitives on the
-                // way in (a non-primitive arg throws `TypeError`); the inner
-                // callable is looked up by `fn_id`, called at runtime arity
-                // (`Args::new` + `push_arg`); the return is marshalled back to a
-                // primitive (or another WrappedFunction). `realm`/`fn_id` are
-                // `u32` (Copy), so the closure is `Fn`.
-                let wrapper = Function::new(
-                    ctx.clone(),
-                    move |ctx: Ctx<'js>, args: Rest<Value<'js>>| -> rquickjs::Result<Value<'js>> {
-                        let mut arg_prims: Vec<SrPrim> = Vec::with_capacity(args.0.len());
-                        for a in args.0 {
-                            match sr_arg_to_prim(&ctx, a) {
-                                Ok(p) => arg_prims.push(p),
-                                Err(()) => {
-                                    return Err(Exception::throw_type(
-                                        &ctx,
-                                        "ShadowRealm WrappedFunction call: non-primitive argument",
-                                    ))
-                                }
-                            }
-                        }
-                        let inner = DS_REALMS.with(|m| m.borrow().get(&realm).cloned());
-                        let Some(inner) = inner else {
-                            return Err(Exception::throw_type(
-                                &ctx,
-                                "ShadowRealm: inner realm released",
-                            ));
-                        };
-                        // `Ok(None)` means the inner callable itself is gone
-                        // (the realm was cleared between evaluate and call) —
-                        // surfaced as a TypeError, matching a released realm.
-                        let ret = inner.with(|ic| -> rquickjs::Result<Option<SrPrim>> {
-                            let f: Function = match ic
-                                .globals()
-                                .get::<_, Function>(format!("__ds_wfn_{fn_id}"))
-                            {
-                                Ok(f) => f,
-                                Err(_) => return Ok(None),
-                            };
-                            let mut call_args = Args::new(ic.clone(), arg_prims.len());
-                            for p in arg_prims {
-                                call_args.push_arg(p)?;
-                            }
-                            let r: Value = f.call_arg(call_args)?;
-                            sr_value_to_prim(&ic, r, realm).map(Some)
-                        })?;
-                        match ret {
-                            Some(p) => p.into_js(&ctx),
-                            None => Err(Exception::throw_type(
-                                &ctx,
-                                "ShadowRealm: wrapped callable released",
-                            )),
-                        }
-                    },
-                )?;
-                // CopyNameAndLength: stamp the target's length/name onto the
-                // outer-realm wrapper as own data properties (writable false,
-                // enumerable false, configurable true — SetFunctionLength/Name).
-                if let Ok(setter) = ctx.globals().get::<_, Function>("__ds_wfn_set_meta") {
-                    let _ = setter.call::<_, ()>((wrapper.clone(), length, name.as_str()));
-                }
-                return Ok(wrapper.into_value());
-            }
-            SrPrim::TypeError => {
-                return Err(Exception::throw_type(
-                    ctx,
-                    "ShadowRealm.prototype.evaluate: evaluation did not resolve to a primitive",
-                ))
-            }
-            SrPrim::SyntaxError => {
-                return Err(Exception::throw_syntax(
-                    ctx,
-                    "ShadowRealm.prototype.evaluate: source text failed to parse",
-                ))
-            }
-        })
-    }
-}
-
-thread_local! {
-    /// ShadowRealm inner realms, keyed by the opaque id each JS ShadowRealm
-    /// instance carries. A `Context` keeps its `Runtime` alive, so a realm
-    /// persists across `evaluate` calls on the same instance. Cleared at the
-    /// end of every `engine_eval` (`RealmsGuard`) so inner runtimes drop with
-    /// the fixture — no cross-fixture residue.
-    static DS_REALMS: std::cell::RefCell<std::collections::HashMap<u32, rquickjs::Context>> =
-        std::cell::RefCell::new(std::collections::HashMap::new());
-    static DS_REALM_NEXT: std::cell::Cell<u32> = const { std::cell::Cell::new(1) };
-    /// Id counter for cross-realm callables registered under `__ds_wfn_<id>`.
-    static DS_SR_FN_NEXT: std::cell::Cell<u32> = const { std::cell::Cell::new(1) };
-}
-
-/// Create a fresh isolated `Context` (a new realm with its own intrinsics),
-/// register it in the per-`engine_eval` realm table under a new opaque id, and
-/// recursively install the ShadowRealm polyfill on it — so a `new ShadowRealm()`
-/// evaluated *inside* a realm can itself allocate a nested realm (test262
-/// `nested-realms`). The polyfill closures and `__ds_wfn_check` reach the inner
-/// realm via [`sr_install`], and the thread-local registries they use
-/// (`DS_REALMS`, the id counters) are process-global, so a callable registered
-/// in any realm is callable from any other. Returns the new realm's id.
-fn sr_create_fn() -> rquickjs::Result<u32> {
-    use rquickjs::{Context, Runtime};
-    let rt = Runtime::new()?;
-    let inner = Context::full(&rt)?;
-    inner.with(|ic| sr_install(&ic))?;
-    let id = DS_REALM_NEXT.with(|c| {
-        let v = c.get();
-        c.set(v.checked_add(1).unwrap_or(1));
-        v
-    });
-    DS_REALMS.with(|m| m.borrow_mut().insert(id, inner));
-    Ok(id)
-}
-
-/// `ShadowRealm.prototype.evaluate` host implementation: look up the inner
-/// realm by id, pre-parse via the Function constructor to tell a SyntaxError
-/// (a parse failure ⇒ `SrPrim::SyntaxError`) from a runtime throw, then eval
-/// and lift the result via [`sr_value_to_prim`] (a non-primitive or a runtime
-/// throw ⇒ `SrPrim::TypeError`, per spec).
-fn sr_evaluate_fn(id: u32, src: String) -> rquickjs::Result<SrPrim> {
-    use rquickjs::{Function, Value};
-    let inner = DS_REALMS.with(|m| m.borrow().get(&id).cloned());
-    let Some(inner) = inner else {
-        return Ok(SrPrim::TypeError);
-    };
-    inner.with(|ic| -> rquickjs::Result<SrPrim> {
-        // Spec: a top-level *parse* failure throws a SyntaxError; a *runtime*
-        // throw is wrapped into a TypeError. rquickjs's eval fuses parse and
-        // execute, so to tell them apart we pre-parse via the Function
-        // constructor — `new Function(src)` parses src as a function body,
-        // which agrees with script-body SyntaxError detection for the cases
-        // that matter (a strict directive prologue applies in both). A throw
-        // here is a parse error ⇒ `SyntaxError`; otherwise the real eval runs,
-        // where any throw is a runtime error ⇒ `TypeError`.
-        let function_ctor: Function = ic.globals().get("Function")?;
-        if function_ctor.call::<_, Value>((src.as_str(),)).is_err() {
-            let _ = ic.catch();
-            return Ok(SrPrim::SyntaxError);
-        }
-        let v: Value = match ic.eval_with_options::<Value, _>(src.as_str(), sr_sloppy()) {
-            Ok(v) => v,
-            // A runtime error thrown inside the realm is wrapped into a
-            // TypeError (and a non-primitive result is too — see
-            // sr_value_to_prim).
-            Err(_) => {
-                let _ = ic.catch();
-                return Ok(SrPrim::TypeError);
-            }
-        };
-        sr_value_to_prim(&ic, v, id)
-    })
-}
-
-/// Install the ShadowRealm polyfill on a context: register the host
-/// `__ds_sr_create`/`__ds_sr_evaluate` (so the realm can allocate nested
-/// realms and evaluate in them), install `__ds_wfn_read_meta`/
-/// `__ds_wfn_set_meta` (the CopyNameAndLength read/write used to copy a wrapped
-/// callable's `length`/`name` onto the outer-realm wrapper), and define the
-/// global `ShadowRealm`. Called on the engine context for fixtures that
-/// reference ShadowRealm, and recursively on every inner realm [`sr_create_fn`]
-/// allocates — so nested `new ShadowRealm()` works at any depth.
-fn sr_install(ctx: &rquickjs::Ctx) -> rquickjs::Result<()> {
-    use rquickjs::Function;
-    ctx.globals()
-        .set("__ds_sr_create", Function::new(ctx.clone(), sr_create_fn)?)?;
-    ctx.globals().set(
-        "__ds_sr_evaluate",
-        Function::new(ctx.clone(), sr_evaluate_fn)?,
-    )?;
-    ctx.eval_with_options::<(), _>(SR_INNER_PRELUDE, sr_sloppy())?;
-    ctx.eval_with_options::<(), _>(SHADOWREALM_PRELUDE, sr_sloppy())?;
-    Ok(())
-}
-
-/// Sloppy-mode `EvalOptions` for ShadowRealm polyfill evals (the spec runs
-/// `evaluate` source as a global-scope script, not a strict module).
-fn sr_sloppy() -> rquickjs::context::EvalOptions {
-    let mut o = rquickjs::context::EvalOptions::default();
-    o.strict = false;
-    o
-}
-
-/// Extract an inner-realm value into the cross-realm [`SrPrim`] form. A
-/// callable becomes a `WrappedFn` handle (registered in the inner global as
-/// `__ds_wfn_<id>` so the outer-realm wrapper can re-enter and call it);
-/// primitives map directly; anything else (object/symbol/bigint) is a
-/// non-primitive → `TypeError` per the ShadowRealm spec.
-fn sr_value_to_prim<'js>(
-    ic: &rquickjs::Ctx<'js>,
-    v: rquickjs::Value<'js>,
-    realm: u32,
-) -> rquickjs::Result<SrPrim> {
-    use rquickjs::{FromJs, Type};
-    Ok(match v.type_of() {
-        Type::Uninitialized | Type::Undefined => SrPrim::Und,
-        Type::Null => SrPrim::Null,
-        Type::Bool => SrPrim::Bool(bool::from_js(ic, v)?),
-        Type::Int | Type::Float => SrPrim::Num(f64::from_js(ic, v)?),
-        Type::String => SrPrim::Str(String::from_js(ic, v)?),
-        // QuickJS-NG tags a callable that carries [[Construct]] (a function
-        // declaration, a named function expression, a class) as `Constructor`,
-        // not `Function` — both are callable, so both wrap as a WrappedFunction.
-        // Matching only `Function` sent every function-declaration result to the
-        // `_ => TypeError` arm ("evaluation did not resolve to a primitive").
-        Type::Function | Type::Constructor => {
-            // Spec (sec-wrappedfunctioncreate, CopyNameAndLength): wrapping a
-            // callable reads `length` then `name` via HasOwnProperty/Get. A
-            // revoked Proxy, a throwing accessor, or a throwing
-            // `getOwnPropertyDescriptor` trap makes that read throw, and the
-            // ShadowRealm `evaluate` boundary surfaces it as a TypeError.
-            // `__ds_wfn_read_meta` (installed in each inner realm) runs that
-            // read and returns the copied `[length, name]`; a throw here
-            // becomes `TypeError` instead of a handle. The pending exception is
-            // cleared so it can't leak into a later eval.
-            let read_meta: rquickjs::Function = ic.globals().get("__ds_wfn_read_meta")?;
-            let meta: rquickjs::Array = match read_meta.call::<_, rquickjs::Array>((v.clone(),)) {
-                Ok(m) => m,
-                Err(_) => {
-                    let _ = ic.catch();
-                    return Ok(SrPrim::TypeError);
-                }
-            };
-            let length: f64 = meta.get(0)?;
-            let name: String = meta.get(1)?;
-            let fn_id = DS_SR_FN_NEXT.with(|c| {
-                let n = c.get();
-                c.set(n.checked_add(1).unwrap_or(1));
-                n
-            });
-            ic.globals().set(format!("__ds_wfn_{fn_id}"), v)?;
-            SrPrim::WrappedFn {
-                realm,
-                fn_id,
-                length,
-                name,
-            }
-        }
-        _ => SrPrim::TypeError,
-    })
-}
-
-/// Marshal an outer-realm call argument into the cross-realm [`SrPrim`] form.
-/// Only primitives cross — a callable or object arg has no static wrap-back
-/// here (the bidirectional callable-arg case is out of scope), so it signals
-/// the caller to throw `TypeError` per the ShadowRealm spec.
-fn sr_arg_to_prim<'js>(ctx: &rquickjs::Ctx<'js>, v: rquickjs::Value<'js>) -> Result<SrPrim, ()> {
-    use rquickjs::{FromJs, Type};
-    match v.type_of() {
-        Type::Uninitialized | Type::Undefined => Ok(SrPrim::Und),
-        Type::Null => Ok(SrPrim::Null),
-        Type::Bool => bool::from_js(ctx, v).map(SrPrim::Bool).map_err(|_| ()),
-        Type::Int | Type::Float => f64::from_js(ctx, v).map(SrPrim::Num).map_err(|_| ()),
-        Type::String => String::from_js(ctx, v).map(SrPrim::Str).map_err(|_| ()),
-        _ => Err(()),
-    }
-}
-
-/// Drops all ShadowRealm inner realms when `engine_eval` returns (or unwinds),
-/// so each fixture starts and ends with an empty registry.
-struct RealmsGuard;
-impl Drop for RealmsGuard {
-    fn drop(&mut self) {
-        DS_REALMS.with(|m| m.borrow_mut().clear());
-    }
-}
-
-/// Wall-clock budget for a single in-process engine eval. The engine path runs
-/// QuickJS in-process, so unlike the spawn-based static path (bounded by
-/// `PROBE_TIMEOUT_SECS`) a busy-looping fixture — e.g. an atomics agent script
-/// `while (true) {}` with no `sleep` — would hang the whole harness. QuickJS's
-/// interrupt handler (polled on loop back-edges) turns this into a bounded
-/// timeout: returning `true` once the deadline passes raises an uncatchable
-/// exception, so the fixture degrades to `partial` instead of hanging. Generous
-/// (10s) — a real engine fixture finishes in milliseconds.
-const ENGINE_EVAL_BUDGET: std::time::Duration = std::time::Duration::from_secs(10);
-thread_local! {
-    /// Deadline for the current engine_eval's JS execution, or `None` when no
-    /// budget is active (the handler then returns `false` = keep running). Set
-    /// by `engine_eval` around the sync eval + microtask drain; cleared on drop.
-    static ENGINE_DEADLINE: std::cell::Cell<Option<std::time::Instant>> = const { std::cell::Cell::new(None) };
-}
-
-/// QuickJS-NG `JSSharedArrayBufferFunctions` — the host hooks a `Runtime` needs
-/// to allocate the backing store of a **growable** `SharedArrayBuffer`
-/// (`new SharedArrayBuffer(n, { maxByteLength: m })` then `.grow()`). Without
-/// them QuickJS throws `TypeError: growable SharedArrayBuffer requires SAB
-/// allocator hooks`, so the sharedarraybuffer/growable-sab fixtures (and a few
-/// atomics ones) fail without this. rquickjs 0.12.1 does not expose the setter,
-/// so we FFI straight to the linked libquickjs: `JS_GetRuntime(ctx)` yields the
-/// `JSRuntime*` (the public `Ctx::as_raw()` gives the `JSContext*`), and
-/// `JS_SetSharedArrayBufferFunctions` copies the struct into the runtime. The
-/// hooks themselves are a refcounting allocator: each block carries an inline
-/// header `[refcount, total_size]` above the payload pointer QuickJS sees, so
-/// `sab_dup`/`sab_free` (matched per logical reference, including multi-view
-/// SABs within one runtime) never double-free. Conformance runs one runtime per
-/// fixture under a process-wide lock, so a non-atomic refcount is race-free.
-mod sab_alloc {
-    use std::alloc::{alloc as sys_alloc, dealloc as sys_dealloc, Layout};
-    use std::os::raw::c_void;
-    use std::sync::atomic::{AtomicUsize, Ordering};
-
-    /// Typed-array backing memory must be aligned for any view (Float64Array
-    /// needs 8); 16 covers every element width on the platforms we target.
-    const ALIGN: usize = 16;
-    /// Inline header above each payload: a refcount + the total allocation
-    /// size (so `dealloc` can reconstruct its `Layout` without an extern map).
-    const HEADER: usize = 2 * std::mem::size_of::<usize>();
-
-    #[repr(C)]
-    struct JSSharedArrayBufferFunctions {
-        sab_alloc: Option<unsafe extern "C" fn(*mut c_void, usize) -> *mut c_void>,
-        sab_free: Option<unsafe extern "C" fn(*mut c_void, *mut c_void)>,
-        sab_dup: Option<unsafe extern "C" fn(*mut c_void, *mut c_void)>,
-        sab_opaque: *mut c_void,
-    }
-
-    extern "C" {
-        fn JS_GetRuntime(ctx: *mut c_void) -> *mut c_void;
-        fn JS_SetSharedArrayBufferFunctions(
-            rt: *mut c_void,
-            sf: *const JSSharedArrayBufferFunctions,
-        );
-    }
-
-    unsafe extern "C" fn alloc(_opaque: *mut c_void, size: usize) -> *mut c_void {
-        let total = HEADER + size;
-        let layout = match Layout::from_size_align(total, ALIGN) {
-            Ok(l) => l,
-            Err(_) => return std::ptr::null_mut(),
-        };
-        let base = sys_alloc(layout);
-        if base.is_null() {
-            return std::ptr::null_mut();
-        }
-        (base as *mut AtomicUsize).write(AtomicUsize::new(1));
-        (base.add(std::mem::size_of::<usize>()) as *mut usize).write(total);
-        base.add(HEADER) as *mut c_void
-    }
-
-    unsafe extern "C" fn dup(_opaque: *mut c_void, ptr: *mut c_void) {
-        let base = (ptr as *mut u8).sub(HEADER) as *mut AtomicUsize;
-        (*base).fetch_add(1, Ordering::Relaxed);
-    }
-
-    unsafe extern "C" fn free(_opaque: *mut c_void, ptr: *mut c_void) {
-        let base = (ptr as *mut u8).sub(HEADER);
-        let rc = base as *mut AtomicUsize;
-        if (*rc).fetch_sub(1, Ordering::Relaxed) == 1 {
-            let total = (base.add(std::mem::size_of::<usize>()) as *mut usize).read();
-            let layout = Layout::from_size_align_unchecked(total, ALIGN);
-            sys_dealloc(base, layout);
-        }
-    }
-
-    /// Register the SAB allocator on a runtime reached via any of its
-    /// contexts. Idempotent: QuickJS overwrites `rt->sab_funcs` each call, and
-    /// the function pointers are static, so re-installing is a no-op.
-    pub fn install(ctx: &rquickjs::Ctx<'_>) {
-        // `as_raw()` yields `*mut qjs::JSContext` (an opaque struct); the extern
-        // declarations use `*mut c_void` (the C-idiomatic opaque pointer). The
-        // cast is required for the extern signature.
-        let rt = unsafe { JS_GetRuntime(ctx.as_raw().as_ptr() as *mut c_void) };
-        let funcs = JSSharedArrayBufferFunctions {
-            sab_alloc: Some(alloc),
-            sab_free: Some(free),
-            sab_dup: Some(dup),
-            sab_opaque: std::ptr::null_mut(),
-        };
-        unsafe { JS_SetSharedArrayBufferFunctions(rt, &funcs) };
-    }
-}
-
-/// Run an engine-gated fixture's ECMAScript under an embedded QuickJS engine —
-/// the same engine `__ds_engine` embeds for `ds build`, but in-process. Skips
-/// the cargo compile entirely: the engine Rust template (`fn main() {
-/// __ds_engine::run(src) }`) is fixed-shape and its compile correctness is
-/// covered by translator unit tests + the engine-path integration test, so
-/// re-compiling a throwaway project per fixture would only burn time. Injects
-/// the test262 harness (`sta.js` + `assert.js` + the fixture's `$INCLUDE`s)
-/// before the fixture, so the assert family runs with reference semantics; a
-/// thrown `Test262Error` (assert mismatch) is the single failure signal.
-fn engine_eval(
-    js_source: &str,
-    includes: &[String],
-    features: &[String],
-    flags: &[String],
-) -> EngineOutcome {
-    use rquickjs::{context::EvalOptions, ArrayBuffer, Context, Ctx, FromJs, Function, Runtime};
-    // Serialize the rquickjs engine path across worker threads. Concurrent
-    // `Runtime::new()` / `Context::full` / `globals().set` in the N parallel
-    // workers races inside QuickJS-NG: a fixture whose body or `$INCLUDE`
-    // references the just-injected `$262` (or `Temporal`, `ShadowRealm`, …)
-    // resolves it as undefined under one parallel run and clean under another
-    // — a heisenbug that surfaced ~19 fixtures as false `unsupported`
-    // (`ReferenceError: $262 is not defined`) under the default parallel
-    // matrix while passing single-threaded (`DASH_CONF_WORKERS=1`). The
-    // `run_gc` between evaluations (01f8bb2) only clears residue within a
-    // single runtime's lifetime; it does not stop the cross-thread creation
-    // race, so a process-global lock around the whole engine path is the
-    // reliable fix. The cost is bounded: engine_eval is in-process rquickjs
-    // (microseconds–milliseconds per fixture), dwarfed by the parallel cargo
-    // builds, which still run concurrently — only the QuickJS evals serialize.
-    static ENGINE_LOCK: std::sync::Mutex<()> = std::sync::Mutex::new(());
-    let _engine_guard = ENGINE_LOCK.lock().expect("ENGINE_LOCK poisoned");
-    let runtime = match Runtime::new() {
-        Ok(r) => r,
-        Err(e) => return EngineOutcome::OtherError(format!("runtime: {e}")),
-    };
-    // Register an interrupt handler so a busy-looping fixture (e.g. an atomics
-    // agent script with no `sleep`) cannot hang the in-process engine eval.
-    // QuickJS polls the handler on loop back-edges; once the wall-clock deadline
-    // set below passes it returns `true`, QuickJS raises an uncatchable
-    // exception, and the fixture degrades to `partial` instead of hanging.
-    runtime.set_interrupt_handler(Some(Box::new(|| {
-        ENGINE_DEADLINE.with(|d| match d.get() {
-            Some(deadline) => std::time::Instant::now() >= deadline,
-            None => false,
-        })
-    })));
-    let ctx = match Context::full(&runtime) {
-        Ok(c) => c,
-        Err(e) => return EngineOutcome::OtherError(format!("context: {e}")),
-    };
-    // Force a GC cycle before the runtime drops. Without it, residue from a
-    // prior fixture's engine_eval leaks into the next one (a timing-sensitive
-    // heisenbug: a fixture whose `$INCLUDE`/body references the just-injected
-    // `$262` resolves it as `undefined` under one run and clean under another,
-    // depending on how much residue the prior fixture left). A GC sweep between
-    // fixtures clears the leak.
-    struct GcOnDrop<'a>(&'a Runtime);
-    impl Drop for GcOnDrop<'_> {
-        fn drop(&mut self) {
-            self.0.run_gc();
-        }
-    }
-    let _gc_guard = GcOnDrop(&runtime);
-    // Drop ShadowRealm inner realms when engine_eval returns so each fixture
-    // starts and ends with an empty registry (no cross-fixture residue).
-    let _realms_guard = RealmsGuard;
-    let sloppy = || {
-        let mut o = EvalOptions::default();
-        o.strict = false;
-        o
-    };
-    // `onlyStrict` fixtures run under strict mode (QuickJS
-    // `JS_EVAL_FLAG_STRICT`): the harness prelude stays sloppy, but the
-    // fixture itself is strict-eval'd so `Function.prototype.caller`/
-    // `arguments` poison-pill, strict assignment/deletion, duplicate params,
-    // octal literals, and `with` behave per spec. Without it the engine runs
-    // every fixture sloppy and `onlyStrict` asserts fail.
-    let strict_fixture = flags.iter().any(|f| f == "onlyStrict");
-    let fixture_opts = || {
-        let mut o = EvalOptions::default();
-        o.strict = strict_fixture;
-        o
-    };
-    let uses_done = js_source.contains("$DONE");
-    // Arm the per-fixture eval deadline. The guard clears it on return so the
-    // budget never leaks into a later engine_eval on this worker thread.
-    ENGINE_DEADLINE.with(|d| d.set(Some(std::time::Instant::now() + ENGINE_EVAL_BUDGET)));
-    struct DeadlineGuard;
-    impl Drop for DeadlineGuard {
-        fn drop(&mut self) {
-            ENGINE_DEADLINE.with(|d| d.set(None));
-        }
-    }
-    let _deadline_guard = DeadlineGuard;
-    // Phase 1 — synchronous harness + fixture eval. Returns `Ok(None)` on a
-    // clean run; `Ok(Some(msg))` if the fixture threw (the thrown value
-    // stringified by the wrapper — "Test262Error: …" or "ReferenceError:
-    // Temporal is not defined"); `Err` if a prelude/harness eval itself failed.
-    // Fetching the thrown value via `ctx.catch()` rather than formatting the
-    // `rquickjs::Error` is what makes engine-path failures diagnosable — that
-    // Error's Display is the opaque "Exception generated by QuickJS", which hid
-    // ~4000 fixtures' real cause behind a fixed string.
-    let sync_throw = ctx.with(
-        move |ctx: Ctx<'_>| -> Result<Option<String>, rquickjs::Error> {
-            // Register SAB allocator hooks before any fixture eval — a
-            // `new SharedArrayBuffer(n, { maxByteLength })` would otherwise
-            // throw `requires SAB allocator hooks` (growable-sab fixtures).
-            sab_alloc::install(&ctx);
-            ctx.eval_with_options::<(), _>(CONSOLE_PRELUDE, sloppy())?;
-            // WinterTC (WPT) engine-fallback path — always on in [`run_wpt`]
-            // (static-first + per-function degrade). A fixture using WPT
-            // testharness APIs (`assert_equals`/`assert_array_equals`/…
-            // — not test262's `assert.sameValue`) is a WinterTC fixture the
-            // static translator could not lower; run it in QuickJS with the WPT
-            // testharness shim + any Web API builtins it references, in the
-            // Javy split (JS shim for the API surface, native Rust fn for the
-            // compute). The test262 harness below is harmless for WPT (different
-            // global names: `assert_equals` vs `assert.sameValue`).
-            // Detect any WPT testharness call. A fixture using `test()`/
-            // `promise_test`/`async_test`/`setup`/`assert_*` needs the prelude:
-            // the static translator lowers only a subset statically, the rest
-            // degrade to the engine, which must inject the shim. The earlier
-            // 3-assert probe missed fixtures that call `test()`/`promise_test`
-            // without those three asserts, leaving the engine to throw
-            // `ReferenceError: test is not defined` (the largest testharness
-            // blocker across the WPT suite).
-            let is_wpt = js_source.contains("assert_")
-                || js_source.contains("promise_test")
-                || js_source.contains("async_test")
-                || js_source.contains("test(function")
-                || js_source.contains("test(()")
-                || js_source.contains("test(async")
-                || js_source.contains("setup(")
-                || js_source.contains("generate_tests(");
-            if is_wpt {
-                ctx.eval_with_options::<(), _>(WPT_TESTHARNESS_PRELUDE, sloppy())?;
-                // `TextEncoder`/`TextDecoder` — native UTF-8 builtins + the JS
-                // class shim. PoC subset: UTF-8 only (Javy's own surface); the
-                // full `encoding_rs`-backed static path stays for hot code.
-                if js_source.contains("TextEncoder") || js_source.contains("TextDecoder") {
-                    // Native UTF-8 encode/decode — `Vec<u8>`/`String` return shapes
-                    // (rquickjs `IntoJs` → JS Array / JS String) sidestep the
-                    // `TypedArray<'js>` Ctx-lifetime trap; the JS shim wraps the
-                    // byte array in `new Uint8Array(...)`. PoC subset: UTF-8 only,
-                    // lossy on invalid bytes (fatal-mode edge cases stay partial).
-                    ctx.globals().set(
-                        "__ds_encode_utf8",
-                        Function::new(
-                            ctx.clone(),
-                            |s: String| -> Vec<u8> { s.into_bytes() },
-                        )?,
-                    )?;
-                    ctx.globals().set(
-                        "__ds_decode_utf8",
-                        Function::new(
-                            ctx.clone(),
-                            |buf: rquickjs::ArrayBuffer,
-                             off: usize,
-                             len: usize,
-                             _fatal: bool,
-                             _ignore_bom: bool|
-                             -> String {
-                                let bytes = buf.as_bytes().unwrap_or(&[]);
-                                let end = (off + len).min(bytes.len());
-                                let view: &[u8] = bytes.get(off..end).unwrap_or(&[]);
-                                String::from_utf8_lossy(view).into_owned()
-                            },
-                        )?,
-                    )?;
-                    ctx.eval_with_options::<(), _>(TEXT_ENCODING_PRELUDE, sloppy())?;
-                }
-                // `crypto` — WinterTC §5 WebCrypto global (randomUUID/
-                // getRandomValues). Pure-JS shim (see CRYPTO_SHIM); conditioned
-                // on the fixture referencing `crypto` so non-crypto fixtures
-                // skip the eval.
-                if js_source.contains("crypto") {
-                    ctx.eval_with_options::<(), _>(CRYPTO_SHIM, sloppy())?;
-                }
-            }
-            // Temporal polyfill: QuickJS-NG lacks Temporal, so a fixture touching
-            // it would ReferenceError. Inject the @js-temporal/polyfill (spec
-            // reference) and expose under the spec-global name. Conditioned on the
-            // fixture's source mentioning Temporal so non-Temporal fixtures skip
-            // the ~240KB eval. A polyfill eval failure propagates as OtherError
-            // (judge_engine → partial) rather than being masked.
-            if js_source.contains("Temporal") {
-                ctx.eval_with_options::<(), _>(INTL_STUB, sloppy())?;
-                if ctx
-                    .eval_with_options::<(), _>(TEMPORAL_POLYFILL, sloppy())
-                    .is_err()
-                {
-                    let thrown = ctx.catch();
-                    let _ = ctx.globals().set("__ds_err_diag", thrown);
-                    let msg = ctx
-                        .eval::<String, &str>("String(globalThis.__ds_err_diag)")
-                        .unwrap_or_else(|_| "<opaque>".into());
-                    return Ok(Some(format!("polyfill eval failed: {msg}")));
-                }
-                ctx.eval_with_options::<(), _>(TEMPORAL_EXPOSE, sloppy())?;
-                // Strip the default `prototype` from non-constructor built-ins
-                // (static/prototype methods defined as plain functions) so the
-                // polyfill surface matches ECMA-262 for the `.builtin` fixtures.
-                ctx.eval_with_options::<(), _>(TEMPORAL_NON_CTOR_STRIP, sloppy())?;
-            }
-            // Harness prelude: sta.js (defines Test262Error), assert.js (throws it
-            // on mismatch), then any $INCLUDE helpers the fixture declares.
-            ctx.eval_with_options::<(), _>(HARNESS_STA, sloppy())?;
-            ctx.eval_with_options::<(), _>(HARNESS_ASSERT, sloppy())?;
-            // Register the host-defined `$262` agent before any `$INCLUDE` (e.g.
-            // detachArrayBuffer.js) that references it. Only `detachArrayBuffer`
-            // needs a Rust impl (JS cannot detach an ArrayBuffer — it calls
-            // QuickJS's JS_DetachArrayBuffer via ArrayBuffer::detach); the rest
-            // of `$262` is the JS polyfill in AGENT_262_PRELUDE.
-            ctx.globals().set(
-                "__ds_detach",
-                Function::new(ctx.clone(), |buf: ArrayBuffer| -> rquickjs::Result<()> {
-                    let mut b = buf;
-                    b.detach();
-                    Ok(())
-                })?,
-            )?;
-            ctx.eval_with_options::<(), _>(AGENT_262_PRELUDE, sloppy())?;
-            // Atomics.waitAsync polyfill (QuickJS-NG lacks it). Inject only for
-            // fixtures that reference it — covers the validation + non-blocking
-            // waitAsync paths; the `-agent` variants stay partial.
-            if js_source.contains("waitAsync") {
-                ctx.eval_with_options::<(), _>(WAITASYNC_PRELUDE, sloppy())?;
-            }
-            // Promise.allKeyed / allSettledKeyed (tc39 `await-dictionary` proposal):
-            // QuickJS-NG lacks both, so inject a polyfill only for fixtures that
-            // reference either. Note `"allSettledKeyed"` is NOT a substring of
-            // `"allKeyed"` (it is `all`+`Settled`+`Keyed`), so both must be probed
-            // — otherwise the allSettledKeyed suite stays partial.
-            if js_source.contains("allKeyed") || js_source.contains("allSettledKeyed") {
-                ctx.eval_with_options::<(), _>(ALLKEYED_PRELUDE, sloppy())?;
-            }
-            // asyncHelpers.js (`asyncTest` / `assert.throwsAsync`): the newer async
-            // helpers are not always declared in a fixture's `includes:` (the
-            // `await-dictionary` suite omits it), so inject when the source
-            // references them. `asyncTest` checks `$DONE` at call time, which the
-            // `DONE_PRELUDE` below provides before the fixture eval runs.
-            if js_source.contains("asyncTest") || js_source.contains("throwsAsync") {
-                if let Some(src) = harness_source("asyncHelpers.js") {
-                    ctx.eval_with_options::<(), _>(src, sloppy())?;
-                }
-            }
-            // ShadowRealm polyfill: QuickJS-NG lacks ShadowRealm, so inject a
-            // Rust-backed one (isolated rquickjs Context per instance) only for
-            // fixtures that reference it — skips the registration cost otherwise.
-            if js_source.contains("ShadowRealm") {
-                sr_install(&ctx)?;
-            }
-            // $262.AbstractModuleSource (tc39 `source-phase-imports` proposal,
-            // ES2026): the host exposes the abstract constructor on `$262`.
-            // QuickJS-NG ships no source-phase-imports, so inject a spec-faithful
-            // stub (abstract ctor that throws, correct length/name/prototype
-            // descriptors) only for the fixtures that reference it.
-            if js_source.contains("AbstractModuleSource") {
-                ctx.eval_with_options::<(), _>(ABSTRACT_MODULE_SOURCE_PRELUDE, sloppy())?;
-            }
-            // Error.prototype.stack accessor (tc39 `error-stack-accessor` proposal):
-            // QuickJS-NG has no own `stack` on `Error.prototype`, so the
-            // `.get`/`.set` access crashes the getter/setter fixtures. Inject before
-            // `$INCLUDE`s so `nativeErrors.js` captures the wrapped constructors.
-            // Gated on the feature flag (the only fixtures that opt into the
-            // proposal), so every other error fixture is untouched.
-            if features.iter().any(|f| f == "error-stack-accessor") {
-                ctx.eval_with_options::<(), _>(ERROR_STACK_ACCESSOR_PRELUDE, sloppy())?;
-            }
-            for inc in includes {
-                if let Some(src) = harness_source(inc) {
-                    ctx.eval_with_options::<(), _>(src, sloppy())?;
-                }
-            }
-            // Host-defined `$DONE` async callback — injected after `$INCLUDE`s so
-            // it wins over `doneprintHandle.js`'s print-based `$DONE`.
-            ctx.eval_with_options::<(), _>(DONE_PRELUDE, sloppy())?;
-            // The fixture is self-contained (declares `main` and calls it, pure-TS
-            // execution semantics), so a single eval runs it — no separate call.
-            // The body is eval'd BARE (no `try { … } catch` wrapper): in strict
-            // mode that wrapper would turn a top-level `function f(){}` into a
-            // block-scoped binding, hiding it from an indirect `eval`/`Function`
-            // that test262 expects to resolve it in global scope (function
-            // 15.3.5.4_2-*gs). Throws are stringified on the Rust side below
-            // (which, unlike a JS wrapper, can't perturb the fixture's scoping).
-            if ctx
-                .eval_with_options::<(), _>(js_source, fixture_opts())
-                .is_err()
-            {
-                let thrown = ctx.catch();
-                if let Ok(s) = String::from_js(&ctx, thrown.clone()) {
-                    return Ok(Some(s));
-                }
-                // The throw left a non-string value — most often a parse-time
-                // SyntaxError from ES2025 regex syntax QuickJS-NG can't compile
-                // (`(?i:…)` modifiers, duplicate named groups), whose object a JS
-                // `try/catch` wrapper can't intercept anyway (a parse error aborts
-                // before any runtime handler installs). Stringize via the engine
-                // so the real message is reported instead of masked as a budget
-                // timeout. The inner `try` guards the case `String()` itself
-                // throws (a Symbol, or an object whose `toString` throws) — that
-                // falls back to `[typeof]`, never the opaque timeout label, which
-                // is reserved for a truly empty catch (an uncatchable busy-loop
-                // interrupt).
-                let _ = ctx.globals().set("__ds_err_diag", thrown);
-                let diag = "(function(){ try { return String(globalThis.__ds_err_diag); } catch(_) { return '[' + (typeof globalThis.__ds_err_diag) + ']'; } })()";
-                if let Ok(s) = ctx.eval::<String, &str>(diag) {
-                    return Ok(Some(s));
-                }
-                return Ok(Some("engine eval budget exhausted (interrupted)".into()));
-            }
-            Ok(None)
-        },
-    );
-    // A synchronous throw decides immediately — async reactions never fire.
-    match sync_throw {
-        Err(e) => return EngineOutcome::OtherError(format!("harness eval: {e}")),
-        Ok(Some(msg)) => {
-            return if msg.contains("Test262Error") {
-                EngineOutcome::AssertFailed(msg)
-            } else {
-                EngineOutcome::OtherError(msg)
-            };
-        }
-        Ok(None) => {}
-    }
-    // Phase 2 — drain microtask jobs so async fixtures resolve. QuickJS schedules
-    // promise reactions (`.then`, async/await, async generators) as runtime jobs;
-    // the synchronous eval above returns before they fire, so `$DONE` would never
-    // be called for an async fixture without draining. The runtime owns the job
-    // queue — drain it outside the `ctx` guard (no deadlock with the context).
-    // Capped: an in-process drain is not covered by the per-fixture spawn
-    // timeout, so a self-rescheduling microtask loop would hang the harness;
-    // 10000 is far above any real fixture's depth.
-    if uses_done {
-        let mut guard = 0;
-        while runtime.is_job_pending() && guard < 10000 {
-            // A thrown job reaction is captured via the `$DONE` sentinel (a
-            // rejection routed to `$DONE(error)`); ignore the JobException here.
-            let _ = runtime.execute_pending_job();
-            guard += 1;
-        }
-    }
-    // Phase 3 — read the `$DONE` sentinel. Only fixtures that reference `$DONE`
-    // are async; for them the verdict is: never called → `EngineLimitation`
-    // (the async chain did not resolve under the engine's drain — needs a host
-    // event loop the engine lacks), "" → supported, "Test262Error: …" → partial
-    // (an unexpected async rejection). A non-async fixture's clean synchronous
-    // eval already means supported.
-    if uses_done {
-        let verdict = ctx.with(|ctx: Ctx<'_>| -> String {
-            // Clear any pending job-throw so the eval below is not contaminated.
-            let _ = ctx.catch();
-            ctx.eval_with_options::<String, _>(
-                "(__ds_done_value === null) ? 'PENDING'\n\
-                 : (__ds_done_value === '') ? 'OK'\n\
-                 : ('FAIL:' + __ds_done_value)",
-                sloppy(),
-            )
-            .unwrap_or_else(|_| "PENDING".to_string())
-        });
-        return match verdict.as_str() {
-            "OK" => EngineOutcome::Ok,
-            "PENDING" => EngineOutcome::EngineLimitation(
-                "$DONE() was never called (async chain did not resolve)".into(),
-            ),
-            rest => {
-                // `FAIL:<msg>` — strip the tag; the msg already carries the
-                // "Test262Error: …" prefix from `$DONE`.
-                let msg = rest.strip_prefix("FAIL:").unwrap_or(rest);
-                if msg.contains("Test262Error") {
-                    EngineOutcome::AssertFailed(msg.to_string())
-                } else {
-                    EngineOutcome::OtherError(msg.to_string())
-                }
-            }
-        };
-    }
-    EngineOutcome::Ok
-}
-
-/// Recover the raw test262 body from a harness-wrapped fixture. The extractor
-/// (scripts/extract-test262.mjs) wraps every body verbatim as
-/// `function main(): void {\n<body>\n}\nmain();\n`; on the engine path we strip
-/// that wrapper so the body evals at global scope (see [`run_test262`]).
-/// Returns the input unchanged if it is not the wrapped form.
-fn strip_main_wrapper(fixture: &str) -> &str {
-    const PREFIX: &str = "function main(): void {\n";
-    const SUFFIX: &str = "\n}\nmain();\n";
-    let s = fixture.strip_prefix(PREFIX).unwrap_or(fixture);
-    s.strip_suffix(SUFFIX).unwrap_or(s)
 }
 
 /// Rewrite the extractor's `function main(): void { … } main();` wrapper to an
@@ -4148,47 +2268,16 @@ fn rewrap_async_main(fixture: &str) -> String {
     }
 }
 
-/// Run a fixture on the engine path — QuickJS with the test262 harness
-/// (`sta.js` + `assert.js` + the fixture's `$INCLUDE`s) injected. The
-/// extractor wraps every body as `function main(): void { … } main();` for
-/// the static path; on the engine path we eval the raw body at global scope
-/// instead — mirroring how test262 runs a fixture as a script — so top-level
-/// `var` declarations are globals and the `Function()` constructor's global-
-/// scope capture resolves them per spec (the planet fixture
-/// `Function("return planet;")` would otherwise throw ReferenceError). Fall
-/// back to the wrapped fixture if the unwrapped body is shorter, so this
-/// never perturbs a fixture's routing. Used both for `needs_engine` fixtures
-/// and as the `cargo check` failure fallback (degrade, don't reject).
-fn run_engine(raw: &RawFeature) -> (&'static str, String) {
-    let body = strip_main_wrapper(&raw.fixture);
-    let js_source = if body.len() < raw.fixture.len() {
-        Translator::new()
-            .engine_source(body)
-            .or_else(|| Translator::new().engine_source(&raw.fixture))
-    } else {
-        Translator::new().engine_source(&raw.fixture)
-    };
-    match js_source {
-        Some(s) => judge_engine(engine_eval(&s, &raw.includes, &raw.features, &raw.flags)),
-        None => (
-            "partial",
-            "engine flag set but engine_source returned None".into(),
-        ),
-    }
-}
-
-/// Run one test262 fixture through the assert-driven pipeline. Returns
-/// `(status, detail)`.
-///
-/// Engine path (`needs_engine`, ES reflection the static translator cannot
-/// lower): run the source in-process under QuickJS with the test262 harness
-/// injected (`sta.js` + `assert.js` + the fixture's `$INCLUDE`s), so a clean
-/// completion means every assert held and a thrown `Test262Error` marks a
-/// partial — no Node oracle, no cargo compile (see [`engine_eval`]). Static
-/// path: `Translator::check` (translatability) → `cargo check` (compiles,
-/// partial on failure) → build + run the probe; exit 0 → supported, a panicked
-/// `Test262Error` → partial, a build failure or timeout → unsupported.
-/// Translator scope limits stay honestly `unsupported`.
+/// Run one test262 fixture through the assert-driven compile pipeline. Returns
+/// `(status, detail)`. Every fixture — static or degrading (`needs_engine`) —
+/// takes the same path: `Translator::check` (translatability) → `cargo check`
+/// → build + run the probe. A degrading fixture's emitted binary embeds a
+/// `__ds_engine` QuickJS that runs the body with the test262 assert family
+/// registered as a production builtin (Javy register pattern); a static
+/// fixture runs plain Rust. Verdict: exit 0 → `supported`, a panicked
+/// `Test262Error` → `partial`, a `ReferenceError` (a host global not shipped)
+/// / build failure / timeout → `unsupported`. Translator scope limits stay
+/// honestly `unsupported`.
 fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str, String) {
     // A fixture whose `features:` the ds engine does not ship has no ds support
     // — `unsupported` up front, skipping translate + cargo.
@@ -4201,28 +2290,18 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
         Ok(r) => r,
         Err(e) => {
             // The translator itself failed (a `quote`/`Ident::new` panic on a
-            // construct it cannot lower — e.g. a non-ASCII member name). That is
-            // a stricter failure than a cargo-check-fail (no Rust was produced
-            // at all), so the same "degrade, don't reject" contract applies:
-            // fall back to the engine so the fixture still runs under QuickJS
-            // rather than reporting a translator-only partial. Only upgrade to
-            // supported; if the engine also fails, keep `partial` carrying both.
-            let (estatus, edetail) = run_engine(raw);
-            if estatus == "supported" {
-                return (
-                    "supported",
-                    "engine fallback after translate failure".into(),
-                );
-            }
-            return ("partial", format!("translate: {e} | engine: {edetail}"));
+            // construct it cannot lower — no Rust was produced). Honestly
+            // `partial` (a translator gap), not an engine-rescuable semantics
+            // gap the in-process testbed used to paper over.
+            return ("partial", format!("translate: {e}"));
         }
     };
-    // Engine path: ES reflection the static translator cannot lower. Run the
-    // source in-process under QuickJS with the test262 harness injected, so
-    // reflection + the full assert family run with reference semantics.
-    if deps.needs_engine() {
-        return run_engine(raw);
-    }
+    // A degrading fixture (`needs_engine`) takes the SAME compile path as a
+    // static one below: `write_project` emits `__ds_engine` + `wire_web_apis`
+    // + the Javy-pattern `register_*` builtins, and the probe's embedded
+    // QuickJS runs the degraded body with the test262 assert family + any Web
+    // APIs the static path pulled in, registered as production builtins. No
+    // in-process testbed — the verdict is what the production binary does.
     // Static path: `check` (translatability) → cargo check (compiles) → build
     // + run the probe (assert-driven verdict).
     let diags = Translator::new().check(&raw.fixture);
@@ -4243,86 +2322,26 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
     if !ok {
         // The translator flagged this Mapped but the emitted Rust does not
         // compile (a unification the static classify could not predict).
-        // DashScript's contract is "degrade, don't reject" — fall back to the
-        // engine path so the fixture still runs under QuickJS rather than
-        // reporting a static-only partial. Only upgrade to `supported`; if the
-        // engine also fails, keep `partial` carrying both details (never
-        // downgrade to `unsupported`, which would be a false regression).
-        let (estatus, edetail) = run_engine(raw);
-        if estatus == "supported" {
-            return (
-                "supported",
-                "engine fallback after static build failure".into(),
-            );
-        }
-        return (
-            "partial",
-            format!("static build: {err} | engine: {edetail}"),
-        );
+        // Honestly `partial` — a translator gap the in-process testbed used to
+        // paper over; the production binary is what conformance measures now.
+        return ("partial", format!("cargo build failed: {err}"));
     }
     let (verdict, _stdout) = cargo_run_full(project, target_dir);
-    match verdict {
-        // The emitted Rust compiled but crashed at runtime (an array index out
-        // of bounds ES would return `undefined` for, an arithmetic overflow, a
-        // residual `todo!()`/`panic!()`). The static translator lowered the
-        // construct to code that crashes instead of expressing its ES semantics
-        // — the same "degrade, don't reject" contract as a build failure: fall
-        // back to the engine path so the fixture runs under QuickJS rather than
-        // reporting a runtime-only partial. Only upgrade to `supported`; if the
-        // engine also fails, keep `partial` carrying both details.
-        RunOutcome::RunError(err) => {
-            let (estatus, edetail) = run_engine(raw);
-            if estatus == "supported" {
-                (
-                    "supported",
-                    "engine fallback after static runtime panic".into(),
-                )
-            } else {
-                (
-                    "partial",
-                    format!("runtime error: {err} | engine: {edetail}"),
-                )
-            }
-        }
-        other => judge_run(other),
-    }
-}
-
-/// Run one WPT (WinterTC, Ecma TC55) fixture. Returns `(status, detail)`.
-/// WinterTC uses the same "degrade, don't reject" model as `run_test262`: a
-/// construct the static translator cannot lower (an unmapped Web API edge, an
-/// `async_test`/`promise_test` needing a tokio-driven host) falls back to the
-/// in-process QuickJS engine path with Web API builtins registered (the engine
-/// builtin delegates to the same Rust impl as the static path, so degraded
-/// behavior == static behavior). The fallback only upgrades to `supported`;
-/// otherwise `partial` carries both details.
-///
-/// Path: `Translator::check` (translatability) → `cargo check` (compiles) →
-/// build + run the probe; exit 0 → supported, a panicked `AssertionError` →
-/// partial, an engine `ReferenceError` (a built-in QuickJS lacks) → unsupported.
-/// Run the engine fallback after a static-path failure at `stage` (check /
-/// translate / build / runtime). The engine can only upgrade to `supported`;
-/// if it also fails, the result is `partial` carrying both the static and
-/// engine details (never a false `unsupported`).
-fn degrade_after(stage: &str, static_detail: &str, raw: &RawFeature) -> (&'static str, String) {
-    let (estatus, edetail) = run_engine(raw);
-    if estatus == "supported" {
-        return ("supported", format!("engine fallback after {stage}"));
-    }
-    (
-        "partial",
-        format!("{stage}: {static_detail} | engine: {edetail}"),
-    )
+    // judge_run maps every RunOutcome: Ok→supported, AssertFailed→partial,
+    // ReferenceError→unsupported (a host global the engine lacks), RunError→
+    // partial (a runtime crash the in-process testbed used to rescue).
+    judge_run(verdict)
 }
 
 fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str, String) {
-    // WinterTC uses the same "degrade, don't reject" model as `run_test262`:
-    // a fixture the static translator cannot lower falls back to the in-process
-    // QuickJS engine path with Web API builtins registered (the Javy pattern —
-    // see [`engine_eval`]'s WPT branch; the engine builtin delegates to the same
-    // Rust impl as the static path, so degraded behavior == static behavior).
-    // The fallback only upgrades to `supported`; otherwise `partial` carries
-    // both details (never a false `unsupported`).
+    // WinterTC fixtures take the same compile path as test262: `check` →
+    // `write_project` (emit `__ds_engine` + `wire_web_apis` + the Javy-pattern
+    // `register_*` builtins) → `cargo build` → run the probe. The probe's
+    // embedded QuickJS runs the degraded body with the WPT testharness assert
+    // family + any Web APIs registered as production builtins; a thrown
+    // `AssertionError` is a real partial, a `ReferenceError` (a host global
+    // DashScript does not ship) is an honest `unsupported`. No engine_eval
+    // testbed — the verdict is what the production binary does.
     //
     // A WPT fixture whose body `await`s needs an async entry — rewrap the
     // extractor's sync `function main` wrapper to `async function main` so the
@@ -4336,17 +2355,12 @@ fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str
             .map(|d| format!("{d}"))
             .collect::<Vec<_>>()
             .join(" | ");
-        return degrade_after("static check", &msg, raw);
+        return ("unsupported", msg);
     }
     let (rust, deps) = match translate_catch(&fixture) {
         Ok(r) => r,
-        Err(e) => return degrade_after("translate", &e.to_string(), raw),
+        Err(e) => return ("partial", format!("translate: {e}")),
     };
-    if deps.needs_engine() {
-        // The testharness builtin is `Mapped`, so classify flagged a genuinely
-        // unmapped construct — route to the engine.
-        return run_engine(raw);
-    }
     write_project(project, &rust, &deps);
     let (ok, err) = cargo(
         project,
@@ -4354,13 +2368,10 @@ fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str
         &["check", "--quiet", "--message-format=short"],
     );
     if !ok {
-        return degrade_after("static build", &err, raw);
+        return ("partial", format!("cargo build failed: {err}"));
     }
     let (verdict, _stdout) = cargo_run_full(project, target_dir);
-    match verdict {
-        RunOutcome::RunError(err) => degrade_after("runtime error", &err, raw),
-        other => judge_run(other),
-    }
+    judge_run(verdict)
 }
 
 /// Whether a WPT fixture's failure detail is a WinterTC out-of-scope pattern
@@ -4705,185 +2716,6 @@ fn scrub_local_paths_strips_tempdir_only() {
     // Two absolute paths in one line are both scrubbed.
     let two = r"C:\Temp\a.ts and /tmp/b.ts";
     assert_eq!(scrub_local_paths(two), "<path>a.ts and <path>b.ts");
-}
-
-/// Regression guard for `TEMPORAL_NON_CTOR_STRIP`: the @js-temporal/polyfill
-/// defines non-constructor built-ins as ordinary functions, which carry a
-/// non-configurable `prototype` (so `delete` is a silent no-op). The shim
-/// replaces them with method-shorthand forwarders (no `prototype`, dynamic
-/// `this` preserved). Lock in: prototype removed for static/proto/Now methods,
-/// kept for named constructors; `name`/`length` preserved; calls still correct.
-#[test]
-fn temporal_strip_removes_non_ctor_prototype() {
-    use rquickjs::{context::EvalOptions, Context, Ctx, Runtime};
-    let sloppy = || {
-        let mut o = EvalOptions::default();
-        o.strict = false;
-        o
-    };
-    let rt = Runtime::new().expect("rt");
-    let ctx = Context::full(&rt).expect("ctx");
-    ctx.with(|ctx: Ctx<'_>| {
-        ctx.eval_with_options::<(), _>(CONSOLE_PRELUDE, sloppy()).unwrap();
-        ctx.eval_with_options::<(), _>(INTL_STUB, sloppy()).unwrap();
-        ctx.eval_with_options::<(), _>(TEMPORAL_POLYFILL, sloppy()).unwrap();
-        ctx.eval_with_options::<(), _>(TEMPORAL_EXPOSE, sloppy()).unwrap();
-        ctx.eval_with_options::<(), _>(TEMPORAL_NON_CTOR_STRIP, sloppy()).unwrap();
-        let b = |src: &str| ctx.eval::<bool, _>(src).unwrap();
-        let s = |src: &str| ctx.eval::<String, _>(src).unwrap();
-        let f = |src: &str| ctx.eval::<f64, _>(src).unwrap();
-        // Non-constructors carry no `prototype` own property (static + proto + Now).
-        assert!(!b("Temporal.Duration.compare.hasOwnProperty('prototype')"));
-        assert!(!b("Temporal.Duration.prototype.add.hasOwnProperty('prototype')"));
-        assert!(!b("Temporal.Now.zonedDateTimeISO.hasOwnProperty('prototype')"));
-        // Named constructors keep their `prototype`.
-        assert!(b("Temporal.PlainDate.hasOwnProperty('prototype')"));
-        // `name`/`length` restored after wrapping.
-        assert_eq!(s("Temporal.Duration.compare.name"), "compare");
-        assert_eq!(f("Temporal.Duration.compare.length"), 2.0);
-        // Calls forward correctly (static + prototype method dynamic `this`).
-        assert_eq!(
-            f("Temporal.Duration.compare(new Temporal.Duration(0,0,0,0,2), new Temporal.Duration(0,0,0,0,1))"),
-            1.0
-        );
-        assert_eq!(
-            s("new Temporal.Duration(0,0,0,0,1).add(new Temporal.Duration(0,0,0,0,1)).toJSON()"),
-            "PT2H"
-        );
-    });
-}
-
-/// Regression guard for `ERROR_STACK_ACCESSOR_PRELUDE` (tc39
-/// `error-stack-accessor` proposal). QuickJS-NG has no own `stack` on
-/// `Error.prototype`; the prelude wraps the native constructors (capturing the
-/// trace into a WeakMap and deleting the construction-time own property) and
-/// installs a get/set accessor matching the proposal. Lock in: the prototype
-/// slot is an accessor, get returns a trace for Error instances / undefined for
-/// non-Errors / TypeError for non-objects, and set creates an own data property
-/// / rejects non-string values, non-object receivers, and the prototype itself.
-#[test]
-fn error_stack_accessor_polyfill_semantics() {
-    use rquickjs::{context::EvalOptions, Context, Ctx, Runtime};
-    let sloppy = || {
-        let mut o = EvalOptions::default();
-        o.strict = false;
-        o
-    };
-    let rt = Runtime::new().expect("rt");
-    let ctx = Context::full(&rt).expect("ctx");
-    ctx.with(|ctx: Ctx<'_>| {
-        ctx.eval_with_options::<(), _>(CONSOLE_PRELUDE, sloppy()).unwrap();
-        ctx.eval_with_options::<(), _>(ERROR_STACK_ACCESSOR_PRELUDE, sloppy())
-            .unwrap();
-        let b = |s: &str| ctx.eval::<bool, _>(s).unwrap();
-        let throws = |src: &str| -> String {
-            ctx.eval::<String, _>(format!(
-                "try{{ {src}; 'no-throw' }} catch(e) {{ e.constructor.name }}"
-            ))
-            .unwrap()
-        };
-        // Prototype slot is an accessor: own descriptor has get+set, no value.
-        assert!(b("var d=Object.getOwnPropertyDescriptor(Error.prototype,'stack'); typeof d.get==='function' && typeof d.set==='function' && !('value' in d)"));
-        assert!(b("d.enumerable===false && d.configurable===true"));
-        // Instances carry no own `stack` at construction (proposal model).
-        assert!(b("!Object.prototype.hasOwnProperty.call(new Error('x'),'stack')"));
-        // get: Error instance → trace string; non-Error → undefined.
-        assert!(b("typeof d.get.call(new Error('x'))==='string'"));
-        assert!(b("d.get.call(new TypeError('x')) !== undefined"));
-        assert!(b("d.get.call({}) === undefined"));
-        assert!(b("d.get.call([]) === undefined"));
-        // get: non-object `this` → TypeError.
-        assert_eq!(throws("d.get.call(undefined)"), "TypeError");
-        assert_eq!(throws("d.get.call(null)"), "TypeError");
-        assert_eq!(throws("d.get.call(5)"), "TypeError");
-        // set: creates an own data property {w,e,c:true}, returns undefined.
-        assert_eq!(
-            ctx.eval::<String, _>("var e=new Error('m'); d.set.call(e,'sentinel'); String(d.set.call(e,'sentinel2'))")
-                .unwrap(),
-            "undefined"
-        );
-        assert!(b("var e2=new Error('m'); d.set.call(e2,'s'); Object.getOwnPropertyDescriptor(e2,'stack').writable===true"));
-        // set: non-string value → TypeError.
-        assert_eq!(throws("d.set.call(new Error('m'), null)"), "TypeError");
-        assert_eq!(throws("d.set.call(new Error('m'), {})"), "TypeError");
-        // set: non-object receiver → TypeError.
-        assert_eq!(throws("d.set.call(undefined, 'x')"), "TypeError");
-        // set: the prototype itself is rejected (its own slot is the accessor).
-        assert_eq!(throws("d.set.call(Error.prototype, '')"), "TypeError");
-        // Own non-writable data rejects the set.
-        assert_eq!(
-            throws("var e3=new Error('m'); Object.defineProperty(e3,'stack',{value:'o',writable:false,configurable:true}); d.set.call(e3,'u')"),
-            "TypeError"
-        );
-        // Data-property shadow: get.call still returns a trace string.
-        assert!(b("var e4=new Error('m'); Object.defineProperty(e4,'stack',{value:'sentinel',writable:true,enumerable:true,configurable:true}); typeof d.get.call(e4)==='string'"));
-        // get/set are non-constructors (method shorthand, no [[Construct]]).
-        assert_eq!(throws("new d.get()"), "TypeError");
-        assert_eq!(throws("new d.set('x')"), "TypeError");
-    });
-}
-
-/// Regression guard for `WAITASYNC_PRELUDE`: QuickJS-NG lacks `Atomics.waitAsync`,
-/// and `Atomics.wait` throws "cannot block in this thread" on the main thread
-/// (before value comparison), so the polyfill delegates only validation and
-/// computes the result directly. Lock in: presence, validation throws
-/// (RangeError OOB / TypeError non-shared / TypeError Symbol value|timeout),
-/// not-equal return, and the timeout-branched `{async,value}` shape.
-#[test]
-fn waitasync_polyfill_validation_and_returns() {
-    use rquickjs::{context::EvalOptions, Context, Ctx, Runtime};
-    let sloppy = || {
-        let mut o = EvalOptions::default();
-        o.strict = false;
-        o
-    };
-    let rt = Runtime::new().expect("rt");
-    let ctx = Context::full(&rt).expect("ctx");
-    ctx.with(|ctx: Ctx<'_>| {
-        ctx.eval_with_options::<(), _>(WAITASYNC_PRELUDE, sloppy())
-            .unwrap();
-        let b = |s: &str| ctx.eval::<bool, _>(s).unwrap();
-        let s = |src: &str| -> String {
-            ctx.eval::<String, _>(format!(
-                "try{{ {src}; 'no-throw' }} catch(e) {{ e.constructor.name }}"
-            ))
-            .unwrap()
-        };
-        // Presence.
-        assert!(b("typeof Atomics.waitAsync === 'function'"));
-        // Validation: out-of-bounds index → RangeError.
-        assert_eq!(
-            s("Atomics.waitAsync(new Int32Array(new SharedArrayBuffer(4)), 99, 0, 0)"),
-            "RangeError"
-        );
-        // Validation: non-shared buffer → TypeError.
-        assert_eq!(
-            s("Atomics.waitAsync(new Int32Array(new ArrayBuffer(4)), 0, 0, 0)"),
-            "TypeError"
-        );
-        // Validation: Symbol value → TypeError.
-        assert_eq!(
-            s("Atomics.waitAsync(new Int32Array(new SharedArrayBuffer(4)), 0, Symbol(), 0)"),
-            "TypeError"
-        );
-        // Validation: Symbol timeout → TypeError (value valid, reaches timeout coercion).
-        assert_eq!(
-            s("Atomics.waitAsync(new Int32Array(new SharedArrayBuffer(4)), 0, 0, Symbol())"),
-            "TypeError"
-        );
-        // Value mismatch → {async:false, value:'not-equal'}.
-        assert!(b(
-            "var __t = new Int32Array(new SharedArrayBuffer(4)); Atomics.store(__t, 0, 42);\
-             Atomics.waitAsync(__t, 0, 0).value === 'not-equal'"
-        ));
-        // Value match, timeout 0 → {async:false, value:'timed-out'}.
-        assert!(b("var __u = new Int32Array(new SharedArrayBuffer(4));\
-             Atomics.waitAsync(__u, 0, 0, 0).value === 'timed-out'"));
-        // Value match, timeout > 0 → {async:true, value: Promise}.
-        assert!(b("var __v = new Int32Array(new SharedArrayBuffer(4));\
-             var r = Atomics.waitAsync(__v, 0, 0, 10);\
-             r.async === true && r.value instanceof Promise"));
-    });
 }
 
 #[test]
