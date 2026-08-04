@@ -625,6 +625,50 @@ fn wpt_file_text_compiles_and_runs() {
     );
 }
 
+/// `new FormData()` + the void/bool instance methods end-to-end — the WinterTC
+/// FETCH `FormData` API. Exercises the `_str` variant (`append`/`set` with a
+/// string value), `has`/`delete`, and the `_file` variant (`append` with a
+/// `File` value, resolved by `is_file_arg`). A failure means the `DsFormData`
+/// helper, the ctor lowering, or the `_str`/`_file` dispatch regressed. The
+/// value-returning `get`/`getAll`/`entries` (a `string | File` union result)
+/// are out of scope — they need the union-unboxing path.
+#[test]
+fn wpt_form_data_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.form_data_smoke".into(),
+        category: "smoke".into(),
+        fixture: "test(() => {\n\
+                  \x20 const fd = new FormData();\n\
+                  \x20 fd.append(\"a\", \"1\");\n\
+                  \x20 fd.append(\"b\", \"2\");\n\
+                  \x20 assert_equals(fd.has(\"a\"), true);\n\
+                  \x20 fd.delete(\"a\");\n\
+                  \x20 assert_equals(fd.has(\"a\"), false);\n\
+                  \x20 fd.set(\"b\", \"3\");\n\
+                  \x20 assert_equals(fd.has(\"b\"), true);\n\
+                  \x20 const f = new File([\"x\"], \"f.txt\");\n\
+                  \x20 fd.append(\"file\", f);\n\
+                  \x20 assert_equals(fd.has(\"file\"), true);\n\
+                  }, \"formdata-core\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "FormData smoke should be supported: {detail}"
+    );
+}
+
 /// `promise_test(async () => { … }, "n")` end-to-end: the async callback lowers
 /// to `wpt_promise_test("n", async move { … }).await` under `#[tokio::main]`,
 /// so this verifies the full Stage 2 chain — translate → cargo build (pulls

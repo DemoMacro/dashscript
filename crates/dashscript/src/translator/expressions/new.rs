@@ -209,6 +209,18 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if builtins::file_ctor_type(id.name.as_str()).is_some() {
             return builtins::file_ctor(n.arguments.as_slice(), ctx);
         }
+        // `new FormData()` — the WHATWG FETCH `FormData` API (a WinterTC Web
+        // API). The no-arg form builds an empty ordered `(name, value)` list
+        // (`crate::__ds::DsFormData`); the ES `new FormData(form)` (an HTML
+        // `form` element) has no static lowering. Intercepted before the generic
+        // `Foo::new` path (which would emit `FormData::new` — E0433). The
+        // `FormData` runtime dep is flagged by the `__ds::DsFormData` marker
+        // probe (and pulls `File` → `Blob` alongside, since a value may be a
+        // `File`); instance methods (`append`/`has`/`delete`/`set`) dispatch in
+        // the call path.
+        if builtins::form_data_ctor_type(id.name.as_str()).is_some() {
+            return builtins::form_data_ctor(n.arguments.as_slice(), ctx);
+        }
         // `new ReadableStream([{ start(controller) { … } }])` — the WHATWG
         // Streams API (a WinterTC Web API). The push-source form maps
         // (`controller.enqueue`/`.close` + `getReader` + `await reader.read()`);

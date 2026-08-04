@@ -70,10 +70,10 @@ pub(in crate::translator) use web::{
     abort_method, blob_ctor, blob_ctor_type, blob_method, compression_ctor_type,
     compression_method, compression_stream_ctor, console_method, crypto_method, encoding_ctor_type,
     event_init, event_target_ctor_type, event_target_method, file_ctor, file_ctor_type,
-    headers_ctor, headers_ctor_type, headers_method, perf_method, readable_stream_ctor,
-    streams_ctor_type, streams_method, text_decoder_method, text_encoder_method, url_ctor_type,
-    url_search_params_method, url_search_params_on_url_method, url_static_method,
-    urlpattern_ctor_type,
+    form_data_ctor, form_data_ctor_type, form_data_method, headers_ctor, headers_ctor_type,
+    headers_method, perf_method, readable_stream_ctor, streams_ctor_type, streams_method,
+    text_decoder_method, text_encoder_method, url_ctor_type, url_search_params_method,
+    url_search_params_on_url_method, url_static_method, urlpattern_ctor_type,
 };
 
 use oxc_ast::ast::{Argument, Expression};

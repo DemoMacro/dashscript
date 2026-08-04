@@ -19,6 +19,7 @@ mod crypto;
 mod encoding;
 mod eventtarget;
 mod file;
+mod form_data;
 mod headers;
 mod hr_time;
 mod streams;
@@ -39,6 +40,7 @@ pub(in crate::translator) use eventtarget::{
     abort_method, event_init, event_target_ctor_type, event_target_method,
 };
 pub(in crate::translator) use file::{file_ctor, file_ctor_type};
+pub(in crate::translator) use form_data::{form_data_ctor, form_data_ctor_type, form_data_method};
 pub(in crate::translator) use headers::{headers_ctor, headers_ctor_type, headers_method};
 pub(in crate::translator) use hr_time::perf_method;
 pub(in crate::translator) use streams::{readable_stream_ctor, streams_ctor_type, streams_method};

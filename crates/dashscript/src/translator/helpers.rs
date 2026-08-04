@@ -1341,6 +1341,80 @@ impl ::std::default::Default for DsHeaders {
 }
 "#;
 
+/// WHATWG `FormData` API helper — `__ds::DsFormData` (FETCH §5.2 / XHR, a
+/// WinterTC Web API). A `FormData` is an ordered list of `(name, value)` pairs
+/// where `value` is a `string` *or* a `File` — modelled as a `DsFormEntryValue`
+/// enum (`Str`/`File`). `append` pushes (duplicates allowed, ES preserves
+/// insertion order); `set` clears the name then pushes; `has`/`delete` are the
+/// name queries. The value-returning methods (`get`/`getAll`/`entries`/`keys`/
+/// `values`/`forEach`) are not lowered here — their `string | File` union
+/// result needs the union-unboxing path, a separate batch; the static path
+/// lowers the void/bool mutation+query surface, which is the common server
+/// shape. The marker is `__ds::DsFormData`; the dep resolution pulls `File`
+/// alongside (the value enum carries a `DsFile`), so FILE_HELPER + BLOB_HELPER
+/// inject whenever a `FormData` appears.
+pub(super) const FORM_DATA_HELPER: &str = r#"
+/// A WHATWG `FormData` entry value — a `string` or a `File` (ES
+/// `FormDataEntryValue`). `#[derive(Clone)]` follows `DsFile`/`String`.
+#[derive(Clone)]
+pub enum DsFormEntryValue {
+    Str(::std::string::String),
+    File(crate::__ds::DsFile),
+}
+/// A WHATWG `FormData` — an ordered `(name, value)` list (duplicates allowed,
+/// matching ES insertion-order semantics). `entries` is public so a future
+/// `DsResponse::formData` / request body can build a view directly.
+#[derive(Clone)]
+pub struct DsFormData {
+    pub entries: ::std::vec::Vec<(::std::string::String, crate::__ds::DsFormEntryValue)>,
+}
+impl DsFormData {
+    /// `new FormData()` — an empty entry list.
+    pub fn new() -> Self {
+        Self {
+            entries: ::std::vec::Vec::new(),
+        }
+    }
+    /// `formData.append(name, value)` where `value` is a `string` — pushes a
+    /// new entry (duplicates allowed).
+    pub fn append_str(&mut self, name: ::std::string::String, value: ::std::string::String) {
+        self.entries
+            .push((name, crate::__ds::DsFormEntryValue::Str(value)));
+    }
+    /// `formData.append(name, file)` — pushes a `File` entry.
+    pub fn append_file(&mut self, name: ::std::string::String, file: crate::__ds::DsFile) {
+        self.entries
+            .push((name, crate::__ds::DsFormEntryValue::File(file)));
+    }
+    /// `formData.has(name)` — whether any entry carries `name`.
+    #[inline]
+    pub fn has(&self, name: ::std::string::String) -> bool {
+        self.entries.iter().any(|(k, _)| k == &name)
+    }
+    /// `formData.delete(name)` — remove every entry carrying `name`.
+    pub fn delete(&mut self, name: ::std::string::String) {
+        self.entries.retain(|(k, _)| k != &name);
+    }
+    /// `formData.set(name, value)` where `value` is a `string` — remove all
+    /// `name` entries, then push the new one (ES `set` replaces, not appends).
+    pub fn set_str(&mut self, name: ::std::string::String, value: ::std::string::String) {
+        self.entries.retain(|(k, _)| k != &name);
+        self.append_str(name, value);
+    }
+    /// `formData.set(name, file)` — remove all `name` entries, then push the
+    /// `File` (ES `set` replaces, not appends).
+    pub fn set_file(&mut self, name: ::std::string::String, file: crate::__ds::DsFile) {
+        self.entries.retain(|(k, _)| k != &name);
+        self.append_file(name, file);
+    }
+}
+impl ::std::default::Default for DsFormData {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+"#;
+
 /// WHATWG EventTarget/Event API helper — `__ds::DsEventTarget`/`__ds::DsEvent`
 /// (WinterTC Web APIs). A `DsEventTarget` is a pub/sub: `addEventListener` boxes
 /// the listener into `Vec<Box<dyn FnMut(&DsEvent)>>` behind an `Arc<Mutex<…>>`

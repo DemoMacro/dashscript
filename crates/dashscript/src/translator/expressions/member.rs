@@ -984,6 +984,18 @@ fn is_file_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
         .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsFile"))
 }
 
+/// Whether `expr` is an `Identifier` local whose `new FormData(…)` initializer
+/// pinned it to `DsFormData`. Gates the `FormData` instance-method dispatch
+/// (`append`/`has`/`delete`/`set`).
+pub(in crate::translator) fn is_form_data_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsFormData"))
+}
+
 /// The `__ds::DsBlob` accessor method name for an ES `Blob` property, or
 /// `None` for any other name (the access falls through). `blob.size` →
 /// `size()`, `blob.type` → `type_()` (the trailing underscore avoids the Rust

@@ -284,12 +284,22 @@ pub enum RuntimeDep {
     /// the marker is `__ds::DsFile`, and the dep resolution pulls `Blob`
     /// alongside (File reuses `DsBlob`).
     File,
+    /// WHATWG `FormData` API (FETCH §5.2 / XHR, a WinterTC Web API) —
+    /// `new FormData()` + `append(name, value)`/`append(name, file)` +
+    /// `has(name)`/`delete(name)`/`set(name, value)`/`set(name, file)`. An
+    /// ordered `(name, value)` list where `value` is a `string` or a `File`
+    /// (a `DsFormEntryValue` enum); the value-returning `get`/`getAll`/
+    /// `entries`/`forEach` stay unmapped (their `string | File` union result
+    /// needs the union-unboxing path, a separate batch). Pure `std` — no cargo
+    /// dep of its own; the marker is `__ds::DsFormData`, and the dep resolution
+    /// pulls `File` alongside (the value enum carries a `DsFile`).
+    FormData,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 33] = [
+    const ALL: [RuntimeDep; 34] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -323,6 +333,7 @@ impl RuntimeDep {
         RuntimeDep::AbortController,
         RuntimeDep::Blob,
         RuntimeDep::File,
+        RuntimeDep::FormData,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -414,6 +425,7 @@ impl RuntimeDep {
             // the dep derivation below also inserts `Blob` so the wrapped type
             // is defined.
             RuntimeDep::File => Some("__ds::DsFile"),
+            RuntimeDep::FormData => Some("__ds::DsFormData"),
             RuntimeDep::Engine => None,
         }
     }
@@ -557,6 +569,10 @@ impl RuntimeDep {
             // File is pure `std` (wraps `DsBlob`); no crate of its own. The
             // wrapped `DsBlob` comes from BLOB_HELPER, pulled by derivation.
             RuntimeDep::File => None,
+            // FormData is pure `std` (an ordered list + a value enum); no crate.
+            // The `DsFile` its value enum carries comes from FILE_HELPER, pulled
+            // by derivation.
+            RuntimeDep::FormData => None,
         }
     }
 
@@ -599,6 +615,7 @@ impl RuntimeDep {
             RuntimeDep::AbortController => Some(DS_ABORT_HELPER),
             RuntimeDep::Blob => Some(BLOB_HELPER),
             RuntimeDep::File => Some(FILE_HELPER),
+            RuntimeDep::FormData => Some(FORM_DATA_HELPER),
         }
     }
 }
@@ -1692,6 +1709,14 @@ impl Translator {
         // `__ds::DsFile` but not the transitive `DsBlob` use inside the helper.
         if deps.has(RuntimeDep::File) {
             deps.insert(RuntimeDep::Blob);
+        }
+        // FORM_DATA_HELPER's `DsFormEntryValue` enum carries a `DsFile` (a
+        // `FormData` value is a `string` or a `File`), so any FormData-bearing
+        // fixture must also pull FILE_HELPER (→ BLOB_HELPER transitively), or
+        // `DsFile`/`DsBlob` are E0433 inside the enum/methods. The marker probe
+        // catches `__ds::DsFormData` but not the transitive `DsFile` use.
+        if deps.has(RuntimeDep::FormData) {
+            deps.insert(RuntimeDep::File);
         }
         // `done()` lowers to `__ds::wpt_done` (sets the timer drain's DONE
         // flag). `wpt_done` lives in TIMERS_HELPER alongside the queue/drain,

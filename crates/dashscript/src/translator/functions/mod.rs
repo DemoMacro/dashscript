@@ -1261,6 +1261,7 @@ fn register_declarator(
             .or_else(|| headers_path(n))
             .or_else(|| blob_path(n))
             .or_else(|| file_path(n))
+            .or_else(|| form_data_path(n))
             .or_else(|| promise_path(n))
             .or_else(|| streams_path(n))
             .or_else(|| error_path(n)),
@@ -1490,6 +1491,21 @@ fn file_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     };
     match id.name.as_str() {
         "File" => Some(parse_quote!(crate::__ds::DsFile)),
+        _ => None,
+    }
+}
+
+/// `new FormData()` → `crate::__ds::DsFormData`, so an unannotated
+/// `let fd = new FormData()` records a `DsFormData` local and a later
+/// `fd.append(…)`/`fd.has(…)`/`fd.delete(…)`/`fd.set(…)` resolves its receiver.
+/// Only the `FormData` callee maps; any other `new` yields `None`.
+fn form_data_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    match id.name.as_str() {
+        "FormData" => Some(parse_quote!(crate::__ds::DsFormData)),
         _ => None,
     }
 }

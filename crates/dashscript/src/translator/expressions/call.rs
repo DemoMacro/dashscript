@@ -604,6 +604,15 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::headers_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `fd.append(name, val)` / `fd.has(name)` / `fd.delete(name)` /
+        // `fd.set(name, val)` on a `DsFormData` local (`new FormData()` binding)
+        // — the WinterTC WHATWG FETCH `FormData` API. Dispatched after the
+        // local-typed method tables; each name arg is ToString-coerced, and a
+        // `File` value arg (a `DsFile` local) routes to the `_file` variant,
+        // any other value to the `_str` variant.
+        if let Some(expr) = builtins::form_data_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         // `s.getReader()` / `r.read()` / `c.enqueue(v)` / `c.close()` on a
         // `DsReadableStream` / `DsReadableStreamDefaultReader` /
         // `DsReadableStreamController` local — the WinterTC WHATWG Streams API

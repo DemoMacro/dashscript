@@ -389,6 +389,7 @@ pub const MAPPED_CTOR_RUST_TYPE: &[(&str, &str)] = &[
     ("AbortSignal", "DsAbortSignal"),
     ("Blob", "DsBlob"),
     ("File", "DsFile"),
+    ("FormData", "DsFormData"),
     // Collections — `new Map()`/`new Set()` (and the weak aliases, which lower
     // to the same strong backing) all map to HashMap/HashSet.
     ("Map", "HashMap"),
