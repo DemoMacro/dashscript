@@ -2292,6 +2292,19 @@ impl ::std::default::Default for DsEventTarget {
         Self::new()
     }
 }
+// WinterTC `self` / `globalThis` — the global scope is itself an `EventTarget`
+// (a receiver for `addEventListener`/`removeEventListener`/`dispatchEvent`). A
+// single thread-local instance mirrors TS's single-threaded global; because
+// `DsEventTarget` clones its inner `Arc`, every `wpt_self()` call shares one
+// listener set, so a listener registered on `self` is seen by a later
+// `self.dispatchEvent`. `crate::__ds::wpt_self().<method>(…)` is the lowering
+// for `self.<method>(…)` / `globalThis.<method>(…)` on the global target.
+thread_local! {
+    static WPT_SELF: DsEventTarget = DsEventTarget::new();
+}
+pub fn wpt_self() -> DsEventTarget {
+    WPT_SELF.with(|s| s.clone())
+}
 
 /// A WHATWG `Event`. `default_prevented` is a `Cell` so a `&DsEvent` listener
 /// (the ES dispatch shape) can flip it via `preventDefault`. `#[derive(Clone)]`

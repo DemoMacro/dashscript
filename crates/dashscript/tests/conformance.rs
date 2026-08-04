@@ -385,6 +385,41 @@ fn wpt_eventtarget_compiles_and_runs() {
     );
 }
 
+/// WinterTC `self` / `globalThis` is the global scope, which is itself an
+/// `EventTarget` — `self.addEventListener(…)` / `globalThis.removeEventListener(…)`
+/// route to the shared `__ds::wpt_self()` target rather than a phantom binding.
+/// Mirrors the WPT `dom/events/eventtarget-removeeventlistener` shape (a
+/// `globalThis.removeEventListener(…)` no-op returning `undefined`).
+#[test]
+fn wpt_eventtarget_self_global_this_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.eventtarget_self_smoke".into(),
+        category: "smoke".into(),
+        fixture: "function main(): void {\n\
+                  \x20 test(function() {\n\
+                  \x20   assert_equals(globalThis.removeEventListener(\"x\", null, false), undefined);\n\
+                  \x20   assert_equals(self.removeEventListener(\"x\", null), undefined);\n\
+                  \x20 }, \"removing a null event listener should succeed\");\n\
+                  }\nmain();\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "self/globalThis EventTarget smoke should be supported: {detail}"
+    );
+}
+
 /// `new CustomEvent(type, init)` + property reads end-to-end on the static
 /// path — the WinterTC DOM `CustomEvent` interface. Mirrors the WPT
 /// `event-constructors` CustomEvent region: `detail` carries through, the

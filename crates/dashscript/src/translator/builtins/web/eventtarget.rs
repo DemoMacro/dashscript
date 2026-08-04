@@ -30,6 +30,18 @@ use super::super::super::expressions::{
 };
 use super::super::es_to_string_arg;
 
+/// True when `expr` is the WinterTC global-scope identifier `self` or
+/// `globalThis` — the global object, which is itself an `EventTarget`. A member
+/// call on such a receiver (`self.addEventListener(…)`) routes to the shared
+/// `__ds::wpt_self()` target instead of a phantom `self_`/`global_this` binding
+/// (which would fail with E0425).
+pub(in crate::translator) fn is_self_or_global_this(expr: &Expression) -> bool {
+    matches!(
+        expr,
+        Expression::Identifier(id) if matches!(id.name.as_str(), "self" | "globalThis")
+    )
+}
+
 /// The Rust type a WHATWG EventTarget API constructor builds, if `name` is one:
 /// `EventTarget` → `crate::__ds::DsEventTarget`, `Event` → `crate::__ds::DsEvent`.
 /// `None` for any other name (the `new` lowering falls through to the generic
@@ -139,11 +151,20 @@ pub(in crate::translator) fn event_target_method(
     args: &[Argument],
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
-    if !is_event_target_local(&sm.object, ctx) {
+    // WinterTC `self` / `globalThis` is the global scope, which is itself an
+    // `EventTarget` — route `self.addEventListener(…)` / `globalThis.
+    // removeEventListener(…)` to the shared `__ds::wpt_self()` target, the same
+    // way a `new EventTarget()` local routes to its own listener set.
+    let self_scope = is_self_or_global_this(&sm.object);
+    if !is_event_target_local(&sm.object, ctx) && !self_scope {
         return None;
     }
     let name = sm.property.name.as_str();
-    let obj = translate_expr(&sm.object, ctx);
+    let obj: Expr = if self_scope {
+        parse_quote!(crate::__ds::wpt_self())
+    } else {
+        translate_expr(&sm.object, ctx)
+    };
     Some(match name {
         // `et.addEventListener(type, cb[, useCapture|options])` →
         // `et.add_event_listener(type, Box::new(..))`. A `null`/`undefined`

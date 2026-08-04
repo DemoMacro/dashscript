@@ -1805,6 +1805,15 @@ impl Translator {
         if probe.contains("__ds::DsCustomEvent") {
             deps.insert(RuntimeDep::EventTarget);
         }
+        // `self.<method>(…)` / `globalThis.<method>(…)` on the WinterTC global
+        // EventTarget lowers to `__ds::wpt_self().<method>(…)`. `wpt_self` lives
+        // in EVENT_TARGET_HELPER, but the emit references neither `DsEvent` nor
+        // `DsEventTarget`, so the marker probe misses it — a fixture whose only
+        // EventTarget use is via `self`/`globalThis` would see `wpt_self` as
+        // E0425. Pull the slice the way a `new CustomEvent(…)`-only fixture does.
+        if probe.contains("__ds::wpt_self") {
+            deps.insert(RuntimeDep::EventTarget);
+        }
         // `done()` lowers to `__ds::wpt_done` (sets the timer drain's DONE
         // flag). `wpt_done` lives in TIMERS_HELPER alongside the queue/drain,
         // so any fixture that calls `done()` — timer or not — pulls the slice
