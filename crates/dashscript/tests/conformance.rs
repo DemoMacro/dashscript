@@ -2832,6 +2832,65 @@ globalThis.promise_test = function (fn, name) {
     p.then(null, function (e) { throw new AssertionError(name + ": promise rejected " + __ds_fmt(e)); });
   }
 };
+// `self` — WinterTC §5 global alias for globalThis. WPT fixtures reach Web
+// APIs through `self.` (e.g. `self.URL`, `self.crypto`) rather than the bare
+// global; without the alias the engine throws `ReferenceError: self is not
+// defined` — the single largest engine-path blocker across the WPT suite.
+if (!globalThis.self) globalThis.self = globalThis;
+// `assert_throws_js(constructor, fn)` — fn must throw an instance of `ctor`.
+// `assert_throws_dom(name, fn)` — fn must throw a DOMException whose `name`
+// matches; QuickJS-NG has no DOMException, so match by the `name` property
+// (the field WinterTC's DsError carries).
+// `assert_throws_exactly(value, fn)` — fn must throw `=== value`.
+globalThis.assert_throws_js = function (ctor, fn, msg) {
+  var thrown = false, exc;
+  try { fn(); } catch (e) { thrown = true; exc = e; }
+  if (!thrown) throw new AssertionError((msg || "") + " did not throw");
+  if (!(exc instanceof ctor))
+    throw new AssertionError((msg || "") + " threw wrong type: " + __ds_fmt(exc));
+};
+globalThis.assert_throws_dom = function (name, fn, msg) {
+  var thrown = false, exc;
+  try { fn(); } catch (e) { thrown = true; exc = e; }
+  if (!thrown) throw new AssertionError((msg || "") + " did not throw");
+  if (String(exc && exc.name) !== String(name))
+    throw new AssertionError((msg || "") + " DOMException name mismatch: " + __ds_fmt(exc));
+};
+globalThis.assert_throws_exactly = function (expected, fn, msg) {
+  var thrown = false, exc;
+  try { fn(); } catch (e) { thrown = true; exc = e; }
+  if (!thrown) throw new AssertionError((msg || "") + " did not throw");
+  if (exc !== expected)
+    throw new AssertionError((msg || "") + " threw wrong value: " + __ds_fmt(exc));
+};
+// `promise_rejects_js(test, ctor, promise, msg)` — assert `promise` rejects
+// with an instance of `ctor`. Returns a promise the harness drains via the
+// microtask loop; a non-matching rejection throws AssertionError on drain.
+globalThis.promise_rejects_js = function (_t, ctor, promise, msg) {
+  return promise.then(
+    function () { throw new AssertionError((msg || "") + " promise should reject"); },
+    function (e) {
+      if (!(e instanceof ctor))
+        throw new AssertionError((msg || "") + " wrong rejection type: " + __ds_fmt(e));
+    }
+  );
+};
+// `format_value(v)` — WPT diagnostic pretty-printer (strings quoted, objects
+// JSON-ish). Used by some fixtures' own diagnostic helpers; a verdict only
+// depends on it when a fixture asserts on its output.
+globalThis.format_value = function (v) {
+  if (typeof v === "string") return "\"" + String(v) + "\"";
+  if (v && typeof v === "object") { try { return JSON.stringify(v); } catch (e) { return String(v); } }
+  return String(v);
+};
+// `assert_inherits(obj, prop)` — WPT IDL helper: the property must be on the
+// prototype chain but NOT an own property.
+globalThis.assert_inherits = function (obj, prop, msg) {
+  if (Object.prototype.hasOwnProperty.call(obj, prop))
+    throw new AssertionError((msg || "") + " expected inherited but found own property " + __ds_fmt(prop));
+  if (!(prop in obj))
+    throw new AssertionError((msg || "") + " expected inherited property " + __ds_fmt(prop));
+};
 "#;
 
 /// `TextEncoder`/`TextDecoder` as a Javy-style split: a JS shim (this prelude,
@@ -3752,9 +3811,22 @@ fn engine_eval(
             // Javy split (JS shim for the API surface, native Rust fn for the
             // compute). The test262 harness below is harmless for WPT (different
             // global names: `assert_equals` vs `assert.sameValue`).
-            let is_wpt = js_source.contains("assert_equals")
-                || js_source.contains("assert_array_equals")
-                || js_source.contains("assert_own_property");
+            // Detect any WPT testharness call. A fixture using `test()`/
+            // `promise_test`/`async_test`/`setup`/`assert_*` needs the prelude:
+            // the static translator lowers only a subset statically, the rest
+            // degrade to the engine, which must inject the shim. The earlier
+            // 3-assert probe missed fixtures that call `test()`/`promise_test`
+            // without those three asserts, leaving the engine to throw
+            // `ReferenceError: test is not defined` (the largest testharness
+            // blocker across the WPT suite).
+            let is_wpt = js_source.contains("assert_")
+                || js_source.contains("promise_test")
+                || js_source.contains("async_test")
+                || js_source.contains("test(function")
+                || js_source.contains("test(()")
+                || js_source.contains("test(async")
+                || js_source.contains("setup(")
+                || js_source.contains("generate_tests(");
             if is_wpt {
                 ctx.eval_with_options::<(), _>(WPT_TESTHARNESS_PRELUDE, sloppy())?;
                 // `TextEncoder`/`TextDecoder` — native UTF-8 builtins + the JS

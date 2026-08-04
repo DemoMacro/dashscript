@@ -44,7 +44,7 @@
     "layer": "wpt",
     "category": "urlpattern",
     "status": "partial",
-    "detail": "static check: `assert_implements` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: test is not defined",
+    "detail": "static check: `assert_implements` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine error: AssertionError: : harness threw ReferenceError: assert_implements is not defined",
     "note": ""
   },
   {

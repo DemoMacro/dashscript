@@ -4995,6 +4995,15 @@ fn wire_console(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
 /// (`Ok(())`) when no Web API dep is active, so a non-Web-API engine fixture
 /// pays nothing.
 fn wire_web_apis(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    // `self` — WinterTC §5 global alias for globalThis. Registered
+    // unconditionally (the alias is part of the global shape, not a per-API
+    // dep), so a degraded function reaching a Web API via `self.` resolves it
+    // exactly as the static path's `self` lowering — one implementation, two
+    // delivery paths (the conformance harness mirrors this in its WPT prelude).
+    ctx.eval_with_options::<(), _>(
+        "if (!globalThis.self) globalThis.self = globalThis;",
+        sloppy(),
+    )?;
     /* __DS_WIRE_WEB_APIS_BODY__ */
     Ok(())
 }
