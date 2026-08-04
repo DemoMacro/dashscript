@@ -2680,6 +2680,46 @@ fn register_base64(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
 }
 "#;
 
+/// `crypto.randomUUID()` / `crypto.getRandomValues(arr)` engine builtin — the
+/// Javy-pattern wiring for the WinterTC WebCrypto globals (mirrors
+/// [`TEXT_ENCODING_ENGINE_BUILTIN`]). Native `__ds_crypto_uuid`/`__ds_crypto_grv`
+/// closures delegate to the SAME `crate::__ds::crypto_random_uuid`/
+/// `crypto_get_random_values` the static path lowers to; `getRandomValues`
+/// reuses the TextDecoder `ArrayBuffer`+offset+length marshal (bytes out, JS
+/// shim fills the TypedArray back in place and returns it — ES semantics). JS
+/// shims expose both on the `crypto` global. One implementation, two delivery
+/// paths.
+pub(super) const CRYPTO_ENGINE_BUILTIN: &str = r#"
+fn register_crypto(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    let uuid = rquickjs::Function::new(ctx.clone(), || -> String {
+        crate::__ds::crypto_random_uuid()
+    })?;
+    ctx.globals().set("__ds_crypto_uuid", uuid)?;
+    let grv = rquickjs::Function::new(
+        ctx.clone(),
+        |buf: rquickjs::ArrayBuffer, off: usize, len: usize| -> Vec<u8> {
+            let bytes = buf.as_bytes().unwrap_or(&[]);
+            let end = off.saturating_add(len).min(bytes.len());
+            let v = bytes.get(off..end).unwrap_or(&[]).to_vec();
+            crate::__ds::crypto_get_random_values(v)
+        },
+    )?;
+    ctx.globals().set("__ds_crypto_grv", grv)?;
+    ctx.eval_with_options::<(), _>(
+        "this.crypto = {
+             randomUUID: function () { return __ds_crypto_uuid(); },
+             getRandomValues: function (arr) {
+                 if (arr == null || arr.buffer == null) return arr;
+                 var filled = __ds_crypto_grv(arr.buffer, arr.byteOffset || 0, arr.length);
+                 for (var i = 0; i < arr.length; i++) arr[i] = filled[i];
+                 return arr;
+             }
+         };",
+        sloppy(),
+    )
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through

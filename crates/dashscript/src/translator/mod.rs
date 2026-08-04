@@ -691,6 +691,7 @@ impl RuntimeDep {
             }
             RuntimeDep::HrTime => Some(("register_perf_now(ctx)", PERF_ENGINE_BUILTIN)),
             RuntimeDep::Base64 => Some(("register_base64(ctx)", BASE64_ENGINE_BUILTIN)),
+            RuntimeDep::Crypto => Some(("register_crypto(ctx)", CRYPTO_ENGINE_BUILTIN)),
             _ => None,
         }
     }

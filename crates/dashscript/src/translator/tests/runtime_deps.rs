@@ -645,6 +645,30 @@ fn engine_helper_module_stamps_perf_and_base64_builtins() {
 }
 
 #[test]
+fn engine_helper_module_stamps_crypto_builtin() {
+    // Batch 1-D: crypto.randomUUID + getRandomValues engine builtins. The
+    // getRandomValues marshal reuses the TextDecoder ArrayBuffer+off+len shape
+    // (bytes out; the JS shim fills the TypedArray in place and returns it —
+    // ES semantics).
+    let both = RuntimeDeps::empty()
+        .with(RuntimeDep::Engine)
+        .with(RuntimeDep::Crypto);
+    let src = both
+        .engine_helper_module()
+        .expect("Engine + Crypto emits __ds_engine module");
+    assert!(
+        src.contains("register_crypto(ctx)?;"),
+        "wire_web_apis stamps the crypto register call, got:\n{src}"
+    );
+    assert!(
+        src.contains("fn register_crypto(ctx: &Ctx<'_>)")
+            && src.contains("crate::__ds::crypto_random_uuid")
+            && src.contains("crate::__ds::crypto_get_random_values"),
+        "register_crypto delegates to crate::__ds::crypto_random_uuid/get_random_values, got:\n{src}"
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);
