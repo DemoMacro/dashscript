@@ -12,8 +12,8 @@ use syn::{parse_quote, Expr};
 use super::super::bindings;
 use super::super::context::Ctx;
 use super::super::expressions::{
-    bool_expr, is_number_arg, regex_lit_parts, string_expr, translate_argument, translate_expr,
-    translate_number_to,
+    bool_expr, is_number_arg, is_request_local, regex_lit_parts, string_expr, translate_argument,
+    translate_expr, translate_number_to,
 };
 use super::super::flavor::NumberFlavor;
 
@@ -125,28 +125,48 @@ pub(in crate::translator) fn global_function(
             let v = translate_argument(args.first()?, ctx);
             parse_quote!(#v.clone())
         }
-        // `fetch(url)` — WinterTC (Ecma TC55) Web API. ES `fetch` returns
-        // `Promise<Response>`; `await fetch(url)` lowers to `__ds::ds_fetch(url)`
-        // (the caller's `await` supplies the `.await`). A string URL is the
-        // common form; a `Request` object arg has no static lowering here — it
-        // falls through to a plain call and surfaces honestly at `cargo check`.
-        // See `DS_FETCH_HELPER`.
+        // `fetch` — WinterTC (Ecma TC55) Web API. ES `fetch` returns
+        // `Promise<Response>`; the caller's `await` supplies the `.await`.
+        // Three arg shapes: `fetch(request)` (a `Request` object arg unwrapped
+        // via `ds_fetch_request`), `fetch(url, init)` (a plain-object `init`
+        // → `ds_fetch_with`), and `fetch(url)` (→ `ds_fetch`). See
+        // `fetch_request_arg` / `fetch_init` / `DS_FETCH_HELPER`.
         "fetch" => {
-            let url = translate_argument(args.first()?, ctx);
-            // `fetch(url, init)` — a plain object `init` lowers to `ds_fetch_with`
-            // (method/body/headers); anything else (no second arg, a `Request`
-            // object, a non-literal) stays the GET `ds_fetch` path and surfaces
-            // honestly at `cargo check`. See `fetch_init` / `DS_FETCH_HELPER`.
-            match args.get(1) {
-                Some(Argument::ObjectExpression(obj)) => {
-                    let (method, body, headers) = fetch_init(obj, ctx);
-                    parse_quote!(crate::__ds::ds_fetch_with(#url, #method, #body, #headers))
+            // `fetch(request)` — a `Request` object arg unwraps via
+            // `ds_fetch_request` (the same method/body/headers path as
+            // `fetch(url, init)`); a string URL or a `(url, init)` pair falls
+            // through to the paths below.
+            if let Some(req) = fetch_request_arg(args.first()?, ctx) {
+                req
+            } else {
+                let url = translate_argument(args.first()?, ctx);
+                // `fetch(url, init)` — a plain object `init` lowers to
+                // `ds_fetch_with` (method/body/headers); anything else (no
+                // second arg, a non-literal) stays the GET `ds_fetch` path.
+                match args.get(1) {
+                    Some(Argument::ObjectExpression(obj)) => {
+                        let (method, body, headers) = fetch_init(obj, ctx);
+                        parse_quote!(crate::__ds::ds_fetch_with(#url, #method, #body, #headers))
+                    }
+                    _ => parse_quote!(crate::__ds::ds_fetch(#url)),
                 }
-                _ => parse_quote!(crate::__ds::ds_fetch(#url)),
             }
         }
         _ => return None,
     })
+}
+
+/// `fetch(request)` when arg0 is a `DsRequest` local → `ds_fetch_request(&req)`
+/// (the same method/body/headers network path as `fetch(url, init)`, unwrapped
+/// from the `Request` object `new Request(…)` built). `None` for any other arg0
+/// shape (a string URL, etc.) so the `fetch(url)` / `fetch(url, init)` path runs.
+fn fetch_request_arg(arg: &Argument, ctx: &Ctx<'_>) -> Option<Expr> {
+    let e = arg.as_expression()?;
+    if !is_request_local(e, ctx) {
+        return None;
+    }
+    let v = translate_argument(arg, ctx);
+    Some(parse_quote!(crate::__ds::ds_fetch_request(&#v)))
 }
 
 /// `fetch(url, init)`'s second argument — the ES `init` object — lowered to the
@@ -154,7 +174,10 @@ pub(in crate::translator) fn global_function(
 /// `"GET"`; `body` to `None`; `headers` (only a plain object literal here) to an
 /// empty list. Each header name/value is ES ToString-coerced (`.to_string()`)
 /// the way `fetch` itself stringifies before sending.
-fn fetch_init(obj: &ObjectExpression<'_>, ctx: &Ctx<'_>) -> (Expr, Expr, Expr) {
+pub(in crate::translator) fn fetch_init(
+    obj: &ObjectExpression<'_>,
+    ctx: &Ctx<'_>,
+) -> (Expr, Expr, Expr) {
     let mut method: Option<Expr> = None;
     let mut body: Option<Expr> = None;
     let mut header_pairs: Vec<Expr> = Vec::new();

@@ -1262,6 +1262,7 @@ fn register_declarator(
             .or_else(|| blob_path(n))
             .or_else(|| file_path(n))
             .or_else(|| form_data_path(n))
+            .or_else(|| request_path(n))
             .or_else(|| promise_path(n))
             .or_else(|| streams_path(n))
             .or_else(|| error_path(n)),
@@ -1506,6 +1507,22 @@ fn form_data_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     };
     match id.name.as_str() {
         "FormData" => Some(parse_quote!(crate::__ds::DsFormData)),
+        _ => None,
+    }
+}
+
+/// `new Request(url, init?)` → `crate::__ds::DsRequest`, so an unannotated
+/// `let r = new Request(…)` records a `DsRequest` local and a later
+/// `fetch(r)` resolves its argument type and `r.url`/`r.method`/`r.headers`
+/// resolve the receiver. Only the `Request` callee maps; any other `new`
+/// yields `None`.
+fn request_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    match id.name.as_str() {
+        "Request" => Some(parse_quote!(crate::__ds::DsRequest)),
         _ => None,
     }
 }

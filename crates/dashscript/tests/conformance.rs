@@ -705,6 +705,46 @@ fn wpt_subtle_digest_compiles_and_runs() {
     );
 }
 
+/// `new Request(url, init?)` + the `.method`/`.url` read-only accessors
+/// end-to-end — the WinterTC FETCH §5.2 `Request` ctor. Exercises the ctor's
+/// `init` parsing (reusing `fetch_init`, the same path as `fetch(url, init)`),
+/// the default GET when `init` is absent, and the accessors (`request.method`
+/// uppercased, `request.url`). `fetch(request)` itself is network-bound (a real
+/// send that panics on a missing WPT server), so the smoke verifies the
+/// descriptor's construction + inspection, not the send; the `fetch(request)`
+/// dispatch (`ds_fetch_request`) is compile-verified by the type wiring.
+#[test]
+fn wpt_request_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.request_smoke".into(),
+        category: "smoke".into(),
+        fixture: "test(() => {\n\
+                  \x20 const r = new Request(\"https://example.com/a\", { method: \"POST\" });\n\
+                  \x20 assert_equals(r.method, \"POST\");\n\
+                  \x20 assert_equals(r.url, \"https://example.com/a\");\n\
+                  \x20 const g = new Request(\"https://example.com/b\");\n\
+                  \x20 assert_equals(g.method, \"GET\");\n\
+                  \x20 assert_equals(g.url, \"https://example.com/b\");\n\
+                  }, \"request-core\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "Request smoke should be supported: {detail}"
+    );
+}
+
 /// `promise_test(async () => { … }, "n")` end-to-end: the async callback lowers
 /// to `wpt_promise_test("n", async move { … }).await` under `#[tokio::main]`,
 /// so this verifies the full Stage 2 chain — translate → cargo build (pulls

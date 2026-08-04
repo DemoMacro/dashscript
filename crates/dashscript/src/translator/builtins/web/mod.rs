@@ -22,6 +22,7 @@ mod file;
 mod form_data;
 mod headers;
 mod hr_time;
+mod request;
 mod streams;
 mod timers;
 mod url;
@@ -43,6 +44,7 @@ pub(in crate::translator) use file::{file_ctor, file_ctor_type};
 pub(in crate::translator) use form_data::{form_data_ctor, form_data_ctor_type, form_data_method};
 pub(in crate::translator) use headers::{headers_ctor, headers_ctor_type, headers_method};
 pub(in crate::translator) use hr_time::perf_method;
+pub(in crate::translator) use request::{request_ctor, request_ctor_type};
 pub(in crate::translator) use streams::{readable_stream_ctor, streams_ctor_type, streams_method};
 pub(in crate::translator) use timers::timer_function;
 pub(in crate::translator) use url::{

@@ -221,6 +221,19 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if builtins::form_data_ctor_type(id.name.as_str()).is_some() {
             return builtins::form_data_ctor(n.arguments.as_slice(), ctx);
         }
+        // `new Request(url, init?)` — the WHATWG FETCH `Request` API (a WinterTC
+        // Web API). A `Request` is a fetch descriptor; the `init` object's
+        // `method`/`body`/`headers` are parsed the same way as `fetch(url, init)`.
+        // Intercepted before the generic `Foo::new` path (which would emit
+        // `Request::new` — E0433). The `Fetch` runtime dep is pulled by the
+        // `__ds::DsRequest` marker (the dep derivation inserts `Fetch` on it, so
+        // `DsRequest` — which lives in `DS_FETCH_HELPER` alongside `DsResponse`/
+        // `ds_fetch` — resolves and `reqwest` is flagged); `.url`/`.method`/
+        // `.headers` accessors dispatch in the member path, and `fetch(request)`
+        // in the call path.
+        if builtins::request_ctor_type(id.name.as_str()).is_some() {
+            return builtins::request_ctor(n.arguments.as_slice(), ctx);
+        }
         // `new ReadableStream([{ start(controller) { … } }])` — the WHATWG
         // Streams API (a WinterTC Web API). The push-source form maps
         // (`controller.enqueue`/`.close` + `getReader` + `await reader.read()`);

@@ -1737,6 +1737,17 @@ impl Translator {
         if deps.has(RuntimeDep::FormData) {
             deps.insert(RuntimeDep::File);
         }
+        // DS_FETCH_HELPER's `DsRequest` (a `new Request(…)` descriptor) lives in
+        // the Fetch helper slice alongside `DsResponse`/`ds_fetch`, so any
+        // Request-bearing fixture must pull DS_FETCH_HELPER + `reqwest`, or
+        // `DsRequest` is E0433. The marker probe catches `__ds::ds_fetch`
+        // (`fetch(url)`/`fetch(request)` lowers to `ds_fetch`/`ds_fetch_request`)
+        // but not a `new Request(…)`-only fixture whose sole emit is
+        // `DsRequest::new`. Insert `Fetch` when `DsRequest` appears, the way
+        // `File` pulls `Blob` and `FormData` pulls `File`.
+        if probe.contains("__ds::DsRequest") {
+            deps.insert(RuntimeDep::Fetch);
+        }
         // `done()` lowers to `__ds::wpt_done` (sets the timer drain's DONE
         // flag). `wpt_done` lives in TIMERS_HELPER alongside the queue/drain,
         // so any fixture that calls `done()` — timer or not — pulls the slice

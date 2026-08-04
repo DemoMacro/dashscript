@@ -320,6 +320,16 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return parse_quote!(#obj.#method());
         }
     }
+    // `request.url`/`.method`/`.headers` on a DsRequest local → the zero-arg
+    // accessor (ES exposes these as read-only properties; the Rust wrapper's
+    // accessors are methods, so `request.url` rewrites to `request.url()`).
+    if is_request_local(&sm.object, ctx) {
+        if let Some(m) = request_accessor(field_name) {
+            let method = Ident::new(m, Span::call_site());
+            let obj = translate_expr(&sm.object, ctx);
+            return parse_quote!(#obj.#method());
+        }
+    }
     // `tags.a` on a `Record`/HashMap local → `tags.get("a").<copied|cloned>().unwrap()`
     // (a TS `Record` static field access and `m["a"]` are the same lookup). A
     // `Copy` value (f64/bool) copies out of the borrow; a non-`Copy` value (a
@@ -996,6 +1006,19 @@ pub(in crate::translator) fn is_form_data_local(expr: &Expression, ctx: &Ctx<'_>
         .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsFormData"))
 }
 
+/// Whether `expr` is an `Identifier` local whose `new Request(…)` initializer
+/// pinned it to `DsRequest`. Gates the `Request` read-only-accessor dispatch
+/// (`.url`/`.method`/`.headers`); `fetch(r)` resolves its argument type via the
+/// same predicate (in `builtins::global`).
+pub(in crate::translator) fn is_request_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsRequest"))
+}
+
 /// The `__ds::DsBlob` accessor method name for an ES `Blob` property, or
 /// `None` for any other name (the access falls through). `blob.size` →
 /// `size()`, `blob.type` → `type_()` (the trailing underscore avoids the Rust
@@ -1017,6 +1040,20 @@ fn file_accessor(field: &str) -> Option<&'static str> {
     match field {
         "name" => Some("name"),
         "lastModified" => Some("last_modified"),
+        _ => None,
+    }
+}
+
+/// The `__ds::DsRequest` accessor method name for an ES `Request` property, or
+/// `None` for any other name (the access falls through). `request.url` →
+/// `url()`, `request.method` → `method()`, `request.headers` → `headers()`.
+/// Dispatched on the receiver type in the member path; the streaming `.body`
+/// and the metadata `.cache`/`.mode`/`.credentials` are not mapped.
+fn request_accessor(field: &str) -> Option<&'static str> {
+    match field {
+        "url" => Some("url"),
+        "method" => Some("method"),
+        "headers" => Some("headers"),
         _ => None,
     }
 }

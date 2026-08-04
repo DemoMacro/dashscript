@@ -1096,6 +1096,90 @@ pub async fn ds_fetch_with<T: reqwest::IntoUrl>(
         inner: req.send().await.expect("fetch network error"),
     }
 }
+/// A WHATWG `Request` — a fetch descriptor built by `new Request(url, init)`
+/// (FETCH §5.2, a WinterTC Web API). It carries the `url`, the HTTP `method`
+/// (uppercased — the ES `Request.method` normalization), the `body` (an ES
+/// string payload, `None` when absent), and the `headers` (a `(name, value)`
+/// list, the same shape `ds_fetch_with` consumes). The translator builds the
+/// `(url, method, body, headers)` quadruple from the ES `init` object via the
+/// same `fetch_init` extraction `fetch(url, init)` uses, so a `Request` and an
+/// inline `init` agree. `fetch(request)` unwraps the fields via
+/// `ds_fetch_request`; `.url`/`.method`/`.headers` are the read-only
+/// accessors. `#[derive(Clone)]` so a `Request` value copies (ES `fetch(r)`
+/// clones, it does not consume). `DsRequest` lives in this slice alongside
+/// `DsResponse`/`ds_fetch`, so a `new Request(…)`-only fixture pulls `Fetch`
+/// (the dep derivation inserts it on the `__ds::DsRequest` marker).
+#[derive(Clone)]
+pub struct DsRequest {
+    pub url: ::std::string::String,
+    pub method: ::std::string::String,
+    pub body: ::std::option::Option<::std::string::String>,
+    pub headers: ::std::vec::Vec<(::std::string::String, ::std::string::String)>,
+}
+impl DsRequest {
+    /// The translator-emitted constructor. `method` is uppercased to match the
+    /// ES `Request.method` normalization; the other fields are stored as given.
+    pub fn new(
+        url: ::std::string::String,
+        method: ::std::string::String,
+        body: ::std::option::Option<::std::string::String>,
+        headers: ::std::vec::Vec<(::std::string::String, ::std::string::String)>,
+    ) -> Self {
+        Self {
+            url,
+            method: method.to_ascii_uppercase(),
+            body,
+            headers,
+        }
+    }
+    /// ES `request.url` — the request's URL.
+    #[inline]
+    pub fn url(&self) -> ::std::string::String {
+        self.url.clone()
+    }
+    /// ES `request.method` — the HTTP method (uppercased).
+    #[inline]
+    pub fn method(&self) -> ::std::string::String {
+        self.method.clone()
+    }
+    /// ES `request.headers` — a `DsHeaders` view (names lowercased, insertion
+    /// order kept), built the same way `DsResponse::headers` builds its view.
+    #[inline]
+    pub fn headers(&self) -> DsHeaders {
+        DsHeaders {
+            entries: self
+                .headers
+                .iter()
+                .map(|(k, v)| (k.to_lowercase(), v.clone()))
+                .collect(),
+        }
+    }
+}
+/// `fetch(request)` — a request built from a `DsRequest`'s fields. Mirrors
+/// `ds_fetch_with` (the same 3s timeout and panic-on-network-error policy) but
+/// reads url/method/body/headers from the `Request` object `new Request(…)`
+/// built. ES `fetch` clones the request (it does not consume it), so this
+/// takes `&DsRequest`. ES `fetch` returns `Promise<Response>`; the caller's
+/// `await` supplies the `.await`.
+pub async fn ds_fetch_request(req: &DsRequest) -> DsResponse {
+    let mut r = reqwest::Client::builder()
+        .timeout(::std::time::Duration::from_secs(3))
+        .build()
+        .expect("reqwest client build")
+        .request(
+            req.method.parse().expect("invalid HTTP method"),
+            req.url.clone(),
+        );
+    if let Some(b) = &req.body {
+        r = r.body(b.clone());
+    }
+    for (k, v) in &req.headers {
+        r = r.header(k, v);
+    }
+    DsResponse {
+        inner: r.send().await.expect("fetch network error"),
+    }
+}
 "#;
 
 /// WHATWG `Blob` API helper — `__ds::DsBlob` (FileAPI, a WinterTC Web API). A
