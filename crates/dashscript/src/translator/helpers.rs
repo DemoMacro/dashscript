@@ -158,6 +158,50 @@ impl TextEncoder {
     pub fn encode(&self, s: String) -> Vec<u8> {
         s.into_bytes()
     }
+    /// WHATWG `encodeInto(src, dst)` — incrementally UTF-8 encodes `src` into
+    /// `dst`, stopping when `dst` fills. `read` = UTF-8 bytes consumed from
+    /// `src` for chars that fully fit; `written` = bytes stored in `dst`. A
+    /// multi-byte char that would overflow `dst` is left entirely unwritten
+    /// (read stays before it). DashScript strings are UTF-8 (not UTF-16), so
+    /// `read` counts UTF-8 bytes; the JS spec counts UTF-16 code units, but a
+    /// UTF-8 byte count is the faithful analogue under DashScript's model.
+    pub fn encode_into(&self, src: &str, dst: &mut [u8]) -> DsEncodeIntoResult {
+        let src_bytes = src.as_bytes();
+        let cap = dst.len();
+        let mut read = 0usize;
+        let mut written = 0usize;
+        while read < src_bytes.len() {
+            // UTF-8 leading byte → char length (1-4): 0xxxxxxx=1, 110xxxxx=2,
+            // 1110xxxx=3, 11110xxx=4. `src` is a valid &str, so a leading byte
+            // is always one of these (never a stray continuation byte).
+            let first = src_bytes[read];
+            let ch_len = if first < 0x80 {
+                1
+            } else if first < 0xE0 {
+                2
+            } else if first < 0xF0 {
+                3
+            } else {
+                4
+            };
+            if written + ch_len > cap {
+                break;
+            }
+            dst[written..written + ch_len].copy_from_slice(&src_bytes[read..read + ch_len]);
+            written += ch_len;
+            read += ch_len;
+        }
+        DsEncodeIntoResult { read: read as f64, written: written as f64 }
+    }
+}
+/// Result of `TextEncoder.encodeInto` — `{ read, written }` (UTF-8 bytes
+/// consumed from the input / bytes stored in the destination). Fields are
+/// `pub` so a returned value is read by plain field access (`r.read`); they
+/// are `f64` (DashScript `number`) since the WHATWG spec returns them as ES
+/// numbers (buffer sizes are far below 2^53, so `f64` is lossless).
+pub struct DsEncodeIntoResult {
+    pub read: f64,
+    pub written: f64,
 }
 pub struct TextDecoder {
     pub encoding: &'static str,

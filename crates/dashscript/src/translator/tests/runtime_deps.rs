@@ -380,6 +380,26 @@ fn fetch_response_body_methods_lower_to_async_fns() {
 }
 
 #[test]
+fn text_encoder_encode_into_lowers_to_encode_into() {
+    // `encoder.encodeInto(src, dst)` → `encode_into(&src, &mut dst)`. The ES
+    // destination is a `Uint8Array` (`Vec<u8>`); encodeInto writes in place,
+    // so it borrows the destination binding as `&mut` (not a clone — ES `dst`
+    // is reference-semantic, the writes must be visible to a later read).
+    let src = "function f(): void {\n  const e = new TextEncoder();\n  const buf = new Uint8Array(10);\n  e.encodeInto(\"hi\", buf);\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("encode_into(") && rust.contains("&mut buf"),
+        "encodeInto → encode_into(&src, &mut buf), got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Encoding),
+        "encodeInto stays under the Encoding dep, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn structured_clone_lowers_to_clone_no_dep() {
     // `structuredClone(v)` (WinterTC deep clone) lowers to `v.clone()` — no
     // runtime dep (DashScript values are `Clone`); a non-`Clone` value surfaces

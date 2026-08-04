@@ -106,22 +106,46 @@ pub(in crate::translator) fn text_encoder_method(
     args: &[Argument],
     ctx: &Ctx<'_>,
 ) -> Option<Expr> {
-    if sm.property.name.as_str() != "encode" {
-        return None;
-    }
     if !is_text_encoder_recv(&sm.object, ctx) {
         return None;
     }
-    let is_default = match args.first() {
-        None => true,
-        Some(Argument::Identifier(id)) => id.name.as_str() == "undefined",
-        _ => false,
-    };
-    if !is_default {
-        return None;
-    }
     let recv = translate_expr(&sm.object, ctx);
-    Some(parse_quote!(#recv.encode(::std::string::String::new())))
+    match sm.property.name.as_str() {
+        // `encoder.encode()` / `encoder.encode(undefined)` → `encode(String::new())`.
+        // The ES signature is `encode(input = "")`: both a missing argument and
+        // an explicit `undefined` trigger the default (JS default-parameter
+        // semantics, not `String(undefined)`). A supplied value falls through to
+        // a plain call — the `String` argument is already handled by the generic path.
+        "encode" => {
+            let is_default = match args.first() {
+                None => true,
+                Some(Argument::Identifier(id)) => id.name.as_str() == "undefined",
+                _ => false,
+            };
+            if !is_default {
+                return None;
+            }
+            Some(parse_quote!(#recv.encode(::std::string::String::new())))
+        }
+        // `encoder.encodeInto(src, dst)` → `encode_into(&src, &mut dst)`. The ES
+        // destination is a `Uint8Array` (`Vec<u8>`); `encodeInto` writes in
+        // place, so it must borrow the destination binding as `&mut` (a clone
+        // would drop the writes on the floor — ES `dst` is reference-semantic).
+        // A non-identifier destination (an inline expression) has no binding to
+        // borrow, so it falls through. Returns `{ read, written }`.
+        "encodeInto" => {
+            let src = translate_argument(args.first()?, ctx);
+            let dst: Expr = match args.get(1)? {
+                Argument::Identifier(id) => {
+                    let name = bindings::snake(&id.name);
+                    parse_quote!(&mut #name)
+                }
+                _ => return None,
+            };
+            Some(parse_quote!(#recv.encode_into(&#src, #dst)))
+        }
+        _ => None,
+    }
 }
 
 /// True when `expr` is a `TextEncoder` receiver — either a local whose type
