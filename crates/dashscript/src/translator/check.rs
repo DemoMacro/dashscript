@@ -470,6 +470,21 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>, state: &m
                             | Expression::BooleanLiteral(_)
                             | Expression::ObjectExpression(_)
                             | Expression::ArrayExpression(_) => Some(LocalKind::NonString),
+                            // `new <Ctor>(…)` (an Identifier callee) pins the
+                            // binding to that ctor, so a later `x instanceof
+                            // <Ctor>` folds statically. A member callee
+                            // (`new Temporal.X(…)`) falls through to the
+                            // Temporal arm below; an engine-value-global `new`
+                            // (`new Date()`) still records here, but its
+                            // enclosing function already degrades via the
+                            // `NewExpression` classify arm, so the entry is
+                            // never read at an `instanceof`.
+                            Expression::NewExpression(n) => match &n.callee {
+                                Expression::Identifier(id) => {
+                                    Some(LocalKind::Ctor(id.name.as_str().to_string()))
+                                }
+                                _ => None,
+                            },
                             _ => super::builtins::temporal_init_type(init).map(LocalKind::Temporal),
                         };
                         if let Some(kind) = kind {
@@ -635,7 +650,14 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mut Wal
         }
         Expression::BinaryExpression(b) => {
             collect_expr(&b.left, out, state);
-            collect_expr(&b.right, out, state);
+            // `x instanceof T` — `T` is a constructor *name* (a type), not a
+            // value reference; recursing it would trip the static-only-global
+            // rule for `Object`/`Array`/… and wrongly degrade a function whose
+            // `instanceof` classify already folded statically. The receiver
+            // (left) is still classified.
+            if !matches!(b.operator, oxc_syntax::operator::BinaryOperator::Instanceof) {
+                collect_expr(&b.right, out, state);
+            }
         }
         Expression::LogicalExpression(l) => {
             collect_expr(&l.left, out, state);

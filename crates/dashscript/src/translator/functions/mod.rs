@@ -1258,7 +1258,8 @@ fn register_declarator(
             .or_else(|| abort_path(n))
             .or_else(|| headers_path(n))
             .or_else(|| promise_path(n))
-            .or_else(|| streams_path(n)),
+            .or_else(|| streams_path(n))
+            .or_else(|| error_path(n)),
         Some(other) => {
             vec_index_elem_path(other, locals).or_else(|| abort_signal_access_path(other, locals))
         }
@@ -1383,6 +1384,24 @@ fn url_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     };
     if id.name.as_str() == "URL" {
         Some(parse_quote!(crate::__ds::DsUrl))
+    } else {
+        None
+    }
+}
+
+/// `new <ErrorCtor>(…)` / `new DOMException(…)` → `DsError`. DashScript lowers
+/// every Error variant (Error/TypeError/RangeError/…) and DOMException to the
+/// one `DsError` value, so an unannotated `let e = new TypeError("…")` records
+/// `DsError` and a later `e instanceof TypeError` folds to `true` statically
+/// (both sides are DsError). Any other `new` callee yields `None`.
+fn error_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    let name = id.name.as_str();
+    if super::globals::error_ctor_name(name).is_some() || name == "DOMException" {
+        Some(parse_quote!(crate::__ds::DsError))
     } else {
         None
     }

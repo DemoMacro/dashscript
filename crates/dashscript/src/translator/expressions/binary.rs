@@ -50,6 +50,16 @@ const STRING_RETURNING_METHODS: &[&str] = &[
 ];
 
 pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
+    // `x instanceof T` — a compile-time exact-type check (DashScript has no
+    // inheritance: a value's Rust type IS its only type). `classify_instanceof`
+    // already gated this onto the static path (receiver is a Ctor-pinned local,
+    // T a mapped ctor or `Array`/`Object`); emit the literal `true`/`false`
+    // here. A `None` return is a classify↔emit drift (receiver type unknown at
+    // emit time) — `todo!()` keeps `cargo check` green and the runtime panic
+    // routes to the engine fallback, never a wrong answer.
+    if matches!(bin.operator, BinaryOperator::Instanceof) {
+        return instanceof_expr(bin, ctx).unwrap_or_else(|| parse_quote!(::core::todo!()));
+    }
     // `x === null` / `x !== null` → `x.is_none()` / `x.is_some()` when `x` is an
     // Option-typed local; any other comparison returns `None` and falls through.
     if let Some(expr) = null_equality(bin, ctx) {
@@ -237,6 +247,49 @@ pub(super) fn bitwise_expr_to(
 /// check can be elided.
 fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
     bitwise_expr_to(bin, ctx, parse_quote!(f64))
+}
+
+/// `x instanceof T` emit — a compile-time `true`/`false` literal. Mirrors
+/// [`super::super::classify::classify_instanceof`]'s gate: the receiver is an
+/// `Identifier` local whose `new <Ctor>(…)` initializer pinned its Rust type
+/// (registered via `register_declarator`), and `T` is a mapped ctor whose
+/// target segment [`super::super::globals::mapped_ctor_rust_type`] returns, or
+/// `Array`/`Object` (special: any `Vec` / any reference type). DashScript has
+/// no inheritance, so the receiver's type segment vs the ctor's target is the
+/// complete answer. `None` only on a classify↔emit drift (receiver type
+/// unknown at emit); the caller substitutes `todo!()` → engine fallback.
+fn instanceof_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
+    use super::super::globals::mapped_ctor_rust_type;
+    let ctor_name = match &bin.right {
+        Expression::Identifier(id) => id.name.as_str(),
+        _ => return None,
+    };
+    let recv_type = match &bin.left {
+        Expression::Identifier(id) => {
+            let name = bindings::snake(&id.name).to_string();
+            ctx.local_type(&name)?
+        }
+        _ => return None,
+    };
+    let recv_last = recv_type.segments.last()?.ident.to_string();
+    let verdict = match ctor_name {
+        // `instanceof Array` — any `Vec` (the typed arrays lower to `Vec<elem>`
+        // too). A non-`Vec` receiver is not an Array.
+        "Array" => recv_last == "Vec",
+        // `instanceof Object` — any reference (non-primitive) type: the
+        // collections, `Ds*` structs, `String`. Primitives (`f64`/`bool`) and
+        // `Option` are not objects.
+        "Object" => {
+            matches!(recv_last.as_str(), "Vec" | "HashMap" | "HashSet" | "String")
+                || recv_last.starts_with("Ds")
+        }
+        name => recv_last == mapped_ctor_rust_type(name)?,
+    };
+    Some(if verdict {
+        parse_quote!(true)
+    } else {
+        parse_quote!(false)
+    })
 }
 
 /// `x === null` / `null === x` → `x.is_none()`; `x !== null` → `x.is_some()`,

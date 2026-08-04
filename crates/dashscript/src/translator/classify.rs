@@ -18,8 +18,8 @@ use std::borrow::Cow;
 use std::collections::HashMap;
 
 use oxc_ast::ast::{
-    Argument, AssignmentTarget, BinaryOperator, CallExpression, Class, Expression, Function,
-    ObjectPropertyKind, PropertyKind, StaticMemberExpression, UnaryOperator,
+    Argument, AssignmentTarget, BinaryExpression, BinaryOperator, CallExpression, Class,
+    Expression, Function, ObjectPropertyKind, PropertyKind, StaticMemberExpression, UnaryOperator,
 };
 
 use super::builtins::{
@@ -28,7 +28,7 @@ use super::builtins::{
 };
 use super::globals::{
     is_engine_value_global, is_global_receiver, is_harness_helper, is_static_only_global,
-    is_testharness_mapped, is_testharness_rejected, is_unmapped_new_global,
+    is_testharness_mapped, is_testharness_rejected, is_unmapped_new_global, mapped_ctor_rust_type,
 };
 
 /// How a single AST node lowers — the translator's translatability verdict,
@@ -83,6 +83,16 @@ pub(in crate::translator) enum LocalKind {
     /// Temporal local, and `from(item)` degrades when `item` is one (ES clones
     /// it) so the polyfill carries the real ToTemporal coercion.
     Temporal(String),
+    /// A `new <Ctor>(…)` initializer (a mapped Web/builtin ctor — `URL`/
+    /// `Headers`/`Map`/`Error`/…), carrying the ctor name so `x instanceof
+    /// <Ctor>` folds to a compile-time `true`/`false` (DashScript has no
+    /// inheritance: a value's Rust type IS its only type). The name is the
+    /// check-time view of what `translate` records as a Rust path via
+    /// `register_declarator`; `mapped_ctor_rust_type` maps it to the target
+    /// segment. `Array`/`Object`/typed-array `new` do not record a `Ctor` —
+    /// they lower to `Vec`, and `instanceof` handles them via the receiver's
+    /// type segment directly.
+    Ctor(String),
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -121,14 +131,14 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         }
         Expression::TSNonNullExpression(n) => classify_expr(&n.expression, ctx),
 
-        // `x instanceof T` — a runtime type check. A zero-cost static lowering
-        // is possible on a typed operand (a union-enum narrowing → `matches!`,
-        // a built-in like `Array` → a type predicate), but the `classify` table
-        // has no type-query path for that yet, so the enclosing function runs
-        // under the engine (full ECMAScript `instanceof` semantics) rather than
-        // failing to build. The static path is tracked as a reflection batch.
+        // `x instanceof T` — a runtime type check that folds to a compile-time
+        // `true`/`false` when the receiver's type is known (DashScript has no
+        // inheritance: a value's Rust type IS its only type). A `local
+        // instanceof <mapped-ctor>` stays on the static path; anything else
+        // (an unknown receiver, an unmapped ctor, a non-identifier operand)
+        // degrades so the engine runs the real `instanceof` semantics.
         Expression::BinaryExpression(b) if matches!(b.operator, BinaryOperator::Instanceof) => {
-            degrade("`instanceof` has no static lowering yet — the function runs under the engine")
+            classify_instanceof(b, ctx)
         }
         // `delete x` — no Rust analogue.
         Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Delete) => {
@@ -430,7 +440,7 @@ fn compare_operand_type(arg: Option<&Argument>, ctx: &ClassifyCtx) -> Option<Str
     };
     match ctx.local_kinds.get(id.name.as_str())? {
         LocalKind::Temporal(ty) => Some(ty.clone()),
-        LocalKind::NonString | LocalKind::String => None,
+        LocalKind::Ctor(_) | LocalKind::NonString | LocalKind::String => None,
     }
 }
 
@@ -443,7 +453,43 @@ fn temporal_receiver_ty(sm: &StaticMemberExpression, ctx: &ClassifyCtx) -> Optio
     };
     match ctx.local_kinds.get(id.name.as_str())? {
         LocalKind::Temporal(ty) => Some(ty.clone()),
-        LocalKind::NonString | LocalKind::String => None,
+        LocalKind::Ctor(_) | LocalKind::NonString | LocalKind::String => None,
+    }
+}
+
+/// `x instanceof T` — folds to a compile-time `true`/`false` when the receiver
+/// is a local whose `new` initializer bound it to a known ctor, AND `T` is a
+/// mapped ctor (or `Array`/`Object`). DashScript has no inheritance — a value's
+/// Rust type IS its only type — so the test is an exact-type check the emit
+/// mirrors in `instanceof_expr`. Anything else (a non-identifier operand, a
+/// receiver of unknown type, an unmapped ctor) degrades so the engine runs the
+/// real `instanceof` (a prototype-chain walk honoring `Symbol.hasInstance`).
+///
+/// Only a `LocalKind::Ctor` receiver qualifies: `var b = new Blob()` records
+/// one, while a parameter, a factory-call result (`var b = make()`), or a
+/// union-typed local does not — its runtime type is not statically pinned, so
+/// the check cannot fold. This is the deliberate sound floor: a wrong static
+/// `true`/`false` would silently break a real `instanceof`, where degrading
+/// keeps the engine's reference semantics.
+fn classify_instanceof(b: &BinaryExpression, ctx: &ClassifyCtx) -> Mapping {
+    let (recv, ctor) = match (&b.left, &b.right) {
+        (Expression::Identifier(r), Expression::Identifier(c)) => (r, c),
+        _ => {
+            return degrade("`instanceof` on a non-identifier operand — engine runs the real check")
+        }
+    };
+    // The receiver must be a local whose initializer pinned it to a known ctor.
+    match ctx.local_kinds.get(recv.name.as_str()) {
+        Some(LocalKind::Ctor(_)) => {}
+        _ => {
+            return degrade("`instanceof` on a local of unknown type — engine runs the real check")
+        }
+    }
+    let name = ctor.name.as_str();
+    if name == "Array" || name == "Object" || mapped_ctor_rust_type(name).is_some() {
+        Mapping::Mapped
+    } else {
+        degrade("`instanceof <unmapped ctor>` — engine runs the real check")
     }
 }
 

@@ -280,3 +280,65 @@ fn abort_signal_via_binding_then_aborted() {
         "s.aborted should emit .aborted(): {rust}"
     );
 }
+
+#[test]
+fn instanceof_same_ctor_folds_true() {
+    // `u instanceof URL` where `u` was just `new URL(…)` — DashScript has no
+    // inheritance, so the receiver's Rust type (DsUrl) vs the ctor's target
+    // (DsUrl) is the whole check: it folds to `true`. The receiver type is
+    // pinned by `register_declarator` recording `new URL(…)` as DsUrl; the ctor
+    // target comes from `mapped_ctor_rust_type("URL")`. No `todo!()` (which a
+    // classify↔emit drift would emit) and no engine degrade.
+    let src = "function f(): boolean { const u = new URL(\"https://example.com/\"); return u instanceof URL; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("todo") && rust.contains("true") && !rust.contains("false"),
+        "u instanceof URL should fold to `true`: {rust}"
+    );
+}
+
+#[test]
+fn instanceof_different_ctor_folds_false() {
+    // `u instanceof Headers` — same receiver (DsUrl) against a different mapped
+    // ctor (DsHeaders): an exact-type mismatch folds to `false`.
+    let src = "function f(): boolean { const u = new URL(\"https://example.com/\"); return u instanceof Headers; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("todo") && rust.contains("false") && !rust.contains("true"),
+        "u instanceof Headers should fold to `false`: {rust}"
+    );
+}
+
+#[test]
+fn instanceof_object_folds_true_for_reference_type() {
+    // `u instanceof Object` — any reference type (DsUrl here) is an Object.
+    let src = "function f(): boolean { const u = new URL(\"https://example.com/\"); return u instanceof Object; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("todo") && rust.contains("true") && !rust.contains("false"),
+        "u instanceof Object should fold to `true` (DsUrl is a reference type): {rust}"
+    );
+}
+
+#[test]
+fn instanceof_array_folds_false_for_non_vec() {
+    // `u instanceof Array` — DsUrl is not a Vec, so `false`.
+    let src = "function f(): boolean { const u = new URL(\"https://example.com/\"); return u instanceof Array; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("todo") && rust.contains("false") && !rust.contains("true"),
+        "u instanceof Array should fold to `false` (DsUrl is not a Vec): {rust}"
+    );
+}
+
+#[test]
+fn instanceof_error_folds_true_for_error_local() {
+    // `e instanceof TypeError` where `e` was `new TypeError(…)` — both lower to
+    // `DsError`, so the exact-type check folds to `true`.
+    let src = "function f(): boolean { const e = new TypeError(\"boom\"); return e instanceof TypeError; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        !rust.contains("todo") && rust.contains("true") && !rust.contains("false"),
+        "e instanceof TypeError should fold to `true` (both DsError): {rust}"
+    );
+}

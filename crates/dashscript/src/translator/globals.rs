@@ -360,6 +360,62 @@ pub fn error_ctor_name(name: &str) -> Option<&'static str> {
     ERROR_CTOR_NAMES.iter().copied().find(|n| *n == name)
 }
 
+/// Constructors whose `new <X>(…)` lowers to a *known concrete Rust type*,
+/// paired with that type's last path segment. `x instanceof X` on a typed local
+/// then folds to a compile-time `true`/`false`: DashScript has no inheritance
+/// (a value's Rust type IS its only type — `extends` is unsupported), so an
+/// `instanceof` test is an exact-type check, never a prototype-chain walk. The
+/// receiver's type comes from its `new` initializer (`check` records it as a
+/// `LocalKind::Ctor`; `translate` records the Rust path via
+/// `register_declarator`), and the two stay in sync because both derive from
+/// the same `new <X>(…)` shape — a drift metatest pins that.
+///
+/// `Array`/`Object` are intentionally absent: `instanceof Array` matches any
+/// `Vec` and `instanceof Object` any reference type, so they take a special
+/// arm in `instanceof_expr` rather than an exact-segment compare. The typed
+/// arrays (`Uint8Array`/…) lower to `Vec<elem>` — already covered by the
+/// `Array` arm. A ctor whose mapping is added in `expressions/new` without an
+/// entry here leaves its `instanceof` on the engine (a safe, lazy default —
+/// the function degrades rather than emit a wrong type check).
+pub const MAPPED_CTOR_RUST_TYPE: &[(&str, &str)] = &[
+    ("URL", "DsUrl"),
+    ("URLSearchParams", "DsUrlSearchParams"),
+    ("URLPattern", "DsURLPattern"),
+    ("Headers", "DsHeaders"),
+    ("Response", "DsResponse"),
+    ("EventTarget", "DsEventTarget"),
+    ("Event", "DsEvent"),
+    ("AbortController", "DsAbortController"),
+    ("AbortSignal", "DsAbortSignal"),
+    // Collections — `new Map()`/`new Set()` (and the weak aliases, which lower
+    // to the same strong backing) all map to HashMap/HashSet.
+    ("Map", "HashMap"),
+    ("WeakMap", "HashMap"),
+    ("Set", "HashSet"),
+    ("WeakSet", "HashSet"),
+    // Errors — every ES native Error ctor, `Test262Error`, and `DOMException`
+    // lower to the same `DsError` value, so they share one target segment.
+    ("Error", "DsError"),
+    ("RangeError", "DsError"),
+    ("TypeError", "DsError"),
+    ("SyntaxError", "DsError"),
+    ("ReferenceError", "DsError"),
+    ("EvalError", "DsError"),
+    ("URIError", "DsError"),
+    ("Test262Error", "DsError"),
+    ("DOMException", "DsError"),
+];
+
+/// The last path segment of the Rust type a `new <name>(…)` constructor lowers
+/// to, or `None` if `name` is not a mapped ctor. See [`MAPPED_CTOR_RUST_TYPE`].
+#[inline]
+pub fn mapped_ctor_rust_type(name: &str) -> Option<&'static str> {
+    MAPPED_CTOR_RUST_TYPE
+        .iter()
+        .find(|(n, _)| *n == name)
+        .map(|(_, t)| *t)
+}
+
 #[cfg(test)]
 mod drift {
     //! Classify-data drift guard. The verdict a bare global name gets in
