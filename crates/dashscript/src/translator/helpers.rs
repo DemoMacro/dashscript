@@ -1146,6 +1146,86 @@ fn ds_blob_index(i: ::std::option::Option<f64>, size: usize, default: usize) -> 
 }
 "#;
 
+/// WHATWG `File` API helper — `__ds::DsFile` (FileAPI, a WinterTC Web API). A
+/// `File` is a `Blob` with a `name` and a `lastModified` (epoch-ms). It wraps a
+/// `DsBlob` and delegates `size`/`type`/`slice`/`text`/`arrayBuffer`/`bytes` to
+/// it (ES `File` extends `Blob`); `slice` returns a `DsBlob` (per spec,
+/// `File.prototype.slice` returns a `Blob`, not a `File`). The marker is
+/// `__ds::DsFile`; the dep resolution pulls `Blob` alongside (File reuses
+/// `DsBlob`), so `BLOB_HELPER` is injected whenever a file uses `File`.
+pub(super) const FILE_HELPER: &str = r#"
+/// A WHATWG `File` — a `Blob` with a `name` and `lastModified` (epoch-ms). ES
+/// `File` extends `Blob`, so the byte buffer + `type` live in the wrapped
+/// `DsBlob`; the File-specific `name`/`last_modified` are siblings.
+/// `#[derive(Clone)]` follows `DsBlob`.
+#[derive(Clone)]
+pub struct DsFile {
+    pub blob: crate::__ds::DsBlob,
+    pub name: ::std::string::String,
+    pub last_modified: f64,
+}
+impl DsFile {
+    /// Build a `File` from already-collected bytes, a `type`, a `name`, and a
+    /// `lastModified` (epoch-ms). The translator flattens
+    /// `new File(bits, name, options)` to this.
+    pub fn new(
+        bytes: ::std::vec::Vec<u8>,
+        type_: ::std::string::String,
+        name: ::std::string::String,
+        last_modified: f64,
+    ) -> Self {
+        Self {
+            blob: crate::__ds::DsBlob::new(bytes, type_),
+            name,
+            last_modified,
+        }
+    }
+    /// `file.size` — delegates to the wrapped `Blob` (ES `size` is a number).
+    #[inline]
+    pub fn size(&self) -> f64 {
+        self.blob.size()
+    }
+    /// `file.type` — the wrapped `Blob`'s MIME (ES guarantees ASCII-lowercase).
+    #[inline]
+    pub fn type_(&self) -> ::std::string::String {
+        self.blob.type_()
+    }
+    /// `file.name` — the file name (ES `name` is a string).
+    #[inline]
+    pub fn name(&self) -> ::std::string::String {
+        self.name.clone()
+    }
+    /// `file.lastModified` — the last-modified time in epoch-ms (ES a number).
+    #[inline]
+    pub fn last_modified(&self) -> f64 {
+        self.last_modified
+    }
+    /// `file.slice(start, end, contentType)` — a new `DsBlob` over the sub-range
+    /// (per spec, `File.prototype.slice` returns a `Blob`). Delegates to the
+    /// wrapped `Blob`'s index resolution.
+    pub fn slice(
+        &self,
+        start: ::std::option::Option<f64>,
+        end: ::std::option::Option<f64>,
+        content_type: ::std::option::Option<::std::string::String>,
+    ) -> crate::__ds::DsBlob {
+        self.blob.slice(start, end, content_type)
+    }
+    /// `await file.text()` — the bytes as UTF-8 text (delegates to `Blob`).
+    pub async fn text(&self) -> ::std::string::String {
+        self.blob.text().await
+    }
+    /// `await file.arrayBuffer()` — a copy of the bytes (delegates to `Blob`).
+    pub async fn array_buffer(&self) -> ::std::vec::Vec<u8> {
+        self.blob.array_buffer().await
+    }
+    /// `await file.bytes()` — a copy of the bytes (delegates to `Blob`).
+    pub async fn bytes(&self) -> ::std::vec::Vec<u8> {
+        self.blob.bytes().await
+    }
+}
+"#;
+
 /// WHATWG `Headers` API helper — `__ds::DsHeaders` (FETCH §5.1, a WinterTC Web
 /// API). A header is an ordered list of `(name, value)` pairs with case-
 /// insensitive name lookup (HTTP headers are) — `Vec<(String, String)>` keyed

@@ -548,6 +548,83 @@ fn wpt_blob_text_compiles_and_runs() {
     );
 }
 
+/// `new File(bits, name, options?)` end-to-end — the WHATWG `File` API (a
+/// WinterTC Web API). A `File` is a `Blob` with a `name`/`lastModified`: the
+/// ctor flattens `bits`, `file.name`/`.lastModified` are the `File`-only
+/// accessors, the inherited `file.size`/`.type` ride the `Blob` accessors
+/// (`is_blob_local` is widened to accept a `DsFile`), `file.slice(…)` returns a
+/// `Blob`, and `instanceof Blob`/`instanceof File` fold to `true`/`true` (the
+/// `Blob` ctor has the `File` subtype special-case). `lastModified` defaults to
+/// `Date.now()`, so the assert is `> 0` (a number), not an exact value.
+#[test]
+fn wpt_file_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.file_smoke".into(),
+        category: "smoke".into(),
+        fixture: "test(() => {\n\
+                  \x20 const f = new File([\"hello\", \" world\"], \"greeting.txt\", { type: \"text/plain\" });\n\
+                  \x20 assert_equals(f.name, \"greeting.txt\");\n\
+                  \x20 assert_equals(f.size, 11);\n\
+                  \x20 assert_equals(f.type, \"text/plain\");\n\
+                  \x20 assert_true(f.lastModified > 0);\n\
+                  \x20 const s = f.slice(0, 5);\n\
+                  \x20 assert_equals(s.size, 5);\n\
+                  \x20 assert_true(f instanceof Blob);\n\
+                  \x20 assert_true(f instanceof File);\n\
+                  }, \"file-core\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "File smoke should be supported: {detail}"
+    );
+}
+
+/// `await file.text()` end-to-end — the inherited async `Blob` method on a
+/// `File` receiver. `file.text()` dispatches through `blob_method` (which keys
+/// off `is_blob_local`, widened to accept a `DsFile`), and the `.await` flips
+/// the entry to `#[tokio::main]`. A failure means the `DsFile` delegation or
+/// the async lowering on a `File` receiver regressed.
+#[test]
+fn wpt_file_text_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.file_text_smoke".into(),
+        category: "smoke".into(),
+        fixture: "promise_test(async () => {\n\
+                  \x20 const f = new File([\"hello\"], \"g.txt\");\n\
+                  \x20 const t = await f.text();\n\
+                  \x20 assert_equals(t, \"hello\");\n\
+                  }, \"file-async\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "File async smoke should be supported: {detail}"
+    );
+}
+
 /// `promise_test(async () => { … }, "n")` end-to-end: the async callback lowers
 /// to `wpt_promise_test("n", async move { … }).await` under `#[tokio::main]`,
 /// so this verifies the full Stage 2 chain — translate → cargo build (pulls

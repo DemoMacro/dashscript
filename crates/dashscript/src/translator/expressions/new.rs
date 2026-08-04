@@ -197,6 +197,18 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if builtins::blob_ctor_type(id.name.as_str()).is_some() {
             return builtins::blob_ctor(n.arguments.as_slice(), ctx);
         }
+        // `new File(bits, name, options?)` — the WHATWG FileAPI `File` API (a
+        // WinterTC Web API). A `File` is a `Blob` with a `name` and a
+        // `lastModified`; `bits` reuses the `Blob` parts collector. Intercepted
+        // before the generic `Foo::new` path (which would emit `File::new` —
+        // E0433). The `File` runtime dep is flagged by the `__ds::DsFile` marker
+        // probe (and pulls `Blob` alongside, since `DsFile` wraps `DsBlob`); the
+        // inherited `Blob` methods/accessors dispatch via `is_blob_local`
+        // (widened to accept a `DsFile`), and `name`/`lastModified` dispatch in
+        // the member path.
+        if builtins::file_ctor_type(id.name.as_str()).is_some() {
+            return builtins::file_ctor(n.arguments.as_slice(), ctx);
+        }
         // `new ReadableStream([{ start(controller) { … } }])` — the WHATWG
         // Streams API (a WinterTC Web API). The push-source form maps
         // (`controller.enqueue`/`.close` + `getReader` + `await reader.read()`);

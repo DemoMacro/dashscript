@@ -80,7 +80,7 @@ pub(in crate::translator) fn blob_method(
 /// then bytes, a `Vec<u8>` local → itself, a `DsBlob` local → its bytes, any
 /// other expression → `ToString` then bytes), and the parts concatenate. A
 /// spread/`holes` element is skipped (a non-static part has no lowering here).
-fn collect_blob_parts(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
+pub(super) fn collect_blob_parts(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
     let mut parts: Vec<Expr> = Vec::new();
     for el in &arr.elements {
         let Some(e) = el.as_expression() else {
@@ -138,7 +138,7 @@ fn blob_part_to_bytes(e: &Expression, ctx: &Ctx<'_>) -> Expr {
 /// Read `options.type` (the MIME string, default `""`) from the ES options
 /// object. A non-object `options` yields `""` (ES `ToString(options)` would
 /// rarely carry a usable `type`; the static path does not chase it).
-fn blob_type_arg(opt: Option<&Expression>, ctx: &Ctx<'_>) -> Expr {
+pub(super) fn blob_type_arg(opt: Option<&Expression>, ctx: &Ctx<'_>) -> Expr {
     let Some(Expression::ObjectExpression(obj)) = opt else {
         return parse_quote!(::std::string::String::new());
     };
@@ -186,7 +186,7 @@ fn arg_to_string_option(arg: Option<&Argument>, ctx: &Ctx<'_>) -> Expr {
 /// Coerce an arbitrary `Expression` to a `String`-typed expression via ES
 /// `ToString`. A `number` routes through `number_to_string` (the precise ES
 /// form); any other expression lowers via `translate_expr` then `.to_string()`.
-fn expr_to_string(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
+pub(super) fn expr_to_string(expr: &Expression, ctx: &Ctx<'_>) -> Expr {
     match expr {
         Expression::NumericLiteral(_) => {
             let n = translate_expr(expr, ctx);

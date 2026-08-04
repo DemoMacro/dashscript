@@ -283,6 +283,9 @@ fn instanceof_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
             matches!(recv_last.as_str(), "Vec" | "HashMap" | "HashSet" | "String")
                 || recv_last.starts_with("Ds")
         }
+        // `instanceof Blob` — a `DsBlob` or a `DsFile` (a `File` extends a
+        // `Blob`, so a File receiver satisfies `instanceof Blob`).
+        "Blob" => recv_last == "DsBlob" || recv_last == "DsFile",
         name => recv_last == mapped_ctor_rust_type(name)?,
     };
     Some(if verdict {

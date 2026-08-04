@@ -308,6 +308,18 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return parse_quote!(#obj.#method());
         }
     }
+    // `file.name`/`.lastModified` on a DsFile local → the zero-arg accessor
+    // (the `File`-only properties; the inherited `Blob` `size`/`type` are
+    // handled by the `blob_accessor` block above, since `is_blob_local` accepts
+    // a `DsFile`). ES exposes these as read-only properties; the Rust wrapper's
+    // accessors are methods, so `file.name` rewrites to `file.name()`.
+    if is_file_local(&sm.object, ctx) {
+        if let Some(m) = file_accessor(field_name) {
+            let method = Ident::new(m, Span::call_site());
+            let obj = translate_expr(&sm.object, ctx);
+            return parse_quote!(#obj.#method());
+        }
+    }
     // `tags.a` on a `Record`/HashMap local → `tags.get("a").<copied|cloned>().unwrap()`
     // (a TS `Record` static field access and `m["a"]` are the same lookup). A
     // `Copy` value (f64/bool) copies out of the borrow; a non-`Copy` value (a
@@ -951,8 +963,25 @@ pub(in crate::translator) fn is_blob_local(expr: &Expression, ctx: &Ctx<'_>) -> 
         return false;
     };
     let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(|p| {
+        p.segments
+            .last()
+            .is_some_and(|s| s.ident == "DsBlob" || s.ident == "DsFile")
+    })
+}
+
+/// Whether `expr` is an `Identifier` local whose `new File(…)` initializer
+/// pinned it to `DsFile`. A `File` is a `Blob`, so the inherited `Blob`
+/// surface (`size`/`type`/`slice`/`text`/…) dispatches through `is_blob_local`
+/// (widened to accept a `DsFile`); this predicate gates the `File`-only
+/// `name`/`lastModified` accessors.
+fn is_file_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name)
-        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsBlob"))
+        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsFile"))
 }
 
 /// The `__ds::DsBlob` accessor method name for an ES `Blob` property, or
@@ -963,6 +992,19 @@ fn blob_accessor(field: &str) -> Option<&'static str> {
     match field {
         "size" => Some("size"),
         "type" => Some("type_"),
+        _ => None,
+    }
+}
+
+/// The `__ds::DsFile` accessor method name for a `File`-only property, or
+/// `None` for any other name (the access falls through). `file.name` →
+/// `name()`, `file.lastModified` → `last_modified()` (snake-cased). The
+/// inherited `Blob` properties (`size`/`type`) are handled by `blob_accessor`
+/// (a `File` is a `Blob`, so `is_blob_local` accepts it).
+fn file_accessor(field: &str) -> Option<&'static str> {
+    match field {
+        "name" => Some("name"),
+        "lastModified" => Some("last_modified"),
         _ => None,
     }
 }

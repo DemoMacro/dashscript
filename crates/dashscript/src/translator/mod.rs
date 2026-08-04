@@ -274,12 +274,22 @@ pub enum RuntimeDep {
     /// at the call site adds the `.await`). Pure `std` — no cargo dep; the
     /// marker is `__ds::DsBlob`.
     Blob,
+    /// WHATWG `File` API (FileAPI, a WinterTC Web API) — `new File(bits, name,
+    /// options?)`. A `File` is a `Blob` with a `name` and a `lastModified`
+    /// (epoch-ms), so `DsFile` wraps a `DsBlob` and delegates `size`/`type`/
+    /// `slice`/`text`/`arrayBuffer`/`bytes` to it (ES `File extends Blob`); a
+    /// `File.prototype.slice` returns a `Blob` (not a `File`). `name`/`type` and
+    /// `lastModified` (default `Date.now()`) come from the ctor; `instanceof
+    /// Blob` holds for a `File` (subtype). Pure `std` — no cargo dep of its own;
+    /// the marker is `__ds::DsFile`, and the dep resolution pulls `Blob`
+    /// alongside (File reuses `DsBlob`).
+    File,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 32] = [
+    const ALL: [RuntimeDep; 33] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -312,6 +322,7 @@ impl RuntimeDep {
         RuntimeDep::Compression,
         RuntimeDep::AbortController,
         RuntimeDep::Blob,
+        RuntimeDep::File,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -397,6 +408,12 @@ impl RuntimeDep {
             // after the marker probe) — without it, `DsEventTarget` is E0433.
             RuntimeDep::AbortController => Some("__ds::DsAbort"),
             RuntimeDep::Blob => Some("__ds::DsBlob"),
+            // Common prefix of `__ds::DsFile` and `__ds::DsBlob` — a fixture
+            // using `File` pulls both FILE_HELPER (DsFile) and BLOB_HELPER
+            // (DsFile wraps DsBlob). The marker `__ds::DsFile` is unique, but
+            // the dep derivation below also inserts `Blob` so the wrapped type
+            // is defined.
+            RuntimeDep::File => Some("__ds::DsFile"),
             RuntimeDep::Engine => None,
         }
     }
@@ -537,6 +554,9 @@ impl RuntimeDep {
             // from EVENT_TARGET_HELPER, pulled by the dep resolution.
             RuntimeDep::AbortController => None,
             RuntimeDep::Blob => None,
+            // File is pure `std` (wraps `DsBlob`); no crate of its own. The
+            // wrapped `DsBlob` comes from BLOB_HELPER, pulled by derivation.
+            RuntimeDep::File => None,
         }
     }
 
@@ -578,6 +598,7 @@ impl RuntimeDep {
             RuntimeDep::Compression => Some(DS_COMPRESSION_HELPER),
             RuntimeDep::AbortController => Some(DS_ABORT_HELPER),
             RuntimeDep::Blob => Some(BLOB_HELPER),
+            RuntimeDep::File => Some(FILE_HELPER),
         }
     }
 }
@@ -1664,6 +1685,13 @@ impl Translator {
         // emit) but not the transitive EventTarget use inside the helper source.
         if deps.has(RuntimeDep::AbortController) {
             deps.insert(RuntimeDep::EventTarget);
+        }
+        // FILE_HELPER's `DsFile` wraps a `DsBlob` (a `File` extends `Blob`), so
+        // any File-bearing fixture must also pull BLOB_HELPER, or `DsBlob` is
+        // E0433 inside the DsFile methods. The marker probe catches
+        // `__ds::DsFile` but not the transitive `DsBlob` use inside the helper.
+        if deps.has(RuntimeDep::File) {
+            deps.insert(RuntimeDep::Blob);
         }
         // `done()` lowers to `__ds::wpt_done` (sets the timer drain's DONE
         // flag). `wpt_done` lives in TIMERS_HELPER alongside the queue/drain,
