@@ -288,7 +288,7 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
                 Expression::Identifier(id) if id.name.as_str() == "Date" => {
                     degrade("`new Date()` has no static mapping — runs under the engine")
                 }
-                // `new Array(n)` / `new ArrayBuffer(n)` / `new Object(x)` /
+                // `new Array(n)` / `new Object(x)` /
                 // `new Number(x)` / … — ES builtin/wrapper constructors whose
                 // `new` form has no static lowering (`new_expr` would emit
                 // `Array::new(…)` → E0433 phantom type). The boxed wrapper /

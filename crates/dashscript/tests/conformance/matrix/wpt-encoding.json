@@ -4,7 +4,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:52:55: error[E0609]: no field `slice` on type `Vec<_>`: unknown field\nsrc\\main.rs:71:26: error[E0609]: no field `buffer` on type `Vec<u8>`: unknown field\nsrc\\main.rs:77:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:86:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:95:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:37:65: error[E0609]: no field `buffer` on type `Vec<u8>`: unknown field",
+    "detail": "cargo build failed: src\\main.rs:65:55: error[E0609]: no field `slice` on type `Vec<_>`: unknown field\nsrc\\main.rs:84:26: error[E0609]: no field `buffer` on type `Vec<u8>`: unknown field\nsrc\\main.rs:90:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:99:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:108:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:34:30: error[E0599]: `f64` is not an iterator: `f64` is not an iterator",
     "note": ""
   },
   {
@@ -36,7 +36,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine | `new ArrayBuffer()` has no static mapping — runs under the engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | `new Array()` has no static mapping — runs under the engine | `new <non-identifier>(…)` has no static lowering → engine | `new ArrayBuffer()` has no static mapping — runs under the engine",
+    "detail": "`.constructor` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine | a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | `new Array()` has no static mapping — runs under the engine | `new <non-identifier>(…)` has no static lowering → engine",
     "note": ""
   },
   {
@@ -51,8 +51,8 @@
     "id": "wpt.encoding.iso-2022-jp-decoder",
     "layer": "wpt",
     "category": "encoding",
-    "status": "unsupported",
-    "detail": "`new ArrayBuffer()` has no static mapping — runs under the engine",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:16:26: warning: unnecessary parentheses around assigned value\nsrc\\main.rs:27:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:28:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:33:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:38:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:43:5: error[E0308]: arguments to this function are incorrect",
     "note": ""
   },
   {
@@ -67,8 +67,8 @@
     "id": "wpt.encoding.legacy-mb-schinese.gbk.gbk-decoder",
     "layer": "wpt",
     "category": "encoding",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:46:51: error[E0605]: non-primitive cast: `Vec<f64>` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -84,7 +84,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "unsupported",
-    "detail": "`new ArrayBuffer()` has no static mapping — runs under the engine | `new ArrayBuffer()` has no static mapping — runs under the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine",
+    "detail": "`async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine",
     "note": ""
   },
   {
@@ -116,7 +116,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:85:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:95:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:32:31: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:34:46: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:36:70: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:69:54: error[E0609]: no field `bytes` on type `&HashMap<String, String>`: unknown field",
+    "detail": "cargo build failed: src\\main.rs:87:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:97:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:32:31: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:34:46: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:36:70: error[E0308]: mismatched types: expected `String`, found `Vec<f64>`\nsrc\\main.rs:71:54: error[E0609]: no field `bytes` on type `&HashMap<String, String>`: unknown field",
     "note": ""
   },
   {
@@ -124,7 +124,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:62:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:63:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:38:60: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:35:17: error[E0308]: mismatched types: expected `f64`, found `Vec<Vec<u8>>`\nsrc\\main.rs:37:32: error[E0599]: no method named `pipe_through` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:37:45: error[E0433]: cannot find type `TextDecoderStream` in this scope: use of undeclared type `TextDecoderStream`",
+    "detail": "cargo build failed: src\\main.rs:68:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:69:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:41:60: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:35:17: error[E0308]: mismatched types: expected `f64`, found `Vec<Vec<u8>>`\nsrc\\main.rs:40:32: error[E0599]: no method named `pipe_through` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:40:45: error[E0433]: cannot find type `TextDecoderStream` in this scope: use of undeclared type `TextDecoderStream`",
     "note": ""
   },
   {
@@ -148,7 +148,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine | `new ArrayBuffer()` has no static mapping — runs under the engine | `new ArrayBuffer()` has no static mapping — runs under the engine | `new ArrayBuffer()` has no static mapping — runs under the engine",
+    "detail": "`.constructor` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine",
     "note": ""
   },
   {
@@ -196,7 +196,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine | `new ArrayBuffer()` has no static mapping — runs under the engine",
+    "detail": "`.constructor` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine",
     "note": ""
   },
   {
@@ -260,7 +260,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine | `new ArrayBuffer()` has no static mapping — runs under the engine",
+    "detail": "`.constructor` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine",
     "note": ""
   },
   {

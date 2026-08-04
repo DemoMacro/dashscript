@@ -98,9 +98,23 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                     Some(Expression::ArrayExpression(_)) => true,
                     Some(expr) if expr.as_member_expression().is_some() => true,
                     Some(Expression::Identifier(id)) => {
+                        // `new <TypedArray>(buf)`: `buf` is a byte buffer, not a
+                        // length. A `Vec<T>` local — or an unannotated local,
+                        // which in WPT fixtures is a byte array (`new
+                        // Uint8Array(n)` uses a numeric literal or binary
+                        // expression, never a bare name) — lowers element-wise;
+                        // only a known number scalar takes the length path.
                         let name = bindings::snake(&id.name).to_string();
-                        ctx.local_type(&name)
-                            .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "Vec"))
+                        !matches!(
+                            ctx.local_type(&name).and_then(|p| {
+                                p.segments.last().map(|s| s.ident.to_string())
+                            }),
+                            Some(s) if matches!(
+                                s.as_str(),
+                                "f64" | "i64" | "u64" | "i32" | "u32" | "f32" | "i8"
+                                    | "u8" | "usize" | "isize"
+                            )
+                        )
                     }
                     _ => false,
                 };
@@ -115,6 +129,21 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
                 let zero: Expr =
                     syn::parse_str(&format!("0_{elem}")).expect("typed-array zero literal");
                 return parse_quote!(::std::vec![#zero; (#e) as usize]);
+            }
+        }
+        // `new ArrayBuffer(byteLength)` — a fixed-length byte buffer (the
+        // backing store of a typed-array view). DashScript models it as a
+        // zero-initialized `Vec<u8>`, the same backing as `Uint8Array`, so a
+        // subsequent `new Uint8Array(buf)` lowers element-wise. An empty `new
+        // ArrayBuffer()` is an empty vec; a growable `maxByteLength` option is
+        // not mapped (it falls through and `cargo check` rejects it honestly).
+        if id.name.as_str() == "ArrayBuffer" {
+            if n.arguments.is_empty() {
+                return parse_quote!(::std::vec::Vec::<u8>::new());
+            }
+            if n.arguments.len() == 1 {
+                let e = array_elem_arg(&n.arguments[0], ctx);
+                return parse_quote!(::std::vec![0_u8; (#e) as usize]);
             }
         }
         // `new TextEncoder()` / `new TextDecoder()` — the WHATWG Encoding API
