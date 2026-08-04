@@ -265,12 +265,21 @@ pub enum RuntimeDep {
     /// `DsAbortController`/`DsAbortSignal`). The dep resolution pulls
     /// `EventTarget` alongside (the signal reuses `DsEventTarget`/`DsEvent`).
     AbortController,
+    /// WHATWG `Blob` API (FileAPI, a WinterTC Web API) — `new Blob(parts, options?)`
+    /// flattens the parts into one byte buffer (each `string` → UTF-8 bytes,
+    /// `number` → `number_to_string` then bytes, a `Uint8Array`/`Blob` local →
+    /// its bytes); `blob.size`/`blob.type` are zero-arg accessors and
+    /// `blob.slice(start, end, contentType)` returns a new `Blob`. The async
+    /// methods `text()`/`arrayBuffer()`/`bytes()` are `async fn`s (an `await`
+    /// at the call site adds the `.await`). Pure `std` — no cargo dep; the
+    /// marker is `__ds::DsBlob`.
+    Blob,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 31] = [
+    const ALL: [RuntimeDep; 32] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -302,6 +311,7 @@ impl RuntimeDep {
         RuntimeDep::Streams,
         RuntimeDep::Compression,
         RuntimeDep::AbortController,
+        RuntimeDep::Blob,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -386,6 +396,7 @@ impl RuntimeDep {
             // the dep resolution pulls alongside (see the `AbortController` arm
             // after the marker probe) — without it, `DsEventTarget` is E0433.
             RuntimeDep::AbortController => Some("__ds::DsAbort"),
+            RuntimeDep::Blob => Some("__ds::DsBlob"),
             RuntimeDep::Engine => None,
         }
     }
@@ -525,6 +536,7 @@ impl RuntimeDep {
             // the embedded `DsEventTarget`); no crate. `DsEventTarget` comes
             // from EVENT_TARGET_HELPER, pulled by the dep resolution.
             RuntimeDep::AbortController => None,
+            RuntimeDep::Blob => None,
         }
     }
 
@@ -565,6 +577,7 @@ impl RuntimeDep {
             RuntimeDep::Streams => Some(DS_STREAMS_HELPER),
             RuntimeDep::Compression => Some(DS_COMPRESSION_HELPER),
             RuntimeDep::AbortController => Some(DS_ABORT_HELPER),
+            RuntimeDep::Blob => Some(BLOB_HELPER),
         }
     }
 }

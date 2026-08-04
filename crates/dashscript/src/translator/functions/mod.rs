@@ -1232,7 +1232,9 @@ fn register_declarator(
         locals.regex_inits.insert(name.clone(), ri);
     }
     let path = match &decl.init {
-        Some(Expression::CallExpression(call)) => callee_return_path(call, registry, locals),
+        Some(Expression::CallExpression(call)) => {
+            callee_return_path(call, registry, locals).or(blob_slice_path(call, locals))
+        }
         // `await fetch(url)` → the awaited call's return type (DsResponse), so
         // an unannotated `let r = await fetch(url)` records `DsResponse` and a
         // later `r.status`/`.ok` lowers to accessors. Only a directly-awaited
@@ -1257,6 +1259,7 @@ fn register_declarator(
             .or_else(|| event_target_path(n))
             .or_else(|| abort_path(n))
             .or_else(|| headers_path(n))
+            .or_else(|| blob_path(n))
             .or_else(|| promise_path(n))
             .or_else(|| streams_path(n))
             .or_else(|| error_path(n)),
@@ -1457,6 +1460,22 @@ fn headers_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     }
 }
 
+/// `new Blob(parts?, options?)` → `crate::__ds::DsBlob`, so an unannotated
+/// `let b = new Blob(…)` records the type and a later `b.size`/`b.type`/
+/// `b.slice(…)`/`b.text()` dispatches through `blob_method`/the accessors (the
+/// receiver resolves to `DsBlob`). Only the `Blob` callee maps; any other `new`
+/// yields `None`.
+fn blob_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    match id.name.as_str() {
+        "Blob" => Some(parse_quote!(crate::__ds::DsBlob)),
+        _ => None,
+    }
+}
+
 /// `new Promise(…)` → `crate::__ds::DsPromise<T>`, so an unannotated `let p =
 /// new Promise(…)` records a `DsPromise` local and a later `p.then(…)` /
 /// `await p` resolves the receiver. The value type `T` is inferred from the
@@ -1539,6 +1558,30 @@ fn abort_signal_access_path(init: &oxc_ast::ast::Expression, locals: &Locals) ->
         return None;
     }
     Some(parse_quote!(crate::__ds::DsAbortSignal))
+}
+
+/// `<blob>.slice(…)` where `blob` is a tracked `DsBlob` local → `DsBlob`, so an
+/// unannotated `let s = b.slice(0, 5)` records the type and a later `s.size`/
+/// `s.slice(…)`/`await s.text()` resolves its receiver (a WHATWG `Blob.slice`
+/// returns a new `Blob`). Returns `None` for any other call shape (the
+/// declarator's `CallExpression` arm reaches this after `callee_return_path`).
+fn blob_slice_path(call: &oxc_ast::ast::CallExpression, locals: &Locals) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::StaticMemberExpression(sm) = &call.callee else {
+        return None;
+    };
+    if sm.property.name.as_str() != "slice" {
+        return None;
+    }
+    let Expression::Identifier(id) = &sm.object else {
+        return None;
+    };
+    let b_path = locals.get(&bindings::snake(id.name.as_str()).to_string())?;
+    let is_blob = b_path.segments.last().is_some_and(|s| s.ident == "DsBlob");
+    if !is_blob {
+        return None;
+    }
+    Some(parse_quote!(crate::__ds::DsBlob))
 }
 
 /// `arr[i]` where `arr` is a tracked `Vec<T>` (or `Option<Vec<T>>`) local → `T`,

@@ -473,6 +473,81 @@ fn wpt_headers_compiles_and_runs() {
     );
 }
 
+/// WHATWG `Blob` (FileAPI, a WinterTC Web API) end-to-end — synchronous core:
+/// `new Blob(parts, options?)` flattens the parts to bytes; `blob.size`/
+/// `blob.type` are zero-arg accessors, `blob.slice(start, end)` returns a new
+/// `Blob`, and `blob instanceof Blob` folds to `true` (the ctor is in
+/// `MAPPED_CTOR_RUST_TYPE`). The async `text()`/`arrayBuffer()`/`bytes()` ride
+/// the same dispatch under `.await` (pinned by `wpt_blob_text_compiles_and_runs`).
+#[test]
+fn wpt_blob_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.blob_smoke".into(),
+        category: "smoke".into(),
+        fixture: "test(() => {\n\
+                  \x20 const b = new Blob([\"hello\", \" world\"]);\n\
+                  \x20 assert_equals(b.size, 11);\n\
+                  \x20 assert_equals(b.type, \"\");\n\
+                  \x20 const t = new Blob([\"x\"], { type: \"text/plain\" });\n\
+                  \x20 assert_equals(t.type, \"text/plain\");\n\
+                  \x20 const s = b.slice(0, 5);\n\
+                  \x20 assert_equals(s.size, 5);\n\
+                  \x20 assert_true(b instanceof Blob);\n\
+                  }, \"blob-core\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "Blob smoke should be supported: {detail}"
+    );
+}
+
+/// `await blob.text()` end-to-end — the async Blob methods lower to a
+/// `pub async fn` call whose `.await` flips the entry to `#[tokio::main]`.
+/// Verifies the full async chain: translate → cargo build (tokio) → the future
+/// awaits and the UTF-8 text assert holds (exit 0). A sibling to the sync
+/// smoke above; a failure means the async lowering or the `DsBlob::text` emit
+/// regressed.
+#[test]
+fn wpt_blob_text_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.blob_text_smoke".into(),
+        category: "smoke".into(),
+        fixture: "promise_test(async () => {\n\
+                  \x20 const b = new Blob([\"hello\"]);\n\
+                  \x20 const t = await b.text();\n\
+                  \x20 assert_equals(t, \"hello\");\n\
+                  }, \"blob-async\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "Blob async smoke should be supported: {detail}"
+    );
+}
+
 /// `promise_test(async () => { … }, "n")` end-to-end: the async callback lowers
 /// to `wpt_promise_test("n", async move { … }).await` under `#[tokio::main]`,
 /// so this verifies the full Stage 2 chain — translate → cargo build (pulls

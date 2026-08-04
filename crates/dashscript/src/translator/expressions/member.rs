@@ -296,6 +296,18 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return parse_quote!(#obj.#method());
         }
     }
+    // `blob.size`/`.type` on a DsBlob local → the zero-arg accessor. ES `Blob`
+    // exposes `size`/`type` as read-only properties; the Rust wrapper's
+    // accessors are methods, so `blob.size` rewrites to `blob.size()`. The
+    // async `.text()`/`.arrayBuffer()`/`.bytes()` and `.slice(…)` are method
+    // calls and dispatch in the call path.
+    if is_blob_local(&sm.object, ctx) {
+        if let Some(m) = blob_accessor(field_name) {
+            let method = Ident::new(m, Span::call_site());
+            let obj = translate_expr(&sm.object, ctx);
+            return parse_quote!(#obj.#method());
+        }
+    }
     // `tags.a` on a `Record`/HashMap local → `tags.get("a").<copied|cloned>().unwrap()`
     // (a TS `Record` static field access and `m["a"]` are the same lookup). A
     // `Copy` value (f64/bool) copies out of the borrow; a non-`Copy` value (a
@@ -929,6 +941,30 @@ pub(in crate::translator) fn is_headers_local(expr: &Expression, ctx: &Ctx<'_>) 
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name)
         .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsHeaders"))
+}
+
+/// True when `expr` is a local whose type is `crate::__ds::DsBlob` (a
+/// `new Blob(…)` binding), so `blob.size`/`.type` accessors and
+/// `.slice(…)`/`.text()`/… methods lower to the wrapper's inherent methods.
+pub(in crate::translator) fn is_blob_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name)
+        .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsBlob"))
+}
+
+/// The `__ds::DsBlob` accessor method name for an ES `Blob` property, or
+/// `None` for any other name (the access falls through). `blob.size` →
+/// `size()`, `blob.type` → `type_()` (the trailing underscore avoids the Rust
+/// keyword).
+fn blob_accessor(field: &str) -> Option<&'static str> {
+    match field {
+        "size" => Some("size"),
+        "type" => Some("type_"),
+        _ => None,
+    }
 }
 
 /// The `__ds::DsUrl` accessor method name for an ES `URL` component property,

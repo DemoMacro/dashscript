@@ -187,6 +187,16 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if builtins::headers_ctor_type(id.name.as_str()).is_some() {
             return builtins::headers_ctor(n.arguments.as_slice(), ctx);
         }
+        // `new Blob(parts?, options?)` — the WHATWG FileAPI `Blob` API (a
+        // WinterTC Web API). `parts` is a sequence of `string`/`BufferSource`/
+        // `Blob`; `options.type` carries the MIME. Intercepted before the
+        // generic `Foo::new` path (which would emit `Blob::new` — E0433). The
+        // `Blob` runtime dep is flagged by the `__ds::DsBlob` marker probe;
+        // instance methods (`slice`/`text`/`arrayBuffer`/`bytes`) and
+        // `size`/`type` accessors dispatch in the call/member paths.
+        if builtins::blob_ctor_type(id.name.as_str()).is_some() {
+            return builtins::blob_ctor(n.arguments.as_slice(), ctx);
+        }
         // `new ReadableStream([{ start(controller) { … } }])` — the WHATWG
         // Streams API (a WinterTC Web API). The push-source form maps
         // (`controller.enqueue`/`.close` + `getReader` + `await reader.read()`);

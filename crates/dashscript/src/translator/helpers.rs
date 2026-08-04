@@ -1051,6 +1051,101 @@ pub async fn ds_fetch_with<T: reqwest::IntoUrl>(
 }
 "#;
 
+/// WHATWG `Blob` API helper — `__ds::DsBlob` (FileAPI, a WinterTC Web API). A
+/// `Blob` is an immutable byte buffer plus a `type` (MIME). ES
+/// `new Blob(parts, options)` flattens the parts (each a `string`, a
+/// `BufferSource`, or a `Blob`) into one byte buffer; the translator collects
+/// the parts into a `Vec<u8>` at the constructor, so the runtime `new` takes
+/// the already-collected bytes + the `type` string. `size`/`type` are
+/// zero-arg accessors; `slice(start, end, contentType)` returns a new `DsBlob`
+/// (a copied sub-range — ES leaves view-vs-copy implementation-defined);
+/// `text()`/`array_buffer()`/`bytes()` are async (ES returns a `Promise`),
+/// so `await blob.text()` lowers to the async fn's `.await`. Pure `std` — no
+/// cargo dep; the marker is `__ds::DsBlob`.
+pub(super) const BLOB_HELPER: &str = r#"
+/// A WHATWG `Blob` — an immutable byte buffer with a `type` (MIME). The
+/// `bytes` are collected from the constructor's parts by the translator; the
+/// runtime sees only the flattened buffer. `#[derive(Clone)]` so a `Blob`
+/// value copies (ES Blobs are immutable, so a clone shares nothing mutable).
+#[derive(Clone)]
+pub struct DsBlob {
+    pub bytes: ::std::vec::Vec<u8>,
+    pub type_: ::std::string::String,
+}
+impl DsBlob {
+    /// Build a `Blob` from already-collected bytes + a `type` string (the
+    /// translator flattens `new Blob(parts, …)` to this). `type` defaults to
+    /// `""` when the options omit it (ES semantics).
+    pub fn new(bytes: ::std::vec::Vec<u8>, type_: ::std::string::String) -> Self {
+        Self { bytes, type_ }
+    }
+    /// `blob.size` — the byte length (ES `size` is a number).
+    #[inline]
+    pub fn size(&self) -> f64 {
+        self.bytes.len() as f64
+    }
+    /// `blob.type` — the MIME lowercased (ES guarantees ASCII-lowercase).
+    #[inline]
+    pub fn type_(&self) -> ::std::string::String {
+        self.type_.clone()
+    }
+    /// `blob.slice(start, end, contentType)` — a new `DsBlob` over the
+    /// `[relStart, relEnd)` sub-range (ES index resolution), with the given
+    /// `contentType` (default `""`).
+    pub fn slice(
+        &self,
+        start: ::std::option::Option<f64>,
+        end: ::std::option::Option<f64>,
+        content_type: ::std::option::Option<::std::string::String>,
+    ) -> DsBlob {
+        let size = self.bytes.len();
+        let s = ds_blob_index(start, size, 0);
+        let e = ds_blob_index(end, size, size);
+        let bytes = if s < e {
+            self.bytes[s..e].to_vec()
+        } else {
+            ::std::vec::Vec::new()
+        };
+        DsBlob {
+            bytes,
+            type_: content_type.unwrap_or_default(),
+        }
+    }
+    /// `await blob.text()` — the bytes as UTF-8 text (ES uses the UTF-8
+    /// replacement decoder; lone surrogates become U+FFFD, matching `from_utf8_lossy`).
+    pub async fn text(&self) -> ::std::string::String {
+        ::std::string::String::from_utf8_lossy(&self.bytes).into_owned()
+    }
+    /// `await blob.arrayBuffer()` — a copy of the bytes (ES `ArrayBuffer`).
+    pub async fn array_buffer(&self) -> ::std::vec::Vec<u8> {
+        self.bytes.clone()
+    }
+    /// `await blob.bytes()` — a copy of the bytes (ES `Uint8Array`).
+    pub async fn bytes(&self) -> ::std::vec::Vec<u8> {
+        self.bytes.clone()
+    }
+}
+/// Resolve a `Blob.slice()` index per ES — `NaN`/`-Infinity` → 0,
+/// `+Infinity` → `size`, negatives count from the end — then clamp to
+/// `[0, size]`. `default` is the value when the argument is absent (`start` →
+/// 0, `end` → `size`).
+fn ds_blob_index(i: ::std::option::Option<f64>, size: usize, default: usize) -> usize {
+    let n = match i {
+        ::std::option::Option::None => return default,
+        ::std::option::Option::Some(n) => n,
+    };
+    if n.is_nan() || n == ::core::f64::NEG_INFINITY {
+        return 0;
+    }
+    if n == ::core::f64::INFINITY {
+        return size;
+    }
+    let s = size as f64;
+    let idx = if n < 0.0 { (s + n).max(0.0) } else { n.min(s) };
+    idx.max(0.0) as usize
+}
+"#;
+
 /// WHATWG `Headers` API helper — `__ds::DsHeaders` (FETCH §5.1, a WinterTC Web
 /// API). A header is an ordered list of `(name, value)` pairs with case-
 /// insensitive name lookup (HTTP headers are) — `Vec<(String, String)>` keyed

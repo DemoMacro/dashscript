@@ -507,6 +507,18 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(expr) = builtins::url_static_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
+        // `b.slice(…)` / `await b.text()` / `await b.arrayBuffer()` /
+        // `await b.bytes()` on a `DsBlob` local (`new Blob(…)` binding) — the
+        // WinterTC WHATWG FileAPI `Blob` API. Dispatched BEFORE the name-based
+        // `string_method` below: `Blob` shares the `slice` method name with
+        // `String`, and the string lowering keys off the method name alone, so a
+        // `DsBlob` receiver must be claimed first (the gate is `is_blob_local`;
+        // a real string still falls through to `string_method`). `slice` returns
+        // a new `DsBlob`; the async methods return a `Future` the caller's
+        // `await` drives (engines return a `Promise`).
+        if let Some(expr) = builtins::blob_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         if let Some(expr) = builtins::array_method(sm, call.arguments.as_slice(), ctx) {
             return expr;
         }
