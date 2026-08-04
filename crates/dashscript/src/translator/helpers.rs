@@ -355,6 +355,53 @@ pub fn crypto_get_random_values(mut buf: ::std::vec::Vec<u8>) -> ::std::vec::Vec
 }
 "#;
 
+/// WebCrypto `SubtleCrypto.digest` helper — `__ds::crypto_subtle_digest`
+/// (WinterTC Web API, W3C WebCrypto). `crypto.subtle.digest(algo, data)` is the
+/// one-shot hash: `algo` is the ES algorithm name (`"SHA-1"`/`"SHA-256"`/
+/// `"SHA-384"`/`"SHA-512"`), `data` is the `BufferSource` (a `Vec<u8>`), and the
+/// result is the digest bytes. Backed by the RustCrypto `sha1`/`sha2` crates
+/// (pure Rust — WinterTC never degrades a Web API). `async` because ES
+/// `digest` returns a `Promise<ArrayBuffer>`; the `await` at the call site
+/// drives the future (the async-main gate flips `fn main` to `#[tokio::main]`).
+/// An unknown algorithm panics the `TypeError` ES throws (the WPT verdict reads
+/// the prefix). The other `SubtleCrypto` methods (`encrypt`/`decrypt`/`sign`/
+/// `verify`/`generateKey`/`importKey`/`deriveBits`) need a `CryptoKey` value
+/// model and land in a later batch; `digest` is the no-key one-shot, the bulk
+/// of the WPT `WebCryptoAPI/digest` fixtures.
+pub(super) const SUBTLE_HELPER: &str = r#"
+/// `crypto.subtle.digest(algo, data)` — the one-shot hash. `algo` is matched
+/// case-sensitively against the ES algorithm names (`"SHA-1"`/`"SHA-256"`/
+/// `"SHA-384"`/`"SHA-512"`); any other value panics the `TypeError` ES throws
+/// (the WPT verdict reads the prefix). `data` is hashed as raw bytes. Returns
+/// the digest bytes (20/32/48/64 for SHA-1/256/384/512).
+pub async fn crypto_subtle_digest(
+    algo: ::std::string::String,
+    data: ::std::vec::Vec<u8>,
+) -> ::std::vec::Vec<u8> {
+    match algo.as_str() {
+        "SHA-1" => {
+            use ::sha1::{Digest, Sha1};
+            Sha1::digest(&data).to_vec()
+        }
+        "SHA-256" => {
+            use ::sha2::{Digest, Sha256};
+            Sha256::digest(&data).to_vec()
+        }
+        "SHA-384" => {
+            use ::sha2::{Digest, Sha384};
+            Sha384::digest(&data).to_vec()
+        }
+        "SHA-512" => {
+            use ::sha2::{Digest, Sha512};
+            Sha512::digest(&data).to_vec()
+        }
+        _ => ::core::panic!(
+            "TypeError: crypto.subtle.digest: unknown or unsupported algorithm"
+        ),
+    }
+}
+"#;
+
 /// WHATWG URLPattern API helper — `__ds::DsURLPattern`. A `new URLPattern(input)`
 /// (a WinterTC Web API) lowers here. A string `input` is parsed as a WHATWG
 /// URLPattern constructor string (`UrlPatternInit::parse_constructor_string`);

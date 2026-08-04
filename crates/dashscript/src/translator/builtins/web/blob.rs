@@ -100,7 +100,7 @@ pub(super) fn collect_blob_parts(arr: &ArrayExpression, ctx: &Ctx<'_>) -> Expr {
 /// a `Vec` is already bytes, anything else is `ToString`-coerced. Any other
 /// expression is `ToString`-coerced (the common fallback for an unannotated
 /// binding).
-fn blob_part_to_bytes(e: &Expression, ctx: &Ctx<'_>) -> Expr {
+pub(super) fn blob_part_to_bytes(e: &Expression, ctx: &Ctx<'_>) -> Expr {
     match e {
         Expression::StringLiteral(s) => {
             let lit = syn::LitStr::new(s.value.as_str(), proc_macro2::Span::call_site());

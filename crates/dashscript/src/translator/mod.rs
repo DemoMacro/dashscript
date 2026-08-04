@@ -181,6 +181,17 @@ pub enum RuntimeDep {
     /// `crypto`/`self.crypto` both lower to `__ds::crypto_random_uuid` (the
     /// `uuid` crate's `new_v4`, pure-Rust — never degraded).
     Crypto,
+    /// WinterTC WebCrypto `SubtleCrypto` — `crypto.subtle.digest(algo, data)`
+    /// (the one-shot hash; the no-key bulk of the WPT `WebCryptoAPI/digest`
+    /// fixtures). `algo` is the ES name (`"SHA-1"`/`"SHA-256"`/`"SHA-384"`/
+    /// `"SHA-512"`); `data` is a `BufferSource` (`Vec<u8>`); the result is the
+    /// digest bytes. Backed by the RustCrypto `sha1`/`sha2` crates (pure-Rust —
+    /// never degraded). `async` (ES returns a `Promise<ArrayBuffer>`); the
+    /// `await` drives the future and the `Tokio` dep is pulled transitively by
+    /// the async entry. The key-bearing `SubtleCrypto` methods
+    /// (`encrypt`/`sign`/…/`generateKey`/`importKey`) need a `CryptoKey` value
+    /// model and land in a later batch; marker `__ds::crypto_subtle_digest`.
+    SubtleCrypto,
     /// WHATWG URLPattern — `new URLPattern(input[, baseURL])` (a WinterTC Web
     /// API). A string `input` is a constructor string; an undefined/absent input
     /// is the empty pattern; `new URLPattern(new URL(…))` uses the URL's href.
@@ -299,7 +310,7 @@ pub enum RuntimeDep {
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 34] = [
+    const ALL: [RuntimeDep; 35] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -321,6 +332,7 @@ impl RuntimeDep {
         RuntimeDep::Base64,
         RuntimeDep::HrTime,
         RuntimeDep::Crypto,
+        RuntimeDep::SubtleCrypto,
         RuntimeDep::URLPattern,
         RuntimeDep::Tokio,
         RuntimeDep::Promise,
@@ -380,6 +392,7 @@ impl RuntimeDep {
             // `getRandomValues`) pulls CRYPTO_HELPER (sibling free fns in the
             // slice) and the `uuid` + `getrandom` crates.
             RuntimeDep::Crypto => Some("__ds::crypto_"),
+            RuntimeDep::SubtleCrypto => Some("__ds::crypto_subtle_digest"),
             RuntimeDep::URLPattern => Some("__ds::DsURLPattern"),
             // The `#[tokio::main]` attribute only the async entry emits — a
             // `.ts` source cannot produce it any other way, so its presence in
@@ -506,6 +519,11 @@ impl RuntimeDep {
                 ("uuid", "{ version = \"1\", features = [\"v4\"] }"),
                 ("getrandom", "\"0.2\""),
             ]),
+            // `sha1`/`sha2` (RustCrypto) — `crypto.subtle.digest` one-shot hash
+            // (pure-Rust). SHA-1 (20 bytes) + the SHA-2 family (256/384/512).
+            // The `Tokio` runtime the async `digest` needs is pulled transitively
+            // by the `await`-driven async entry, not here.
+            RuntimeDep::SubtleCrypto => Some(&[("sha1", "\"0.10\""), ("sha2", "\"0.10\"")]),
             // `urlpattern` (denoland/rust-urlpattern) — the WHATWG URLPattern
             // reference. `new URLPattern(…)` wraps `urlpattern::UrlPattern`; a
             // pattern that fails to compile panics a `TypeError` (ES error class).
@@ -602,6 +620,7 @@ impl RuntimeDep {
             RuntimeDep::Base64 => Some(BASE64_HELPER),
             RuntimeDep::HrTime => Some(PERF_HELPER),
             RuntimeDep::Crypto => Some(CRYPTO_HELPER),
+            RuntimeDep::SubtleCrypto => Some(SUBTLE_HELPER),
             RuntimeDep::URLPattern => Some(URLPATTERN_HELPER),
             // The runtime is `#[tokio::main]`, not a helper module — no slice.
             RuntimeDep::Tokio => None,

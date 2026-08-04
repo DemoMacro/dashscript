@@ -669,6 +669,42 @@ fn wpt_form_data_compiles_and_runs() {
     );
 }
 
+/// `await crypto.subtle.digest(algo, data)` end-to-end — the WinterTC WebCrypto
+/// `SubtleCrypto.digest` one-shot hash. Exercises the two-level `crypto.subtle`
+/// member chain, the async lowering (`await` flips the entry to
+/// `#[tokio::main]`), and both the `sha2` (SHA-256 → 32 bytes) and `sha1`
+/// (SHA-1 → 20 bytes) crates. A failure means the nested-member dispatch, the
+/// async helper, or the `sha1`/`sha2` wiring regressed.
+#[test]
+fn wpt_subtle_digest_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.subtle_digest_smoke".into(),
+        category: "smoke".into(),
+        fixture: "promise_test(async () => {\n\
+                  \x20 const a = await crypto.subtle.digest(\"SHA-256\", new Uint8Array([0, 1, 2, 3]));\n\
+                  \x20 assert_equals(a.length, 32);\n\
+                  \x20 const b = await crypto.subtle.digest(\"SHA-1\", \"abc\");\n\
+                  \x20 assert_equals(b.length, 20);\n\
+                  }, \"subtle-digest\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "SubtleCrypto digest smoke should be supported: {detail}"
+    );
+}
+
 /// `promise_test(async () => { … }, "n")` end-to-end: the async callback lowers
 /// to `wpt_promise_test("n", async move { … }).await` under `#[tokio::main]`,
 /// so this verifies the full Stage 2 chain — translate → cargo build (pulls
