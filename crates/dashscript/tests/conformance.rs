@@ -973,6 +973,49 @@ fn wpt_subtle_derive_key_compiles_and_runs() {
     );
 }
 
+/// `crypto.subtle.deriveBits(…)` with `name: "HKDF"` end-to-end — the WinterTC
+/// WEBCRYPTO §5 HKDF (RFC 5869) extract-then-expand path, the second of the two
+/// §5 key-derivation functions (PBKDF2 is the other). Exercises the canonical
+/// RFC 5869 Test Case 1: SHA-256, IKM = 22 bytes of `0x0b`, salt = `0..12`,
+/// info = `0xf0..0xf9`, L = 42 bytes — the first output byte is `0x3c` (60),
+/// proving the extract+expand ran correctly (not a zero-filled buffer). Reuses
+/// the same `hmac` backing as PBKDF2 — no new crate.
+#[test]
+fn wpt_subtle_derive_bits_hkdf_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.subtle_derive_bits_hkdf_smoke".into(),
+        category: "smoke".into(),
+        fixture: r#"promise_test(async () => {
+    const baseKey = await crypto.subtle.importKey(
+        "raw", new Uint8Array([11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11,11]),
+        { name: "HKDF" }, false, ["deriveBits"]);
+    const salt = new Uint8Array([0,1,2,3,4,5,6,7,8,9,10,11,12]);
+    const info = new Uint8Array([240,241,242,243,244,245,246,247,248,249]);
+    const okm = await crypto.subtle.deriveBits(
+        { name: "HKDF", salt: salt, info: info, hash: "SHA-256" }, baseKey, 336);
+    assert_equals(okm.length, 42);
+    assert_equals(okm[0], 60);
+}, "subtle-derivebits-hkdf");
+"#
+        .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "SubtleCrypto HKDF deriveBits smoke should be supported: {detail}"
+    );
+}
+
 /// `new Request(url, init?)` + the `.method`/`.url` read-only accessors
 /// end-to-end — the WinterTC FETCH §5.2 `Request` ctor. Exercises the ctor's
 /// `init` parsing (reusing `fetch_init`, the same path as `fetch(url, init)`),

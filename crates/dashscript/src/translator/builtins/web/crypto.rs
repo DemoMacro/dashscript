@@ -11,11 +11,11 @@
 //! `.verify` are the async HMAC backed by `hmac`, and `subtle.encrypt`/`.decrypt`
 //! are the async AES-GCM backed by `aes-gcm` (pure-Rust — never degraded),
 //! `crypto.subtle.generateKey` is the fresh-key factory (random AES/HMAC keys),
-//! `crypto.subtle.deriveBits`/`deriveKey` are the PBKDF2 key-derivation paths
-//! (a small HMAC round-XOR loop, the same `hmac` backing as `sign`), and
+//! `crypto.subtle.deriveBits`/`deriveKey` are the PBKDF2/HKDF key-derivation
+//! paths (small HMAC loops, the same `hmac` backing as `sign`), and
 //! `crypto.subtle.exportKey` is the raw symmetric-key export (the inverse of
-//! `importKey`). The remaining `SubtleCrypto` methods (AES-CBC, HKDF, `wrapKey`)
-//! are not yet mapped.
+//! `importKey`). The remaining `SubtleCrypto` methods (AES-CBC, `wrapKey`) are
+//! not yet mapped.
 
 use oxc_ast::ast::{Argument, Expression, ObjectPropertyKind, PropertyKey, StaticMemberExpression};
 use syn::{parse_quote, Expr};
@@ -118,19 +118,20 @@ pub(in crate::translator) fn crypto_method(
         }
     }
     // `crypto.subtle.deriveKey(algo, baseKey, derivedKeyType, extractable,
-    // usages)` — the PBKDF2 subset, an orchestrator over `deriveBits` + the key
-    // ctor. The ES `algo` object's `name`/`salt`/`iterations`/`hash` and the ES
-    // `derivedKeyType` object's `name`/`hash`/`length` are both extracted at
-    // translate time (reusing the `deriveBits`/`generateKey` extractors); `baseKey`
-    // is the password `DsCryptoKey`. ES returns `Promise<CryptoKey>`; the call
-    // site's `await` drives the future, and `callee_return_path` records the
-    // `DsCryptoKey` return (like `importKey`/`generateKey`).
+    // usages)` — the PBKDF2/HKDF subset, an orchestrator over `deriveBits` + the
+    // key ctor. The ES `algo` object's `name`/`salt`/`iterations`/`info`/`hash`
+    // and the ES `derivedKeyType` object's `name`/`hash`/`length` are both
+    // extracted at translate time (reusing the `deriveBits`/`generateKey`
+    // extractors); `baseKey` is the password (PBKDF2) or input-key-material (HKDF)
+    // `DsCryptoKey`. ES returns `Promise<CryptoKey>`; the call site's `await`
+    // drives the future, and `callee_return_path` records the `DsCryptoKey` return
+    // (like `importKey`/`generateKey`).
     if sm.property.name.as_str() == "deriveKey" {
         if let Expression::StaticMemberExpression(inner) = &sm.object {
             if inner.property.name.as_str() == "subtle"
                 && is_crypto_receiver(&inner.object).is_some()
             {
-                let (algorithm, hash, salt, iterations) =
+                let (algorithm, hash, salt, info, iterations) =
                     derive_bits_algorithm(args.first()?, ctx)?;
                 let base_key = translate_argument(args.get(1)?, ctx);
                 let (derived_name, derived_hash, derived_length) =
@@ -139,7 +140,7 @@ pub(in crate::translator) fn crypto_method(
                 let usages: Expr = parse_quote!(::std::vec![]);
                 return Some(parse_quote!(
                     crate::__ds::crypto_subtle_derive_key(
-                        #algorithm, #hash, #salt, #iterations, &#base_key,
+                        #algorithm, #hash, #salt, #info, #iterations, &#base_key,
                         #derived_name, #derived_hash, #derived_length,
                         #extractable, #usages
                     )
@@ -147,24 +148,24 @@ pub(in crate::translator) fn crypto_method(
             }
         }
     }
-    // `crypto.subtle.deriveBits(algo, key, length)` — the PBKDF2 subset. The ES
-    // `algo` object's `name`/`salt`/`iterations`/`hash` are extracted at translate
-    // time; `key` is the password `DsCryptoKey` (imported raw); `length` is the
-    // output length in bits. ES returns `Promise<ArrayBuffer>`; the call site's
-    // `await` drives the future, and `callee_return_path` records the `Vec<u8>`
-    // return.
+    // `crypto.subtle.deriveBits(algo, key, length)` — the PBKDF2/HKDF subset. The
+    // ES `algo` object's `name`/`salt`/`iterations`/`info`/`hash` are extracted at
+    // translate time; `key` is the password (PBKDF2) or input-key-material (HKDF)
+    // `DsCryptoKey` (imported raw); `length` is the output length in bits. ES
+    // returns `Promise<ArrayBuffer>`; the call site's `await` drives the future,
+    // and `callee_return_path` records the `Vec<u8>` return.
     if sm.property.name.as_str() == "deriveBits" {
         if let Expression::StaticMemberExpression(inner) = &sm.object {
             if inner.property.name.as_str() == "subtle"
                 && is_crypto_receiver(&inner.object).is_some()
             {
-                let (algorithm, hash, salt, iterations) =
+                let (algorithm, hash, salt, info, iterations) =
                     derive_bits_algorithm(args.first()?, ctx)?;
                 let key = translate_argument(args.get(1)?, ctx);
                 let length = length_value(args.get(2)?.as_expression()?);
                 return Some(parse_quote!(
                     crate::__ds::crypto_subtle_derive_bits(
-                        #algorithm, #hash, #salt, #iterations, &#key, #length
+                        #algorithm, #hash, #salt, #info, #iterations, &#key, #length
                     )
                 ));
             }
@@ -424,17 +425,19 @@ fn length_value(expr: &Expression) -> Expr {
 
 /// `crypto.subtle.deriveBits(…)`'s `algorithm` argument — the ES
 /// `{ name: "PBKDF2", salt: <Uint8Array>, iterations: 100000, hash: "SHA-256" }`
-/// object — lowered to the `(name, hash, salt, iterations)` quadruple the
-/// runtime helper takes. `salt` is a `BufferSource` coerced via the digest path;
-/// `iterations` is a numeric literal read as a `u32`. `None` for a non-object
-/// `algorithm` (the arm falls through).
-fn derive_bits_algorithm(arg: &Argument, ctx: &Ctx<'_>) -> Option<(Expr, Expr, Expr, Expr)> {
+/// (PBKDF2) or `{ name: "HKDF", salt: …, info: <Uint8Array>, hash: "SHA-256" }`
+/// (HKDF) object — lowered to the `(name, hash, salt, info, iterations)`
+/// quintuple the runtime helper takes. `salt`/`info` are `BufferSource`s coerced
+/// via the digest path; `iterations` is a numeric literal read as a `u32`
+/// (unused by HKDF). `None` for a non-object `algorithm` (the arm falls through).
+fn derive_bits_algorithm(arg: &Argument, ctx: &Ctx<'_>) -> Option<(Expr, Expr, Expr, Expr, Expr)> {
     let Expression::ObjectExpression(obj) = arg.as_expression()? else {
         return None;
     };
     let mut name = parse_quote!(::std::string::String::new());
     let mut hash = parse_quote!(::std::string::String::new());
     let mut salt: Option<Expr> = None;
+    let mut info: Option<Expr> = None;
     let mut iterations: Option<Expr> = None;
     for kind in &obj.properties {
         let ObjectPropertyKind::ObjectProperty(p) = kind else {
@@ -449,13 +452,15 @@ fn derive_bits_algorithm(arg: &Argument, ctx: &Ctx<'_>) -> Option<(Expr, Expr, E
             "name" => name = algo_string_value(&p.value, ctx),
             "hash" => hash = algo_string_value(&p.value, ctx),
             "salt" => salt = Some(digest_data_expr(&p.value, ctx)),
+            "info" => info = Some(digest_data_expr(&p.value, ctx)),
             "iterations" => iterations = Some(iterations_value(&p.value)),
             _ => {}
         }
     }
     let salt = salt.unwrap_or_else(|| parse_quote!(::std::vec![]));
+    let info = info.unwrap_or_else(|| parse_quote!(::std::vec![]));
     let iterations = iterations.unwrap_or_else(|| parse_quote!(0u32));
-    Some((name, hash, salt, iterations))
+    Some((name, hash, salt, info, iterations))
 }
 
 /// Read an `iterations` algorithm field (the PBKDF2 round count) as a `u32`

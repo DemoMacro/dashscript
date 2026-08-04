@@ -368,8 +368,8 @@ pub fn crypto_get_random_values(mut buf: ::std::vec::Vec<u8>) -> ::std::vec::Vec
 /// (raw format → `DsCryptoKey`) / `exportKey` (raw format ← `DsCryptoKey`),
 /// `sign`/`verify` (HMAC, RustCrypto `hmac`), `encrypt`/`decrypt` (AES-GCM,
 /// `aes-gcm`), `generateKey` (a fresh random `DsCryptoKey` for AES-GCM/
-/// AES-CBC/HMAC), `deriveBits`/`deriveKey` (the PBKDF2 key-derivation path,
-/// reusing `hmac`). The remaining `SubtleCrypto` methods (AES-CBC, HKDF,
+/// AES-CBC/HMAC), `deriveBits`/`deriveKey` (the PBKDF2/HKDF key-derivation
+/// paths, reusing `hmac`). The remaining `SubtleCrypto` methods (AES-CBC,
 /// `wrapKey`) land later; `digest` is the no-key one-shot, the bulk of the WPT
 /// `WebCryptoAPI/digest` fixtures.
 pub(super) const SUBTLE_HELPER: &str = r#"
@@ -506,21 +506,23 @@ pub async fn crypto_subtle_generate_key(
     ::getrandom::getrandom(&mut key).expect("getrandom failed");
     DsCryptoKey::new(name, hash, key, extractable, usages)
 }
-/// `crypto.subtle.deriveBits(algorithm, baseKey, length)` — the PBKDF2 subset
-/// (the WinterTC WebCrypto key-derivation path). For PBKDF2 the `baseKey` carries
-/// the password bytes (`key.key`), and the ES `algorithm` object's `salt`/
-/// `iterations`/`hash` drive the derivation (RFC 2898); `length` is the output
-/// length in bits (`length / 8` bytes). The hash selects the HMAC PRF
-/// (SHA-1/256/384/512), reusing the `hmac` crate that backs `sign` — no separate
-/// PBKDF2 dep (the `pbkdf2` 0.13 crate pulls `digest` 0.11, incompatible with the
-/// `sha1`/`sha2` 0.10 DashScript uses; the PBKDF2 round-XOR is a short loop over
-/// HMAC anyway). `async` because ES `deriveBits` returns `Promise<ArrayBuffer>`;
-/// the call site's `await` drives the future, and `callee_return_path` records
-/// the `Vec<u8>` return (like `sign`/`encrypt`).
+/// `crypto.subtle.deriveBits(algorithm, baseKey, length)` — the WinterTC WebCrypto
+/// key-derivation path. For PBKDF2 the `baseKey` carries the password bytes
+/// (`key.key`), and the ES `algorithm` object's `salt`/`iterations`/`hash` drive
+/// the derivation (RFC 2898); `info` is unused. For HKDF the `baseKey` is the
+/// input key material, `salt`/`info`/`hash` drive the extract+expand (RFC 5869);
+/// `iterations` is unused. `length` is the output length in bits (`length / 8`
+/// bytes). The hash selects the HMAC PRF (SHA-1/256/384/512), reusing the `hmac`
+/// crate that backs `sign` — no separate PBKDF2/HKDF dep (the `pbkdf2` 0.13 crate
+/// pulls `digest` 0.11, incompatible with the `sha1`/`sha2` 0.10 DashScript uses;
+/// both KDFs are short loops over HMAC anyway). `async` because ES `deriveBits`
+/// returns `Promise<ArrayBuffer>`; the call site's `await` drives the future, and
+/// `callee_return_path` records the `Vec<u8>` return (like `sign`/`encrypt`).
 pub async fn crypto_subtle_derive_bits(
     name: ::std::string::String,
     hash: ::std::string::String,
     salt: ::std::vec::Vec<u8>,
+    info: ::std::vec::Vec<u8>,
     iterations: u32,
     key: &DsCryptoKey,
     length: usize,
@@ -545,14 +547,32 @@ pub async fn crypto_subtle_derive_bits(
                 "TypeError: crypto.subtle.deriveBits: unsupported PBKDF2 hash"
             ),
         },
+        "HKDF" => match hash.as_str() {
+            "SHA-1" => hkdf_into::<::hmac::Hmac<::sha1::Sha1>>(
+                &salt, password, &info, &mut out, 20,
+            ),
+            "SHA-256" => hkdf_into::<::hmac::Hmac<::sha2::Sha256>>(
+                &salt, password, &info, &mut out, 32,
+            ),
+            "SHA-384" => hkdf_into::<::hmac::Hmac<::sha2::Sha384>>(
+                &salt, password, &info, &mut out, 48,
+            ),
+            "SHA-512" => hkdf_into::<::hmac::Hmac<::sha2::Sha512>>(
+                &salt, password, &info, &mut out, 64,
+            ),
+            _ => ::core::panic!(
+                "TypeError: crypto.subtle.deriveBits: unsupported HKDF hash"
+            ),
+        },
         _ => ::core::panic!("TypeError: crypto.subtle.deriveBits: unsupported algorithm"),
     }
     out
 }
 /// `crypto.subtle.deriveKey(algorithm, baseKey, derivedKeyType, extractable,
-/// usages)` — the PBKDF2 subset, an orchestrator over `deriveBits` + the key
-/// ctor (the WinterTC WebCrypto key-derivation-and-import path). The derivation
-/// algorithm (PBKDF2's `name`/`hash`/`salt`/`iterations`) and the password
+/// usages)` — the PBKDF2/HKDF subset, an orchestrator over `deriveBits` + the
+/// key ctor (the WinterTC WebCrypto key-derivation-and-import path). The
+/// derivation algorithm (PBKDF2's `name`/`hash`/`salt`/`iterations` or HKDF's
+/// `name`/`hash`/`salt`/`info`) and the password/input-key-material
 /// `baseKey` feed `crypto_subtle_derive_bits`; the `derivedKeyType` object's
 /// `name`/`hash`/`length` decide the output key length in bits (AES-GCM/AES-CBC:
 /// `length`; HMAC: `length`, else the named hash's block size — 512 for
@@ -565,6 +585,7 @@ pub async fn crypto_subtle_derive_key(
     name: ::std::string::String,
     hash: ::std::string::String,
     salt: ::std::vec::Vec<u8>,
+    info: ::std::vec::Vec<u8>,
     iterations: u32,
     base_key: &DsCryptoKey,
     derived_name: ::std::string::String,
@@ -587,10 +608,8 @@ pub async fn crypto_subtle_derive_key(
         }
         _ => ::core::panic!("TypeError: crypto.subtle.deriveKey: unsupported derived key type"),
     };
-    let bits = crypto_subtle_derive_bits(
-        name, hash, salt, iterations, base_key, length_bits,
-    )
-    .await;
+    let bits =
+        crypto_subtle_derive_bits(name, hash, salt, info, iterations, base_key, length_bits).await;
     DsCryptoKey::new(derived_name, derived_hash, bits, extractable, usages)
 }
 /// The PBKDF2 (RFC 2898) core — `T_i = U_1 ^ … ^ U_c`, where
@@ -624,6 +643,36 @@ where
         }
         let n = chunk.len().min(t.len());
         chunk[..n].copy_from_slice(&t[..n]);
+    }
+}
+/// The HKDF (RFC 5869) core — extract-then-expand, generic over the HMAC
+/// instance (`H: hmac::Mac`). Extract: `PRK = HMAC-Hash(salt, IKM)` (an empty
+/// `salt` is HMAC's normal zero-key path, not RFC 5869's HashLen-zeros default,
+/// but HMAC of an empty key is the same as HMAC of HashLen zero bytes for these
+/// hashes — the test-vector round-trip confirms it). Expand:
+/// `T(0) = ""`, `T(i) = HMAC(PRK, T(i-1) || info || octet(i))`, `OKM = T(1) ||
+/// T(2) || …` truncated to `res.len()`. `h_len` is the hash output length.
+fn hkdf_into<H>(salt: &[u8], ikm: &[u8], info: &[u8], res: &mut [u8], h_len: usize)
+where
+    H: ::hmac::Mac + ::hmac::digest::KeyInit,
+{
+    use ::hmac::Mac;
+    // Extract — PRK = HMAC(salt, IKM); reuse as the expand key.
+    let mut prk_mac = <H as ::hmac::digest::KeyInit>::new_from_slice(salt).expect("HMAC key length");
+    prk_mac.update(ikm);
+    let prk = prk_mac.finalize().into_bytes();
+    // Expand — fill `res` block by block (each HMAC output is one block).
+    let mut t: ::std::vec::Vec<u8> = ::std::vec![];
+    let mut idx: u8 = 1;
+    for chunk in res.chunks_mut(h_len) {
+        let mut mac = <H as ::hmac::digest::KeyInit>::new_from_slice(&prk).expect("HMAC key length");
+        mac.update(&t);
+        mac.update(info);
+        mac.update(&[idx]);
+        t = mac.finalize().into_bytes().to_vec();
+        let n = chunk.len().min(t.len());
+        chunk[..n].copy_from_slice(&t[..n]);
+        idx = idx.wrapping_add(1);
     }
 }
 /// `crypto.subtle.sign(algo, key, data)` — the HMAC subset. The hash comes from
