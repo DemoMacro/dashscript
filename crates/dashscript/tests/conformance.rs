@@ -705,6 +705,50 @@ fn wpt_subtle_digest_compiles_and_runs() {
     );
 }
 
+/// `await crypto.subtle.{importKey,sign,verify}(…)` end-to-end — the WinterTC
+/// WebCrypto HMAC subset. Exercises the two-level `crypto.subtle` chain for
+/// each method, the `importKey → DsCryptoKey` return-type inference (so the
+/// later `sign`/`verify` pass the key local through as `&DsCryptoKey`), the
+/// `hmac` crate backing (SHA-256 → 32-byte tag), and the constant-time verify.
+/// The data arrays are inlined per call (each `sign`/`verify` takes the
+/// `Vec<u8>` by value); the key is `&DsCryptoKey`, borrowed across the three
+/// calls. A failure means the importKey wiring, the key-bearing dispatch, or
+/// the `hmac` dependency regressed.
+#[test]
+fn wpt_subtle_hmac_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.subtle_hmac_smoke".into(),
+        category: "smoke".into(),
+        fixture: "promise_test(async () => {\n\
+                  \x20 const key = await crypto.subtle.importKey(\n\
+                  \x20   \"raw\", new Uint8Array([1, 2, 3]), { name: \"HMAC\", hash: \"SHA-256\" }, false, []);\n\
+                  \x20 const sig = await crypto.subtle.sign(\"HMAC\", key, new Uint8Array([10, 20, 30]));\n\
+                  \x20 assert_equals(sig.length, 32);\n\
+                  \x20 const ok = await crypto.subtle.verify(\"HMAC\", key, sig, new Uint8Array([10, 20, 30]));\n\
+                  \x20 assert_equals(ok, true);\n\
+                  \x20 const sig2 = await crypto.subtle.sign(\"HMAC\", key, new Uint8Array([99, 99, 99]));\n\
+                  \x20 const bad = await crypto.subtle.verify(\"HMAC\", key, sig2, new Uint8Array([10, 20, 30]));\n\
+                  \x20 assert_equals(bad, false);\n\
+                  }, \"subtle-hmac\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "SubtleCrypto HMAC smoke should be supported: {detail}"
+    );
+}
+
 /// `new Request(url, init?)` + the `.method`/`.url` read-only accessors
 /// end-to-end — the WinterTC FETCH §5.2 `Request` ctor. Exercises the ctor's
 /// `init` parsing (reusing `fetch_init`, the same path as `fetch(url, init)`),

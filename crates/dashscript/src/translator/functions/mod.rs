@@ -1737,6 +1737,33 @@ fn callee_return_path(
         {
             Some(parse_quote!(crate::__ds::DsPromise<serde_json::Value>))
         }
+        // `crypto.subtle.importKey(…)` → `crate::__ds::DsCryptoKey` (the WinterTC
+        // WebCrypto HMAC subset), so an unannotated `let k = crypto.subtle.importKey(…)`
+        // — and `let k = await crypto.subtle.importKey(…)` via the `AwaitExpression`
+        // arm in `register_declarator` — records the type, and a later
+        // `crypto.subtle.sign(algo, k, …)`/`.verify(…)` passes the key through as a
+        // `DsCryptoKey` arg (the callee `crypto.subtle` is detected by the shared
+        // predicate, mirroring `crypto_method`'s two-level chain guard).
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "importKey"
+                && super::builtins::is_crypto_subtle_member(&sm.object) =>
+        {
+            Some(parse_quote!(crate::__ds::DsCryptoKey))
+        }
+        // `crypto.subtle.sign(…)` → `Vec<u8>` (the WinterTC WebCrypto HMAC tag
+        // bytes), so an unannotated `let sig = crypto.subtle.sign(…)` (and `await
+        // …` via the `AwaitExpression` arm) records the same `Vec<u8>` `new
+        // Uint8Array(…)` records. A later `crypto.subtle.verify(algo, key, sig,
+        // …)` then recognizes `sig` as a byte vector — the signature arg's
+        // `digest_data_arg` coercion keys off the `Vec` path segment and passes it
+        // through, instead of applying the Blob string coercion (`sig.to_string()`
+        // would require `Vec<u8>: Display`).
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "sign"
+                && super::builtins::is_crypto_subtle_member(&sm.object) =>
+        {
+            Some(parse_quote!(Vec<u8>))
+        }
         // `cs.writable.getWriter()` → `DsCompressionWriter` /
         // `cs.readable.getReader()` → `DsCompressionReader` (a WinterTC Web API),
         // so an unannotated `let writer = cs.writable.getWriter()` — receiver is

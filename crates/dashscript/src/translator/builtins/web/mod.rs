@@ -33,7 +33,7 @@ pub(in crate::translator) use compression::{
     compression_ctor_type, compression_method, compression_stream_ctor,
 };
 pub(in crate::translator) use console::console_method;
-pub(in crate::translator) use crypto::crypto_method;
+pub(in crate::translator) use crypto::{crypto_method, is_crypto_subtle_member};
 pub(in crate::translator) use encoding::{
     encoding_ctor_type, text_decoder_method, text_encoder_method,
 };

@@ -188,9 +188,11 @@ pub enum RuntimeDep {
     /// digest bytes. Backed by the RustCrypto `sha1`/`sha2` crates (pure-Rust —
     /// never degraded). `async` (ES returns a `Promise<ArrayBuffer>`); the
     /// `await` drives the future and the `Tokio` dep is pulled transitively by
-    /// the async entry. The key-bearing `SubtleCrypto` methods
-    /// (`encrypt`/`sign`/…/`generateKey`/`importKey`) need a `CryptoKey` value
-    /// model and land in a later batch; marker `__ds::crypto_subtle_digest`.
+    /// the async entry. The HMAC key-bearing subset (`importKey`/`sign`/`verify`,
+    /// backed by `hmac`) is mapped alongside; `encrypt`/`decrypt`/`generateKey`/
+    /// `deriveBits` need a wider key model and land later. The marker
+    /// `__ds::crypto_subtle_` is the common prefix, so any SubtleCrypto call
+    /// flags the dep (a key-only fixture reaches the slice too).
     SubtleCrypto,
     /// WHATWG URLPattern — `new URLPattern(input[, baseURL])` (a WinterTC Web
     /// API). A string `input` is a constructor string; an undefined/absent input
@@ -392,7 +394,11 @@ impl RuntimeDep {
             // `getRandomValues`) pulls CRYPTO_HELPER (sibling free fns in the
             // slice) and the `uuid` + `getrandom` crates.
             RuntimeDep::Crypto => Some("__ds::crypto_"),
-            RuntimeDep::SubtleCrypto => Some("__ds::crypto_subtle_digest"),
+            // `__ds::crypto_subtle_` is the common prefix of `digest`/
+            // `import_key`/`sign`/`verify`, so any SubtleCrypto call flags the
+            // dep (and pulls `sha1`/`sha2`/`hmac`) — a key-only fixture
+            // (`importKey`/`sign`/`verify`, no `digest`) reaches the slice too.
+            RuntimeDep::SubtleCrypto => Some("__ds::crypto_subtle_"),
             RuntimeDep::URLPattern => Some("__ds::DsURLPattern"),
             // The `#[tokio::main]` attribute only the async entry emits — a
             // `.ts` source cannot produce it any other way, so its presence in
@@ -523,7 +529,12 @@ impl RuntimeDep {
             // (pure-Rust). SHA-1 (20 bytes) + the SHA-2 family (256/384/512).
             // The `Tokio` runtime the async `digest` needs is pulled transitively
             // by the `await`-driven async entry, not here.
-            RuntimeDep::SubtleCrypto => Some(&[("sha1", "\"0.10\""), ("sha2", "\"0.10\"")]),
+            RuntimeDep::SubtleCrypto => Some(&[
+                ("sha1", "\"0.10\""),
+                ("sha2", "\"0.10\""),
+                // HMAC `sign`/`verify` (the key-bearing SubtleCrypto subset).
+                ("hmac", "\"0.12\""),
+            ]),
             // `urlpattern` (denoland/rust-urlpattern) — the WHATWG URLPattern
             // reference. `new URLPattern(…)` wraps `urlpattern::UrlPattern`; a
             // pattern that fails to compile panics a `TypeError` (ES error class).

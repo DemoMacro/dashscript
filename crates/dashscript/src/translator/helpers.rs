@@ -364,10 +364,11 @@ pub fn crypto_get_random_values(mut buf: ::std::vec::Vec<u8>) -> ::std::vec::Vec
 /// `digest` returns a `Promise<ArrayBuffer>`; the `await` at the call site
 /// drives the future (the async-main gate flips `fn main` to `#[tokio::main]`).
 /// An unknown algorithm panics the `TypeError` ES throws (the WPT verdict reads
-/// the prefix). The other `SubtleCrypto` methods (`encrypt`/`decrypt`/`sign`/
-/// `verify`/`generateKey`/`importKey`/`deriveBits`) need a `CryptoKey` value
-/// model and land in a later batch; `digest` is the no-key one-shot, the bulk
-/// of the WPT `WebCryptoAPI/digest` fixtures.
+/// the prefix). The HMAC key-bearing methods are mapped alongside: `importKey`
+/// (raw format → `DsCryptoKey`) and `sign`/`verify` (backed by the RustCrypto
+/// `hmac` crate). The remaining `SubtleCrypto` methods (`encrypt`/`decrypt`/
+/// `generateKey`/`deriveBits`) need a wider key model and land later; `digest`
+/// is the no-key one-shot, the bulk of the WPT `WebCryptoAPI/digest` fixtures.
 pub(super) const SUBTLE_HELPER: &str = r#"
 /// `crypto.subtle.digest(algo, data)` — the one-shot hash. `algo` is matched
 /// case-sensitively against the ES algorithm names (`"SHA-1"`/`"SHA-256"`/
@@ -399,6 +400,117 @@ pub async fn crypto_subtle_digest(
             "TypeError: crypto.subtle.digest: unknown or unsupported algorithm"
         ),
     }
+}
+/// A WebCrypto `CryptoKey` — the value `crypto.subtle.importKey(…)` returns and
+/// `sign`/`verify` take (the HMAC subset of WinterTC WebCrypto). It carries the
+/// `algorithm` name (`"HMAC"`), the paired `hash` (`"SHA-256"`/…), the raw `key`
+/// bytes, and its `extractable`/`usages` (stored, not enforced by the static
+/// path — ES enforces them at runtime; the common server shape never trips
+/// them). `#[derive(Clone)]` so a key passed to `sign`/`verify` by reference
+/// may copy. The marker `__ds::DsCryptoKey` pulls `SubtleCrypto` (so `sha1`/
+/// `sha2`/`hmac` are flagged) via the dep derivation.
+#[derive(Clone)]
+pub struct DsCryptoKey {
+    pub algorithm: ::std::string::String,
+    pub hash: ::std::string::String,
+    pub key: ::std::vec::Vec<u8>,
+    pub extractable: bool,
+    pub usages: ::std::vec::Vec<::std::string::String>,
+}
+impl DsCryptoKey {
+    /// The translator-emitted constructor (the importKey lowering builds the
+    /// `(algorithm, hash, key, extractable, usages)` quadruple from the ES
+    /// `algorithm` object + the raw key bytes).
+    pub fn new(
+        algorithm: ::std::string::String,
+        hash: ::std::string::String,
+        key: ::std::vec::Vec<u8>,
+        extractable: bool,
+        usages: ::std::vec::Vec<::std::string::String>,
+    ) -> Self {
+        Self {
+            algorithm,
+            hash,
+            key,
+            extractable,
+            usages,
+        }
+    }
+}
+/// `crypto.subtle.importKey(format, keyData, algorithm, extractable, usages)`
+/// — the HMAC subset. `format` is `"raw"` (the only form lowered — pkcs8/spki
+/// are not statically modeled), `keyData` the raw key bytes, `algorithm` the
+/// `{name, hash}` the translator extracted. Returns a `DsCryptoKey`. `async`
+/// because ES `importKey` returns `Promise<CryptoKey>`; the call site's `await`
+/// drives the future.
+pub async fn crypto_subtle_import_key(
+    algorithm: ::std::string::String,
+    hash: ::std::string::String,
+    key: ::std::vec::Vec<u8>,
+    extractable: bool,
+    usages: ::std::vec::Vec<::std::string::String>,
+) -> DsCryptoKey {
+    DsCryptoKey::new(algorithm, hash, key, extractable, usages)
+}
+/// `crypto.subtle.sign(algo, key, data)` — the HMAC subset. The hash comes from
+/// the key; the ES `algo` arg is carried by `key.algorithm` (verified to be
+/// `"HMAC"`). Returns the HMAC tag bytes. `async` because ES `sign` returns
+/// `Promise<ArrayBuffer>`.
+pub async fn crypto_subtle_sign(
+    key: &DsCryptoKey,
+    data: ::std::vec::Vec<u8>,
+) -> ::std::vec::Vec<u8> {
+    match (key.algorithm.as_str(), key.hash.as_str()) {
+        ("HMAC", "SHA-1") => {
+            use ::hmac::{Hmac, Mac};
+            type HmacSha1 = Hmac<::sha1::Sha1>;
+            let mut mac = HmacSha1::new_from_slice(&key.key).expect("HMAC key length");
+            mac.update(&data);
+            mac.finalize().into_bytes().to_vec()
+        }
+        ("HMAC", "SHA-256") => {
+            use ::hmac::{Hmac, Mac};
+            type HmacSha256 = Hmac<::sha2::Sha256>;
+            let mut mac = HmacSha256::new_from_slice(&key.key).expect("HMAC key length");
+            mac.update(&data);
+            mac.finalize().into_bytes().to_vec()
+        }
+        ("HMAC", "SHA-384") => {
+            use ::hmac::{Hmac, Mac};
+            type HmacSha384 = Hmac<::sha2::Sha384>;
+            let mut mac = HmacSha384::new_from_slice(&key.key).expect("HMAC key length");
+            mac.update(&data);
+            mac.finalize().into_bytes().to_vec()
+        }
+        ("HMAC", "SHA-512") => {
+            use ::hmac::{Hmac, Mac};
+            type HmacSha512 = Hmac<::sha2::Sha512>;
+            let mut mac = HmacSha512::new_from_slice(&key.key).expect("HMAC key length");
+            mac.update(&data);
+            mac.finalize().into_bytes().to_vec()
+        }
+        _ => ::core::panic!("TypeError: crypto.subtle.sign: unsupported algorithm"),
+    }
+}
+/// `crypto.subtle.verify(algo, key, signature, data)` — the HMAC subset. Returns
+/// `true` iff `signature` recomputes from `key`+`data`. The compare folds XOR so
+/// it is constant-time-ish (HMAC verification is not secret-dependent in
+/// practice, but the fold avoids an early-exit timing leak). `async` because ES
+/// `verify` returns `Promise<boolean>`.
+pub async fn crypto_subtle_verify(
+    key: &DsCryptoKey,
+    signature: ::std::vec::Vec<u8>,
+    data: ::std::vec::Vec<u8>,
+) -> bool {
+    let computed = crypto_subtle_sign(key, data).await;
+    if computed.len() != signature.len() {
+        return false;
+    }
+    let mut diff = 0u8;
+    for (a, b) in computed.iter().zip(signature.iter()) {
+        diff |= a ^ b;
+    }
+    diff == 0
 }
 "#;
 
