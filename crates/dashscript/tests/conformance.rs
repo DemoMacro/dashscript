@@ -1795,6 +1795,66 @@ fn per_function_path_compiles_to_valid_rust_project() {
 }
 
 #[test]
+fn engine_path_with_web_api_builtin_compiles() {
+    // 阶段一验证缺口填补：`engine_path_compiles` / `per_function_path_compiles`
+    // 用 `Object.defineProperty`（仅触发 Engine dep），不用任何 Web API —— 所以
+    // `wire_web_apis` stamp 的 `register_text_encoding` / `register_crypto` 等从未
+    // 在真实 probe crate 内 cargo check 过（memory `wintertc-engine-wire-webapis`
+    // 标注的开放缺口）。本 fixture 在 per-function 降级的反射函数旁加一个静态
+    // `TextEncoder` 函数，使 Engine dep 与 Encoding dep 同时 stamp —— 证明
+    // `register_text_encoding`（Javy 模式：JS shim + 原生闭包委派同一份
+    // `crate::__ds::TextEncoder`）真编译，非仅 stamp 字符串内容正确。
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let src = "\
+interface Item { v: number }
+function reflect(b: Item): string {
+  Object.defineProperty(b, \"k\", { value: 1 });
+  return \"done\";
+}
+function enc(): Uint8Array {
+  const e = new TextEncoder();
+  return e.encode(\"hi\");
+}
+const x: Item = { v: 2 };
+console.log(reflect(x));
+enc();
+";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate engine+webapi source");
+    assert!(deps.needs_engine(), "reflection should flip needs_engine");
+    assert!(
+        deps.has(dashscript::translator::RuntimeDep::Encoding),
+        "TextEncoder use should pull Encoding dep, got: {:?}",
+        deps
+    );
+    // `register_text_encoding` lives in the emitted `__ds_engine.rs` (the
+    // engine helper module write_project drops beside `main.rs`), not the main
+    // `rust` body — assert against the module directly, then let cargo check
+    // prove the whole stamped module compiles against rquickjs + encoding_rs.
+    let engine_mod = deps
+        .engine_helper_module()
+        .expect("needs_engine should yield an engine helper module");
+    assert!(
+        engine_mod.contains("fn register_text_encoding"),
+        "engine_helper_module must stamp register_text_encoding when Engine ∧ Encoding active:\n{engine_mod}"
+    );
+    write_project(&project, &rust, &deps);
+    let (ok, err) = cargo(
+        &project,
+        &target_dir,
+        &["check", "--quiet", "--message-format=short"],
+    );
+    assert!(
+        ok,
+        "engine path with Web API builtin must compile: {err}\n--- emitted ---\n{rust}"
+    );
+}
+
+#[test]
 fn engine_loads_multi_file_js_module_graph() {
     // B6-2: the engine's `Loader`/`Resolver` loads a multi-file ESM `.js`
     // module graph (a.js imports b.js), `call_module_fn` lazily declares +

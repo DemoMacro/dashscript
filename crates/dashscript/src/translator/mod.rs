@@ -829,6 +829,21 @@ impl RuntimeDeps {
             src.push_str(HEADERS_HELPER);
             any = true;
         }
+        // `TextDecoder`'s fatal-mode decode path panics a `DsError` (defined
+        // in `ERROR_HELPER`), so an encoding-using fixture needs the Error
+        // slice even when it does not itself lower a `throw`/`new Error()` —
+        // otherwise the `DsError` reference inside `ENCODING_HELPER` is
+        // undefined (E0433). An `Error`-already-active fixture emits
+        // `ERROR_HELPER` via its own marker; this only fills the gap when
+        // `Encoding` is present without `Error`. Surfaced by the Engine ∧
+        // Encoding integration test (a per-function degrade fixture + a
+        // static `TextEncoder` function) — the engine builtin wires
+        // `register_text_encoding`, but the `DsError` gap is in the static
+        // `__ds.rs` either path writes.
+        if self.has(RuntimeDep::Encoding) && !self.has(RuntimeDep::Error) {
+            src.push_str(ERROR_HELPER);
+            any = true;
+        }
         any.then_some(src)
     }
 
