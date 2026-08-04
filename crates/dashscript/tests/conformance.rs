@@ -1061,6 +1061,54 @@ fn wpt_subtle_aes_cbc_compiles_and_runs() {
     );
 }
 
+/// `crypto.subtle.wrapKey`/`unwrapKey` (AES-KW) end-to-end — RFC 3394 §4.1
+/// (wrap a 128-bit key under a 128-bit KEK). The wrapped bytes' first block is
+/// `1FA68B0A…` (`wrapped[0] == 0x1F == 31`), and the unwrap round-trip recovers
+/// the original raw key bytes (verified by re-exporting). Pure-Rust — WinterTC
+/// never degrades a Web API.
+#[test]
+fn wpt_subtle_aes_kw_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.subtle_aes_kw_smoke".into(),
+        category: "smoke".into(),
+        fixture: r#"promise_test(async () => {
+    const kek = await crypto.subtle.importKey(
+        "raw", new Uint8Array([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]),
+        { name: "AES-KW", length: 128 }, true, ["wrapKey","unwrapKey"]);
+    const key = await crypto.subtle.importKey(
+        "raw", new Uint8Array([0,17,34,51,68,85,102,119,136,153,170,187,204,221,238,255]),
+        { name: "AES-GCM", length: 128 }, true, ["encrypt"]);
+    const wrapped = await crypto.subtle.wrapKey("raw", key, kek, { name: "AES-KW" });
+    assert_equals(wrapped.length, 24);
+    assert_equals(wrapped[0], 31);
+    const unwrapped = await crypto.subtle.unwrapKey(
+        "raw", wrapped, kek, { name: "AES-KW" },
+        { name: "AES-GCM", length: 128 }, true, ["encrypt"]);
+    const exported = await crypto.subtle.exportKey("raw", unwrapped);
+    assert_equals(exported.length, 16);
+    assert_equals(exported[0], 0);
+    assert_equals(exported[15], 255);
+}, "subtle-aeskw");
+"#
+        .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "SubtleCrypto AES-KW smoke should be supported: {detail}"
+    );
+}
+
 /// `new Request(url, init?)` + the `.method`/`.url` read-only accessors
 /// end-to-end — the WinterTC FETCH §5.2 `Request` ctor. Exercises the ctor's
 /// `init` parsing (reusing `fetch_init`, the same path as `fetch(url, init)`),

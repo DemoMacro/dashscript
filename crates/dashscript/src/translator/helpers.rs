@@ -874,6 +874,151 @@ pub async fn crypto_subtle_decrypt(
         _ => ::core::panic!("TypeError: crypto.subtle.decrypt: unsupported algorithm"),
     }
 }
+/// RFC 3394 AES Key Wrap — the only `wrapKey`/`unwrapKey` algorithm WinterTC
+/// servers use (the AES-KW "authentic" wrap, no padding, no IV; AES-GCM/AES-CBC
+/// wraps go through `encrypt`/`decrypt`). `cbc` re-exports `cipher`, so
+/// `cbc::cipher::*` resolves (cipher 0.4, the same version `aes` 0.8 and `cbc`
+/// 0.1 share). The wrap operates on 64-bit blocks: the key (a non-zero multiple
+/// of 8 bytes, `n` blocks) is wrapped under the KEK into `n+1` blocks, the
+/// leading `A` block carrying the `0xA6A6…` integrity check, with the `t = i +
+/// n·j` counter XOR'd in (RFC 3394 §2.2.1).
+fn aes_kw_wrap<A>(kek: &[u8], key: &[u8]) -> ::std::vec::Vec<u8>
+where
+    A: ::cbc::cipher::BlockCipher + ::cbc::cipher::BlockEncrypt + ::cbc::cipher::KeyInit,
+{
+    use ::cbc::cipher::{BlockEncrypt, KeyInit, generic_array::GenericArray};
+    assert!(
+        key.len() % 8 == 0 && !key.is_empty(),
+        "AES-KW: key length must be a non-zero multiple of 8 bytes"
+    );
+    let cipher = <A as KeyInit>::new(GenericArray::from_slice(kek));
+    let n = key.len() / 8;
+    let mut a = [0xA6u8; 8];
+    let mut r: ::std::vec::Vec<[u8; 8]> = (0..n)
+        .map(|i| {
+            let mut blk = [0u8; 8];
+            blk.copy_from_slice(&key[i * 8..(i + 1) * 8]);
+            blk
+        })
+        .collect();
+    let mut block = [0u8; 16];
+    for j in 0..6u64 {
+        for i in 1..=n as u64 {
+            block[..8].copy_from_slice(&a);
+            block[8..].copy_from_slice(&r[(i - 1) as usize]);
+            cipher.encrypt_block(GenericArray::from_mut_slice(&mut block));
+            a.copy_from_slice(&block[..8]);
+            let t = (n as u64 * j + i).to_be_bytes();
+            for k in 0..8 {
+                a[k] ^= t[k];
+            }
+            r[(i - 1) as usize].copy_from_slice(&block[8..]);
+        }
+    }
+    let mut out = ::std::vec::Vec::with_capacity(8 * (n + 1));
+    out.extend_from_slice(&a);
+    for blk in &r {
+        out.extend_from_slice(blk);
+    }
+    out
+}
+/// The decrypt twin of [`aes_kw_wrap`] (RFC 3394 §2.2.2, the reverse loop in
+/// `j`/`i`). The post-loop `A == 0xA6A6…` check is the integrity check — a
+/// mismatch means a tampered ciphertext or wrong KEK, panicked as ES
+/// `OperationError`.
+fn aes_kw_unwrap<A>(kek: &[u8], data: &[u8]) -> ::std::vec::Vec<u8>
+where
+    A: ::cbc::cipher::BlockCipher + ::cbc::cipher::BlockDecrypt + ::cbc::cipher::KeyInit,
+{
+    use ::cbc::cipher::{BlockDecrypt, KeyInit, generic_array::GenericArray};
+    assert!(
+        data.len() % 8 == 0 && data.len() >= 16,
+        "AES-KW: wrapped data must be a multiple of 8 bytes and at least 16 bytes"
+    );
+    let cipher = <A as KeyInit>::new(GenericArray::from_slice(kek));
+    let n = data.len() / 8 - 1;
+    let mut a = [0u8; 8];
+    a.copy_from_slice(&data[..8]);
+    let mut r: ::std::vec::Vec<[u8; 8]> = (0..n)
+        .map(|i| {
+            let mut blk = [0u8; 8];
+            blk.copy_from_slice(&data[(i + 1) * 8..(i + 2) * 8]);
+            blk
+        })
+        .collect();
+    let mut block = [0u8; 16];
+    for j in (0..6u64).rev() {
+        for i in (1..=n as u64).rev() {
+            let t = (n as u64 * j + i).to_be_bytes();
+            for k in 0..8 {
+                a[k] ^= t[k];
+            }
+            block[..8].copy_from_slice(&a);
+            block[8..].copy_from_slice(&r[(i - 1) as usize]);
+            cipher.decrypt_block(GenericArray::from_mut_slice(&mut block));
+            a.copy_from_slice(&block[..8]);
+            r[(i - 1) as usize].copy_from_slice(&block[8..]);
+        }
+    }
+    assert!(
+        a == [0xA6u8; 8],
+        "OperationError: AES-KW integrity check failed"
+    );
+    let mut out = ::std::vec::Vec::with_capacity(8 * n);
+    for blk in &r {
+        out.extend_from_slice(blk);
+    }
+    out
+}
+/// `crypto.subtle.wrapKey(format, key, wrappingKey, wrapAlgorithm)` — the AES-KW
+/// subset. The `wrapAlgorithm` carries no IV (AES-KW is IV-less), so the call is
+/// `aes_kw_wrap(wrappingKey.key, key.key)`; the KEK length selects
+/// `Aes128`/`Aes256`. `format` is `"raw"` (the only export form lowered — the
+/// raw key bytes are wrapped directly; jwk/pkcs8/spki are not statically
+/// modeled). `async` because ES `wrapKey` returns `Promise<ArrayBuffer>`; the
+/// call site's `await` drives the future, and `callee_return_path` records the
+/// `Vec<u8>` return (like `encrypt`).
+pub async fn crypto_subtle_wrap_key(
+    name: ::std::string::String,
+    wrapping_key: &DsCryptoKey,
+    key: &DsCryptoKey,
+) -> ::std::vec::Vec<u8> {
+    match name.as_str() {
+        "AES-KW" => match wrapping_key.key.len() {
+            16 => aes_kw_wrap::<::aes::Aes128>(&wrapping_key.key, &key.key),
+            32 => aes_kw_wrap::<::aes::Aes256>(&wrapping_key.key, &key.key),
+            _ => ::core::panic!("TypeError: AES-KW wrapping key length must be 128/256 bits"),
+        },
+        _ => ::core::panic!("TypeError: crypto.subtle.wrapKey: unsupported algorithm"),
+    }
+}
+/// `crypto.subtle.unwrapKey(format, wrappedKey, wrappingKey, wrapAlgorithm,
+/// wrappedKeyAlgorithm, extractable, usages)` — the AES-KW subset (the inverse
+/// of `wrapKey`). The wrapped `data` is unwrapped under the KEK, then a
+/// `DsCryptoKey` is rebuilt from the unwrapped raw bytes + the
+/// `wrappedKeyAlgorithm`'s `name`/`hash` (AES keys carry no hash; HMAC keys
+/// carry the named hash). `async` because ES `unwrapKey` returns
+/// `Promise<CryptoKey>`; the call site's `await` drives the future, and
+/// `callee_return_path` records the `DsCryptoKey` return (like `importKey`).
+pub async fn crypto_subtle_unwrap_key(
+    name: ::std::string::String,
+    wrapping_key: &DsCryptoKey,
+    data: ::std::vec::Vec<u8>,
+    wrapped_name: ::std::string::String,
+    wrapped_hash: ::std::string::String,
+    extractable: bool,
+    usages: ::std::vec::Vec<::std::string::String>,
+) -> DsCryptoKey {
+    let raw = match name.as_str() {
+        "AES-KW" => match wrapping_key.key.len() {
+            16 => aes_kw_unwrap::<::aes::Aes128>(&wrapping_key.key, &data),
+            32 => aes_kw_unwrap::<::aes::Aes256>(&wrapping_key.key, &data),
+            _ => ::core::panic!("TypeError: AES-KW wrapping key length must be 128/256 bits"),
+        },
+        _ => ::core::panic!("TypeError: crypto.subtle.unwrapKey: unsupported algorithm"),
+    };
+    DsCryptoKey::new(wrapped_name, wrapped_hash, raw, extractable, usages)
+}
 "#;
 
 /// WHATWG URLPattern API helper — `__ds::DsURLPattern`. A `new URLPattern(input)`

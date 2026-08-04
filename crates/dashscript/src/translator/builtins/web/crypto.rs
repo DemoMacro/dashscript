@@ -15,8 +15,9 @@
 //! `crypto.subtle.deriveBits`/`deriveKey` are the PBKDF2/HKDF key-derivation
 //! paths (small HMAC loops, the same `hmac` backing as `sign`), and
 //! `crypto.subtle.exportKey` is the raw symmetric-key export (the inverse of
-//! `importKey`). The remaining `SubtleCrypto` method (`wrapKey`) is not yet
-//! mapped.
+//! `importKey`), and `crypto.subtle.wrapKey`/`unwrapKey` are the AES-KW key-wrap
+//! path (RFC 3394, the only wrap algorithm WinterTC servers use; backed by
+//! `aes`+`cbc`'s `cipher` re-export — pure-Rust, never degraded).
 
 use oxc_ast::ast::{Argument, Expression, ObjectPropertyKind, PropertyKey, StaticMemberExpression};
 use syn::{parse_quote, Expr};
@@ -239,6 +240,55 @@ pub(in crate::translator) fn crypto_method(
             }
         }
     }
+    // `crypto.subtle.wrapKey(format, key, wrappingKey, wrapAlgorithm)` — the
+    // AES-KW subset (the only `wrapKey` algorithm WinterTC servers use; the raw
+    // key bytes are wrapped under the KEK, no IV). The ES `wrapAlgorithm`'s
+    // `name` (`"AES-KW"`) is extracted at translate time; the KEK length selects
+    // `Aes128`/`Aes256`. ES returns `Promise<ArrayBuffer>`; the call site's
+    // `await` drives the future, and `callee_return_path` records the `Vec<u8>`
+    // return (like `encrypt`).
+    if sm.property.name.as_str() == "wrapKey" {
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            if inner.property.name.as_str() == "subtle"
+                && is_crypto_receiver(&inner.object).is_some()
+            {
+                let algorithm = wrap_algorithm(args.get(3)?, ctx);
+                let key = translate_argument(args.get(1)?, ctx);
+                let wrapping_key = translate_argument(args.get(2)?, ctx);
+                return Some(parse_quote!(
+                    crate::__ds::crypto_subtle_wrap_key(#algorithm, &#wrapping_key, &#key)
+                ));
+            }
+        }
+    }
+    // `crypto.subtle.unwrapKey(format, wrappedKey, wrappingKey, wrapAlgorithm,
+    // wrappedKeyAlgorithm, extractable, usages)` — the AES-KW subset (the inverse
+    // of `wrapKey`). The wrapped `wrappedKey` is unwrapped under the KEK, then a
+    // `DsCryptoKey` is rebuilt from the unwrapped raw bytes + the
+    // `wrappedKeyAlgorithm`'s `name`/`hash` (reusing the `generateKey` extractor).
+    // ES returns `Promise<CryptoKey>`; the call site's `await` drives the future,
+    // and `callee_return_path` records the `DsCryptoKey` return (like `importKey`).
+    if sm.property.name.as_str() == "unwrapKey" {
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            if inner.property.name.as_str() == "subtle"
+                && is_crypto_receiver(&inner.object).is_some()
+            {
+                let name = wrap_algorithm(args.get(3)?, ctx);
+                let data = digest_data_arg(args.get(1)?, ctx);
+                let wrapping_key = translate_argument(args.get(2)?, ctx);
+                let (wrapped_name, wrapped_hash, _wrapped_length) =
+                    generate_key_algorithm(args.get(4)?, ctx)?;
+                let extractable = bool_argument(args.get(5), ctx);
+                let usages: Expr = parse_quote!(::std::vec![]);
+                return Some(parse_quote!(
+                    crate::__ds::crypto_subtle_unwrap_key(
+                        #name, &#wrapping_key, #data,
+                        #wrapped_name, #wrapped_hash, #extractable, #usages
+                    )
+                ));
+            }
+        }
+    }
     // `crypto.randomUUID()` / `crypto.getRandomValues(buf)` (Tier 1).
     is_crypto_receiver(&sm.object)?;
     Some(match sm.property.name.as_str() {
@@ -323,6 +373,18 @@ fn encrypt_algorithm(arg: &Argument, ctx: &Ctx<'_>) -> Option<(Expr, Expr)> {
     }
     let iv = iv.unwrap_or_else(|| parse_quote!(::std::vec![]));
     Some((name, iv))
+}
+
+/// `crypto.subtle.wrapKey(…)`/`unwrapKey(…)`'s `wrapAlgorithm` argument — the
+/// ES `{ name: "AES-KW" }` object or the bare `"AES-KW"` string (an
+/// `AlgorithmIdentifier`) — lowered to its `name` string. AES-KW carries no
+/// IV/params, so `name` is the only field; reuse the string extraction that
+/// handles both the object-with-`name` and the bare-string forms.
+fn wrap_algorithm(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
+    match arg.as_expression() {
+        Some(e) => algo_string_value(e, ctx),
+        None => parse_quote!(::std::string::String::new()),
+    }
 }
 
 /// Whether `expr` is the global `crypto` object: the bare identifier, or

@@ -1838,6 +1838,26 @@ fn callee_return_path(
         {
             Some(parse_quote!(Vec<u8>))
         }
+        // `crypto.subtle.wrapKey(…)` → `Vec<u8>` (the WinterTC WebCrypto AES-KW
+        // wrapped-key bytes), so an unannotated `let wrapped =
+        // crypto.subtle.wrapKey(…)` (and `await …`) records the same `Vec<u8>`
+        // `new Uint8Array(…)` records — mirroring `encrypt`/`sign`.
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "wrapKey"
+                && super::builtins::is_crypto_subtle_member(&sm.object) =>
+        {
+            Some(parse_quote!(Vec<u8>))
+        }
+        // `crypto.subtle.unwrapKey(…)` → `crate::__ds::DsCryptoKey` (the WinterTC
+        // WebCrypto key rebuilt from the AES-KW-unwrapped bytes; the call site's
+        // `await` drives the async future). Records the same `DsCryptoKey` as
+        // `importKey`/`generateKey`/`deriveKey`.
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "unwrapKey"
+                && super::builtins::is_crypto_subtle_member(&sm.object) =>
+        {
+            Some(parse_quote!(crate::__ds::DsCryptoKey))
+        }
         // `cs.writable.getWriter()` → `DsCompressionWriter` /
         // `cs.readable.getReader()` → `DsCompressionReader` (a WinterTC Web API),
         // so an unannotated `let writer = cs.writable.getWriter()` — receiver is
