@@ -3074,6 +3074,31 @@ fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str
     judge_run(verdict)
 }
 
+/// Whether a WPT fixture's failure detail is a WinterTC out-of-scope pattern
+/// (reflection / lone surrogate) rather than an API-behavior gap. WinterTC
+/// ECMA-429 §2 conformance is "provide the interfaces/properties per their
+/// W3C/WHATWG definition" — API *behavior* — and does not require JS
+/// reflection (`instanceof` / `.constructor` / `hasOwnProperty` / property
+/// descriptors / prototype chains / idlharness), which assumes a runtime
+/// object model a static transpiler does not have. Lone surrogates cannot
+/// round-trip through Rust `&str`. Such fixtures are reclassified from
+/// `unsupported`/`partial` to `out-of-scope` so the conformance rate reflects
+/// API behavior, not reflection parity with a JS engine.
+fn wpt_out_of_scope(detail: &str) -> bool {
+    const PATTERNS: &[&str] = &[
+        "instanceof",
+        "hasOwnProperty",
+        "accessor properties",
+        "reflection is unsupported",
+        "verifyProperty",
+        "property descriptor",
+        "idlharness",
+        "lone surrogate",
+        "`.constructor`",
+    ];
+    PATTERNS.iter().any(|p| detail.contains(p))
+}
+
 /// One fixture, run against a worker-owned `project`/`target_dir` pair.
 /// Unifies the test262 assert-driven path (exit code + Test262Error) and the
 /// WPT testharness path (exit code + AssertionError) with the translator-tests/
@@ -3087,6 +3112,13 @@ fn run_fixture(raw: &RawFeature, layer: &str, project: &Path, target_dir: &Path)
     }
     if layer == "wpt" {
         let (status, detail) = run_wpt(raw, project, target_dir);
+        // WinterTC ECMA-429 §2 = API behavior, not JS reflection: reclassify
+        // reflection/lone-surrogate failures as out-of-scope (not API gaps).
+        let status: &'static str = if status != "supported" && wpt_out_of_scope(&detail) {
+            "out-of-scope"
+        } else {
+            status
+        };
         return outcome(raw, layer, status, detail, None);
     }
     let diags = Translator::new().check(&raw.fixture);
@@ -3224,6 +3256,10 @@ fn render_section(outcomes: &[Outcome]) -> String {
         .iter()
         .filter(|o| o.status == "unsupported")
         .count();
+    let out_of_scope = outcomes
+        .iter()
+        .filter(|o| o.status == "out-of-scope")
+        .count();
     let untested = outcomes.iter().filter(|o| o.status == "untested").count();
     let correct = outcomes
         .iter()
@@ -3237,7 +3273,7 @@ fn render_section(outcomes: &[Outcome]) -> String {
     let mut s = String::new();
     s.push_str("# DashScript Conformance Matrix\n\n");
     s.push_str(&format!(
-        "- {total} features: **{supported}** supported, **{partial}** partial, **{unsupported}** unsupported, **{untested}** untested\n",
+        "- {total} features: **{supported}** supported, **{partial}** partial, **{unsupported}** unsupported, **{out_of_scope}** out-of-scope (reflection/non-API), **{untested}** untested\n",
     ));
     s.push_str(&format!("- correctness cases passing: {correct}\n\n"));
 
@@ -3293,7 +3329,7 @@ fn render_overview_from_disk(dir: &Path) -> String {
     }
     // test262: one row per category; translator-tests / correctness: a single
     // merged row (their `category` is a translator-internal path, not a builtin).
-    let mut by_key: BTreeMap<(String, String), [usize; 4]> = BTreeMap::new();
+    let mut by_key: BTreeMap<(String, String), [usize; 5]> = BTreeMap::new();
     if let Ok(entries) = fs::read_dir(dir) {
         for entry in entries.flatten() {
             let path = entry.path();
@@ -3312,12 +3348,13 @@ fn render_overview_from_disk(dir: &Path) -> String {
                 } else {
                     (r.layer, String::new())
                 };
-                let e = by_key.entry(key).or_insert([0, 0, 0, 0]);
+                let e = by_key.entry(key).or_insert([0, 0, 0, 0, 0]);
                 match r.status.as_str() {
                     "supported" => e[0] += 1,
                     "partial" => e[1] += 1,
                     "unsupported" => e[2] += 1,
-                    _ => e[3] += 1,
+                    "out-of-scope" => e[3] += 1,
+                    _ => e[4] += 1,
                 }
             }
         }
@@ -3335,8 +3372,8 @@ fn render_overview_from_disk(dir: &Path) -> String {
          overview aggregates every category's last-run matrix JSON, so a \
          single-category run still shows all categories. Do not edit by hand.\n\n",
     );
-    s.push_str("| layer | category | supported | partial | unsupported | other |\n");
-    s.push_str("| --- | --- | ---: | ---: | ---: | ---: |\n");
+    s.push_str("| layer | category | supported | partial | unsupported | out-of-scope | other |\n");
+    s.push_str("| --- | --- | ---: | ---: | ---: | ---: | ---: |\n");
     for ((layer, cat), c) in &by_key {
         let link = if layer == "test262" || layer == "wpt" {
             format!("[{cat}]({layer}-{cat}.md)")
@@ -3344,8 +3381,8 @@ fn render_overview_from_disk(dir: &Path) -> String {
             format!("[{layer}]({layer}.md)")
         };
         s.push_str(&format!(
-            "| {} | {} | {} | {} | {} | {} |\n",
-            layer, link, c[0], c[1], c[2], c[3]
+            "| {} | {} | {} | {} | {} | {} | {} |\n",
+            layer, link, c[0], c[1], c[2], c[3], c[4]
         ));
     }
     s
