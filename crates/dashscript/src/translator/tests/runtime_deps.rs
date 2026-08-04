@@ -614,6 +614,37 @@ fn engine_helper_module_omits_web_api_builtins_without_their_dep() {
 }
 
 #[test]
+fn engine_helper_module_stamps_perf_and_base64_builtins() {
+    // Batch 1-C: performance.now + atob/btoa engine builtins — the same Javy
+    // pattern as TextEncoder/TextDecoder, applied to global functions. A
+    // degraded function that calls performance.now() / atob() / btoa() resolves
+    // them in the engine instead of throwing ReferenceError, delegating to the
+    // SAME crate::__ds impl the static path lowers to.
+    let both = RuntimeDeps::empty()
+        .with(RuntimeDep::Engine)
+        .with(RuntimeDep::HrTime)
+        .with(RuntimeDep::Base64);
+    let src = both
+        .engine_helper_module()
+        .expect("Engine + HrTime + Base64 emits __ds_engine module");
+    assert!(
+        src.contains("register_perf_now(ctx)?;") && src.contains("register_base64(ctx)?;"),
+        "wire_web_apis stamps the perf + base64 register calls, got:\n{src}"
+    );
+    assert!(
+        src.contains("fn register_perf_now(ctx: &Ctx<'_>)")
+            && src.contains("crate::__ds::perf_now()"),
+        "register_perf_now delegates to crate::__ds::perf_now, got:\n{src}"
+    );
+    assert!(
+        src.contains("fn register_base64(ctx: &Ctx<'_>)")
+            && src.contains("crate::__ds::b64_encode")
+            && src.contains("crate::__ds::b64_decode"),
+        "register_base64 delegates to crate::__ds::b64_encode/b64_decode, got:\n{src}"
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);

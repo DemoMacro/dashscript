@@ -2636,6 +2636,50 @@ fn register_text_encoding(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
 }
 "#;
 
+/// `performance.now()` engine builtin — the Javy-pattern wiring for the
+/// hr-time global (mirrors [`TEXT_ENCODING_ENGINE_BUILTIN`]). A native
+/// `__ds_perf_now` closure delegates to the SAME `crate::__ds::perf_now` the
+/// static path lowers to, and a JS shim exposes `performance.now()` on the
+/// engine global so a degraded function that times itself resolves it instead
+/// of throwing `ReferenceError`. One implementation, two delivery paths
+/// (static `__ds::perf_now()` vs engine `performance.now()`).
+pub(super) const PERF_ENGINE_BUILTIN: &str = r#"
+fn register_perf_now(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    let now = rquickjs::Function::new(ctx.clone(), || -> f64 {
+        crate::__ds::perf_now()
+    })?;
+    ctx.globals().set("__ds_perf_now", now)?;
+    ctx.eval_with_options::<(), _>(
+        "this.performance = { now: function () { return __ds_perf_now(); } };",
+        sloppy(),
+    )
+}
+"#;
+
+/// `atob`/`btoa` engine builtin — the Javy-pattern wiring for the WinterTC
+/// base64 globals (mirrors [`TEXT_ENCODING_ENGINE_BUILTIN`]). Native
+/// `__ds_b64_encode`/`__ds_b64_decode` closures delegate to the SAME
+/// `crate::__ds::b64_encode`/`b64_decode` the static path lowers to, and JS
+/// shims expose `atob`/`btoa` on the engine global. One implementation, two
+/// delivery paths.
+pub(super) const BASE64_ENGINE_BUILTIN: &str = r#"
+fn register_base64(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    let encode = rquickjs::Function::new(ctx.clone(), |s: String| -> String {
+        crate::__ds::b64_encode(s)
+    })?;
+    ctx.globals().set("__ds_b64_encode", encode)?;
+    let decode = rquickjs::Function::new(ctx.clone(), |s: String| -> String {
+        crate::__ds::b64_decode(s)
+    })?;
+    ctx.globals().set("__ds_b64_decode", decode)?;
+    ctx.eval_with_options::<(), _>(
+        "this.atob = function (s) { return __ds_b64_decode(String(s)); };
+         this.btoa = function (s) { return __ds_b64_encode(String(s)); };",
+        sloppy(),
+    )
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through
