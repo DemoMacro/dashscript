@@ -885,6 +885,47 @@ fn wpt_subtle_derive_bits_pbkdf2_compiles_and_runs() {
     );
 }
 
+/// `crypto.subtle.exportKey("raw", key)` end-to-end — the WinterTC WEBCRYPTO §5
+/// raw symmetric-key export (the inverse of `importKey`). Exercises the
+/// importKey → exportKey round-trip: a 16-byte AES-GCM key imported raw, then
+/// exported raw, must come back byte-equal (length + first/last bytes). Proves
+/// the static path keeps the key bytes through the `DsCryptoKey` without
+/// coercion (`callee_return_path` records the `Vec<u8>` return, so the
+/// `dk.length`/`dk[0]`/`dk[15]` reads are byte-vector indexing).
+#[test]
+fn wpt_subtle_export_key_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.subtle_export_key_smoke".into(),
+        category: "smoke".into(),
+        fixture: r#"promise_test(async () => {
+    const key = await crypto.subtle.importKey(
+        "raw", new Uint8Array([1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]),
+        { name: "AES-GCM" }, true, ["encrypt"]);
+    const raw = await crypto.subtle.exportKey("raw", key);
+    assert_equals(raw.length, 16);
+    assert_equals(raw[0], 1);
+    assert_equals(raw[15], 16);
+}, "subtle-exportkey");
+"#
+        .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "SubtleCrypto exportKey smoke should be supported: {detail}"
+    );
+}
+
 /// `new Request(url, init?)` + the `.method`/`.url` read-only accessors
 /// end-to-end — the WinterTC FETCH §5.2 `Request` ctor. Exercises the ctor's
 /// `init` parsing (reusing `fetch_init`, the same path as `fetch(url, init)`),

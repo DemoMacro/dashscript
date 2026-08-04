@@ -1788,6 +1788,17 @@ fn callee_return_path(
         {
             Some(parse_quote!(Vec<u8>))
         }
+        // `crypto.subtle.exportKey(…)` → `Vec<u8>` (the WinterTC WebCrypto raw
+        // key bytes — the inverse of `importKey`), so an unannotated
+        // `let raw = crypto.subtle.exportKey("raw", key)` (and `await …` via the
+        // `AwaitExpression` arm) records the same `Vec<u8>` `new Uint8Array(…)`
+        // records (the only statically modeled format is `"raw"`).
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "exportKey"
+                && super::builtins::is_crypto_subtle_member(&sm.object) =>
+        {
+            Some(parse_quote!(Vec<u8>))
+        }
         // `crypto.subtle.sign(…)` → `Vec<u8>` (the WinterTC WebCrypto HMAC tag
         // bytes), so an unannotated `let sig = crypto.subtle.sign(…)` (and `await
         // …` via the `AwaitExpression` arm) records the same `Vec<u8>` `new

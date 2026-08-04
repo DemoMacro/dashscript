@@ -365,12 +365,13 @@ pub fn crypto_get_random_values(mut buf: ::std::vec::Vec<u8>) -> ::std::vec::Vec
 /// drives the future (the async-main gate flips `fn main` to `#[tokio::main]`).
 /// An unknown algorithm panics the `TypeError` ES throws (the WPT verdict reads
 /// the prefix). The key-bearing methods are mapped alongside: `importKey`
-/// (raw format → `DsCryptoKey`), `sign`/`verify` (HMAC, RustCrypto `hmac`),
-/// `encrypt`/`decrypt` (AES-GCM, `aes-gcm`), `generateKey` (a fresh random
-/// `DsCryptoKey` for AES-GCM/AES-CBC/HMAC), and `deriveBits` (the PBKDF2
-/// key-derivation path, reusing `hmac`). The remaining `SubtleCrypto` methods
-/// (AES-CBC, `deriveKey`/HKDF, `wrapKey`, `exportKey`) land later; `digest`
-/// is the no-key one-shot, the bulk of the WPT `WebCryptoAPI/digest` fixtures.
+/// (raw format → `DsCryptoKey`) / `exportKey` (raw format ← `DsCryptoKey`),
+/// `sign`/`verify` (HMAC, RustCrypto `hmac`), `encrypt`/`decrypt` (AES-GCM,
+/// `aes-gcm`), `generateKey` (a fresh random `DsCryptoKey` for AES-GCM/
+/// AES-CBC/HMAC), and `deriveBits` (the PBKDF2 key-derivation path, reusing
+/// `hmac`). The remaining `SubtleCrypto` methods (AES-CBC, `deriveKey`/HKDF,
+/// `wrapKey`) land later; `digest` is the no-key one-shot, the bulk of the WPT
+/// `WebCryptoAPI/digest` fixtures.
 pub(super) const SUBTLE_HELPER: &str = r#"
 /// `crypto.subtle.digest(algo, data)` — the one-shot hash. `algo` is matched
 /// case-sensitively against the ES algorithm names (`"SHA-1"`/`"SHA-256"`/
@@ -453,6 +454,22 @@ pub async fn crypto_subtle_import_key(
     usages: ::std::vec::Vec<::std::string::String>,
 ) -> DsCryptoKey {
     DsCryptoKey::new(algorithm, hash, key, extractable, usages)
+}
+/// `crypto.subtle.exportKey(format, key)` — the symmetric-key raw export (the
+/// inverse of `importKey`). For `format` `"raw"` the raw key bytes (`key.key`)
+/// are returned; `"jwk"`/`"pkcs8"`/`"spki"` are not statically modeled (panic
+/// honestly — the WinterTC server shape uses `"raw"` for HMAC/AES keys). `async`
+/// because ES `exportKey` returns `Promise<ArrayBuffer>`; the call site's `await`
+/// drives the future, and `callee_return_path` records the `Vec<u8>` return (like
+/// `sign`/`encrypt`).
+pub async fn crypto_subtle_export_key(
+    format: ::std::string::String,
+    key: &DsCryptoKey,
+) -> ::std::vec::Vec<u8> {
+    match format.as_str() {
+        "raw" => key.key.clone(),
+        _ => ::core::panic!("TypeError: crypto.subtle.exportKey: unsupported format"),
+    }
 }
 /// `crypto.subtle.generateKey(algorithm, extractable, usages)` — the factory for
 /// a fresh `DsCryptoKey` (the WinterTC WebCrypto subset). For AES-GCM/AES-CBC the

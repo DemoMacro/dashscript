@@ -11,10 +11,11 @@
 //! `.verify` are the async HMAC backed by `hmac`, and `subtle.encrypt`/`.decrypt`
 //! are the async AES-GCM backed by `aes-gcm` (pure-Rust — never degraded),
 //! `crypto.subtle.generateKey` is the fresh-key factory (random AES/HMAC keys),
-//! and `crypto.subtle.deriveBits` is the PBKDF2 key-derivation path (a small
-//! HMAC round-XOR loop, the same `hmac` backing as `sign`). The remaining
-//! `SubtleCrypto` methods (AES-CBC, `deriveKey`/HKDF, `wrapKey`, `exportKey`)
-//! are not yet mapped.
+//! `crypto.subtle.deriveBits` is the PBKDF2 key-derivation path (a small HMAC
+//! round-XOR loop, the same `hmac` backing as `sign`), and `crypto.subtle.
+//! exportKey` is the raw symmetric-key export (the inverse of `importKey`). The
+//! remaining `SubtleCrypto` methods (AES-CBC, `deriveKey`/HKDF, `wrapKey`) are
+//! not yet mapped.
 
 use oxc_ast::ast::{Argument, Expression, ObjectPropertyKind, PropertyKey, StaticMemberExpression};
 use syn::{parse_quote, Expr};
@@ -96,6 +97,23 @@ pub(in crate::translator) fn crypto_method(
                         #algorithm, #hash, #length, #extractable, #usages
                     )
                 ));
+            }
+        }
+    }
+    // `crypto.subtle.exportKey(format, key)` — the symmetric-key raw export (the
+    // inverse of `importKey`). `format` is the string `"raw"` (the only form
+    // lowered — jwk/pkcs8/spki are not statically modeled); `key` is the
+    // `DsCryptoKey` (imported or generated). ES returns `Promise<ArrayBuffer>`;
+    // the call site's `await` drives the future, and `callee_return_path` records
+    // the `Vec<u8>` return (the raw key bytes).
+    if sm.property.name.as_str() == "exportKey" {
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            if inner.property.name.as_str() == "subtle"
+                && is_crypto_receiver(&inner.object).is_some()
+            {
+                let format = es_to_string_arg(args.first()?, ctx);
+                let key = translate_argument(args.get(1)?, ctx);
+                return Some(parse_quote!(crate::__ds::crypto_subtle_export_key(#format, &#key)));
             }
         }
     }
