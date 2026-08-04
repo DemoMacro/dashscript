@@ -543,6 +543,18 @@ impl RuntimeDep {
                 // re-export.
                 ("aes-gcm", "\"0.10\""),
                 ("aead", "\"0.5\""),
+                // AES-CBC `encrypt`/`decrypt` (the unauthenticated block-cipher
+                // subset). `cbc::Encryptor`/`Decryptor` over `aes::Aes128`/
+                // `Aes256`, PKCS7 padding (the only padding WebCrypto uses). 192
+                // is not statically modeled (mirrors AES-GCM). `cbc` re-exports
+                // the `cipher` traits (`KeyIvInit`/`BlockEncryptMut`/
+                // `BlockDecryptMut`), so `cbc::cipher::*` resolves without a
+                // separate `cipher` dep; `aes` is named directly for the
+                // `Aes128`/`Aes256` block-cipher types. The `alloc` +
+                // `block-padding` features unlock `encrypt_padded_vec_mut`/
+                // `decrypt_padded_vec_mut` (the allocating, PKCS7-padded API).
+                ("aes", "\"0.8\""),
+                ("cbc", "{ version = \"0.1\", features = [\"alloc\", \"block-padding\"] }"),
                 // `getrandom` — `crypto.subtle.generateKey(…)` fills the fresh
                 // key with cryptographically random bytes (the same source
                 // `crypto.getRandomValues` uses, listed under `Crypto`).

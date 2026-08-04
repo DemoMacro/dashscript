@@ -9,13 +9,14 @@
 //! is the async hash backed by the RustCrypto `sha1`/`sha2` crates;
 //! `subtle.importKey` (raw format) builds a `DsCryptoKey`, `subtle.sign`/
 //! `.verify` are the async HMAC backed by `hmac`, and `subtle.encrypt`/`.decrypt`
-//! are the async AES-GCM backed by `aes-gcm` (pure-Rust — never degraded),
+//! are the async AES-GCM/AES-CBC backed by `aes-gcm`/`aes`+`cbc` (pure-Rust —
+//! never degraded),
 //! `crypto.subtle.generateKey` is the fresh-key factory (random AES/HMAC keys),
 //! `crypto.subtle.deriveBits`/`deriveKey` are the PBKDF2/HKDF key-derivation
 //! paths (small HMAC loops, the same `hmac` backing as `sign`), and
 //! `crypto.subtle.exportKey` is the raw symmetric-key export (the inverse of
-//! `importKey`). The remaining `SubtleCrypto` methods (AES-CBC, `wrapKey`) are
-//! not yet mapped.
+//! `importKey`). The remaining `SubtleCrypto` method (`wrapKey`) is not yet
+//! mapped.
 
 use oxc_ast::ast::{Argument, Expression, ObjectPropertyKind, PropertyKey, StaticMemberExpression};
 use syn::{parse_quote, Expr};

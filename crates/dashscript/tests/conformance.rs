@@ -1016,6 +1016,51 @@ fn wpt_subtle_derive_bits_hkdf_compiles_and_runs() {
     );
 }
 
+/// `crypto.subtle.encrypt`/`.decrypt` with `name: "AES-CBC"` end-to-end — the
+/// WinterTC WEBCRYPTO §5 unauthenticated block-cipher subset (the companion of
+/// AES-GCM). Exercises the canonical NIST SP 800-38A F.2.1 AES-128-CBC vector:
+/// the first ciphertext byte is `0x76` (118), proving the CBC core is correct;
+/// the PKCS7-padded ciphertext is 32 bytes (16 NIST block + a full padding
+/// block — PKCS7 always pads, even on a block boundary); and the
+/// encrypt→decrypt round-trip restores the 16-byte plaintext.
+#[test]
+fn wpt_subtle_aes_cbc_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.subtle_aes_cbc_smoke".into(),
+        category: "smoke".into(),
+        fixture: r#"promise_test(async () => {
+    const key = await crypto.subtle.importKey(
+        "raw", new Uint8Array([43,126,21,22,40,174,210,166,171,247,21,136,9,207,79,60]),
+        { name: "AES-CBC", length: 128 }, true, ["encrypt"]);
+    const iv = new Uint8Array([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15]);
+    const pt = new Uint8Array([107,193,190,226,46,64,159,150,233,61,126,17,115,147,23,42]);
+    const ct = await crypto.subtle.encrypt({ name: "AES-CBC", iv: iv }, key, pt);
+    assert_equals(ct.length, 32);
+    assert_equals(ct[0], 118);
+    const back = await crypto.subtle.decrypt({ name: "AES-CBC", iv: iv }, key, ct);
+    assert_equals(back.length, 16);
+    assert_equals(back[0], 107);
+}, "subtle-aescbc");
+"#
+        .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "SubtleCrypto AES-CBC smoke should be supported: {detail}"
+    );
+}
+
 /// `new Request(url, init?)` + the `.method`/`.url` read-only accessors
 /// end-to-end — the WinterTC FETCH §5.2 `Request` ctor. Exercises the ctor's
 /// `init` parsing (reusing `fetch_init`, the same path as `fetch(url, init)`),

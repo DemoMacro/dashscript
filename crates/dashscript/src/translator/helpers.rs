@@ -366,11 +366,11 @@ pub fn crypto_get_random_values(mut buf: ::std::vec::Vec<u8>) -> ::std::vec::Vec
 /// An unknown algorithm panics the `TypeError` ES throws (the WPT verdict reads
 /// the prefix). The key-bearing methods are mapped alongside: `importKey`
 /// (raw format → `DsCryptoKey`) / `exportKey` (raw format ← `DsCryptoKey`),
-/// `sign`/`verify` (HMAC, RustCrypto `hmac`), `encrypt`/`decrypt` (AES-GCM,
-/// `aes-gcm`), `generateKey` (a fresh random `DsCryptoKey` for AES-GCM/
-/// AES-CBC/HMAC), `deriveBits`/`deriveKey` (the PBKDF2/HKDF key-derivation
-/// paths, reusing `hmac`). The remaining `SubtleCrypto` methods (AES-CBC,
-/// `wrapKey`) land later; `digest` is the no-key one-shot, the bulk of the WPT
+/// `sign`/`verify` (HMAC, RustCrypto `hmac`), `encrypt`/`decrypt` (AES-GCM
+/// `aes-gcm` / AES-CBC `aes`+`cbc`), `generateKey` (a fresh random `DsCryptoKey`
+/// for AES-GCM/AES-CBC/HMAC), `deriveBits`/`deriveKey` (the PBKDF2/HKDF
+/// key-derivation paths, reusing `hmac`). The remaining `SubtleCrypto` methods
+/// (`wrapKey`) land later; `digest` is the no-key one-shot, the bulk of the WPT
 /// `WebCryptoAPI/digest` fixtures.
 pub(super) const SUBTLE_HELPER: &str = r#"
 /// `crypto.subtle.digest(algo, data)` — the one-shot hash. `algo` is matched
@@ -765,14 +765,43 @@ where
         .expect("AES-GCM decrypt")
         .to_vec()
 }
-/// `crypto.subtle.encrypt(algo, key, data)` — the AES-GCM subset. The ES `algo`
-/// object's `name` (`"AES-GCM"`) and `iv` (the nonce, typically a 12-byte
+/// Seal with an AES-CBC cipher built at the call site (keyed by length:
+/// `Aes128`/`Aes256`), PKCS7-padded (the only padding WebCrypto uses). `cbc`
+/// re-exports the `cipher` traits, so `cbc::cipher::*` resolves. The block size
+/// and key size are inferred from `A` via `KeyIvInit::new`'s `&GenericArray`
+/// params (`from_slice` lets a `&[u8]` stand in for the sized array).
+fn aes_cbc_seal<A>(key: &[u8], iv: &[u8], data: &[u8]) -> ::std::vec::Vec<u8>
+where
+    A: ::cbc::cipher::BlockCipher + ::cbc::cipher::BlockEncrypt + ::cbc::cipher::KeyInit,
+{
+    use ::cbc::cipher::{
+        BlockEncryptMut, KeyIvInit, block_padding::Pkcs7, generic_array::GenericArray,
+    };
+    ::cbc::Encryptor::<A>::new(GenericArray::from_slice(key), GenericArray::from_slice(iv))
+        .encrypt_padded_vec_mut::<Pkcs7>(data)
+}
+/// The decrypt twin of [`aes_cbc_seal`] — `decrypt_padded_vec_mut` returns
+/// `None` on a padding mismatch (a tampered ciphertext), panicked as the ES
+/// `OperationError` analogue.
+fn aes_cbc_open<A>(key: &[u8], iv: &[u8], data: &[u8]) -> ::std::vec::Vec<u8>
+where
+    A: ::cbc::cipher::BlockCipher + ::cbc::cipher::BlockDecrypt + ::cbc::cipher::KeyInit,
+{
+    use ::cbc::cipher::{
+        BlockDecryptMut, KeyIvInit, block_padding::Pkcs7, generic_array::GenericArray,
+    };
+    ::cbc::Decryptor::<A>::new(GenericArray::from_slice(key), GenericArray::from_slice(iv))
+        .decrypt_padded_vec_mut::<Pkcs7>(data)
+        .expect("AES-CBC decrypt")
+}
+/// `crypto.subtle.encrypt(algo, key, data)` — the AES-GCM/AES-CBC subset. The ES
+/// `algo` object's `name` (`"AES-GCM"`/`"AES-CBC"`) and `iv` (the nonce/IV, a
 /// `Uint8Array`) are extracted at translate time; the key length selects
-/// `Aes128`/`Aes256Gcm`. Returns `ciphertext || tag` (the WebCrypto
-/// AES-GCM output format). `async` because ES `encrypt` returns
-/// `Promise<ArrayBuffer>`. The `iv` is taken by reference so the standard
-/// encrypt→decrypt round-trip can reuse one nonce binding. AES-CBC and the
-/// `additionalData`/`tagLength` AES-GCM fields are not yet mapped.
+/// `Aes128`/`Aes256`. AES-GCM returns `ciphertext || tag` (the WebCrypto
+/// AES-GCM output format); AES-CBC returns the PKCS7-padded ciphertext. `async`
+/// because ES `encrypt` returns `Promise<ArrayBuffer>`. The `iv` is taken by
+/// reference so the standard encrypt→decrypt round-trip can reuse one IV
+/// binding. The `additionalData`/`tagLength` AES-GCM fields are not yet mapped.
 pub async fn crypto_subtle_encrypt(
     name: ::std::string::String,
     iv: &[u8],
@@ -798,13 +827,20 @@ pub async fn crypto_subtle_encrypt(
             ),
             _ => ::core::panic!("TypeError: AES-GCM key length must be 128/256 bits"),
         },
+        "AES-CBC" => match key.key.len() {
+            16 => aes_cbc_seal::<::aes::Aes128>(&key.key, iv, &data),
+            32 => aes_cbc_seal::<::aes::Aes256>(&key.key, iv, &data),
+            _ => ::core::panic!("TypeError: AES-CBC key length must be 128/256 bits"),
+        },
         _ => ::core::panic!("TypeError: crypto.subtle.encrypt: unsupported algorithm"),
     }
 }
-/// `crypto.subtle.decrypt(algo, key, data)` — the AES-GCM subset. The inverse of
-/// `encrypt`: `data` is `ciphertext || tag`, authenticated then returned as
-/// plaintext. `async` because ES `decrypt` returns `Promise<ArrayBuffer>`. As
-/// with `encrypt`, `iv` is by reference (the same nonce binds a sealed pair).
+/// `crypto.subtle.decrypt(algo, key, data)` — the AES-GCM/AES-CBC subset. The
+/// inverse of `encrypt`: AES-GCM `data` is `ciphertext || tag`, authenticated
+/// then returned as plaintext; AES-CBC `data` is PKCS7-padded ciphertext, the
+/// padding stripped (a mismatch panics — ES `OperationError`). `async` because
+/// ES `decrypt` returns `Promise<ArrayBuffer>`. As with `encrypt`, `iv` is by
+/// reference (the same IV binds a sealed pair).
 pub async fn crypto_subtle_decrypt(
     name: ::std::string::String,
     iv: &[u8],
@@ -829,6 +865,11 @@ pub async fn crypto_subtle_decrypt(
                 &data,
             ),
             _ => ::core::panic!("TypeError: AES-GCM key length must be 128/256 bits"),
+        },
+        "AES-CBC" => match key.key.len() {
+            16 => aes_cbc_open::<::aes::Aes128>(&key.key, iv, &data),
+            32 => aes_cbc_open::<::aes::Aes256>(&key.key, iv, &data),
+            _ => ::core::panic!("TypeError: AES-CBC key length must be 128/256 bits"),
         },
         _ => ::core::panic!("TypeError: crypto.subtle.decrypt: unsupported algorithm"),
     }
