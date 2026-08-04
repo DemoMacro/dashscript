@@ -58,6 +58,16 @@ thread_local! {
 struct WalkState {
     in_loop: bool,
     local_kinds: HashMap<String, LocalKind>,
+    /// Whether `DegradeEngine` classifications (and a runtime-`typeof`
+    /// operand) emit a diagnostic. `ds lint` ([`check`]) sets this true — a
+    /// degrade is information a user acts on (the function runs under the
+    /// embedded QuickJS). The conformance harness sets it false via
+    /// [`check_reject_only`]: a degrade is *not* a translatability failure
+    /// (the function still lowers, via the engine), so the fixture proceeds
+    /// through the compile path rather than short-circuiting as `unsupported`.
+    /// [`program_engine_sites`] sets it true — it counts degrade diagnostics
+    /// to detect which functions to emit into the engine.
+    include_degrades: bool,
 }
 
 /// RAII guard: constructed to mark an engine-path detection in progress;
@@ -88,6 +98,20 @@ pub(super) fn check(source: &str) -> Vec<OxcDiagnostic> {
 /// entry to land in. Declarations (function/class/interface/type/import/export)
 /// pass under either role.
 pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
+    check_as_inner(source, role, true)
+}
+
+/// Like [`check_as`] but drops `DegradeEngine` (and runtime-`typeof`)
+/// diagnostics. For the conformance harness: a degrade is a compile-path
+/// fallback (the function still lowers, via the embedded QuickJS), not a
+/// translatability failure, so a degraded fixture proceeds through
+/// `cargo build` + run rather than short-circuiting as `unsupported`. Only a
+/// hard `Reject` short-circuits.
+pub(super) fn check_reject_only(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
+    check_as_inner(source, role, false)
+}
+
+fn check_as_inner(source: &str, role: FileRole, include_degrades: bool) -> Vec<OxcDiagnostic> {
     let allocator = Allocator::default();
     let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
 
@@ -113,6 +137,7 @@ pub(super) fn check_as(source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
     let mut state = WalkState {
         in_loop: false,
         local_kinds: HashMap::new(),
+        include_degrades,
     };
     for stmt in &program.body {
         // `export {}` is a standard TS module marker (no declaration, no
@@ -323,6 +348,7 @@ pub(super) fn program_engine_sites(program: &oxc_ast::ast::Program) -> EngineSit
     let mut state = WalkState {
         in_loop: false,
         local_kinds: HashMap::new(),
+        include_degrades: true,
     };
     let mut diags = Vec::new();
     let mut sites = EngineSites::default();
@@ -561,19 +587,27 @@ fn collect_assignment_target(
 ) {
     match target {
         AssignmentTarget::ComputedMemberExpression(cm) => {
-            if let Mapping::Reject(msg) | Mapping::DegradeEngine(msg) =
-                classify::classify_assignment_target(target)
-            {
-                out.push(err(msg, cm.span));
+            match classify::classify_assignment_target(target) {
+                Mapping::Reject(msg) => out.push(err(msg, cm.span)),
+                Mapping::DegradeEngine(msg) => {
+                    if state.include_degrades {
+                        out.push(err(msg, cm.span));
+                    }
+                }
+                Mapping::Mapped => {}
             }
             collect_expr(&cm.object, out, state);
             collect_expr(&cm.expression, out, state);
         }
         AssignmentTarget::StaticMemberExpression(sm) => {
-            if let Mapping::Reject(msg) | Mapping::DegradeEngine(msg) =
-                classify::classify_assignment_target(target)
-            {
-                out.push(err(msg, sm.span));
+            match classify::classify_assignment_target(target) {
+                Mapping::Reject(msg) => out.push(err(msg, sm.span)),
+                Mapping::DegradeEngine(msg) => {
+                    if state.include_degrades {
+                        out.push(err(msg, sm.span));
+                    }
+                }
+                Mapping::Mapped => {}
             }
             collect_expr(&sm.object, out, state);
         }
@@ -627,17 +661,33 @@ fn collect_expr(expr: &Expression, out: &mut Vec<OxcDiagnostic>, state: &mut Wal
         in_loop: state.in_loop,
         local_kinds: &state.local_kinds,
     };
-    if let Mapping::Reject(msg) | Mapping::DegradeEngine(msg) = classify::classify_expr(expr, &ctx)
-    {
-        out.push(err(msg, expr.span()));
+    match classify::classify_expr(expr, &ctx) {
+        // A hard `unsupported` — always a diagnostic (the construct has no
+        // DashScript mapping, not even via the engine).
+        Mapping::Reject(msg) => out.push(err(msg, expr.span())),
+        // A degrade is a translatability *fallback*, not a failure: the
+        // function still lowers via the embedded QuickJS. `ds lint` reports
+        // it (so the user sees which functions run under the engine); the
+        // conformance harness skips it via `include_degrades` so the fixture
+        // proceeds through the compile path instead of short-circuiting.
+        Mapping::DegradeEngine(msg) => {
+            if state.include_degrades {
+                out.push(err(msg, expr.span()));
+            }
+        }
+        Mapping::Mapped => {}
     }
     match expr {
         Expression::UnaryExpression(u) => {
             if matches!(u.operator, UnaryOperator::Typeof) {
                 // `typeof` resolves to a static type string only for literals
                 // and known globals; a runtime operand (user identifier, member
-                // access, call) needs the engine's runtime type string.
-                if super::expressions::typeof_operand_is_runtime(&u.argument) {
+                // access, call) needs the engine's runtime type string. A
+                // degrade (not a hard reject) — gated by `include_degrades`
+                // like every other `DegradeEngine` verdict.
+                if state.include_degrades
+                    && super::expressions::typeof_operand_is_runtime(&u.argument)
+                {
                     out.push(err(
                         "`typeof` of a runtime value (a user identifier, member access, or call) \
                          has no static lowering — the function runs under the engine",

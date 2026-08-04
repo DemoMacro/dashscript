@@ -2303,8 +2303,12 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
     // APIs the static path pulled in, registered as production builtins. No
     // in-process testbed — the verdict is what the production binary does.
     // Static path: `check` (translatability) → cargo check (compiles) → build
-    // + run the probe (assert-driven verdict).
-    let diags = Translator::new().check(&raw.fixture);
+    // + run the probe (assert-driven verdict). `check_reject_only` so a
+    // `DegradeEngine` classify (a function the static translator cannot lower
+    // — reflection, `typeof` of a runtime value, …) proceeds through the
+    // compile path (the probe's QuickJS runs it) rather than short-circuiting
+    // as `unsupported`; only a hard `Reject` short-circuits.
+    let diags = Translator::new().check_reject_only(&raw.fixture, FileRole::BinEntry);
     if !diags.is_empty() {
         let msg = diags
             .iter()
@@ -2348,7 +2352,7 @@ fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str
     // translator emits a `#[tokio::main] async fn main` that resolves the body's
     // `.await` (see [`rewrap_async_main`]). No-op for sync fixtures.
     let fixture = rewrap_async_main(&raw.fixture);
-    let diags = Translator::new().check(&fixture);
+    let diags = Translator::new().check_reject_only(&fixture, FileRole::BinEntry);
     if !diags.is_empty() {
         let msg = diags
             .iter()

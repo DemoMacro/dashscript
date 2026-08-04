@@ -2059,6 +2059,17 @@ impl Translator {
         check::check_as(source, role)
     }
 
+    /// Like [`Self::check_as`] but drops `DegradeEngine` (and runtime-`typeof`)
+    /// diagnostics — for the conformance harness, which runs degraded fixtures
+    /// through the compile path (the production binary's embedded QuickJS)
+    /// rather than short-circuiting them as `unsupported`. A degrade is a
+    /// translatability *fallback*, not a failure: the function still lowers,
+    /// via the engine. Only a hard `Reject` short-circuits.
+    #[must_use]
+    pub fn check_reject_only(&self, source: &str, role: FileRole) -> Vec<OxcDiagnostic> {
+        check::check_reject_only(source, role)
+    }
+
     /// The annotation-stripped ECMAScript the engine compat path runs under
     /// QuickJS. The conformance harness uses this both for `needs_engine`
     /// fixtures (ES reflection the static translator cannot lower) and as the
