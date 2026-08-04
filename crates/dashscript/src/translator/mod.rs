@@ -691,6 +691,19 @@ impl RuntimeDep {
             RuntimeDep::HrTime => Some(("register_perf_now(ctx)", PERF_ENGINE_BUILTIN)),
             RuntimeDep::Base64 => Some(("register_base64(ctx)", BASE64_ENGINE_BUILTIN)),
             RuntimeDep::Crypto => Some(("register_crypto(ctx)", CRYPTO_ENGINE_BUILTIN)),
+            // `assert.sameValue`/`throws`/`notSameValue` + `Test262Error` — the
+            // test262 harness assert family. Pure-JS shim (no native fn): the
+            // static path's `assert_same_value<A: DsSameValue>` is generic over
+            // concrete Rust types, unreachable from a dynamic `rquickjs::Value`,
+            // but QuickJS already has ES `Object.is` (SameValue) + `Error`/
+            // `try-catch`, so the assert family runs faithfully in JS. One
+            // contract (a mismatch throws `Test262Error`), two delivery paths.
+            RuntimeDep::Assert => Some(("register_assert(ctx)", ASSERT_ENGINE_BUILTIN)),
+            // WPT testharness sync subset (`assert_equals`/`true`/`approx`/… +
+            // `AssertionError`). Same pure-JS reasoning as `Assert`;
+            // `promise_test`/`async_test` need an async runtime the engine
+            // lacks — those fixtures honestly degrade to `EngineLimitation`.
+            RuntimeDep::WptAssert => Some(("register_wpt_assert(ctx)", WPT_ASSERT_ENGINE_BUILTIN)),
             _ => None,
         }
     }
@@ -918,6 +931,46 @@ fn append_dep(cargo_toml: &mut String, pkg: &str, req: &str) {
         cargo_toml.insert_str(pos + "[dependencies]\n".len(), &line);
     } else {
         cargo_toml.push_str(&format!("\n[dependencies]\n{line}"));
+    }
+}
+
+/// Stamp `Assert`/`WptAssert` (+ `Error`) when a degraded body's JS uses the
+/// test262/WPT assert family. The static marker probe catches only the Rust
+/// `__ds::assert_` text the static path emits; a degraded body keeps
+/// `assert.sameValue`/`assert_equals` as JS (in the `__DS_MODULE_JS` const or
+/// `run(src)`'s literal), so without this scan the engine never stamps the
+/// Assert/WptAssert deps — `register_assert`/`register_wpt_assert` stay unwired
+/// and the asserts throw `ReferenceError`, mis-flipping a real mismatch to
+/// `unsupported`. `Error` is pulled alongside (mirroring the
+/// `translate_program` Assert→Error rule) because `ASSERT_HELPER`'s
+/// `assert_throws` routes through `catch_quiet`/`DsError` in `ERROR_HELPER`.
+/// The engine's assert shims are pure JS (no `__ds::` delegate), so the static
+/// assert helpers emit but stay unused on a degrade-only crate.
+fn stamp_engine_assert_deps(deps: &mut RuntimeDeps, js: &str) {
+    let had = deps.has(RuntimeDep::Assert) || deps.has(RuntimeDep::WptAssert);
+    // test262 harness: `sta.js` defines `Test262Error`, `assert.js` throws it
+    // via `assert.sameValue`/`notSameValue`/`throws`.
+    if js.contains("assert.sameValue")
+        || js.contains("assert.notSameValue")
+        || js.contains("assert.throws")
+        || js.contains("Test262Error")
+    {
+        deps.insert(RuntimeDep::Assert);
+    }
+    // WPT testharness: `AssertionError` + `assert_equals`/`true`/`false`/…
+    if js.contains("assert_equals")
+        || js.contains("assert_not_equals")
+        || js.contains("assert_true")
+        || js.contains("assert_false")
+        || js.contains("assert_throws_js")
+        || js.contains("assert_approx_equals")
+        || js.contains("assert_array_equals")
+        || js.contains("AssertionError")
+    {
+        deps.insert(RuntimeDep::WptAssert);
+    }
+    if (deps.has(RuntimeDep::Assert) || deps.has(RuntimeDep::WptAssert)) && !had {
+        deps.insert(RuntimeDep::Error);
     }
 }
 
@@ -1337,6 +1390,7 @@ impl Translator {
             });
             let mut deps = RuntimeDeps::empty();
             deps.insert(RuntimeDep::Engine);
+            stamp_engine_assert_deps(&mut deps, &js_source);
             return Ok((rust, deps));
         }
         // Per-function degradation: publish the dynamic-function set so
@@ -1894,6 +1948,11 @@ impl Translator {
         // path), so it is inserted explicitly when the route is per-function.
         if per_function {
             deps.insert(RuntimeDep::Engine);
+            // A degraded function's JS body (in the `__DS_MODULE_JS` const,
+            // inlined into `probe`) may use `assert.sameValue`/`assert_equals`,
+            // which the Rust marker probe does not catch — scan it so the engine
+            // registers the matching pure-JS assert shim.
+            stamp_engine_assert_deps(&mut deps, &probe);
         }
         // Module mode: the per-function-degraded module's source goes into the
         // static table the engine loader reads at runtime (no `__DS_MODULE_JS`

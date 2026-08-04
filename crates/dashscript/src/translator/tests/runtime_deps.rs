@@ -669,6 +669,66 @@ fn engine_helper_module_stamps_crypto_builtin() {
 }
 
 #[test]
+fn engine_helper_module_stamps_assert_builtin() {
+    // The test262 harness assert family (Test262Error + assert.sameValue/
+    // notSameValue/throws) as a production engine builtin — the Javy-pattern
+    // wiring mirroring the static `__ds::assert_*` helpers. A degraded function
+    // whose body calls `assert.sameValue(a, b)` resolves it in the engine
+    // instead of throwing ReferenceError, so a degraded test262 fixture runs its
+    // asserts faithfully and a mismatch surfaces as `Test262Error: …` (the name
+    // the conformance verdict keys on). Pure-JS shim (no `__ds::` delegate): the
+    // static path's `assert_same_value<A: DsSameValue>` is generic over concrete
+    // Rust types, unreachable from a dynamic `rquickjs::Value`, but QuickJS ships
+    // `Object.is` (SameValue) + `Error`/`try-catch`, so the contract holds in JS.
+    let both = RuntimeDeps::empty()
+        .with(RuntimeDep::Engine)
+        .with(RuntimeDep::Assert);
+    let src = both
+        .engine_helper_module()
+        .expect("Engine + Assert emits __ds_engine module");
+    assert!(
+        src.contains("register_assert(ctx)?;"),
+        "wire_web_apis stamps the assert register call, got:\n{src}"
+    );
+    assert!(
+        src.contains("fn register_assert(ctx: &Ctx<'_>)")
+            && src.contains("Test262Error")
+            && src.contains("sameValue")
+            && src.contains("notSameValue"),
+        "register_assert defines Test262Error + assert.sameValue/notSameValue, got:\n{src}"
+    );
+}
+
+#[test]
+fn engine_helper_module_stamps_wpt_assert_builtin() {
+    // The WPT testharness sync subset (AssertionError + assert_equals/true/false/
+    // approx_equals/array_equals/throws_js + test/setup/done no-ops) as a
+    // production engine builtin — mirrors register_assert for the WPT family.
+    // A degraded WPT fixture runs its asserts faithfully; a mismatch surfaces as
+    // `AssertionError: …` (the name the conformance verdict keys on).
+    // promise_test/async_test stay out — they need an async runtime the engine
+    // lacks, so fixtures using them honestly degrade to unsupported.
+    let both = RuntimeDeps::empty()
+        .with(RuntimeDep::Engine)
+        .with(RuntimeDep::WptAssert);
+    let src = both
+        .engine_helper_module()
+        .expect("Engine + WptAssert emits __ds_engine module");
+    assert!(
+        src.contains("register_wpt_assert(ctx)?;"),
+        "wire_web_apis stamps the wpt-assert register call, got:\n{src}"
+    );
+    assert!(
+        src.contains("fn register_wpt_assert(ctx: &Ctx<'_>)")
+            && src.contains("AssertionError")
+            && src.contains("assert_equals")
+            && src.contains("assert_true")
+            && src.contains("assert_throws_js"),
+        "register_wpt_assert defines AssertionError + the WPT assert family, got:\n{src}"
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);

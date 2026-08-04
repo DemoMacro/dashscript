@@ -2720,6 +2720,115 @@ fn register_crypto(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
 }
 "#;
 
+/// `assert.sameValue`/`notSameValue`/`throws` + `Test262Error` engine builtin —
+/// the Javy-pattern wiring for the test262 harness assert family (mirrors
+/// [`TEXT_ENCODING_ENGINE_BUILTIN`]). Pure-JS shim (no native fn): the static
+/// path's `assert_same_value<A: DsSameValue>` is generic over concrete Rust
+/// types, unreachable from a dynamic `rquickjs::Value`, but QuickJS already
+/// ships ES `Object.is` (SameValue) + `Error`/`try-catch`, so the assert family
+/// runs faithfully in JS — no `__ds::` Rust impl to delegate to. One contract
+/// (a mismatch throws `Test262Error`), two delivery paths (static Rust panic vs
+/// engine JS throw). Emitted only when `Engine` is also active, so a non-engine
+/// fixture never references it.
+pub(super) const ASSERT_ENGINE_BUILTIN: &str = r#"
+fn register_assert(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    ctx.eval_with_options::<(), _>(
+        "function Test262Error(message) { this.message = message; }\n\
+         Test262Error.prototype = Object.create(Error.prototype);\n\
+         Test262Error.prototype.name = 'Test262Error';\n\
+         Test262Error.prototype.constructor = Test262Error;\n\
+         Test262Error.prototype.toString = function () {\n\
+             return this.message === undefined ? 'Test262Error' : 'Test262Error: ' + this.message;\n\
+         };\n\
+         this.Test262Error = Test262Error;\n\
+         this.assert = {\n\
+             sameValue: function (a, b) {\n\
+                 if (Object.is(a, b)) return;\n\
+                 throw new Test262Error('Expected ' + String(b) + ' but got ' + String(a));\n\
+             },\n\
+             notSameValue: function (a, b) {\n\
+                 if (!Object.is(a, b)) return;\n\
+                 throw new Test262Error('Expected different values but both were ' + String(a));\n\
+             },\n\
+             throws: function (expected, fn) {\n\
+                 if (typeof fn !== 'function')\n\
+                     throw new Test262Error('assert.throws: second argument must be a function');\n\
+                 try { fn(); } catch (e) {\n\
+                     var ctor = typeof expected === 'function' ? expected : Object;\n\
+                     if (e instanceof ctor) return;\n\
+                     throw new Test262Error(\n\
+                         'Expected ' + (ctor.name || String(ctor)) + ' but threw ' + String(e)\n\
+                     );\n\
+                 }\n\
+                 throw new Test262Error(\n\
+                     'Expected ' + (expected && expected.name || String(expected)) + ' but nothing threw'\n\
+                 );\n\
+             }\n\
+         };",
+        sloppy(),
+    )
+}
+"#;
+
+/// WPT testharness sync-subset engine builtin — `assert_equals`/`true`/`false`/
+/// `approx_equals`/`array_equals`/`throws_js` + `AssertionError` + `test`/
+/// `setup`/`done` no-ops (mirrors [`ASSERT_ENGINE_BUILTIN`]). Pure-JS shim for
+/// the same reason (dynamic `rquickjs::Value` vs the static path's generic
+/// `wpt_assert_equals<A: DsSameValue>`). `promise_test`/`async_test` are
+/// intentionally NOT wired here — they need an async runtime the engine lacks,
+/// so fixtures using them honestly degrade to `EngineLimitation` (unsupported).
+pub(super) const WPT_ASSERT_ENGINE_BUILTIN: &str = r#"
+fn register_wpt_assert(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    ctx.eval_with_options::<(), _>(
+        "function AssertionError(message) { this.message = message; }\n\
+         AssertionError.prototype = Object.create(Error.prototype);\n\
+         AssertionError.prototype.name = 'AssertionError';\n\
+         AssertionError.prototype.constructor = AssertionError;\n\
+         AssertionError.prototype.toString = function () { return 'AssertionError: ' + this.message; };\n\
+         this.AssertionError = AssertionError;\n\
+         function __ds_wpt_fmt(v) {\n\
+             try { return typeof v === 'object' && v !== null ? JSON.stringify(v) : String(v); }\n\
+             catch (_) { return String(v); }\n\
+         }\n\
+         this.assert_equals = function (a, b, msg) {\n\
+             if (Object.is(a, b)) return;\n\
+             throw new AssertionError((msg ? msg + ' ' : '') + 'expected ' + __ds_wpt_fmt(b) + ' but got ' + __ds_wpt_fmt(a));\n\
+         };\n\
+         this.assert_not_equals = function (a, b, msg) {\n\
+             if (!Object.is(a, b)) return;\n\
+             throw new AssertionError((msg ? msg + ' ' : '') + 'both were ' + __ds_wpt_fmt(a));\n\
+         };\n\
+         this.assert_true = function (v, msg) { if (v === true) return; throw new AssertionError(msg || 'expected true'); };\n\
+         this.assert_false = function (v, msg) { if (v === false) return; throw new AssertionError(msg || 'expected false'); };\n\
+         this.assert_array_equals = function (a, b, msg) {\n\
+             if (!Array.isArray(a) || !Array.isArray(b) || a.length !== b.length)\n\
+                 throw new AssertionError((msg ? msg + ' ' : '') + 'array length mismatch');\n\
+             for (var i = 0; i < a.length; i++) {\n\
+                 if (!Object.is(a[i], b[i]))\n\
+                     throw new AssertionError((msg ? msg + ' ' : '') + 'at index ' + i + ': expected ' + __ds_wpt_fmt(b[i]) + ' but got ' + __ds_wpt_fmt(a[i]));\n\
+             }\n\
+         };\n\
+         this.assert_approx_equals = function (actual, expected, eps, msg) {\n\
+             if (typeof actual !== 'number' || typeof expected !== 'number' || Math.abs(actual - expected) > eps)\n\
+                 throw new AssertionError((msg ? msg + ' ' : '') + 'expected ~' + expected + ' but got ' + actual);\n\
+         };\n\
+         this.assert_throws_js = function (ErrorCtor, fn, msg) {\n\
+             if (typeof fn !== 'function')\n\
+                 throw new AssertionError('assert_throws_js: second argument must be a function');\n\
+             try { fn(); } catch (e) {\n\
+                 if (e instanceof ErrorCtor) return;\n\
+                 throw new AssertionError((msg ? msg + ' ' : '') + 'expected ' + (ErrorCtor && ErrorCtor.name) + ' but threw ' + __ds_wpt_fmt(e));\n\
+             }\n\
+             throw new AssertionError((msg ? msg + ' ' : '') + 'expected ' + (ErrorCtor && ErrorCtor.name) + ' but nothing threw');\n\
+         };\n\
+         this.test = function (fn, _name) { fn({}); };\n\
+         this.setup = function () {};\n\
+         this.done = function () {};",
+        sloppy(),
+    )
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through
@@ -5102,20 +5211,49 @@ pub fn js_to_json<'js>(ctx: &Ctx<'js>, v: Value<'js>) -> rquickjs::Result<serde_
     }
 }
 
+/// Extract the thrown value's string form after an eval failed, so a degraded
+/// function's failure surfaces as `Test262Error: …` / `ReferenceError: …` (the
+/// spec truth) rather than rquickjs's opaque `Exception generated by QuickJS`.
+/// The conformance verdict keys off these names — `Test262Error`/`AssertionError`
+/// ⇒ partial (assert mismatch), `ReferenceError` ⇒ unsupported (the engine — and
+/// DashScript — lack that surface). `ctx.catch()` clears the pending exception
+/// first, so the `String(thrown)` eval does not trip it; `String(value)` yields
+/// `Error.prototype.toString()`, the same form the static `__ds::assert_*` panic
+/// uses, so the two paths report identically.
+fn throw_msg(ctx: &Ctx<'_>) -> String {
+    let thrown = ctx.catch();
+    let _ = ctx.globals().set("__ds_throw_diag", thrown);
+    let msg: String = ctx
+        .eval_with_options::<String, _>(
+            "(function(){ try { return String(globalThis.__ds_throw_diag); } catch(_) { return '[' + (typeof globalThis.__ds_throw_diag) + ']'; } })()",
+            sloppy(),
+        )
+        .unwrap_or_else(|_| "engine eval threw (non-string value)".into());
+    let _ = ctx.globals().remove("__ds_throw_diag");
+    msg
+}
+
 /// Run a self-contained `.ts` source under QuickJS with `console.log` wired to
 /// stdout. The source declares `main()` and calls it (pure-TS execution
-/// semantics), so a single eval runs the fixture.
+/// semantics), so a single eval runs the fixture. A thrown `Test262Error`/
+/// `ReferenceError` panics with its string form — `eprintln!`'d first so the
+/// name leads the stderr snippet the conformance verdict reads, ahead of the
+/// Rust panic frame.
 pub fn run(source: &str) {
     let result = RUNTIME.with(|runtime| -> rquickjs::Result<()> {
         let ctx = Context::full(runtime).expect("rquickjs Context");
         ctx.with(|ctx: Ctx<'_>| {
             wire_console(&ctx)?;
             wire_web_apis(&ctx)?;
-            ctx.eval_with_options::<(), _>(source, sloppy())?;
+            if ctx.eval_with_options::<(), _>(source, sloppy()).is_err() {
+                let msg = throw_msg(&ctx);
+                eprintln!("{msg}");
+                panic!("{msg}");
+            }
             Ok(())
         })
     });
-    result.expect("rquickjs eval");
+    result.expect("rquickjs runtime");
 }
 
 /// The per-function degradation entry point: evaluate `body_js` (which defines
@@ -5129,14 +5267,25 @@ pub fn call_fn(fn_name: &str, body_js: &str, args: &[serde_json::Value]) -> serd
         ctx.with(|ctx: Ctx<'_>| {
             wire_console(&ctx)?;
             wire_web_apis(&ctx)?;
-            ctx.eval_with_options::<(), _>(body_js, sloppy())?;
+            if ctx.eval_with_options::<(), _>(body_js, sloppy()).is_err() {
+                let msg = throw_msg(&ctx);
+                eprintln!("{msg}");
+                panic!("{msg}");
+            }
             let js_args = Array::new(ctx.clone())?;
             for (i, a) in args.iter().enumerate() {
                 js_args.set(i, json_to_js(&ctx, a)?)?;
             }
             ctx.globals().set("__ds_call_args", js_args)?;
             let expr = format!("{fn_name}(...__ds_call_args)");
-            let ret: Value = ctx.eval_with_options::<Value, _>(expr, sloppy())?;
+            let ret: Value = match ctx.eval_with_options::<Value, _>(expr, sloppy()) {
+                Ok(v) => v,
+                Err(_) => {
+                    let msg = throw_msg(&ctx);
+                    eprintln!("{msg}");
+                    panic!("{msg}");
+                }
+            };
             let _ = ctx.globals().remove("__ds_call_args");
             js_to_json(&ctx, ret)
         })
@@ -5209,7 +5358,14 @@ pub fn call_module_fn(
             }
             ctx.globals().set("__ds_call_args", js_args)?;
             let expr = format!("__ds_modules['{module_key}'].{fn_name}(...__ds_call_args)");
-            let ret: Value = ctx.eval_with_options::<Value, _>(expr, sloppy())?;
+            let ret: Value = match ctx.eval_with_options::<Value, _>(expr, sloppy()) {
+                Ok(v) => v,
+                Err(_) => {
+                    let msg = throw_msg(&ctx);
+                    eprintln!("{msg}");
+                    panic!("{msg}");
+                }
+            };
             let _ = ctx.globals().remove("__ds_call_args");
             js_to_json(&ctx, ret)
         })
