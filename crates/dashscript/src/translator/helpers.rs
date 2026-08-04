@@ -2998,6 +2998,38 @@ impl ::core::fmt::Display for DsUrlSearchParams {
         write!(f, \"{}\", s.finish())
     }
 }
+/// Iterator over a `DsUrlSearchParams`'s `[name, value]` pairs — what ES
+/// `for (const entry of params)` / `params.entries()` yields. Each item is a
+/// two-element `[name, value]` array (so `assert_array_equals(entry, [\"a\",
+/// \"1\"])` holds). The iterator is **live**: it shares the `DsUrlRef` and
+/// re-reads the query list each step (advancing a cursor), so a mutation to
+/// the underlying URL mid-iteration (`url.search = …`) is visible to later
+/// steps — the WHATWG URLSearchParams iterator semantics a WPT fixture
+/// exercises.
+pub struct DsUrlSearchParamsIter {
+    inner: DsUrlRef,
+    idx: usize,
+}
+impl ::std::iter::Iterator for DsUrlSearchParamsIter {
+    type Item = ::std::vec::Vec<::std::string::String>;
+    fn next(&mut self) -> ::std::option::Option<Self::Item> {
+        let pairs = dsq_pairs(&self.inner);
+        if self.idx < pairs.len() {
+            let (k, v) = pairs[self.idx].clone();
+            self.idx += 1;
+            ::std::option::Option::Some(vec![k, v])
+        } else {
+            ::std::option::Option::None
+        }
+    }
+}
+impl<'a> ::std::iter::IntoIterator for &'a DsUrlSearchParams {
+    type Item = ::std::vec::Vec<::std::string::String>;
+    type IntoIter = DsUrlSearchParamsIter;
+    fn into_iter(self) -> Self::IntoIter {
+        DsUrlSearchParamsIter { inner: self.0.clone(), idx: 0 }
+    }
+}
 ";
 
 /// ES truthiness for a value used in condition position. The translator emits

@@ -423,6 +423,45 @@ fn wpt_custom_event_compiles_and_runs() {
     );
 }
 
+/// `for (const entry of url.searchParams)` — the WHATWG URLSearchParams
+/// iterable contract: each yielded entry is a `[name, value]` pair, and the
+/// iterator is **live** (a mid-iteration `url.search = …` mutation is visible
+/// to later steps). Covers the `IntoIterator for &DsUrlSearchParams` helper
+/// (yields owned `Vec<String>` pairs) plus the for-of lowering's value-pattern
+/// branch for an untyped Web-collection iterable. Mirrors the
+/// `urlsearchparams-foreach` WPT fixture's "For-of Check".
+#[test]
+fn wpt_url_search_params_iter_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.url_search_params_iter_smoke".into(),
+        category: "smoke".into(),
+        fixture: "test(() => {\n\
+                  \x20 const u = new URL(\"http://a.b/c?a=1&b=2&c=3\");\n\
+                  \x20 const c = [];\n\
+                  \x20 for (const entry of u.searchParams) { c.push(entry); }\n\
+                  \x20 assert_array_equals(c[0], [\"a\", \"1\"]);\n\
+                  \x20 assert_array_equals(c[1], [\"b\", \"2\"]);\n\
+                  \x20 assert_array_equals(c[2], [\"c\", \"3\"]);\n\
+                  });\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "URLSearchParams for-of should be supported: {detail}"
+    );
+}
+
 /// `new AbortController()` + `controller.signal` (both a binding and a chained
 /// read) + `signal.aborted` (before/after) + `controller.abort()` end-to-end on
 /// the static path — the WinterTC WHATWG DOM Abort API core. Covers the two

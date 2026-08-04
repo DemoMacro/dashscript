@@ -231,6 +231,13 @@ pub(super) fn translate_for_of(
         expressions::translate_expr(&stmt.right, &Ctx::new(&*locals, registry, narrow, names));
     if iterates_by_ref {
         vec![parse_quote!(for #pat in &#iter #body)]
+    } else if arr_ty.is_none() {
+        // An untyped iterable (no element type inferred — a Web API collection
+        // like `URLSearchParams`, whose `IntoIterator` yields its own item
+        // shape, e.g. a `[name, value]` pair) binds the pattern by value
+        // (`for pat in &iter`); the `for &pat in &iter` form assumes a `Copy`
+        // item deref and would mismatch an owned-item iterator.
+        vec![parse_quote!(for #pat in &#iter #body)]
     } else {
         vec![parse_quote!(for &#pat in &#iter #body)]
     }
