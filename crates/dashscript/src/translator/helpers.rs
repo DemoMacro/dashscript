@@ -2749,7 +2749,9 @@ impl DsUrl {
     }
     /// `url.searchParams.forEach(cb)` — see `DsUrlSearchParams::for_each`.
     /// Same value-first/key-second order; operates on the URL's live query.
-    pub fn sp_for_each<F: Fn(String, String)>(&self, f: F) {
+    /// `FnMut` (not `Fn`) so a callback accumulating into a captured outer
+    /// binding (`keys.push(key)`, the universal WPT `forEach` pattern) compiles.
+    pub fn sp_for_each<F: FnMut(String, String)>(&self, mut f: F) {
         for (k, v) in self.sp_pairs() {
             f(v, k);
         }
@@ -2979,7 +2981,9 @@ impl DsUrlSearchParams {
     /// params object) and `thisArg` are reflection the static path drops.
     /// `cb` takes owned `String`s so `keys.push(key)` type-checks against a
     /// `Vec<String>` accumulator (the `assert_array_equals` operand shape).
-    pub fn for_each<F: Fn(String, String)>(&self, f: F) {
+    /// `FnMut` (not `Fn`) so a callback that mutates a captured outer binding
+    /// (the `keys.push`/`values.push` accumulator pattern) compiles.
+    pub fn for_each<F: FnMut(String, String)>(&self, mut f: F) {
         for (k, v) in dsq_pairs(&self.0) {
             f(v, k);
         }

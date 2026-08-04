@@ -165,6 +165,20 @@ fn member_mutated_array_local_is_let_mut() {
 }
 
 #[test]
+fn local_mutated_in_callback_is_let_mut() {
+    // A local mutated only inside a *nested* callback closure (`keys.push(..)`
+    // in the `forEach` arrow) still needs `let mut` — the closure borrows it
+    // `&mut`. The mut-analysis must descend into arrow/function bodies, else
+    // the borrow fails to compile (E0596).
+    let src = "function main(): void { let keys: string[] = []; [1].forEach((v) => { keys.push(\"a\"); }); console.log(keys[0]); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("let mut keys:"),
+        "a local mutated in a nested callback needs `let mut`, got:\n{rust}"
+    );
+}
+
+#[test]
 fn ref_param_call_site_borrows_in_place() {
     // A reference parameter is borrowed in place at the call site (`&mut a`),
     // not cloned — the callee's mutation is then visible to the caller. The

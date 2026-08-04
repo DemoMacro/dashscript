@@ -272,6 +272,24 @@ fn walk_expr(expr: &Expression, names: &NameTable, a: &mut Analysis) {
                 walk_expr(e, names, a);
             }
         }
+        // Descend into nested arrow/function bodies so a mutation of an
+        // *outer* captured local (`var keys = []; arr.forEach(() => keys.push(..))`)
+        // is recorded — without this, the receiver's `let` never gains `mut`
+        // and the closure's `&mut` borrow fails to compile (E0596). The
+        // callback's own locals may also be recorded, but only keys present
+        // in the *outer* scope drive a `let mut` decision, so they are inert.
+        Expression::ArrowFunctionExpression(arrow) => {
+            for s in &arrow.body.statements {
+                walk_stmt(s, names, a);
+            }
+        }
+        Expression::FunctionExpression(f) => {
+            if let Some(body) = f.body.as_deref() {
+                for s in &body.statements {
+                    walk_stmt(s, names, a);
+                }
+            }
+        }
         _ => {}
     }
 }
