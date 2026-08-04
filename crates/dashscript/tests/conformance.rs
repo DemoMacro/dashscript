@@ -2946,6 +2946,37 @@ const TEXT_ENCODING_PRELUDE: &str = r#"
 })();
 "#;
 
+/// `crypto.getRandomValues(arr)` / `crypto.randomUUID()` — WinterTC §5 WebCrypto
+/// globals for the engine path. Pure-JS shim (QuickJS `Math.random` PRNG): WPT
+/// behavior tests verify the return shape (same typed array, length, byte range,
+/// run-to-run variation, the 65536-byte QuotaExceededError cap) — not CSPRNG
+/// quality — so a PRNG fill passes them. The static path's getrandom-backed
+/// impl stays the CSPRNG source for production; `subtle` is a bare object here
+/// (its methods land in a later batch — fixtures calling `subtle.digest` stay
+/// partial honestly).
+const CRYPTO_SHIM: &str = r#"
+if (!globalThis.crypto) {
+  globalThis.crypto = {
+    getRandomValues: function (arr) {
+      if (arr == null) return arr;
+      if (arr.length > 65536) throw new RangeError("getRandomValues byte length must not exceed 65536");
+      for (var i = 0; i < arr.length; i++) arr[i] = (Math.random() * 256) | 0;
+      return arr;
+    },
+    randomUUID: function () {
+      var b = new Uint8Array(16);
+      this.getRandomValues(b);
+      b[6] = (b[6] & 0x0f) | 0x40;
+      b[8] = (b[8] & 0x3f) | 0x80;
+      var h = [];
+      for (var i = 0; i < 16; i++) { var s = b[i].toString(16); h.push(s.length < 2 ? "0" + s : s); }
+      return h.slice(0,4).join("") + "-" + h.slice(4,6).join("") + "-" + h.slice(6,8).join("") + "-" + h.slice(8,10).join("") + "-" + h.slice(10,16).join("");
+    },
+    subtle: {}
+  };
+}
+"#;
+
 /// Minimal `Intl` stub injected before the polyfill. rquickjs's QuickJS-NG
 /// build ships without `Intl`, but the polyfill's factory reads
 /// `Intl.DateTimeFormat` / `Intl.DurationFormat` to layer its Temporal-aware
@@ -3863,6 +3894,13 @@ fn engine_eval(
                         )?,
                     )?;
                     ctx.eval_with_options::<(), _>(TEXT_ENCODING_PRELUDE, sloppy())?;
+                }
+                // `crypto` — WinterTC §5 WebCrypto global (randomUUID/
+                // getRandomValues). Pure-JS shim (see CRYPTO_SHIM); conditioned
+                // on the fixture referencing `crypto` so non-crypto fixtures
+                // skip the eval.
+                if js_source.contains("crypto") {
+                    ctx.eval_with_options::<(), _>(CRYPTO_SHIM, sloppy())?;
                 }
             }
             // Temporal polyfill: QuickJS-NG lacks Temporal, so a fixture touching

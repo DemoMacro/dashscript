@@ -380,7 +380,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "\nthread 'main' (48028) panicked at src\\__ds.rs:310:13:\nAssertionError: Expected a TypeError to be thrown but got a Error\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "\nthread 'main' (35312) panicked at src\\__ds.rs:310:13:\nAssertionError: Expected a TypeError to be thrown but got a Error\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {

@@ -940,7 +940,7 @@
     "layer": "wpt",
     "category": "fetch",
     "status": "partial",
-    "detail": "\nthread 'main' (28072) panicked at src\\__ds.rs:315:13:\nAssertionError: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display ",
+    "detail": "\nthread 'main' (37812) panicked at src\\__ds.rs:315:13:\nAssertionError: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display ",
     "note": ""
   },
   {
