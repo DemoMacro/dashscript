@@ -177,6 +177,7 @@ declare function Number(x: unknown): number; // The numeric form of `x`.
 declare function atob(s: string): string; // Base64-decode a string (forgiving: whitespace stripped, missing padding padded).
 declare function btoa(s: string): string; // Base64-encode the string's Latin-1 bytes (code units > U+00FF throw).
 declare function structuredClone<T>(value: T): T; // Deep-clone a cloneable value (primitives, records, arrays).
+declare function reportError(error: any): void; // Dispatch an "error" event to the global EventTarget; if uncanceled, log to stderr (HTML §5).
 declare var self: any; // WinterTC global-object alias (`self === globalThis`); `self.<global>` reaches the same global.
 declare var undefined: any; // The absent value.
 declare var Infinity: number; // Positive infinity.

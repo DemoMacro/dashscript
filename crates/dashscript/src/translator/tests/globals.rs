@@ -359,3 +359,21 @@ fn translates_self_navigator_browser_compat_constants() {
         "self.navigator appCodeName and product → compat literals, got:\n{rust}"
     );
 }
+
+#[test]
+fn translates_report_error_to_event_dispatch() {
+    // `reportError(e)` (HTML §5) dispatches an "error" event to the global
+    // EventTarget; if no listener cancels it, writes the error to stderr. The
+    // emit routes through `__ds::report_error` (in EVENT_TARGET_HELPER), never
+    // the engine.
+    let src = "function f(): void { reportError(new TypeError(\"boom\")); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("crate::__ds::ds_report_error"),
+        "reportError → __ds::ds_report_error, got:\n{rust}"
+    );
+    assert!(
+        !rust.contains("__ds_engine"),
+        "reportError stays static (no engine degradation), got:\n{rust}"
+    );
+}

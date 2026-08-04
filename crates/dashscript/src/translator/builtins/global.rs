@@ -125,6 +125,18 @@ pub(in crate::translator) fn global_function(
             let v = translate_argument(args.first()?, ctx);
             parse_quote!(#v.clone())
         }
+        // `reportError(e)` — WinterTC (HTML §5) global. Dispatches an `"error"`
+        // event to the global `self` EventTarget (an `addEventListener("error",
+        // …)` listener receives it); if no listener cancels it, writes the error
+        // to stderr. Reuses the `EventTarget` runtime dep's `ds_report_error`
+        // helper (no new dep — it lives in `EVENT_TARGET_HELPER`). The payload is
+        // `Display`d, so an ES `Error`/`DOMException` (`DsError`) and a primitive
+        // all type-check; a non-`Display` value surfaces honestly at `cargo
+        // check`.
+        "reportError" => {
+            let e = translate_argument(args.first()?, ctx);
+            parse_quote!(crate::__ds::ds_report_error(&#e))
+        }
         // `fetch` — WinterTC (Ecma TC55) Web API. ES `fetch` returns
         // `Promise<Response>`; the caller's `await` supplies the `.await`.
         // Three arg shapes: `fetch(request)` (a `Request` object arg unwrapped

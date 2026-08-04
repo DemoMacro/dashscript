@@ -1853,6 +1853,15 @@ impl Translator {
         if probe.contains("__ds::wpt_self") {
             deps.insert(RuntimeDep::EventTarget);
         }
+        // `reportError(e)` lowers to `__ds::ds_report_error` (HTML §5 — dispatch
+        // an `"error"` event on the global EventTarget). `ds_report_error` lives
+        // in EVENT_TARGET_HELPER alongside `DsEvent`/`wpt_self`, but the emit
+        // references neither, so the marker probe misses it — a fixture whose
+        // only EventTarget use is `reportError(…)` would see `ds_report_error`
+        // as E0425. Pull the slice the way a `wpt_self`-only fixture does.
+        if probe.contains("__ds::ds_report_error") {
+            deps.insert(RuntimeDep::EventTarget);
+        }
         // `done()` lowers to `__ds::wpt_done` (sets the timer drain's DONE
         // flag). `wpt_done` lives in TIMERS_HELPER alongside the queue/drain,
         // so any fixture that calls `done()` — timer or not — pulls the slice

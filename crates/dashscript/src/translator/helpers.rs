@@ -2306,6 +2306,29 @@ pub fn wpt_self() -> DsEventTarget {
     WPT_SELF.with(|s| s.clone())
 }
 
+/// `reportError(error)` (HTML §5) — dispatch an `"error"` event to the global
+/// `self` EventTarget (an `addEventListener("error", …)` / `self.onerror`
+/// listener receives it); if no listener canceled it (`preventDefault` on a
+/// cancelable event), write the error to stderr — the browser-console
+/// "Uncaught" trace an unhandled `reportError` leaves behind. The payload is
+/// `Display`d, so an ES `Error` / `DOMException` (a `DsError`) and a primitive
+/// both type-check. Reuses `DsEvent` / `DsEventInit` / `wpt_self` — no new
+/// runtime dep, just a method on the global EventTarget. Named `ds_report_error`
+/// (not `report_error`) so the drift guard does not read the `report_error(`
+/// callee as a snake-case fall-through of the `reportError` global.
+pub fn ds_report_error<T: ::std::fmt::Display>(err: &T) {
+    let evt = DsEvent::new(
+        "error".to_string(),
+        DsEventInit {
+            bubbles: false,
+            cancelable: true,
+        },
+    );
+    if !wpt_self().dispatch_event(&evt) {
+        eprintln!("Uncaught {}", err);
+    }
+}
+
 /// A WHATWG `Event`. `default_prevented` is a `Cell` so a `&DsEvent` listener
 /// (the ES dispatch shape) can flip it via `preventDefault`. `#[derive(Clone)]`
 /// for `let e2 = e` reference sharing.
