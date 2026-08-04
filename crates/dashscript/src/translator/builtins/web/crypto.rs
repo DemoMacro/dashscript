@@ -11,11 +11,11 @@
 //! `.verify` are the async HMAC backed by `hmac`, and `subtle.encrypt`/`.decrypt`
 //! are the async AES-GCM backed by `aes-gcm` (pure-Rust — never degraded),
 //! `crypto.subtle.generateKey` is the fresh-key factory (random AES/HMAC keys),
-//! `crypto.subtle.deriveBits` is the PBKDF2 key-derivation path (a small HMAC
-//! round-XOR loop, the same `hmac` backing as `sign`), and `crypto.subtle.
-//! exportKey` is the raw symmetric-key export (the inverse of `importKey`). The
-//! remaining `SubtleCrypto` methods (AES-CBC, `deriveKey`/HKDF, `wrapKey`) are
-//! not yet mapped.
+//! `crypto.subtle.deriveBits`/`deriveKey` are the PBKDF2 key-derivation paths
+//! (a small HMAC round-XOR loop, the same `hmac` backing as `sign`), and
+//! `crypto.subtle.exportKey` is the raw symmetric-key export (the inverse of
+//! `importKey`). The remaining `SubtleCrypto` methods (AES-CBC, HKDF, `wrapKey`)
+//! are not yet mapped.
 
 use oxc_ast::ast::{Argument, Expression, ObjectPropertyKind, PropertyKey, StaticMemberExpression};
 use syn::{parse_quote, Expr};
@@ -114,6 +114,36 @@ pub(in crate::translator) fn crypto_method(
                 let format = es_to_string_arg(args.first()?, ctx);
                 let key = translate_argument(args.get(1)?, ctx);
                 return Some(parse_quote!(crate::__ds::crypto_subtle_export_key(#format, &#key)));
+            }
+        }
+    }
+    // `crypto.subtle.deriveKey(algo, baseKey, derivedKeyType, extractable,
+    // usages)` — the PBKDF2 subset, an orchestrator over `deriveBits` + the key
+    // ctor. The ES `algo` object's `name`/`salt`/`iterations`/`hash` and the ES
+    // `derivedKeyType` object's `name`/`hash`/`length` are both extracted at
+    // translate time (reusing the `deriveBits`/`generateKey` extractors); `baseKey`
+    // is the password `DsCryptoKey`. ES returns `Promise<CryptoKey>`; the call
+    // site's `await` drives the future, and `callee_return_path` records the
+    // `DsCryptoKey` return (like `importKey`/`generateKey`).
+    if sm.property.name.as_str() == "deriveKey" {
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            if inner.property.name.as_str() == "subtle"
+                && is_crypto_receiver(&inner.object).is_some()
+            {
+                let (algorithm, hash, salt, iterations) =
+                    derive_bits_algorithm(args.first()?, ctx)?;
+                let base_key = translate_argument(args.get(1)?, ctx);
+                let (derived_name, derived_hash, derived_length) =
+                    generate_key_algorithm(args.get(2)?, ctx)?;
+                let extractable = bool_argument(args.get(3), ctx);
+                let usages: Expr = parse_quote!(::std::vec![]);
+                return Some(parse_quote!(
+                    crate::__ds::crypto_subtle_derive_key(
+                        #algorithm, #hash, #salt, #iterations, &#base_key,
+                        #derived_name, #derived_hash, #derived_length,
+                        #extractable, #usages
+                    )
+                ));
             }
         }
     }

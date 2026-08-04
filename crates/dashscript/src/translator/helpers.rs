@@ -368,8 +368,8 @@ pub fn crypto_get_random_values(mut buf: ::std::vec::Vec<u8>) -> ::std::vec::Vec
 /// (raw format → `DsCryptoKey`) / `exportKey` (raw format ← `DsCryptoKey`),
 /// `sign`/`verify` (HMAC, RustCrypto `hmac`), `encrypt`/`decrypt` (AES-GCM,
 /// `aes-gcm`), `generateKey` (a fresh random `DsCryptoKey` for AES-GCM/
-/// AES-CBC/HMAC), and `deriveBits` (the PBKDF2 key-derivation path, reusing
-/// `hmac`). The remaining `SubtleCrypto` methods (AES-CBC, `deriveKey`/HKDF,
+/// AES-CBC/HMAC), `deriveBits`/`deriveKey` (the PBKDF2 key-derivation path,
+/// reusing `hmac`). The remaining `SubtleCrypto` methods (AES-CBC, HKDF,
 /// `wrapKey`) land later; `digest` is the no-key one-shot, the bulk of the WPT
 /// `WebCryptoAPI/digest` fixtures.
 pub(super) const SUBTLE_HELPER: &str = r#"
@@ -548,6 +548,50 @@ pub async fn crypto_subtle_derive_bits(
         _ => ::core::panic!("TypeError: crypto.subtle.deriveBits: unsupported algorithm"),
     }
     out
+}
+/// `crypto.subtle.deriveKey(algorithm, baseKey, derivedKeyType, extractable,
+/// usages)` — the PBKDF2 subset, an orchestrator over `deriveBits` + the key
+/// ctor (the WinterTC WebCrypto key-derivation-and-import path). The derivation
+/// algorithm (PBKDF2's `name`/`hash`/`salt`/`iterations`) and the password
+/// `baseKey` feed `crypto_subtle_derive_bits`; the `derivedKeyType` object's
+/// `name`/`hash`/`length` decide the output key length in bits (AES-GCM/AES-CBC:
+/// `length`; HMAC: `length`, else the named hash's block size — 512 for
+/// SHA-1/SHA-256, 1024 for SHA-384/SHA-512, mirroring `generateKey`). The
+/// derived bytes become the `DsCryptoKey`'s raw key. `async` because ES
+/// `deriveKey` returns `Promise<CryptoKey>`; the call site's `await` drives the
+/// future, and `callee_return_path` records the `DsCryptoKey` return (like
+/// `importKey`/`generateKey`).
+pub async fn crypto_subtle_derive_key(
+    name: ::std::string::String,
+    hash: ::std::string::String,
+    salt: ::std::vec::Vec<u8>,
+    iterations: u32,
+    base_key: &DsCryptoKey,
+    derived_name: ::std::string::String,
+    derived_hash: ::std::string::String,
+    derived_length: usize,
+    extractable: bool,
+    usages: ::std::vec::Vec<::std::string::String>,
+) -> DsCryptoKey {
+    let length_bits = match derived_name.as_str() {
+        "AES-GCM" | "AES-CBC" => derived_length,
+        "HMAC" => {
+            if derived_length == 0 {
+                match derived_hash.as_str() {
+                    "SHA-384" | "SHA-512" => 1024,
+                    _ => 512,
+                }
+            } else {
+                derived_length
+            }
+        }
+        _ => ::core::panic!("TypeError: crypto.subtle.deriveKey: unsupported derived key type"),
+    };
+    let bits = crypto_subtle_derive_bits(
+        name, hash, salt, iterations, base_key, length_bits,
+    )
+    .await;
+    DsCryptoKey::new(derived_name, derived_hash, bits, extractable, usages)
 }
 /// The PBKDF2 (RFC 2898) core — `T_i = U_1 ^ … ^ U_c`, where
 /// `U_1 = HMAC(P, S || INT_32_BE(i))` and `U_j = HMAC(P, U_{j-1})` — generic over

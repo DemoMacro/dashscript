@@ -1778,6 +1778,17 @@ fn callee_return_path(
         {
             Some(parse_quote!(crate::__ds::DsCryptoKey))
         }
+        // `crypto.subtle.deriveKey(…)` → `crate::__ds::DsCryptoKey` (the WinterTC
+        // WebCrypto derived key), so an unannotated
+        // `let k = crypto.subtle.deriveKey(…)` — and `await …` via the
+        // `AwaitExpression` arm — records the same type as `importKey`/
+        // `generateKey`, and a later `encrypt`/`exportKey` passes the key through.
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "deriveKey"
+                && super::builtins::is_crypto_subtle_member(&sm.object) =>
+        {
+            Some(parse_quote!(crate::__ds::DsCryptoKey))
+        }
         // `crypto.subtle.deriveBits(…)` → `Vec<u8>` (the WinterTC WebCrypto PBKDF2
         // derived bytes), so an unannotated `let dk = crypto.subtle.deriveBits(…)`
         // — and `await …` via the `AwaitExpression` arm — records the same

@@ -926,6 +926,53 @@ fn wpt_subtle_export_key_compiles_and_runs() {
     );
 }
 
+/// `crypto.subtle.deriveKey(…)` end-to-end — the WinterTC WEBCRYPTO §5
+/// PBKDF2→AES-GCM derivation-and-import path (an orchestrator over
+/// `deriveBits` + the key ctor). Exercises the full importKey(PBKDF2 password)
+/// → deriveKey(PBKDF2 c=1 SHA-1 → AES-GCM 256) → exportKey round-trip: the
+/// derived AES-256 key is 32 bytes, and its first byte is `0x0c` (the RFC 6070
+/// PBKDF2-SHA1 c=1 first byte — proving the derivation actually ran, not just a
+/// zero-filled key). Proves `deriveKey` composes the already-mapped
+/// `deriveBits` + `DsCryptoKey::new` (DRY — no duplicated PBKDF2 core).
+#[test]
+fn wpt_subtle_derive_key_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.subtle_derive_key_smoke".into(),
+        category: "smoke".into(),
+        fixture: r#"promise_test(async () => {
+    const baseKey = await crypto.subtle.importKey(
+        "raw", new Uint8Array([112,97,115,115,119,111,114,100]),
+        { name: "PBKDF2" }, false, ["deriveKey"]);
+    const salt = new Uint8Array([115,97,108,116]);
+    const key = await crypto.subtle.deriveKey(
+        { name: "PBKDF2", salt: salt, iterations: 1, hash: "SHA-1" },
+        baseKey,
+        { name: "AES-GCM", length: 256 },
+        true, ["encrypt"]);
+    const raw = await crypto.subtle.exportKey("raw", key);
+    assert_equals(raw.length, 32);
+    assert_equals(raw[0], 12);
+}, "subtle-derivekey");
+"#
+        .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "SubtleCrypto deriveKey smoke should be supported: {detail}"
+    );
+}
+
 /// `new Request(url, init?)` + the `.method`/`.url` read-only accessors
 /// end-to-end — the WinterTC FETCH §5.2 `Request` ctor. Exercises the ctor's
 /// `init` parsing (reusing `fetch_init`, the same path as `fetch(url, init)`),
