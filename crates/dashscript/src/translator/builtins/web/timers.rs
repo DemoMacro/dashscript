@@ -43,6 +43,19 @@ pub(in crate::translator) fn timer_function(
             let handle = translate_argument(args.first()?, ctx);
             parse_quote!(crate::__ds::wpt_clear_timer(#handle))
         }
+        // `queueMicrotask(cb)` — HTML's microtask queue (a WinterTC §5.2 global).
+        // The callback is the same `Box<dyn FnMut()>` thunk shape as a timer
+        // callback; the queue drains at every task boundary inside
+        // `wpt_run_timers` (after each fire) and once at the entry's end before
+        // the timer queue runs (see `wpt_drain_microtasks`). A non-function
+        // argument (`undefined`/`null`/`0`) fails to type-check against
+        // `FnMut()` → cargo-check-fail → honestly `unsupported`, matching ES
+        // throwing `TypeError` for a non-callback (surfaced as a build failure
+        // rather than a runtime throw on the static path).
+        "queueMicrotask" => {
+            let cb = timer_callback_thunk(args.first()?, ctx);
+            parse_quote!(crate::__ds::wpt_queue_microtask(#cb))
+        }
         _ => return None,
     })
 }

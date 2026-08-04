@@ -1579,6 +1579,45 @@ fn wpt_setinterval_negative_requeue_compiles_and_runs() {
     );
 }
 
+/// `queueMicrotask(cb)` — HTML's microtask queue (a WinterTC §5.2 global). The
+/// callback runs at the next microtask checkpoint — before any `setTimeout`
+/// macrotask drains. `microtask-before-timer`: an arrow
+/// `queueMicrotask(() => done())` fires during the leading
+/// `wpt_drain_microtasks` (before `wpt_run_timers`), setting DONE; the later
+/// `setTimeout(assert_unreached, 0)` then sees DONE and never fires. This pins
+/// both the microtask-before-macro ordering and the arrow-callback thunk path
+/// (a named `done` callback is covered by the timer smokes — `done` is the
+/// special-cased thunk in `timer_callback_thunk`).
+#[test]
+fn wpt_queue_microtask_runs_before_timer() {
+    let raw = RawFeature {
+        id: "wpt.microtask_before_timer_smoke".into(),
+        category: "smoke".into(),
+        fixture: "function main(): void {\n\
+                  \x20 setup({ single_test: true });\n\
+                  \x20 queueMicrotask(() => { done(); });\n\
+                  \x20 setTimeout(assert_unreached, 0);\n\
+                  }\n\
+                  main();\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "queueMicrotask-before-setTimeout smoke should be supported: {detail}"
+    );
+}
+
 /// Once-per-run check that the engine compat path assembles into a building
 /// cargo project: a reflection `.ts` source → `translate_with_deps` (flips
 /// `needs_engine`) → `write_project` (injects `__ds_engine` + the `rquickjs`

@@ -1583,19 +1583,25 @@ impl Translator {
                         })
                         .collect();
                     functions::drop_trailing_return(&mut out);
-                    // A `setTimeout`/`setInterval` registers a callback on the
-                    // timer queue; the ES event loop drains that queue once main
-                    // returns (the call stack is empty, the way a browser drains
-                    // between tasks). Emit the drain as the entry's last
-                    // statement — but only when a timer was actually registered.
-                    // A WPT fixture's `setTimeout` sits inside the `function
-                    // main` body (a fn item, not a top-level exec stmt), so the
-                    // scan covers both the entry statements (`out`) and the
-                    // emitted items (fn bodies), looking for the
-                    // `wpt_set_timeout`/`wpt_set_interval` the dispatch emits.
-                    // WPT timer fixtures clamp every delay to 0, so the drain is
-                    // a deterministic CPU loop, not a real wait.
-                    let needs_timer_drain = out
+                    // A `setTimeout`/`setInterval`/`queueMicrotask` registers a
+                    // callback on the event loop's task (timer) or microtask
+                    // queue; ES drains both once main returns (the call stack is
+                    // empty, the way a browser drains between tasks). Emit the
+                    // drain as the entry's last statement — but only when either
+                    // queue was actually referenced. A WPT fixture's call sits
+                    // inside the `function main` body (a fn item, not a top-level
+                    // exec stmt), so the scan covers both the entry statements
+                    // (`out`) and the emitted items (fn bodies), looking for the
+                    // `wpt_set_timeout`/`wpt_set_interval`/`wpt_queue_microtask`
+                    // the dispatch emits. The microtask checkpoint runs first
+                    // (`wpt_drain_microtasks`), then the timer queue
+                    // (`wpt_run_timers`, a no-op when no timer was registered);
+                    // `wpt_run_timers` itself re-drains microtasks after every
+                    // timer fire, so a timer callback that queues a microtask
+                    // runs it before the next timer. WPT timer fixtures clamp
+                    // every delay to 0, so the timer drain is a deterministic
+                    // CPU loop, not a real wait.
+                    let needs_event_loop_drain = out
                         .iter()
                         .map(|s| quote::ToTokens::to_token_stream(s).to_string())
                         .chain(
@@ -1603,8 +1609,13 @@ impl Translator {
                                 .iter()
                                 .map(|i| quote::ToTokens::to_token_stream(i).to_string()),
                         )
-                        .any(|t| t.contains("wpt_set_timeout") || t.contains("wpt_set_interval"));
-                    if needs_timer_drain {
+                        .any(|t| {
+                            t.contains("wpt_set_timeout")
+                                || t.contains("wpt_set_interval")
+                                || t.contains("wpt_queue_microtask")
+                        });
+                    if needs_event_loop_drain {
+                        out.push(syn::parse_quote!(crate::__ds::wpt_drain_microtasks();));
                         out.push(syn::parse_quote!(crate::__ds::wpt_run_timers();));
                     }
                     // An `async function main(): Promise<void>` lowers to an

@@ -3382,6 +3382,12 @@ thread_local! {
     static WPT_DONE: std::cell::Cell<bool> = std::cell::Cell::new(false);
     static WPT_CANCELLED: std::cell::RefCell<std::collections::HashSet<u64>> =
         std::cell::RefCell::new(std::collections::HashSet::new());
+    // The microtask queue — a FIFO of `queueMicrotask` callbacks. Drained to
+    // empty at every task boundary (after each timer fire, and at the entry's
+    // end before the timer queue runs) per HTML's microtask checkpoint: a
+    // callback queued by a firing timer runs before the next timer fires.
+    static WPT_MICROTASKS: std::cell::RefCell<std::collections::VecDeque<Box<dyn FnMut()>>> =
+        std::cell::RefCell::new(std::collections::VecDeque::new());
 }
 
 /// HTML timer delay clamp: WebIDL `long` (signed 32-bit) conversion followed by
@@ -3467,6 +3473,35 @@ pub fn wpt_done() {
     WPT_DONE.with(|d| d.set(true));
 }
 
+/// `queueMicrotask(cb)` — push `cb` onto the FIFO microtask queue. The callback
+/// is `FnMut` (a named listener may mutate captured state); like `setTimeout`'s
+/// callback it is a `Box<dyn FnMut()>` whose captured state the translator
+/// clones/moves in at the call site, so it is `'static` (the queue is
+/// `thread_local`, single-threaded — no `Send` bound, unlike an `async`
+/// WritableStream sink that crosses an `await` on a multi-thread executor).
+#[inline]
+pub fn wpt_queue_microtask(cb: Box<dyn FnMut()>) {
+    WPT_MICROTASKS.with(|q| q.borrow_mut().push_back(cb));
+}
+
+/// Drain the microtask queue to empty — HTML's microtask checkpoint. Fires
+/// every queued callback in FIFO order; a callback that itself queues another
+/// microtask is caught by the loop (the `pop_front` re-reads the queue each
+/// iteration, so a `push_back` during a fire is seen on the next pass). Called
+/// at every task boundary: after each timer fire (inside `wpt_run_timers`) and
+/// once at the entry's end before the timer queue runs. `done()` does NOT stop
+/// the microtask drain — HTML runs pending microtasks even after the "stop"
+/// signal, only the macrotask (timer) queue respects `done()`.
+pub fn wpt_drain_microtasks() {
+    loop {
+        let mut cb = WPT_MICROTASKS.with(|q| q.borrow_mut().pop_front());
+        match cb.as_mut() {
+            ::std::option::Option::Some(f) => f(),
+            ::std::option::Option::None => break,
+        }
+    }
+}
+
 /// Drain the timer queue — the ES event loop's task queue, run at the entry's
 /// end. Fires the earliest-deadline live (non-cancelled) timer by `(deadline,
 /// seq)`, re-queues an interval's next fire, and stops when `done()` was called
@@ -3524,6 +3559,9 @@ pub fn wpt_run_timers() {
             (interval, cb)
         });
         cb();
+        // HTML microtask checkpoint: drain queued `queueMicrotask` callbacks
+        // after each timer fire, before the next timer runs.
+        wpt_drain_microtasks();
         if let ::std::option::Option::Some(ms) = interval {
             if !WPT_DONE.with(|d| d.get()) {
                 WPT_TIMERS.with(|t| {
