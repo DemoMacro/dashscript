@@ -2,7 +2,7 @@
 
 A [DashScript](https://github.com/DemoMacro/dashscript) project exercising the
 WinterTC `fetch` Web API — a **native** async mapping backed by `reqwest`
-(never degraded to the embedded engine, per the WinterTC policy). `fetch(url)`
+(a zero-cost static mapping: `fetch` lowers straight to a Rust crate). `fetch(url)`
 lowers to `__ds::ds_fetch`; `await fetch(url)` records `r: DsResponse`, so
 `r.status` / `.ok` / `.headers` rewrite to the wrapper's zero-arg accessors and
 `await r.text()` to the async body drain.

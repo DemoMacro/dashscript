@@ -24,7 +24,7 @@ interface console {
 // performance — the WinterTC (W3C hr-time) High Resolution Time global.
 // `now()` returns a monotonic DOMHighResTimeStamp (ms since timeOrigin);
 // WinterTC's `self` is the global-object alias, so `self.performance.now()`
-// works the same (`hr_time.rs`, static Rust — never degraded).
+// works the same (`hr_time.rs`, static Rust).
 interface performance {
   now(): number; // Monotonic milliseconds since timeOrigin.
 }
@@ -33,7 +33,7 @@ interface performance {
 // static string (or a platform-selected one): the browser-compat constants
 // every engine reports plus a `DashScript` user-agent; `platform`/`oscpu`
 // track the host OS. Read-only globals; `self.navigator.<prop>` works the
-// same (`member.rs`, static Rust — never degraded).
+// same (`member.rs`, static Rust).
 interface navigator {
   readonly userAgent: string; // "Mozilla/5.0 (compatible; DashScript)"
   readonly appCodeName: string; // "Mozilla"
@@ -49,7 +49,7 @@ interface navigator {
 }
 
 // crypto — the WinterTC (W3C WebCrypto) global. `randomUUID()` returns an RFC
-// 4122 version-4 UUID string (`crypto.rs`, static Rust — never degraded).
+// 4122 version-4 UUID string (`crypto.rs`, static Rust).
 // `getRandomValues`/`subtle` are not Tier 1.
 interface crypto {
   randomUUID(): string; // A fresh RFC 4122 version-4 UUID.

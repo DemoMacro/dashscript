@@ -172,9 +172,10 @@ fn conformance_matrix() {
     // at runtime so a new dir file is picked up with no Rust edit. The layer is
     // opt-in: `DASH_WPT_CATEGORIES=url,encoding` runs only those WinterTC dirs;
     // unset → wpt skipped (so a bare `cargo test` stays fast). WinterTC is
-    // pure-Rust (no engine fallback): the harness runs the static path only, so
-    // a Web API not yet mapped surfaces honestly as unsupported/partial — the
-    // baseline for the API-implementation backlog. `DASH_WPT=<n>` caps each dir.
+    // static-first with per-function engine degrade (same model as test262): a
+    // Web API not yet mapped statically falls back to the engine path with Web
+    // API builtins registered (degraded behavior == static behavior — same Rust
+    // impl). `DASH_WPT=<n>` caps each dir.
     let wpt_dir = conformance_dir().join("data").join("wpt");
     let wpt_cats: Vec<String> = match std::env::var("DASH_WPT_CATEGORIES") {
         // `=all` discovers every `data/wpt/<dir>.json` at runtime (see above).
@@ -3742,8 +3743,8 @@ fn engine_eval(
             // throw `requires SAB allocator hooks` (growable-sab fixtures).
             sab_alloc::install(&ctx);
             ctx.eval_with_options::<(), _>(CONSOLE_PRELUDE, sloppy())?;
-            // WinterTC (WPT) engine-fallback path — gated by
-            // `DASH_WPT_ENGINE_FALLBACK` in [`run_wpt`]. A fixture using WPT
+            // WinterTC (WPT) engine-fallback path — always on in [`run_wpt`]
+            // (static-first + per-function degrade). A fixture using WPT
             // testharness APIs (`assert_equals`/`assert_array_equals`/…
             // — not test262's `assert.sameValue`) is a WinterTC fixture the
             // static translator could not lower; run it in QuickJS with the WPT
@@ -4177,30 +4178,42 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
     }
 }
 
-/// Run one WPT (WinterTC, Ecma TC55) fixture through the **static-only**
-/// pipeline. Returns `(status, detail)`. WinterTC is pure-Rust: there is NO
-/// engine fallback — a construct the static translator cannot lower (an
-/// unmapped Web API like `URL`, an `async_test`/`promise_test` needing a
-/// tokio-driven host) is honestly `unsupported`/`partial`, never degraded to
-/// QuickJS. That is the contract difference from `run_test262` (which
-/// degrades-don't-reject): WinterTC conformance is static-only.
+/// Run one WPT (WinterTC, Ecma TC55) fixture. Returns `(status, detail)`.
+/// WinterTC uses the same "degrade, don't reject" model as `run_test262`: a
+/// construct the static translator cannot lower (an unmapped Web API edge, an
+/// `async_test`/`promise_test` needing a tokio-driven host) falls back to the
+/// in-process QuickJS engine path with Web API builtins registered (the engine
+/// builtin delegates to the same Rust impl as the static path, so degraded
+/// behavior == static behavior). The fallback only upgrades to `supported`;
+/// otherwise `partial` carries both details.
 ///
-/// Path: `Translator::check` (translatability) → `cargo check` (compiles,
-/// partial on failure) → build + run the probe; exit 0 → supported, a panicked
-/// `AssertionError` (the testharness builtin's prefix) → partial, a build
-/// failure or timeout → unsupported.
+/// Path: `Translator::check` (translatability) → `cargo check` (compiles) →
+/// build + run the probe; exit 0 → supported, a panicked `AssertionError` →
+/// partial, an engine `ReferenceError` (a built-in QuickJS lacks) → unsupported.
+/// Run the engine fallback after a static-path failure at `stage` (check /
+/// translate / build / runtime). The engine can only upgrade to `supported`;
+/// if it also fails, the result is `partial` carrying both the static and
+/// engine details (never a false `unsupported`).
+fn degrade_after(stage: &str, static_detail: &str, raw: &RawFeature) -> (&'static str, String) {
+    let (estatus, edetail) = run_engine(raw);
+    if estatus == "supported" {
+        return ("supported", format!("engine fallback after {stage}"));
+    }
+    (
+        "partial",
+        format!("{stage}: {static_detail} | engine: {edetail}"),
+    )
+}
+
 fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str, String) {
-    // `DASH_WPT_ENGINE_FALLBACK=1` — PoC toggle: relax the WinterTC static-only
-    // contract and let a fixture the static translator cannot lower fall back
-    // to the in-process QuickJS engine path WITH Web API builtins registered
-    // (the Javy pattern — see [`engine_eval`]'s WPT branch). Mirrors
-    // `run_test262`'s "degrade, don't reject": only upgrades to `supported`;
-    // if the engine also fails, keep `partial` carrying both details (never a
-    // false `unsupported`). Default (unset) = the production static-only
-    // contract — WinterTC conformance is pure-Rust, no engine fallback.
-    let engine_fallback = std::env::var("DASH_WPT_ENGINE_FALLBACK")
-        .map(|v| v == "1" || v.eq_ignore_ascii_case("true"))
-        .unwrap_or(false);
+    // WinterTC uses the same "degrade, don't reject" model as `run_test262`:
+    // a fixture the static translator cannot lower falls back to the in-process
+    // QuickJS engine path with Web API builtins registered (the Javy pattern —
+    // see [`engine_eval`]'s WPT branch; the engine builtin delegates to the same
+    // Rust impl as the static path, so degraded behavior == static behavior).
+    // The fallback only upgrades to `supported`; otherwise `partial` carries
+    // both details (never a false `unsupported`).
+    //
     // A WPT fixture whose body `await`s needs an async entry — rewrap the
     // extractor's sync `function main` wrapper to `async function main` so the
     // translator emits a `#[tokio::main] async fn main` that resolves the body's
@@ -4213,49 +4226,16 @@ fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str
             .map(|d| format!("{d}"))
             .collect::<Vec<_>>()
             .join(" | ");
-        if engine_fallback {
-            let (estatus, edetail) = run_engine(raw);
-            if estatus == "supported" {
-                return (
-                    "supported",
-                    "engine fallback after static check failure".into(),
-                );
-            }
-            return (
-                "partial",
-                format!("static check: {msg} | engine: {edetail}"),
-            );
-        }
-        return ("unsupported", msg);
+        return degrade_after("static check", &msg, raw);
     }
     let (rust, deps) = match translate_catch(&fixture) {
         Ok(r) => r,
-        // No engine fallback (WinterTC is static-only): a translator failure is
-        // an honest partial, not a degrade-to-QuickJS.
-        Err(e) => {
-            if engine_fallback {
-                let (estatus, edetail) = run_engine(raw);
-                if estatus == "supported" {
-                    return (
-                        "supported",
-                        "engine fallback after translate failure".into(),
-                    );
-                }
-                return ("partial", format!("translate: {e} | engine: {edetail}"));
-            }
-            return ("partial", format!("translate: {e}"));
-        }
+        Err(e) => return degrade_after("translate", &e.to_string(), raw),
     };
     if deps.needs_engine() {
-        // The testharness builtin is `Mapped`, so this means classify let an
-        // unmapped construct through — honest partial, no engine fallback.
-        if engine_fallback {
-            return run_engine(raw);
-        }
-        return (
-            "partial",
-            "static classify flagged engine; WinterTC has no fallback".into(),
-        );
+        // The testharness builtin is `Mapped`, so classify flagged a genuinely
+        // unmapped construct — route to the engine.
+        return run_engine(raw);
     }
     write_project(project, &rust, &deps);
     let (ok, err) = cargo(
@@ -4264,36 +4244,11 @@ fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str
         &["check", "--quiet", "--message-format=short"],
     );
     if !ok {
-        if engine_fallback {
-            let (estatus, edetail) = run_engine(raw);
-            if estatus == "supported" {
-                return (
-                    "supported",
-                    "engine fallback after static build failure".into(),
-                );
-            }
-            return (
-                "partial",
-                format!("static build: {err} | engine: {edetail}"),
-            );
-        }
-        return ("partial", format!("static build: {err}"));
+        return degrade_after("static build", &err, raw);
     }
     let (verdict, _stdout) = cargo_run_full(project, target_dir);
     match verdict {
-        RunOutcome::RunError(err) if engine_fallback => {
-            let (estatus, edetail) = run_engine(raw);
-            if estatus == "supported" {
-                return (
-                    "supported",
-                    "engine fallback after static runtime panic".into(),
-                );
-            }
-            (
-                "partial",
-                format!("runtime error: {err} | engine: {edetail}"),
-            )
-        }
+        RunOutcome::RunError(err) => degrade_after("runtime error", &err, raw),
         other => judge_run(other),
     }
 }

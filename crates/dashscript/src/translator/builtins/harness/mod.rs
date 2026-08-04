@@ -11,9 +11,10 @@
 //! This is the fourth, orthogonal layer of `builtins/` — ES built-in / Web API
 //! / Node module / **test harness**. Deno's `ext/` has no analogue because Deno
 //! does not run test262/WPT fixtures; the harness layer exists here only to
-//! keep the conformance oracle on the static path (WinterTC is pure-Rust, no
-//! degradation — so the WPT harness must lower statically, not fall back to the
-//! engine the way a test262 helper sometimes does).
+//! keep the conformance oracle on the static path (the mapped harness set
+//! lowers statically to `__ds::wpt_*`; composite/async forms with no static
+//! lowering fall back to the engine, same per-function degrade model as
+//! test262).
 
 mod assert;
 mod testharness;

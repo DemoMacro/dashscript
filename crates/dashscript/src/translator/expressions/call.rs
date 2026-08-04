@@ -460,8 +460,8 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         // WPT testharness globals — `test()`/`assert_equals`/`assert_true`/…
         // (the web-platform analogue of test262's `assert`). Dispatched before
         // `global_function` so the bare-callee form does not fall through to a
-        // phantom binding (E0425). WinterTC is static-only: these lower to
-        // `__ds::wpt_*` Rust helpers, never to the engine.
+        // phantom binding (E0425). These lower to `__ds::wpt_*` Rust helpers
+        // (the static path).
         if let Some(expr) = builtins::testharness_function(id, call.arguments.as_slice(), ctx) {
             return expr;
         }

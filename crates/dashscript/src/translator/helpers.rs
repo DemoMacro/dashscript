@@ -1612,9 +1612,9 @@ fn ds_codec_run(
 /// (Ecma TC55) Web API: ES `fetch(url)` returns `Promise<Response>`; this slice
 /// holds the `DsResponse`/`DsHeaders` wrappers + the `ds_fetch` async fn that
 /// `await fetch(url)` lowers to. Backed by `reqwest` (deno_fetch's HTTP core,
-/// the crate Deno/servo reach for) — pure-Rust static track, never degraded to
-/// the engine. reqwest auto-switches its backend on `wasm32` (browser `fetch`
-/// via wasm-bindgen), so one slice covers the native and the future wasm target.
+/// the crate Deno/servo reach for) — pure-Rust static track. reqwest
+/// auto-switches its backend on `wasm32` (browser `fetch` via wasm-bindgen),
+/// so one slice covers the native and the future wasm target.
 pub(super) const DS_FETCH_HELPER: &str = r#"
 /// A WHATWG `Response` — owns its parts (status/status_text/headers/body), so
 /// both a real `fetch(…)` (the body drained eagerly) and a synthetic
@@ -3504,8 +3504,9 @@ impl<T: DsSameValue> DsSameValue for Option<T> {
 // harness distinguish a WPT assert failure (`partial`) from a build error
 // (`unsupported`), the way `Test262Error:` does for test262. Composite WPT
 // asserts (`assert_array_equals`/`assert_object_equals`/…) and async forms
-// (`async_test`/`promise_test`) stay `unsupported` — the WinterTC path is
-// static-only (degrade-don't-reject does not apply to Web APIs).
+// (`async_test`/`promise_test`) have no static lowering — the fixture falls
+// back to the engine (WinterTC is static-first + per-function degrade, same
+// as test262).
 
 /// WPT `assert_equals(a, b)` — panics an `AssertionError` on mismatch. Same
 /// SameValue (Object.is) semantics as `assert_same_value`; two type params so
@@ -3646,8 +3647,7 @@ pub fn wpt_assert_approx_equals(actual: f64, expected: f64, epsilon: f64) {
 /// timer fixtures clamp every delay to 0 (negative, `2^32`-overflow, or
 /// missing), so the drain is a deterministic CPU loop with no real wait; the
 /// `Instant` comparison is kept so a future delay>0 fixture sleeps correctly
-/// without a redesign. Pure `std` — never degraded to the engine (WinterTC's
-/// static-only contract).
+/// without a redesign. Pure `std`.
 pub(super) const TIMERS_HELPER: &str = r#"
 /// One scheduled timer. `interval_ms = Some(_)` is a recurring `setInterval`;
 /// `None` is a one-shot `setTimeout` (removed after firing). `seq` is the

@@ -136,8 +136,8 @@ pub enum RuntimeDep {
     /// WPT (web-platform-tests) testharness asserts — `assert_equals`/
     /// `not_equals`/`assert_throws_dom`/`assert_throws_js`/`assert_unreached`
     /// lower to Rust helpers (`__ds::wpt_*`) that panic an `AssertionError` on
-    /// failure. The WinterTC conformance path is static-only — Web APIs are
-    /// pure-Rust, never degraded to the engine — so these share `ASSERT_HELPER`
+    /// failure. The WinterTC conformance path is static-first with per-function
+    /// degrade (same model as test262) — so these share `ASSERT_HELPER`
     /// with test262's asserts (same `DsSameValue` core). `assert_true`/
     /// `assert_false` route through `wpt_assert_equals` against `&true`/`&false`;
     /// `test(fn, name)` lowers to an immediate closure call (no helper). Pure
@@ -207,8 +207,7 @@ pub enum RuntimeDep {
     /// `Promise` introduce a runtime and a thread model. A `.ts` file whose
     /// top level awaits lowers its implicit entry to `#[tokio::main] async fn
     /// main`; `async fn` items and `.await` map to native Rust. Pure-Rust
-    /// static track — never degraded to the engine (the engine covers the
-    /// ECMAScript core only). Flags `tokio` (macros + rt, single-thread) and
+    /// static track. Flags `tokio` (macros + rt, single-thread) and
     /// `futures`; no `__ds` helper slice (the runtime is `#[tokio::main]`, not
     /// a helper module). The marker is the `#[tokio::main]` attribute, which
     /// only the async entry emits.
@@ -229,7 +228,7 @@ pub enum RuntimeDep {
     /// (a `DsResponse`), the caller's `await` driving it. `Response` properties
     /// (`status`/`ok`/`headers`/`text`) map to `DsResponse` methods. Backed by
     /// `reqwest` (rustls-tls, pure-Rust TLS — no system OpenSSL), the same HTTP
-    /// core deno_fetch uses; never degraded to the engine. Flags `reqwest`;
+    /// core deno_fetch uses. Flags `reqwest`;
     /// marker `__ds::ds_fetch`.
     Fetch,
     /// WHATWG `EventTarget`/`Event` — the WinterTC (Ecma TC55) DOM Events API

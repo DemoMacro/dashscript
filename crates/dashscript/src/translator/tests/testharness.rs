@@ -1,8 +1,8 @@
 //! WPT testharness builtin mappings — `test()`/`assert_equals`/…. See
 //! `builtins/harness/testharness.rs`. These verify the static lowering
 //! (`__ds::wpt_*`) end-to-end through `Translator::translate`/`check`, the way
-//! `tests/console.rs` verifies `console.*`. WinterTC is pure-Rust, so these must
-//! lower statically — never to the engine.
+//! `tests/console.rs` verifies `console.*`. The mapped set lowers statically;
+//! composite/async forms with no static lowering fall back to the engine.
 
 use super::super::Translator;
 
@@ -66,8 +66,8 @@ fn check_passes_test_call_and_assert_equals() {
 
 #[test]
 fn check_rejects_async_test() {
-    // `async_test` has no static lowering (needs tokio) and no engine fallback
-    // (WinterTC is static-only) — check flags it `unsupported`.
+    // `async_test` has no static lowering (needs tokio) — check flags it so the
+    // fixture falls back to the engine.
     let diags = Translator::new().check("async_test(() => {});");
     assert!(
         diags.iter().any(|d| d.message.contains("async_test")),

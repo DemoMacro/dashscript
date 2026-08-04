@@ -1,5 +1,5 @@
 // fetch-smoke — DashScript: WinterTC `fetch` (a native reqwest-backed async
-// mapping, never degraded to the engine). `fetch(url)` → `__ds::ds_fetch`, and
+// mapping). `fetch(url)` → `__ds::ds_fetch`, and
 // `await fetch(url)` records `r: DsResponse`, so `r.status`/`.ok`/`.headers`
 // lower to the wrapper's zero-arg accessors. `fetch(url, init)` with a plain
 // object `init` (method/body/headers) → `__ds::ds_fetch_with`. The Response

@@ -9,7 +9,7 @@
 //! as plain method calls on the handle types — only the constructor needs a
 //! dispatch arm (`expressions/new`), and the `writable`/`readable` fields are
 //! plain `pub` field access. Backed by `flate2` via the `Compression` runtime
-//! dep; pure-Rust static track, never degraded. `DecompressionStream` shares
+//! dep; pure-Rust static track. `DecompressionStream` shares
 //! this model (same `DsCompressionStream` type, a `Decompress` direction);
 //! `brotli`/true streaming remain honest partials.
 

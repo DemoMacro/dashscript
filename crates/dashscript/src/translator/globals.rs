@@ -267,10 +267,10 @@ pub fn is_testharness_mapped(name: &str) -> bool {
 /// not plain `DsSameValue` scalars or arrays of them). (`assert_approx_equals`
 /// is mapped — numeric operands cast to `f64`; see [`TESTHARNESS_MAPPED_GLOBALS`].)
 /// `promise_test` is mapped — it lowers to `wpt_promise_test(name, async move {
-/// … }).await` under `#[tokio::main]` (see `testharness_function`). Unlike
-/// test262's degrade-don't-reject, WinterTC is static-only — a fixture using
-/// one of these is honestly `unsupported`, not engine-degraded. Growing
-/// [`TESTHARNESS_MAPPED_GLOBALS`] (add a `__ds::wpt_*` helper + a
+/// … }).await` under `#[tokio::main]` (see `testharness_function`). A fixture
+/// using one of these has no static lowering, so it falls back to the engine
+/// (WinterTC is static-first + per-function degrade, same model as test262).
+/// Growing [`TESTHARNESS_MAPPED_GLOBALS`] (add a `__ds::wpt_*` helper + a
 /// `testharness_function` arm, then move the name here→there) is how WinterTC
 /// coverage expands.
 pub const TESTHARNESS_REJECTED_GLOBALS: &[&str] = &[
@@ -288,8 +288,8 @@ pub const TESTHARNESS_REJECTED_GLOBALS: &[&str] = &[
     "generate_string",
 ];
 
-/// True if `name` is a WPT testharness function with no static lowering (and no
-/// engine fallback — WinterTC is static-only). See [`TESTHARNESS_REJECTED_GLOBALS`].
+/// True if `name` is a WPT testharness function with no static lowering (the
+/// fixture falls back to the engine). See [`TESTHARNESS_REJECTED_GLOBALS`].
 #[inline]
 pub fn is_testharness_rejected(name: &str) -> bool {
     TESTHARNESS_REJECTED_GLOBALS.contains(&name)

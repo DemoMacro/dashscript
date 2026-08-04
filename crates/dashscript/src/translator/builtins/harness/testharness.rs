@@ -1,13 +1,11 @@
 //! The WPT (web-platform-tests) testharness API — `test()`/`assert_equals`/
 //! `assert_throws_dom`/…. These are *not* ES built-ins; they are the
 //! host-defined test harness WPT fixtures call (the web-platform analogue of
-//! test262's `assert.sameValue`). WinterTC conformance runs WPT fixtures on the
-//! **static path** (translate → cargo → run), so the harness API lowers to Rust
-//! helpers (`__ds::wpt_*`) — never to the embedded engine — matching the
-//! "WinterTC is pure-Rust, no degradation" contract. Composite asserts
-//! (`assert_array_equals`/`assert_object_equals`/…) and the async forms
-//! (`async_test`/`promise_test`) stay unmapped (`classify` rejects them
-//! honestly — the async forms need a runtime this static path does not ship).
+//! test262's `assert.sameValue`). WinterTC conformance is static-first: the
+//! harness API lowers to Rust helpers (`__ds::wpt_*`) on the static path, and
+//! composite asserts (`assert_array_equals`/`assert_object_equals`/…) and the
+//! async forms (`async_test`/`promise_test`) stay unmapped — a fixture using
+//! them falls back to the engine (same per-function degrade model as test262).
 //!
 //! Sibling to `assert.rs` (the test262 harness); both lower to `ASSERT_HELPER`.
 

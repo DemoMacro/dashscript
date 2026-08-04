@@ -9,15 +9,14 @@
 //! is the async hash backed by the RustCrypto `sha1`/`sha2` crates;
 //! `subtle.importKey` (raw format) builds a `DsCryptoKey`, `subtle.sign`/
 //! `.verify` are the async HMAC backed by `hmac`, and `subtle.encrypt`/`.decrypt`
-//! are the async AES-GCM/AES-CBC backed by `aes-gcm`/`aes`+`cbc` (pure-Rust —
-//! never degraded),
+//! are the async AES-GCM/AES-CBC backed by `aes-gcm`/`aes`+`cbc` (pure-Rust).
 //! `crypto.subtle.generateKey` is the fresh-key factory (random AES/HMAC keys),
 //! `crypto.subtle.deriveBits`/`deriveKey` are the PBKDF2/HKDF key-derivation
 //! paths (small HMAC loops, the same `hmac` backing as `sign`), and
 //! `crypto.subtle.exportKey` is the raw symmetric-key export (the inverse of
 //! `importKey`), and `crypto.subtle.wrapKey`/`unwrapKey` are the AES-KW key-wrap
 //! path (RFC 3394, the only wrap algorithm WinterTC servers use; backed by
-//! `aes`+`cbc`'s `cipher` re-export — pure-Rust, never degraded).
+//! `aes`+`cbc`'s `cipher` re-export — pure-Rust).
 
 use oxc_ast::ast::{Argument, Expression, ObjectPropertyKind, PropertyKey, StaticMemberExpression};
 use syn::{parse_quote, Expr};

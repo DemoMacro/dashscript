@@ -4,12 +4,13 @@
 // `tests/conformance/data/wpt/<dir>.json`. Each WPT `.any.js` fixture's body
 // is wrapped verbatim in `function main(): void { … }` — `test()`/
 // `assert_equals` stay as-is (DashScript lowers them to `__ds::wpt_*` static
-// helpers). The conformance harness runs the **static path only** (translate →
-// cargo → run) and judges by exit code + `AssertionError` detection: a
-// fixture whose asserts all hold passes (supported); a thrown `AssertionError`
-// fails it (partial); a build failure / timeout / rejected construct is
-// unsupported. WinterTC is pure-Rust: there is NO engine fallback — the
-// testharness builtin + every Web API mapping are static.
+// helpers). The conformance harness is static-first with per-function engine
+// degrade (same model as test262): translate → cargo → run, and a fixture the
+// static translator cannot lower falls back to the in-process QuickJS engine
+// (with Web API builtins registered). Judges by exit code + `AssertionError`
+// detection: a fixture whose asserts all hold passes (supported); a thrown
+// `AssertionError` fails it (partial); a build failure / timeout / rejected
+// construct is unsupported (only if the engine also fails).
 //
 // Dir scope = the WinterTC ECMA-429 §5 minimum common web API
 // (url/urlpattern/encoding/hr-time/html/dom/WebCryptoAPI/console/fetch/
@@ -155,8 +156,8 @@ function inlineIncludes(fixturePath, includes, seen = new Set()) {
 // Parse the body for test counts + flag async/fetch use (matrix diagnostics,
 // not filtering). The body is returned verbatim — DashScript lowers `test()`/
 // `assert_equals` to static `__ds::wpt_*` helpers; `async_test`/`promise_test`
-// classify `Reject` (no static lowering, no engine fallback — WinterTC is
-// static-only); `fetch`/other Tier-3 Web APIs leave the fixture honestly
+// classify `Reject` (no static lowering — the fixture falls back to the
+// engine); `fetch`/other Tier-3 Web APIs leave the fixture honestly
 // `unsupported` until mapped. Returns { ok, body, nTests, hasAsync, hasFetch }
 // or { ok: false, reason }.
 function rewrite(body) {
@@ -268,8 +269,8 @@ function extract() {
     "(WinterTC ECMA-429 §5 minimum common API scope). Each fixture wraps a WPT " +
     ".any.js body verbatim in `function main(): void { … }` — test()/" +
     "assert_equals stay as-is (DashScript lowers them to __ds::wpt_* static " +
-    "helpers). WinterTC is pure-Rust: the conformance harness runs the static " +
-    "path only (no engine fallback). `includes` lists the WPT harness scripts " +
+    "helpers). WinterTC is static-first with per-function engine degrade " +
+    "(same model as test262). `includes` lists the WPT harness scripts " +
     "(// META: script=) the fixture depends on. DO NOT edit by hand.";
   const summary = [];
   for (const [cat, feats] of [...byDir.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
