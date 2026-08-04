@@ -234,6 +234,16 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if builtins::request_ctor_type(id.name.as_str()).is_some() {
             return builtins::request_ctor(n.arguments.as_slice(), ctx);
         }
+        // `new Response(body?, init?)` — the WHATWG `Response` constructor (FETCH
+        // §5.3, a WinterTC Web API). A `new Response(…)` builds a synthetic
+        // `DsResponse` (no network) from a `body` flattened to bytes and a
+        // `status`/`statusText`/`headers` init object, the same surface
+        // `fetch(…)` returns — `.status`/`.statusText`/`.ok`/`.headers` resolve
+        // in the member path, `await .text()`/`.json()`/`.arrayBuffer()` in the
+        // call path.
+        if builtins::response_ctor_type(id.name.as_str()).is_some() {
+            return builtins::response_ctor(n.arguments.as_slice(), ctx);
+        }
         // `new ReadableStream([{ start(controller) { … } }])` — the WHATWG
         // Streams API (a WinterTC Web API). The push-source form maps
         // (`controller.enqueue`/`.close` + `getReader` + `await reader.read()`);

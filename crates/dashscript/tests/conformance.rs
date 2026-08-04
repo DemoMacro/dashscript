@@ -789,6 +789,48 @@ fn wpt_request_compiles_and_runs() {
     );
 }
 
+/// `new Response(body?, init?)` end-to-end — the WHATWG `Response` constructor
+/// (FETCH §5.3, a WinterTC Web API). A synthetic `DsResponse` is built from a
+/// body flattened to bytes and a `status`/`statusText`/`headers` init object,
+/// the same surface `fetch(…)` returns: `.status`/`.statusText`/`.ok` (member
+/// accessors, synchronous) and `await .text()` (the body-consuming async
+/// method). The smoke covers a full-init Response (201/Created/headers), a
+/// default-arg Response (`new Response()` → 200/ok), and the async `text()`
+/// drain — verifying the constructor, the accessors, and the body method together.
+#[test]
+fn wpt_response_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.response_smoke".into(),
+        category: "smoke".into(),
+        fixture: "promise_test(async () => {\n\
+                  \x20 const r = new Response(\"hello\", { status: 201, statusText: \"Created\", headers: { \"content-type\": \"text/plain\" } });\n\
+                  \x20 assert_equals(r.status, 201);\n\
+                  \x20 assert_equals(r.statusText, \"Created\");\n\
+                  \x20 assert_equals(r.ok, true);\n\
+                  \x20 assert_equals(await r.text(), \"hello\");\n\
+                  \x20 const d = new Response();\n\
+                  \x20 assert_equals(d.status, 200);\n\
+                  \x20 assert_equals(d.ok, true);\n\
+                  \x20 }, \"response-core\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "Response smoke should be supported: {detail}"
+    );
+}
+
 /// `promise_test(async () => { … }, "n")` end-to-end: the async callback lowers
 /// to `wpt_promise_test("n", async move { … }).await` under `#[tokio::main]`,
 /// so this verifies the full Stage 2 chain — translate → cargo build (pulls

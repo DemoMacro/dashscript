@@ -219,8 +219,8 @@ pub(in crate::translator) fn fetch_init(
 
 /// An `init` object's property key as a string — a static identifier (`method`)
 /// or a string literal (`"method"`); computed/shorthand keys have no static
-/// name here.
-fn init_key_name(key: &PropertyKey<'_>) -> Option<String> {
+/// name here. Shared by `fetch_init` and the `Response` ctor's init parser.
+pub(in crate::translator) fn init_key_name(key: &PropertyKey<'_>) -> Option<String> {
     match key {
         PropertyKey::StaticIdentifier(id) => Some(id.name.to_string()),
         PropertyKey::StringLiteral(s) => Some(s.value.to_string()),

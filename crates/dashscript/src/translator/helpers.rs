@@ -1109,56 +1109,105 @@ fn ds_codec_run(
 /// the engine. reqwest auto-switches its backend on `wasm32` (browser `fetch`
 /// via wasm-bindgen), so one slice covers the native and the future wasm target.
 pub(super) const DS_FETCH_HELPER: &str = r#"
-/// A `fetch()` `Response` — wraps `reqwest::Response`. The body is a one-shot
-/// stream (ES semantics), so `text` consumes `self`; `status`/`ok`/`headers`
-/// borrow `&self` (the ES properties do not drain the body).
+/// A WHATWG `Response` — owns its parts (status/status_text/headers/body), so
+/// both a real `fetch(…)` (the body drained eagerly) and a synthetic
+/// `new Response(body, init)` (no network) lower to one shape. The body is a
+/// one-shot resource (ES semantics): `text`/`json`/`array_buffer` consume
+/// `self`; `status`/`status_text`/`ok`/`headers` borrow `&self` (the ES
+/// properties do not drain the body). `reqwest::Response` has no public
+/// parts-constructor, which is why a synthetic `new Response(…)` forces this
+/// owned shape (a `fetch(…)` drains the reqwest body into `body` up front).
 pub struct DsResponse {
-    inner: reqwest::Response,
+    pub status: u16,
+    pub status_text: ::std::string::String,
+    pub headers: DsHeaders,
+    pub body: ::std::vec::Vec<u8>,
 }
 impl DsResponse {
-    /// HTTP status code (e.g. 200). ES `response.status` is a number.
-    #[inline]
-    pub fn status(&self) -> f64 {
-        self.inner.status().as_u16() as f64
-    }
-    /// True iff the status is a 2xx. ES `response.ok`.
-    #[inline]
-    pub fn ok(&self) -> bool {
-        self.inner.status().is_success()
-    }
-    /// The response headers. ES `response.headers` — a `DsHeaders` view built
-    /// from the underlying `reqwest` header map (names lowercased, insertion
-    /// order kept so iteration matches the wire order). `DsHeaders` lives in
-    /// `HEADERS_HELPER` (a pure-`std` slice); this conversion is the one bridge
-    /// from `reqwest`'s header map to the standalone `Headers` model.
-    #[inline]
-    pub fn headers(&self) -> DsHeaders {
+    /// Build a `DsResponse` from a live `reqwest::Response` — the body is
+    /// drained eagerly so the rest of `DsResponse` is pure data (no async
+    /// needed for `status`/`ok`/`headers`). Used by the `fetch(…)` producers.
+    async fn from_reqwest(resp: reqwest::Response) -> DsResponse {
+        let status = resp.status().as_u16();
+        let status_text = resp
+            .status()
+            .canonical_reason()
+            .unwrap_or("")
+            .to_string();
         let mut entries = ::std::vec::Vec::new();
-        for (k, v) in self.inner.headers().iter() {
+        for (k, v) in resp.headers().iter() {
             if let Ok(s) = v.to_str() {
                 entries.push((k.as_str().to_lowercase(), ::std::string::String::from(s)));
             }
         }
-        DsHeaders { entries }
+        let body = resp.bytes().await.unwrap_or_default().to_vec();
+        DsResponse {
+            status,
+            status_text,
+            headers: DsHeaders { entries },
+            body,
+        }
+    }
+    /// The translator-emitted constructor for `new Response(body, init?)`. The
+    /// `body` is the already-flattened byte buffer (a string/`Blob`/`Uint8Array`
+    /// lowered by the translator's Blob-parts coercion); `status` (default
+    /// `200`), `status_text` (default `""`), and `headers` (a `(name, value)`
+    /// list) come from the ES `init` object. No network — ES `new Response(…)`
+    /// is synchronous.
+    pub fn new(
+        body: ::std::vec::Vec<u8>,
+        status: u16,
+        status_text: ::std::string::String,
+        headers: ::std::vec::Vec<(::std::string::String, ::std::string::String)>,
+    ) -> Self {
+        DsResponse {
+            status,
+            status_text,
+            headers: DsHeaders {
+                entries: headers.into_iter().map(|(k, v)| (k.to_lowercase(), v)).collect(),
+            },
+            body,
+        }
+    }
+    /// HTTP status code (e.g. 200). ES `response.status` is a number.
+    #[inline]
+    pub fn status(&self) -> f64 {
+        self.status as f64
+    }
+    /// True iff the status is a 2xx. ES `response.ok`.
+    #[inline]
+    pub fn ok(&self) -> bool {
+        (200..300).contains(&self.status)
+    }
+    /// ES `response.statusText` — the HTTP status text (e.g. "OK", "Created").
+    #[inline]
+    pub fn status_text(&self) -> ::std::string::String {
+        self.status_text.clone()
+    }
+    /// The response headers. ES `response.headers` — a `DsHeaders` view (a
+    /// clone of the owned field; names lowercased, insertion order kept).
+    /// `DsHeaders` lives in `HEADERS_HELPER` (a pure-`std` slice).
+    #[inline]
+    pub fn headers(&self) -> DsHeaders {
+        self.headers.clone()
     }
     /// The body as UTF-8 text. ES `await response.text()` (consumes the body).
     #[inline]
     pub async fn text(self) -> ::std::string::String {
-        self.inner.text().await.unwrap_or_default()
+        ::std::string::String::from_utf8_lossy(&self.body).into_owned()
     }
     /// The body parsed as JSON. ES `await response.json()` (consumes the body);
     /// a body that fails to parse yields `null` (ES would reject the promise
     /// with a `SyntaxError` — the `null` prefix is what the harness reads).
     #[inline]
     pub async fn json(self) -> ::serde_json::Value {
-        let body = self.inner.text().await.unwrap_or_default();
-        ::serde_json::from_str(&body).unwrap_or(::serde_json::Value::Null)
+        ::serde_json::from_slice(&self.body).unwrap_or(::serde_json::Value::Null)
     }
     /// The body as raw bytes. ES `await response.arrayBuffer()` (consumes the
     /// body).
     #[inline]
     pub async fn array_buffer(self) -> ::std::vec::Vec<u8> {
-        self.inner.bytes().await.unwrap_or_default().to_vec()
+        self.body
     }
 }
 /// `fetch(url)` — a GET request returning a `DsResponse`. ES `fetch` returns a
@@ -1176,7 +1225,7 @@ pub async fn ds_fetch<T: reqwest::IntoUrl>(url: T) -> DsResponse {
         .send()
         .await
         .expect("fetch network error");
-    DsResponse { inner: resp }
+    DsResponse::from_reqwest(resp).await
 }
 /// `fetch(url, init)` — a request built from the ES `init` object fields:
 /// `method` (an HTTP verb, case-insensitive), `body` (a string payload), and
@@ -1204,9 +1253,7 @@ pub async fn ds_fetch_with<T: reqwest::IntoUrl>(
     for (k, v) in headers {
         req = req.header(k, v);
     }
-    DsResponse {
-        inner: req.send().await.expect("fetch network error"),
-    }
+    DsResponse::from_reqwest(req.send().await.expect("fetch network error")).await
 }
 /// A WHATWG `Request` — a fetch descriptor built by `new Request(url, init)`
 /// (FETCH §5.2, a WinterTC Web API). It carries the `url`, the HTTP `method`
@@ -1288,9 +1335,7 @@ pub async fn ds_fetch_request(req: &DsRequest) -> DsResponse {
     for (k, v) in &req.headers {
         r = r.header(k, v);
     }
-    DsResponse {
-        inner: r.send().await.expect("fetch network error"),
-    }
+    DsResponse::from_reqwest(r.send().await.expect("fetch network error")).await
 }
 "#;
 
@@ -1485,6 +1530,10 @@ pub(super) const HEADERS_HELPER: &str = r#"
 /// insensitive); values are stored as-given (a leading/trailing trim is the
 /// only normalization, matching the common WPT shape). `entries` is public so
 /// `DsResponse::headers` can build a view directly from `reqwest`'s header map.
+/// `#[derive(Clone)]` so `DsResponse` (which owns a `DsHeaders` field, so a
+/// `new Response(…)` and a `fetch(…)` share one Response shape) can return a
+/// headers view by clone.
+#[derive(Clone)]
 pub struct DsHeaders {
     pub entries: ::std::vec::Vec<(::std::string::String, ::std::string::String)>,
 }

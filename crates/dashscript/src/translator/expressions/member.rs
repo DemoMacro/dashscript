@@ -285,10 +285,11 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return parse_quote!(#obj.#method());
         }
     }
-    // `r.status`/`.ok`/`.headers` on a DsResponse local → the zero-arg
-    // accessor. ES `Response` exposes these as properties; the Rust wrapper's
-    // accessors are methods, so `r.status` rewrites to `r.status()`. The async
-    // `.text()`/`.json()` are method calls and dispatch in the call path.
+    // `r.status`/`.statusText`/`.ok`/`.headers` on a DsResponse local → the
+    // zero-arg accessor. ES `Response` exposes these as properties; the Rust
+    // wrapper's accessors are methods, so `r.status` rewrites to `r.status()`.
+    // The async `.text()`/`.json()` are method calls and dispatch in the call
+    // path.
     if is_ds_response_local(&sm.object, ctx) {
         if let Some(m) = ds_response_accessor(field_name) {
             let method = Ident::new(m, Span::call_site());
@@ -1093,12 +1094,13 @@ pub(in crate::translator) fn is_ds_response_local(expr: &Expression, ctx: &Ctx<'
 }
 
 /// The `__ds::DsResponse` accessor method name for a WHATWG `Response`
-/// property, or `None` for any other name. `status`/`ok`/`headers` map to the
-/// wrapper's same-named zero-arg methods; `text`/`json` are async and dispatch
-/// in the call path, not here.
+/// property, or `None` for any other name. `status`/`statusText`/`ok`/`headers`
+/// map to the wrapper's zero-arg methods (`statusText` → `status_text`); `text`/
+/// `json` are async and dispatch in the call path, not here.
 fn ds_response_accessor(field: &str) -> Option<&'static str> {
     Some(match field {
         "status" => "status",
+        "statusText" => "status_text",
         "ok" => "ok",
         "headers" => "headers",
         _ => return None,

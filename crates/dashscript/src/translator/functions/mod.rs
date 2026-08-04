@@ -1263,6 +1263,7 @@ fn register_declarator(
             .or_else(|| file_path(n))
             .or_else(|| form_data_path(n))
             .or_else(|| request_path(n))
+            .or_else(|| response_path(n))
             .or_else(|| promise_path(n))
             .or_else(|| streams_path(n))
             .or_else(|| error_path(n)),
@@ -1523,6 +1524,22 @@ fn request_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     };
     match id.name.as_str() {
         "Request" => Some(parse_quote!(crate::__ds::DsRequest)),
+        _ => None,
+    }
+}
+
+/// `new Response(…)` → `crate::__ds::DsResponse`, so an unannotated `let r =
+/// new Response(…)` records a `DsResponse` local and a later `.status`/
+/// `.statusText`/`.ok`/`.headers` (member accessors) and `await r.text()`/
+/// `.json()`/`.arrayBuffer()` (call path) resolve the receiver. Only the
+/// `Response` callee maps; any other `new` yields `None`.
+fn response_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
+    use oxc_ast::ast::Expression;
+    let Expression::Identifier(id) = &new_expr.callee else {
+        return None;
+    };
+    match id.name.as_str() {
+        "Response" => Some(parse_quote!(crate::__ds::DsResponse)),
         _ => None,
     }
 }

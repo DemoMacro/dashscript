@@ -1748,15 +1748,15 @@ impl Translator {
         if deps.has(RuntimeDep::FormData) {
             deps.insert(RuntimeDep::File);
         }
-        // DS_FETCH_HELPER's `DsRequest` (a `new Request(…)` descriptor) lives in
-        // the Fetch helper slice alongside `DsResponse`/`ds_fetch`, so any
-        // Request-bearing fixture must pull DS_FETCH_HELPER + `reqwest`, or
-        // `DsRequest` is E0433. The marker probe catches `__ds::ds_fetch`
-        // (`fetch(url)`/`fetch(request)` lowers to `ds_fetch`/`ds_fetch_request`)
-        // but not a `new Request(…)`-only fixture whose sole emit is
-        // `DsRequest::new`. Insert `Fetch` when `DsRequest` appears, the way
-        // `File` pulls `Blob` and `FormData` pulls `File`.
-        if probe.contains("__ds::DsRequest") {
+        // DS_FETCH_HELPER's `DsRequest`/`DsResponse` live in the Fetch helper
+        // slice alongside `ds_fetch`, so any Request- or Response-bearing fixture
+        // must pull DS_FETCH_HELPER + `reqwest`, or those types are E0433. The
+        // marker probe catches `__ds::ds_fetch` (`fetch(url)`/`fetch(request)`
+        // lowers to `ds_fetch`/`ds_fetch_request`) but not a `new Request(…)`/
+        // `new Response(…)`-only fixture whose sole emit is `DsRequest::new`/
+        // `DsResponse::new`. Insert `Fetch` when either appears, the way `File`
+        // pulls `Blob` and `FormData` pulls `File`.
+        if probe.contains("__ds::DsRequest") || probe.contains("__ds::DsResponse") {
             deps.insert(RuntimeDep::Fetch);
         }
         // `done()` lowers to `__ds::wpt_done` (sets the timer drain's DONE
