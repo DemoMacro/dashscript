@@ -1,22 +1,24 @@
 //! WebCrypto API — `crypto.randomUUID()` / `crypto.getRandomValues(buf)`
-//! (Tier 1), `crypto.subtle.digest(algo, data)` (the one-shot hash), and the
-//! HMAC key-bearing subset `crypto.subtle.importKey/sign/verify` (WinterTC Web
-//! API, W3C WebCrypto). The receiver is the global `crypto` object; WinterTC's
-//! `self` is the global-object alias (`self === globalThis`), so both `crypto.*`
-//! and `self.crypto.*` lower to the same `__ds::crypto_*` helper. `randomUUID`
-//! returns an RFC 4122 v4 UUID string; `getRandomValues` fills a `Uint8Array`
-//! byte buffer; `subtle.digest` is the async hash backed by the RustCrypto
-//! `sha1`/`sha2` crates; `subtle.importKey` (raw format) builds a `DsCryptoKey`,
-//! and `subtle.sign`/`.verify` are the async HMAC backed by `hmac` (pure-Rust —
-//! never degraded). The remaining `SubtleCrypto` methods (`encrypt`/`decrypt`/
-//! `generateKey`/`deriveBits`) need a wider key model and are not yet mapped.
+//! (Tier 1), `crypto.subtle.digest(algo, data)` (the one-shot hash), the HMAC
+//! key-bearing subset `crypto.subtle.importKey/sign/verify`, and the AES-GCM
+//! `crypto.subtle.encrypt/decrypt` (WinterTC Web API, W3C WebCrypto). The
+//! receiver is the global `crypto` object; WinterTC's `self` is the global-object
+//! alias (`self === globalThis`), so both `crypto.*` and `self.crypto.*` lower to
+//! the same `__ds::crypto_*` helper. `randomUUID` returns an RFC 4122 v4 UUID
+//! string; `getRandomValues` fills a `Uint8Array` byte buffer; `subtle.digest`
+//! is the async hash backed by the RustCrypto `sha1`/`sha2` crates;
+//! `subtle.importKey` (raw format) builds a `DsCryptoKey`, `subtle.sign`/
+//! `.verify` are the async HMAC backed by `hmac`, and `subtle.encrypt`/`.decrypt`
+//! are the async AES-GCM backed by `aes-gcm` (pure-Rust — never degraded). The
+//! remaining `SubtleCrypto` methods (AES-CBC, `generateKey`/`deriveBits`) are not
+//! yet mapped.
 
 use oxc_ast::ast::{Argument, Expression, ObjectPropertyKind, PropertyKey, StaticMemberExpression};
 use syn::{parse_quote, Expr};
 
 use super::super::super::bindings::snake;
 use super::super::super::context::Ctx;
-use super::super::super::expressions::translate_argument;
+use super::super::super::expressions::{translate_argument, translate_expr};
 use super::super::es_to_string_arg;
 use super::blob::{blob_part_to_bytes, collect_blob_parts, expr_to_string};
 
@@ -101,6 +103,43 @@ pub(in crate::translator) fn crypto_method(
             }
         }
     }
+    // `crypto.subtle.encrypt(algo, key, data)` — the AES-GCM subset. The ES
+    // `algo` object's `name` (`"AES-GCM"`) and `iv` (the nonce, a `Uint8Array`)
+    // are extracted at translate time; `data` is a `BufferSource` (reuses the
+    // digest coercion). ES returns `Promise<ArrayBuffer>`; the call site's
+    // `await` drives the future, and `callee_return_path` records the `Vec<u8>`
+    // return so a later `decrypt`/`assert_equals` passes the ciphertext through.
+    if sm.property.name.as_str() == "encrypt" {
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            if inner.property.name.as_str() == "subtle"
+                && is_crypto_receiver(&inner.object).is_some()
+            {
+                let (algorithm, iv) = encrypt_algorithm(args.first()?, ctx)?;
+                let key = translate_argument(args.get(1)?, ctx);
+                let data = digest_data_arg(args.get(2)?, ctx);
+                return Some(parse_quote!(
+                    crate::__ds::crypto_subtle_encrypt(#algorithm, &#iv, &#key, #data)
+                ));
+            }
+        }
+    }
+    // `crypto.subtle.decrypt(algo, key, data)` — the AES-GCM subset (the inverse
+    // of `encrypt`): `data` is `ciphertext || tag`. ES returns
+    // `Promise<ArrayBuffer>`.
+    if sm.property.name.as_str() == "decrypt" {
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            if inner.property.name.as_str() == "subtle"
+                && is_crypto_receiver(&inner.object).is_some()
+            {
+                let (algorithm, iv) = encrypt_algorithm(args.first()?, ctx)?;
+                let key = translate_argument(args.get(1)?, ctx);
+                let data = digest_data_arg(args.get(2)?, ctx);
+                return Some(parse_quote!(
+                    crate::__ds::crypto_subtle_decrypt(#algorithm, &#iv, &#key, #data)
+                ));
+            }
+        }
+    }
     // `crypto.randomUUID()` / `crypto.getRandomValues(buf)` (Tier 1).
     is_crypto_receiver(&sm.object)?;
     Some(match sm.property.name.as_str() {
@@ -127,25 +166,64 @@ pub(in crate::translator) fn crypto_method(
 /// - a string / any other expression → UTF-8 / `ToString` bytes (the `Blob`
 ///   single-part coercion, reused via `blob_part_to_bytes`).
 fn digest_data_arg(arg: &Argument, ctx: &Ctx<'_>) -> Expr {
-    let Some(e) = arg.as_expression() else {
-        return translate_argument(arg, ctx);
-    };
+    match arg.as_expression() {
+        Some(e) => digest_data_expr(e, ctx),
+        None => translate_argument(arg, ctx),
+    }
+}
+
+/// The `&Expression` form of [`digest_data_arg`] — the per-shape `BufferSource`
+/// → `Vec<u8>` coercion, factored so `encrypt`/`decrypt`'s `iv` field (a
+/// `Uint8Array` nonce) reuses it. See [`digest_data_arg`] for the per-shape
+/// lowering.
+fn digest_data_expr(e: &Expression, ctx: &Ctx<'_>) -> Expr {
     match e {
         Expression::ArrayExpression(arr) => collect_blob_parts(arr, ctx),
-        Expression::NewExpression(_) => translate_argument(arg, ctx),
+        Expression::NewExpression(_) => translate_expr(e, ctx),
         Expression::Identifier(id) => {
             let name = snake(&id.name).to_string();
             let is_vec = ctx
                 .local_type(&name)
                 .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "Vec"));
             if is_vec {
-                translate_argument(arg, ctx)
+                translate_expr(e, ctx)
             } else {
                 blob_part_to_bytes(e, ctx)
             }
         }
         _ => blob_part_to_bytes(e, ctx),
     }
+}
+
+/// `crypto.subtle.encrypt(algo, key, data)` / `.decrypt(…)`'s `algorithm`
+/// argument — the ES `{ name: "AES-GCM", iv: <Uint8Array> }` object — lowered to
+/// the `(name, iv)` pair the runtime helpers take. `iv` is a `BufferSource`
+/// coerced via the same path as `digest`'s `data`; an absent `iv` is an empty
+/// vector (ES requires it, so a missing `iv` surfaces honestly at runtime).
+/// `None` for a non-object `algorithm` (the arm falls through).
+fn encrypt_algorithm(arg: &Argument, ctx: &Ctx<'_>) -> Option<(Expr, Expr)> {
+    let Expression::ObjectExpression(obj) = arg.as_expression()? else {
+        return None;
+    };
+    let mut name = parse_quote!(::std::string::String::new());
+    let mut iv: Option<Expr> = None;
+    for kind in &obj.properties {
+        let ObjectPropertyKind::ObjectProperty(p) = kind else {
+            continue;
+        };
+        let key = match &p.key {
+            PropertyKey::StaticIdentifier(id) => id.name.as_str(),
+            PropertyKey::StringLiteral(s) => s.value.as_str(),
+            _ => continue,
+        };
+        match key {
+            "name" => name = algo_string_value(&p.value, ctx),
+            "iv" => iv = Some(digest_data_expr(&p.value, ctx)),
+            _ => {}
+        }
+    }
+    let iv = iv.unwrap_or_else(|| parse_quote!(::std::vec![]));
+    Some((name, iv))
 }
 
 /// Whether `expr` is the global `crypto` object: the bare identifier, or

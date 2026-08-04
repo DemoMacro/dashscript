@@ -749,6 +749,51 @@ fn wpt_subtle_hmac_compiles_and_runs() {
     );
 }
 
+/// `await crypto.subtle.{importKey,encrypt,decrypt}(…)` end-to-end — the
+/// WinterTC WebCrypto AES-GCM subset. Exercises the `crypto.subtle.encrypt`/
+/// `.decrypt` dispatch, the `encrypt → Vec<u8>` return-type inference (so the
+/// ciphertext local passes through to `decrypt` as a byte vector), the
+/// `encrypt_algorithm` `{name, iv}` extraction, and the `aes-gcm` crate backing
+/// (AES-256-GCM, 32-byte raw key). The `iv` is a local reused across the
+/// encrypt/decrypt pair (the helper takes it by reference). The assertions lean
+/// on AES-GCM's authentication: a 3-byte plaintext encrypts to 19 bytes (3 +
+/// 16-byte tag), and decrypting authenticates before returning the 3-byte
+/// plaintext — a wrong key/iv/tampered tag panics rather than returns a wrong
+/// length, so the length checks prove the round-trip.
+#[test]
+fn wpt_subtle_aes_gcm_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.subtle_aes_gcm_smoke".into(),
+        category: "smoke".into(),
+        fixture: "promise_test(async () => {\n\
+                  \x20 const key = await crypto.subtle.importKey(\n\
+                  \x20   \"raw\", new Uint8Array([0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31]),\n\
+                  \x20   { name: \"AES-GCM\" }, false, [\"encrypt\", \"decrypt\"]);\n\
+                  \x20 const iv = new Uint8Array([0,1,2,3,4,5,6,7,8,9,10,11]);\n\
+                  \x20 const ct = await crypto.subtle.encrypt({ name: \"AES-GCM\", iv: iv }, key, new Uint8Array([104, 105, 106]));\n\
+                  \x20 assert_equals(ct.length, 19);\n\
+                  \x20 const pt = await crypto.subtle.decrypt({ name: \"AES-GCM\", iv: iv }, key, ct);\n\
+                  \x20 assert_equals(pt.length, 3);\n\
+                  \x20 }, \"subtle-aes-gcm\");\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "SubtleCrypto AES-GCM smoke should be supported: {detail}"
+    );
+}
+
 /// `new Request(url, init?)` + the `.method`/`.url` read-only accessors
 /// end-to-end — the WinterTC FETCH §5.2 `Request` ctor. Exercises the ctor's
 /// `init` parsing (reusing `fetch_init`, the same path as `fetch(url, init)`),

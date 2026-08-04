@@ -1781,6 +1781,20 @@ fn callee_return_path(
         {
             Some(parse_quote!(Vec<u8>))
         }
+        // `crypto.subtle.encrypt(…)`/`.decrypt(…)` → `Vec<u8>` (the WinterTC
+        // WebCrypto AES-GCM ciphertext/plaintext bytes), so an unannotated
+        // `let ct = crypto.subtle.encrypt(…)` (and `await …`) records the same
+        // `Vec<u8>` `new Uint8Array(…)` records. A later `crypto.subtle.decrypt(
+        // algo, key, ct, …)` then recognizes `ct` as a byte vector — the data
+        // arg's `digest_data_arg` coercion passes it through instead of the Blob
+        // string coercion (the same reason `sign` is registered).
+        Expression::StaticMemberExpression(sm)
+            if (sm.property.name.as_str() == "encrypt"
+                || sm.property.name.as_str() == "decrypt")
+                && super::builtins::is_crypto_subtle_member(&sm.object) =>
+        {
+            Some(parse_quote!(Vec<u8>))
+        }
         // `cs.writable.getWriter()` → `DsCompressionWriter` /
         // `cs.readable.getReader()` → `DsCompressionReader` (a WinterTC Web API),
         // so an unannotated `let writer = cs.writable.getWriter()` — receiver is

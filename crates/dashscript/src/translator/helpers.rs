@@ -512,6 +512,104 @@ pub async fn crypto_subtle_verify(
     }
     diff == 0
 }
+/// Seal with an AES-GCM cipher built at the call site (keyed by length:
+/// `Aes128Gcm`/`Aes256Gcm`). `aead::Aead::encrypt` returns
+/// `ciphertext || tag` — the WebCrypto AES-GCM output format — so the result is
+/// byte-compatible with a browser `crypto.subtle.encrypt`. A nonce/length error
+/// is impossible for a translator-built key+iv, so the `expect` is a panic on a
+/// genuinely malformed input (the engine path's `TypeError` analogue).
+fn aes_gcm_seal<C>(cipher: &C, iv: &[u8], data: &[u8]) -> ::std::vec::Vec<u8>
+where
+    C: ::aead::Aead,
+{
+    use ::aead::Aead;
+    cipher
+        .encrypt(::aead::Nonce::<C>::from_slice(iv), data)
+        .expect("AES-GCM encrypt")
+        .to_vec()
+}
+/// The decrypt twin of [`aes_gcm_seal`] — `aead::Aead::decrypt` expects
+/// `ciphertext || tag` and authenticates before returning the plaintext; a tag
+/// mismatch (a tampered ciphertext) panics (ES rejects the promise with an
+/// `OperationError`).
+fn aes_gcm_open<C>(cipher: &C, iv: &[u8], data: &[u8]) -> ::std::vec::Vec<u8>
+where
+    C: ::aead::Aead,
+{
+    use ::aead::Aead;
+    cipher
+        .decrypt(::aead::Nonce::<C>::from_slice(iv), data)
+        .expect("AES-GCM decrypt")
+        .to_vec()
+}
+/// `crypto.subtle.encrypt(algo, key, data)` — the AES-GCM subset. The ES `algo`
+/// object's `name` (`"AES-GCM"`) and `iv` (the nonce, typically a 12-byte
+/// `Uint8Array`) are extracted at translate time; the key length selects
+/// `Aes128`/`Aes256Gcm`. Returns `ciphertext || tag` (the WebCrypto
+/// AES-GCM output format). `async` because ES `encrypt` returns
+/// `Promise<ArrayBuffer>`. The `iv` is taken by reference so the standard
+/// encrypt→decrypt round-trip can reuse one nonce binding. AES-CBC and the
+/// `additionalData`/`tagLength` AES-GCM fields are not yet mapped.
+pub async fn crypto_subtle_encrypt(
+    name: ::std::string::String,
+    iv: &[u8],
+    key: &DsCryptoKey,
+    data: ::std::vec::Vec<u8>,
+) -> ::std::vec::Vec<u8> {
+    use ::aead::KeyInit;
+    match name.as_str() {
+        "AES-GCM" => match key.key.len() {
+            16 => aes_gcm_seal(
+                &::aes_gcm::Aes128Gcm::new(::aead::Key::<::aes_gcm::Aes128Gcm>::from_slice(
+                    &key.key,
+                )),
+                iv,
+                &data,
+            ),
+            32 => aes_gcm_seal(
+                &::aes_gcm::Aes256Gcm::new(::aead::Key::<::aes_gcm::Aes256Gcm>::from_slice(
+                    &key.key,
+                )),
+                iv,
+                &data,
+            ),
+            _ => ::core::panic!("TypeError: AES-GCM key length must be 128/256 bits"),
+        },
+        _ => ::core::panic!("TypeError: crypto.subtle.encrypt: unsupported algorithm"),
+    }
+}
+/// `crypto.subtle.decrypt(algo, key, data)` — the AES-GCM subset. The inverse of
+/// `encrypt`: `data` is `ciphertext || tag`, authenticated then returned as
+/// plaintext. `async` because ES `decrypt` returns `Promise<ArrayBuffer>`. As
+/// with `encrypt`, `iv` is by reference (the same nonce binds a sealed pair).
+pub async fn crypto_subtle_decrypt(
+    name: ::std::string::String,
+    iv: &[u8],
+    key: &DsCryptoKey,
+    data: ::std::vec::Vec<u8>,
+) -> ::std::vec::Vec<u8> {
+    use ::aead::KeyInit;
+    match name.as_str() {
+        "AES-GCM" => match key.key.len() {
+            16 => aes_gcm_open(
+                &::aes_gcm::Aes128Gcm::new(::aead::Key::<::aes_gcm::Aes128Gcm>::from_slice(
+                    &key.key,
+                )),
+                iv,
+                &data,
+            ),
+            32 => aes_gcm_open(
+                &::aes_gcm::Aes256Gcm::new(::aead::Key::<::aes_gcm::Aes256Gcm>::from_slice(
+                    &key.key,
+                )),
+                iv,
+                &data,
+            ),
+            _ => ::core::panic!("TypeError: AES-GCM key length must be 128/256 bits"),
+        },
+        _ => ::core::panic!("TypeError: crypto.subtle.decrypt: unsupported algorithm"),
+    }
+}
 "#;
 
 /// WHATWG URLPattern API helper — `__ds::DsURLPattern`. A `new URLPattern(input)`

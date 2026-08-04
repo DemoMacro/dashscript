@@ -534,6 +534,15 @@ impl RuntimeDep {
                 ("sha2", "\"0.10\""),
                 // HMAC `sign`/`verify` (the key-bearing SubtleCrypto subset).
                 ("hmac", "\"0.12\""),
+                // AES-GCM `encrypt`/`decrypt` (the authenticated-encryption
+                // subset). WebCrypto's AES-GCM output is `ciphertext || tag`,
+                // byte-compatible with `aead::Aead::encrypt`. Keyed by length
+                // (128/256; 192 is not statically modeled — `aes-gcm` does not
+                // export `Aes192Gcm` by default). `aead` is named directly so
+                // `::aead::{Aead, KeyInit, Key, Nonce}` resolves regardless of
+                // re-export.
+                ("aes-gcm", "\"0.10\""),
+                ("aead", "\"0.5\""),
             ]),
             // `urlpattern` (denoland/rust-urlpattern) — the WHATWG URLPattern
             // reference. `new URLPattern(…)` wraps `urlpattern::UrlPattern`; a
