@@ -121,9 +121,14 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         }
         Expression::TSNonNullExpression(n) => classify_expr(&n.expression, ctx),
 
-        // `x instanceof T` — a runtime type check with no static equivalent.
+        // `x instanceof T` — a runtime type check. A zero-cost static lowering
+        // is possible on a typed operand (a union-enum narrowing → `matches!`,
+        // a built-in like `Array` → a type predicate), but the `classify` table
+        // has no type-query path for that yet, so the enclosing function runs
+        // under the engine (full ECMAScript `instanceof` semantics) rather than
+        // failing to build. The static path is tracked as a reflection batch.
         Expression::BinaryExpression(b) if matches!(b.operator, BinaryOperator::Instanceof) => {
-            reject("`instanceof` has no DashScript mapping (static types; no runtime type check)")
+            degrade("`instanceof` has no static lowering yet — the function runs under the engine")
         }
         // `delete x` — no Rust analogue.
         Expression::UnaryExpression(u) if matches!(u.operator, UnaryOperator::Delete) => {
@@ -1022,10 +1027,10 @@ mod tests {
     }
 
     #[test]
-    fn rejects_instanceof() {
+    fn degrades_instanceof() {
         assert!(matches!(
             classify_first_expr("x instanceof Foo"),
-            Mapping::Reject(_)
+            Mapping::DegradeEngine(_)
         ));
     }
 
