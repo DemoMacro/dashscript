@@ -582,8 +582,9 @@ fn engine_helper_module_stamps_web_api_builtins() {
     // static path lowers to (one implementation, two delivery paths)…
     assert!(
         src.contains("fn register_text_encoding(ctx: &Ctx<'_>)")
-            && src.contains("crate::__ds::TextEncoder::new().encode(s)"),
-        "register_text_encoding delegates to crate::__ds::TextEncoder, got:\n{src}"
+            && src.contains("crate::__ds::TextEncoder::new().encode(s)")
+            && src.contains("crate::__ds::TextDecoder::new(label, fatal, ignore_bom)"),
+        "register_text_encoding delegates to crate::__ds::TextEncoder and TextDecoder, got:\n{src}"
     );
     // …and the three engine entry points call wire_web_apis next to wire_console.
     assert!(

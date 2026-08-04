@@ -2552,27 +2552,61 @@ impl ::std::default::Default for DsAbortController {
 }
 "#;
 
-/// Engine-path Web API builtin for the WHATWG Encoding API — the Javy split:
-/// a JS shim (`new TextEncoder()`, `.encode()`) over a native `Function::new`
-/// that delegates to `crate::__ds::TextEncoder` (the SAME Rust impl the static
-/// path lowers to). Emitted into `__ds_engine.rs` only when `RuntimeDep::Engine`
-/// ∧ `RuntimeDep::Encoding` are both active, and called from `wire_web_apis`
-/// (whose body [`engine_helper_module`](Translator::engine_helper_module)
-/// stamps). Returning `Vec<u8>` (rquickjs `IntoJs` → a JS Array of numbers) and
-/// wrapping it in `new Uint8Array(...)` in the shim sidesteps the
-/// `TypedArray<'js>` Ctx-lifetime trap (a closure cannot return a value tied to
-/// the call's `Ctx` lifetime). TextDecoder follows the same pattern (its
-/// byte-input handling is the next continuous-impl item).
+/// Engine-path Web API builtins for the WHATWG Encoding API — the Javy split:
+/// JS shims (`new TextEncoder()`, `.encode()`, `new TextDecoder(…)`, `.decode()`)
+/// over native `Function::new` closures that delegate to `crate::__ds::Text*`
+/// (the SAME Rust impls the static path lowers to). Emitted into `__ds_engine.rs`
+/// only when `RuntimeDep::Engine` ∧ `RuntimeDep::Encoding` are both active, and
+/// called from `wire_web_apis` (whose body
+/// [`engine_helper_module`](Translator::engine_helper_module) stamps). Returning
+/// `Vec<u8>`/`String` (rquickjs `IntoJs` → JS Array / JS String) sidesteps the
+/// `TypedArray<'js>` Ctx-lifetime trap; the shims wrap/unwrap bytes via
+/// `new Uint8Array(...)` and `ArrayBuffer` arg extraction. `decode` is
+/// non-streaming (a fresh `TextDecoder` per call) — the streaming `Decoder`
+/// slot is the static path's job; the engine path covers the common single-call
+/// decode faithfully.
 pub(super) const TEXT_ENCODING_ENGINE_BUILTIN: &str = r#"
 fn register_text_encoding(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
     let encode = rquickjs::Function::new(ctx.clone(), |s: String| -> Vec<u8> {
         crate::__ds::TextEncoder::new().encode(s)
     })?;
     ctx.globals().set("__ds_te_encode", encode)?;
+    let decode = rquickjs::Function::new(
+        ctx.clone(),
+        |buf: rquickjs::ArrayBuffer,
+         off: usize,
+         len: usize,
+         label: String,
+         fatal: bool,
+         ignore_bom: bool|
+         -> String {
+            let bytes = buf.as_bytes().unwrap_or(&[]);
+            let end = off.saturating_add(len).min(bytes.len());
+            let view = bytes.get(off..end).unwrap_or(&[]);
+            crate::__ds::TextDecoder::new(label, fatal, ignore_bom)
+                .decode(view.to_vec(), false)
+        },
+    )?;
+    ctx.globals().set("__ds_td_decode", decode)?;
     ctx.eval_with_options::<(), _>(
         "this.TextEncoder = function TextEncoder() { this.encoding = 'utf-8'; };
          this.TextEncoder.prototype.encode = function(input) {
              return new Uint8Array(__ds_te_encode(input === undefined ? '' : String(input)));
+         };
+         this.TextDecoder = function TextDecoder(label, options) {
+             this.label = label === undefined ? 'utf-8' : String(label);
+             options = options || {};
+             this.fatal = !!options.fatal;
+             this.ignoreBOM = !!options.ignoreBOM;
+             this.encoding = 'utf-8';
+         };
+         this.TextDecoder.prototype.decode = function(input, _options) {
+             if (input == null) return '';
+             var buf, off = 0, len = 0;
+             if (input.buffer) { buf = input.buffer; off = input.byteOffset || 0; len = input.length; }
+             else if (input.byteLength !== undefined) { buf = input; len = input.byteLength; }
+             else { return ''; }
+             return __ds_td_decode(buf, off, len, this.label, this.fatal, this.ignoreBOM);
          };",
         sloppy(),
     )
