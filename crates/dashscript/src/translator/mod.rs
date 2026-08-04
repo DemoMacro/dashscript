@@ -1795,6 +1795,16 @@ impl Translator {
         if probe.contains("__ds::DsRequest") || probe.contains("__ds::DsResponse") {
             deps.insert(RuntimeDep::Fetch);
         }
+        // `DsCustomEvent` lives in EVENT_TARGET_HELPER alongside `DsEvent`/
+        // `DsEventTarget`/`DsEventInit`, so any CustomEvent-bearing fixture must
+        // pull EVENT_TARGET_HELPER, or `DsCustomEvent` is E0433. The marker
+        // probe catches `__ds::DsEvent` (a common prefix of the three Event
+        // types) but NOT `__ds::DsCustomEvent` (it starts `DsC`, not `DsEvent`)
+        // — so a `new CustomEvent(…)`-only fixture injects EventTarget
+        // explicitly, the way a `new Request(…)`-only fixture injects Fetch.
+        if probe.contains("__ds::DsCustomEvent") {
+            deps.insert(RuntimeDep::EventTarget);
+        }
         // `done()` lowers to `__ds::wpt_done` (sets the timer drain's DONE
         // flag). `wpt_done` lives in TIMERS_HELPER alongside the queue/drain,
         // so any fixture that calls `done()` — timer or not — pulls the slice

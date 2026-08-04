@@ -38,6 +38,11 @@ pub(in crate::translator) fn event_target_ctor_type(name: &str) -> Option<Type> 
     match name {
         "EventTarget" => Some(parse_quote!(crate::__ds::DsEventTarget)),
         "Event" => Some(parse_quote!(crate::__ds::DsEvent)),
+        // `DsCustomEvent` (no `<T>` — the chunk type is inferred at the call
+        // site from the `detail` value, the way `DsReadableStream`'s `T` is).
+        // The member dispatch keys off the last path segment, so the bare
+        // `DsCustomEvent` registration routes `ev.detail`/`.type`/… correctly.
+        "CustomEvent" => Some(parse_quote!(crate::__ds::DsCustomEvent)),
         "AbortController" => Some(parse_quote!(crate::__ds::DsAbortController)),
         _ => None,
     }
@@ -76,6 +81,50 @@ pub(in crate::translator) fn event_init(obj: &ObjectExpression) -> Expr {
         bubbles: #bubbles,
         cancelable: #cancelable,
     })
+}
+
+/// `new CustomEvent(type, init?)`'s `init` object — `{ detail, bubbles,
+/// cancelable }`. Returns the three as separate exprs (the `DsCustomEvent::new`
+/// signature takes them positionally). `detail` is `None` when absent or not a
+/// plain expression (ES `undefined`); `bubbles`/`cancelable` default to `false`
+/// and only BooleanLiteral fields lower statically (the common fixture shape —
+/// mirroring [`event_init`]). Other `init` fields (`sweet`/`composed`/…) are
+/// dropped — ES ignores unknown fields on the init record, and a property read
+/// like `ev.sweet` lowers to a plain field access that surfaces honestly.
+pub(in crate::translator) fn custom_event_init(
+    obj: &ObjectExpression,
+    ctx: &Ctx<'_>,
+) -> (Option<Expr>, Expr, Expr) {
+    let mut detail: Option<Expr> = None;
+    let mut bubbles: Expr = parse_quote!(false);
+    let mut cancelable: Expr = parse_quote!(false);
+    for kind in &obj.properties {
+        let ObjectPropertyKind::ObjectProperty(p) = kind else {
+            continue;
+        };
+        let name = match &p.key {
+            PropertyKey::StaticIdentifier(id) => id.name.as_str(),
+            PropertyKey::StringLiteral(s) => s.value.as_str(),
+            _ => continue,
+        };
+        match name {
+            "detail" => detail = Some(translate_expr(&p.value, ctx)),
+            "bubbles" => {
+                if let Expression::BooleanLiteral(b) = &p.value {
+                    let lit = syn::LitBool::new(b.value, proc_macro2::Span::call_site());
+                    bubbles = parse_quote!(#lit);
+                }
+            }
+            "cancelable" => {
+                if let Expression::BooleanLiteral(b) = &p.value {
+                    let lit = syn::LitBool::new(b.value, proc_macro2::Span::call_site());
+                    cancelable = parse_quote!(#lit);
+                }
+            }
+            _ => {}
+        }
+    }
+    (detail, bubbles, cancelable)
 }
 
 /// An `EventTarget` instance method, dispatched on the receiver's resolved

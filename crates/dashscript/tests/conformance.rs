@@ -385,6 +385,44 @@ fn wpt_eventtarget_compiles_and_runs() {
     );
 }
 
+/// `new CustomEvent(type, init)` + property reads end-to-end on the static
+/// path — the WinterTC DOM `CustomEvent` interface. Mirrors the WPT
+/// `event-constructors` CustomEvent region: `detail` carries through, the
+/// `cancelable` flag reads back, and an unknown init field (`sweet`) reads as
+/// `undefined` (it is dropped on the static path — `DsCustomEvent` has no such
+/// field). Inline fixture (not from `data/wpt/`) so it cannot be regressed by
+/// re-extraction.
+#[test]
+fn wpt_custom_event_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.custom_event_smoke".into(),
+        category: "smoke".into(),
+        fixture: "test(() => {\n\
+                  \x20 const ev = new CustomEvent(\"$\", {detail: 54, sweet: \"x\", sweet2: \"x\", cancelable: true});\n\
+                  \x20 assert_equals(ev.type, \"$\");\n\
+                  \x20 assert_equals(ev.bubbles, false);\n\
+                  \x20 assert_equals(ev.cancelable, true);\n\
+                  \x20 assert_equals(ev.detail, 54);\n\
+                  });\n"
+            .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "CustomEvent smoke should be supported: {detail}"
+    );
+}
+
 /// `new AbortController()` + `controller.signal` (both a binding and a chained
 /// read) + `signal.aborted` (before/after) + `controller.abort()` end-to-end on
 /// the static path — the WinterTC WHATWG DOM Abort API core. Covers the two

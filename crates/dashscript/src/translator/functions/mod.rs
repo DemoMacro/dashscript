@@ -1445,6 +1445,9 @@ fn event_target_path(new_expr: &oxc_ast::ast::NewExpression) -> Option<Path> {
     match id.name.as_str() {
         "EventTarget" => Some(parse_quote!(crate::__ds::DsEventTarget)),
         "Event" => Some(parse_quote!(crate::__ds::DsEvent)),
+        // `DsCustomEvent` (no `<T>` — the detail-payload type is inferred at the
+        // call site; the last-segment match routes `ev.detail`/`.type`/…).
+        "CustomEvent" => Some(parse_quote!(crate::__ds::DsCustomEvent)),
         _ => None,
     }
 }

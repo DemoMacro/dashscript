@@ -2343,6 +2343,75 @@ impl DsEvent {
     pub fn stop_immediate_propagation(&self) {}
 }
 
+/// A WHATWG `CustomEvent` — an `Event` carrying an arbitrary `detail` payload
+/// (a WinterTC Web API). Mirrors `DsEvent` for `type`/`bubbles`/`cancelable`/
+/// `defaultPrevented` (a `CustomEvent` is-an `Event`), and adds a
+/// `detail: Option<T>` field: ES `detail` is `any` (defaulting to `undefined`
+/// when omitted), and `Option<T>` lets `T` track the payload's static type so
+/// `assert_equals(ev.detail, v)` lines up (`Some(v)` projects to `v` under
+/// `DsSameValue`; `None` projects to `undefined`). Generic like
+/// `DsReadableStream<T>` — `T` is inferred from the `detail` value at the call
+/// site. A separate type from `DsEvent` (not a subtype): a `DsEventTarget`
+/// listener takes `&DsEvent`, so `dispatchEvent(customEvent)` does not dispatch
+/// to listeners on the static path (an honest partial for that shape; the
+/// common WPT form — construct + read properties — is fully static).
+#[derive(Clone)]
+pub struct DsCustomEvent<T> {
+    pub type_: ::std::string::String,
+    pub bubbles: bool,
+    pub cancelable: bool,
+    pub default_prevented: ::std::cell::Cell<bool>,
+    pub detail: ::std::option::Option<T>,
+}
+impl<T: ::std::clone::Clone> DsCustomEvent<T> {
+    /// `new CustomEvent(type, init)` — `detail` is `Some(v)` when the init
+    /// carries it, `None` otherwise (ES `undefined`); `bubbles`/`cancelable`
+    /// default to `false`.
+    pub fn new(
+        type_: ::std::string::String,
+        detail: ::std::option::Option<T>,
+        bubbles: bool,
+        cancelable: bool,
+    ) -> Self {
+        Self {
+            type_,
+            bubbles,
+            cancelable,
+            default_prevented: ::std::cell::Cell::new(false),
+            detail,
+        }
+    }
+    /// `event.type` (ES property; `type` is a Rust keyword, so `member.rs`
+    /// routes `event.type` here).
+    #[inline]
+    pub fn type_(&self) -> ::std::string::String {
+        self.type_.clone()
+    }
+    /// `event.defaultPrevented` (a property; `member.rs` dispatches).
+    #[inline]
+    pub fn default_prevented(&self) -> bool {
+        self.default_prevented.get()
+    }
+    /// `event.preventDefault()` — sets `defaultPrevented` only when `cancelable`.
+    pub fn prevent_default(&self) {
+        if self.cancelable {
+            self.default_prevented.set(true);
+        }
+    }
+    /// `event.stopPropagation()` — a no-op (same single-listener simplification
+    /// as `DsEvent`).
+    pub fn stop_propagation(&self) {}
+    /// `event.stopImmediatePropagation()` — likewise a no-op.
+    pub fn stop_immediate_propagation(&self) {}
+    /// `event.detail` (ES property; `member.rs` dispatches). `Some(v)` projects
+    /// to `v` under `DsSameValue`, so `assert_equals(ev.detail, v)` holds; `None`
+    /// projects to `undefined`.
+    #[inline]
+    pub fn detail(&self) -> ::std::option::Option<T> {
+        self.detail.clone()
+    }
+}
+
 /// `new Event(type, init)`'s `init` object — `{ bubbles, cancelable }`, both
 /// defaulting to `false`. `#[derive(Clone)]` + `Default` for the
 /// `new Event(type)` (no init) and `new Event(type, {})` forms.

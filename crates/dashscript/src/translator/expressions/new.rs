@@ -172,6 +172,7 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
             return match id.name.as_str() {
                 "EventTarget" => parse_quote!(crate::__ds::DsEventTarget::new()),
                 "Event" => event_ctor(n.arguments.as_slice(), ctx),
+                "CustomEvent" => custom_event_ctor(n.arguments.as_slice(), ctx),
                 "AbortController" => parse_quote!(crate::__ds::DsAbortController::new()),
                 _ => unreachable!(),
             };
@@ -573,6 +574,37 @@ fn event_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
         _ => parse_quote!(crate::__ds::DsEventInit::default()),
     };
     parse_quote!(crate::__ds::DsEvent::new(#type_, #init))
+}
+
+/// `new CustomEvent(type[, init])` → `crate::__ds::DsCustomEvent::<T>::new(type,
+/// detail, bubbles, cancelable)`. The type is ToString-coerced; the optional
+/// `init` object's `detail`/`bubbles`/`cancelable` fields lower via
+/// [`builtins::custom_event_init`] (`detail` `None` when absent → ES `undefined`;
+/// `bubbles`/`cancelable` default `false`). `T` is inferred from the `detail`
+/// value (e.g. `detail: 54` → `T = f64`); a missing `detail` leaves `T`
+/// unconstrained, so the `::<()>` turbofish pins it (an honest partial —
+/// `ev.detail` then reads `None` → `undefined`). ES `new CustomEvent()` (no
+/// args) throws `TypeError`; the no-arg case panics with the class name (the
+/// WPT verdict reads the prefix), rather than a phantom `CustomEvent::new`.
+fn custom_event_ctor(args: &[Argument], ctx: &Ctx<'_>) -> Expr {
+    let Some(type_arg) = args.first() else {
+        return parse_quote!(::core::panic!(
+            "TypeError: CustomEvent constructor requires at least 1 argument"
+        ));
+    };
+    let type_ = builtins::es_to_string_arg(type_arg, ctx);
+    let (detail, bubbles, cancelable) = match args.get(1).and_then(|a| a.as_expression()) {
+        Some(Expression::ObjectExpression(obj)) => builtins::custom_event_init(obj, ctx),
+        _ => (None, parse_quote!(false), parse_quote!(false)),
+    };
+    match detail {
+        Some(d) => parse_quote!(
+            crate::__ds::DsCustomEvent::new(#type_, ::std::option::Option::Some(#d), #bubbles, #cancelable)
+        ),
+        None => parse_quote!(
+            crate::__ds::DsCustomEvent::<()>::new(#type_, ::std::option::Option::None, #bubbles, #cancelable)
+        ),
+    }
 }
 /// map of [key, value] pairs. Each element must be a 2-element array literal;
 /// `None` otherwise (spread / non-array / wrong arity), so anything else falls

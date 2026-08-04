@@ -251,6 +251,23 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             _ => {}
         }
     }
+    // `customEvent.type`/`.bubbles`/`.cancelable`/`.detail`/`.defaultPrevented`
+    // on a `DsCustomEvent` local (`new CustomEvent(…)` binding) → the matching
+    // accessor/field. Same property set as `DsEvent` plus `.detail` (the
+    // `CustomEvent`-specific payload). `type` is a Rust keyword → `.type_()`;
+    // `detail` is `Option<T>` (`Some(v)` projects to `v` under `DsSameValue`,
+    // `None` to `undefined`); `bubbles`/`cancelable` are plain `bool` fields.
+    if is_custom_event_local(&sm.object, ctx) {
+        let obj = translate_expr(&sm.object, ctx);
+        match field_name {
+            "type" => return parse_quote!(#obj.type_()),
+            "defaultPrevented" => return parse_quote!(#obj.default_prevented()),
+            "bubbles" => return parse_quote!(#obj.bubbles),
+            "cancelable" => return parse_quote!(#obj.cancelable),
+            "detail" => return parse_quote!(#obj.detail()),
+            _ => {}
+        }
+    }
     // `controller.signal` on a DsAbortController local → the signal clone (a
     // `DsAbortSignal`); `signal.aborted` on a DsAbortSignal value (an Identifier
     // local or a chained `controller.signal`) → the bool flag. ES exposes both
@@ -906,6 +923,23 @@ pub(in crate::translator) fn is_event_local(expr: &Expression, ctx: &Ctx<'_>) ->
     let name = bindings::snake(&id.name).to_string();
     ctx.local_type(&name)
         .is_some_and(|p| p.segments.last().is_some_and(|s| s.ident == "DsEvent"))
+}
+
+/// True when `expr` is a local whose type is `crate::__ds::DsCustomEvent` (a
+/// `new CustomEvent(...)` binding), so `event.type`/`.bubbles`/`.cancelable`/
+/// `.detail`/`.defaultPrevented` lower to the wrapper's accessors/fields. The
+/// last-segment check ignores the `<T>` detail-payload generic, the way
+/// `DsReadableStream<T>` locals match on the bare `DsReadableStream` segment.
+pub(in crate::translator) fn is_custom_event_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let Expression::Identifier(id) = expr else {
+        return false;
+    };
+    let name = bindings::snake(&id.name).to_string();
+    ctx.local_type(&name).is_some_and(|p| {
+        p.segments
+            .last()
+            .is_some_and(|s| s.ident == "DsCustomEvent")
+    })
 }
 
 /// True when `expr` evaluates to a `crate::__ds::DsAbortController` value —
