@@ -366,11 +366,11 @@ pub fn crypto_get_random_values(mut buf: ::std::vec::Vec<u8>) -> ::std::vec::Vec
 /// An unknown algorithm panics the `TypeError` ES throws (the WPT verdict reads
 /// the prefix). The key-bearing methods are mapped alongside: `importKey`
 /// (raw format → `DsCryptoKey`), `sign`/`verify` (HMAC, RustCrypto `hmac`),
-/// `encrypt`/`decrypt` (AES-GCM, `aes-gcm`), and `generateKey` (a fresh random
-/// `DsCryptoKey` for AES-GCM/AES-CBC/HMAC). The remaining `SubtleCrypto`
-/// methods (AES-CBC, `deriveBits`/`deriveKey`/PBKDF2, `wrapKey`) land later;
-/// `digest` is the no-key one-shot, the bulk of the WPT `WebCryptoAPI/digest`
-/// fixtures.
+/// `encrypt`/`decrypt` (AES-GCM, `aes-gcm`), `generateKey` (a fresh random
+/// `DsCryptoKey` for AES-GCM/AES-CBC/HMAC), and `deriveBits` (the PBKDF2
+/// key-derivation path, reusing `hmac`). The remaining `SubtleCrypto` methods
+/// (AES-CBC, `deriveKey`/HKDF, `wrapKey`, `exportKey`) land later; `digest`
+/// is the no-key one-shot, the bulk of the WPT `WebCryptoAPI/digest` fixtures.
 pub(super) const SUBTLE_HELPER: &str = r#"
 /// `crypto.subtle.digest(algo, data)` — the one-shot hash. `algo` is matched
 /// case-sensitively against the ES algorithm names (`"SHA-1"`/`"SHA-256"`/
@@ -488,6 +488,82 @@ pub async fn crypto_subtle_generate_key(
     let mut key = ::std::vec![0u8; bytes];
     ::getrandom::getrandom(&mut key).expect("getrandom failed");
     DsCryptoKey::new(name, hash, key, extractable, usages)
+}
+/// `crypto.subtle.deriveBits(algorithm, baseKey, length)` — the PBKDF2 subset
+/// (the WinterTC WebCrypto key-derivation path). For PBKDF2 the `baseKey` carries
+/// the password bytes (`key.key`), and the ES `algorithm` object's `salt`/
+/// `iterations`/`hash` drive the derivation (RFC 2898); `length` is the output
+/// length in bits (`length / 8` bytes). The hash selects the HMAC PRF
+/// (SHA-1/256/384/512), reusing the `hmac` crate that backs `sign` — no separate
+/// PBKDF2 dep (the `pbkdf2` 0.13 crate pulls `digest` 0.11, incompatible with the
+/// `sha1`/`sha2` 0.10 DashScript uses; the PBKDF2 round-XOR is a short loop over
+/// HMAC anyway). `async` because ES `deriveBits` returns `Promise<ArrayBuffer>`;
+/// the call site's `await` drives the future, and `callee_return_path` records
+/// the `Vec<u8>` return (like `sign`/`encrypt`).
+pub async fn crypto_subtle_derive_bits(
+    name: ::std::string::String,
+    hash: ::std::string::String,
+    salt: ::std::vec::Vec<u8>,
+    iterations: u32,
+    key: &DsCryptoKey,
+    length: usize,
+) -> ::std::vec::Vec<u8> {
+    let password = &key.key;
+    let mut out = ::std::vec![0u8; length / 8];
+    match name.as_str() {
+        "PBKDF2" => match hash.as_str() {
+            "SHA-1" => pbkdf2_into::<::hmac::Hmac<::sha1::Sha1>>(
+                password, &salt, iterations, &mut out, 20,
+            ),
+            "SHA-256" => pbkdf2_into::<::hmac::Hmac<::sha2::Sha256>>(
+                password, &salt, iterations, &mut out, 32,
+            ),
+            "SHA-384" => pbkdf2_into::<::hmac::Hmac<::sha2::Sha384>>(
+                password, &salt, iterations, &mut out, 48,
+            ),
+            "SHA-512" => pbkdf2_into::<::hmac::Hmac<::sha2::Sha512>>(
+                password, &salt, iterations, &mut out, 64,
+            ),
+            _ => ::core::panic!(
+                "TypeError: crypto.subtle.deriveBits: unsupported PBKDF2 hash"
+            ),
+        },
+        _ => ::core::panic!("TypeError: crypto.subtle.deriveBits: unsupported algorithm"),
+    }
+    out
+}
+/// The PBKDF2 (RFC 2898) core — `T_i = U_1 ^ … ^ U_c`, where
+/// `U_1 = HMAC(P, S || INT_32_BE(i))` and `U_j = HMAC(P, U_{j-1})` — generic over
+/// the HMAC instance (`H: hmac::Mac`), so each SHA hash arms with a concrete
+/// `Hmac<D>` (no `digest` trait bounds to state). `h_len` is the hash output
+/// length (the F-block size); `res` is filled block by block, the trailing
+/// partial block truncated.
+fn pbkdf2_into<H>(password: &[u8], salt: &[u8], rounds: u32, res: &mut [u8], h_len: usize)
+where
+    H: ::hmac::Mac + ::hmac::digest::KeyInit,
+{
+    use ::hmac::Mac;
+    for (idx, chunk) in res.chunks_mut(h_len).enumerate() {
+        let mut block = ::std::vec![0u8; salt.len() + 4];
+        block[..salt.len()].copy_from_slice(salt);
+        block[salt.len()..].copy_from_slice(&((idx as u32) + 1).to_be_bytes());
+        let mut mac = <H as ::hmac::digest::KeyInit>::new_from_slice(password)
+            .expect("HMAC key length");
+        mac.update(&block);
+        let mut u: ::std::vec::Vec<u8> = mac.finalize().into_bytes().to_vec();
+        let mut t = u.clone();
+        for _ in 1..rounds {
+            let mut mac = <H as ::hmac::digest::KeyInit>::new_from_slice(password)
+            .expect("HMAC key length");
+            mac.update(&u);
+            u = mac.finalize().into_bytes().to_vec();
+            for (a, b) in t.iter_mut().zip(u.iter()) {
+                *a ^= b;
+            }
+        }
+        let n = chunk.len().min(t.len());
+        chunk[..n].copy_from_slice(&t[..n]);
+    }
 }
 /// `crypto.subtle.sign(algo, key, data)` — the HMAC subset. The hash comes from
 /// the key; the ES `algo` arg is carried by `key.algorithm` (verified to be

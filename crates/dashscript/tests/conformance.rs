@@ -842,6 +842,49 @@ fn wpt_subtle_generate_key_compiles_and_runs() {
     );
 }
 
+/// `await crypto.subtle.deriveBits(…)` end-to-end — the WinterTC WebCrypto
+/// PBKDF2 key-derivation path. Exercises the `deriveBits` dispatch, the
+/// `deriveBits → Vec<u8>` return-type inference, and the
+/// `derive_bits_algorithm` `{name, salt, iterations, hash}` extraction. Uses the
+/// RFC 6070 PBKDF2-SHA-1 reference vector (P="password", S="salt", c=1, dkLen=20
+/// → `0c60c80f…`) as a deterministic correctness check: `dk[0] == 0x0c` proves
+/// the `pbkdf2` crate is fed the password (the `importKey` raw `baseKey`), salt,
+/// iteration count, and SHA-1 PRF correctly.
+#[test]
+fn wpt_subtle_derive_bits_pbkdf2_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.subtle_derive_bits_pbkdf2_smoke".into(),
+        category: "smoke".into(),
+        fixture: r#"promise_test(async () => {
+    const baseKey = await crypto.subtle.importKey(
+        "raw", new Uint8Array([112,97,115,115,119,111,114,100]),
+        { name: "PBKDF2" }, false, ["deriveBits"]);
+    const salt = new Uint8Array([115,97,108,116]);
+    const dk = await crypto.subtle.deriveBits(
+        { name: "PBKDF2", salt: salt, iterations: 1, hash: "SHA-1" }, baseKey, 160);
+    assert_equals(dk.length, 20);
+    assert_equals(dk[0], 12);
+}, "subtle-derivebits-pbkdf2");
+"#
+        .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "SubtleCrypto PBKDF2 deriveBits smoke should be supported: {detail}"
+    );
+}
+
 /// `new Request(url, init?)` + the `.method`/`.url` read-only accessors
 /// end-to-end — the WinterTC FETCH §5.2 `Request` ctor. Exercises the ctor's
 /// `init` parsing (reusing `fetch_init`, the same path as `fetch(url, init)`),

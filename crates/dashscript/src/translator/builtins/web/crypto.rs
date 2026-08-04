@@ -9,10 +9,12 @@
 //! is the async hash backed by the RustCrypto `sha1`/`sha2` crates;
 //! `subtle.importKey` (raw format) builds a `DsCryptoKey`, `subtle.sign`/
 //! `.verify` are the async HMAC backed by `hmac`, and `subtle.encrypt`/`.decrypt`
-//! are the async AES-GCM backed by `aes-gcm` (pure-Rust — never degraded), and
-//! `crypto.subtle.generateKey` is the fresh-key factory (random AES/HMAC keys).
-//! The remaining `SubtleCrypto` methods (AES-CBC, `deriveBits`/`deriveKey`/
-//! PBKDF2, `wrapKey`) are not yet mapped.
+//! are the async AES-GCM backed by `aes-gcm` (pure-Rust — never degraded),
+//! `crypto.subtle.generateKey` is the fresh-key factory (random AES/HMAC keys),
+//! and `crypto.subtle.deriveBits` is the PBKDF2 key-derivation path (a small
+//! HMAC round-XOR loop, the same `hmac` backing as `sign`). The remaining
+//! `SubtleCrypto` methods (AES-CBC, `deriveKey`/HKDF, `wrapKey`, `exportKey`)
+//! are not yet mapped.
 
 use oxc_ast::ast::{Argument, Expression, ObjectPropertyKind, PropertyKey, StaticMemberExpression};
 use syn::{parse_quote, Expr};
@@ -92,6 +94,29 @@ pub(in crate::translator) fn crypto_method(
                 return Some(parse_quote!(
                     crate::__ds::crypto_subtle_generate_key(
                         #algorithm, #hash, #length, #extractable, #usages
+                    )
+                ));
+            }
+        }
+    }
+    // `crypto.subtle.deriveBits(algo, key, length)` — the PBKDF2 subset. The ES
+    // `algo` object's `name`/`salt`/`iterations`/`hash` are extracted at translate
+    // time; `key` is the password `DsCryptoKey` (imported raw); `length` is the
+    // output length in bits. ES returns `Promise<ArrayBuffer>`; the call site's
+    // `await` drives the future, and `callee_return_path` records the `Vec<u8>`
+    // return.
+    if sm.property.name.as_str() == "deriveBits" {
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            if inner.property.name.as_str() == "subtle"
+                && is_crypto_receiver(&inner.object).is_some()
+            {
+                let (algorithm, hash, salt, iterations) =
+                    derive_bits_algorithm(args.first()?, ctx)?;
+                let key = translate_argument(args.get(1)?, ctx);
+                let length = length_value(args.get(2)?.as_expression()?);
+                return Some(parse_quote!(
+                    crate::__ds::crypto_subtle_derive_bits(
+                        #algorithm, #hash, #salt, #iterations, &#key, #length
                     )
                 ));
             }
@@ -347,6 +372,53 @@ fn length_value(expr: &Expression) -> Expr {
         return parse_quote!(#v);
     }
     parse_quote!(0usize)
+}
+
+/// `crypto.subtle.deriveBits(…)`'s `algorithm` argument — the ES
+/// `{ name: "PBKDF2", salt: <Uint8Array>, iterations: 100000, hash: "SHA-256" }`
+/// object — lowered to the `(name, hash, salt, iterations)` quadruple the
+/// runtime helper takes. `salt` is a `BufferSource` coerced via the digest path;
+/// `iterations` is a numeric literal read as a `u32`. `None` for a non-object
+/// `algorithm` (the arm falls through).
+fn derive_bits_algorithm(arg: &Argument, ctx: &Ctx<'_>) -> Option<(Expr, Expr, Expr, Expr)> {
+    let Expression::ObjectExpression(obj) = arg.as_expression()? else {
+        return None;
+    };
+    let mut name = parse_quote!(::std::string::String::new());
+    let mut hash = parse_quote!(::std::string::String::new());
+    let mut salt: Option<Expr> = None;
+    let mut iterations: Option<Expr> = None;
+    for kind in &obj.properties {
+        let ObjectPropertyKind::ObjectProperty(p) = kind else {
+            continue;
+        };
+        let key = match &p.key {
+            PropertyKey::StaticIdentifier(id) => id.name.as_str(),
+            PropertyKey::StringLiteral(s) => s.value.as_str(),
+            _ => continue,
+        };
+        match key {
+            "name" => name = algo_string_value(&p.value, ctx),
+            "hash" => hash = algo_string_value(&p.value, ctx),
+            "salt" => salt = Some(digest_data_expr(&p.value, ctx)),
+            "iterations" => iterations = Some(iterations_value(&p.value)),
+            _ => {}
+        }
+    }
+    let salt = salt.unwrap_or_else(|| parse_quote!(::std::vec![]));
+    let iterations = iterations.unwrap_or_else(|| parse_quote!(0u32));
+    Some((name, hash, salt, iterations))
+}
+
+/// Read an `iterations` algorithm field (the PBKDF2 round count) as a `u32`
+/// expression. A numeric literal lowers to a `u32` literal; any other shape
+/// lowers to `0`.
+fn iterations_value(expr: &Expression) -> Expr {
+    if let Expression::NumericLiteral(n) = expr {
+        let v = n.value as u32;
+        return parse_quote!(#v);
+    }
+    parse_quote!(0u32)
 }
 
 /// Extract a string-valued algorithm field. ES WebCrypto uses string literals

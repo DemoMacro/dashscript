@@ -1778,6 +1778,16 @@ fn callee_return_path(
         {
             Some(parse_quote!(crate::__ds::DsCryptoKey))
         }
+        // `crypto.subtle.deriveBits(…)` → `Vec<u8>` (the WinterTC WebCrypto PBKDF2
+        // derived bytes), so an unannotated `let dk = crypto.subtle.deriveBits(…)`
+        // — and `await …` via the `AwaitExpression` arm — records the same
+        // `Vec<u8>` as `sign`/`encrypt`.
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "deriveBits"
+                && super::builtins::is_crypto_subtle_member(&sm.object) =>
+        {
+            Some(parse_quote!(Vec<u8>))
+        }
         // `crypto.subtle.sign(…)` → `Vec<u8>` (the WinterTC WebCrypto HMAC tag
         // bytes), so an unannotated `let sig = crypto.subtle.sign(…)` (and `await
         // …` via the `AwaitExpression` arm) records the same `Vec<u8>` `new
