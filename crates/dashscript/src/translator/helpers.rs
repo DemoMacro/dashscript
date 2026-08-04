@@ -364,11 +364,13 @@ pub fn crypto_get_random_values(mut buf: ::std::vec::Vec<u8>) -> ::std::vec::Vec
 /// `digest` returns a `Promise<ArrayBuffer>`; the `await` at the call site
 /// drives the future (the async-main gate flips `fn main` to `#[tokio::main]`).
 /// An unknown algorithm panics the `TypeError` ES throws (the WPT verdict reads
-/// the prefix). The HMAC key-bearing methods are mapped alongside: `importKey`
-/// (raw format → `DsCryptoKey`) and `sign`/`verify` (backed by the RustCrypto
-/// `hmac` crate). The remaining `SubtleCrypto` methods (`encrypt`/`decrypt`/
-/// `generateKey`/`deriveBits`) need a wider key model and land later; `digest`
-/// is the no-key one-shot, the bulk of the WPT `WebCryptoAPI/digest` fixtures.
+/// the prefix). The key-bearing methods are mapped alongside: `importKey`
+/// (raw format → `DsCryptoKey`), `sign`/`verify` (HMAC, RustCrypto `hmac`),
+/// `encrypt`/`decrypt` (AES-GCM, `aes-gcm`), and `generateKey` (a fresh random
+/// `DsCryptoKey` for AES-GCM/AES-CBC/HMAC). The remaining `SubtleCrypto`
+/// methods (AES-CBC, `deriveBits`/`deriveKey`/PBKDF2, `wrapKey`) land later;
+/// `digest` is the no-key one-shot, the bulk of the WPT `WebCryptoAPI/digest`
+/// fixtures.
 pub(super) const SUBTLE_HELPER: &str = r#"
 /// `crypto.subtle.digest(algo, data)` — the one-shot hash. `algo` is matched
 /// case-sensitively against the ES algorithm names (`"SHA-1"`/`"SHA-256"`/
@@ -451,6 +453,41 @@ pub async fn crypto_subtle_import_key(
     usages: ::std::vec::Vec<::std::string::String>,
 ) -> DsCryptoKey {
     DsCryptoKey::new(algorithm, hash, key, extractable, usages)
+}
+/// `crypto.subtle.generateKey(algorithm, extractable, usages)` — the factory for
+/// a fresh `DsCryptoKey` (the WinterTC WebCrypto subset). For AES-GCM/AES-CBC the
+/// algorithm object's `length` field (128/192/256) is the key length in bits
+/// (`length / 8` bytes); for HMAC, `length` (if present) is the key length in
+/// bits, else the default is the named hash's block size (64 for SHA-1/SHA-256,
+/// 128 for SHA-384/SHA-512). The key bytes are cryptographically random
+/// (`getrandom`, the same source `crypto.getRandomValues` uses). `async` because
+/// ES `generateKey` returns `Promise<CryptoKey>`; the call site's `await` drives
+/// the future, and `callee_return_path` records the `DsCryptoKey` return
+/// (mirroring `importKey`, so a later `sign`/`encrypt` passes the key through).
+pub async fn crypto_subtle_generate_key(
+    name: ::std::string::String,
+    hash: ::std::string::String,
+    length: usize,
+    extractable: bool,
+    usages: ::std::vec::Vec<::std::string::String>,
+) -> DsCryptoKey {
+    let bytes = match name.as_str() {
+        "AES-GCM" | "AES-CBC" => length / 8,
+        "HMAC" => {
+            if length == 0 {
+                match hash.as_str() {
+                    "SHA-384" | "SHA-512" => 128,
+                    _ => 64,
+                }
+            } else {
+                length / 8
+            }
+        }
+        _ => ::core::panic!("TypeError: crypto.subtle.generateKey: unsupported algorithm"),
+    };
+    let mut key = ::std::vec![0u8; bytes];
+    ::getrandom::getrandom(&mut key).expect("getrandom failed");
+    DsCryptoKey::new(name, hash, key, extractable, usages)
 }
 /// `crypto.subtle.sign(algo, key, data)` — the HMAC subset. The hash comes from
 /// the key; the ES `algo` arg is carried by `key.algorithm` (verified to be

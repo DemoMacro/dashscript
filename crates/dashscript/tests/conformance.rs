@@ -794,6 +794,54 @@ fn wpt_subtle_aes_gcm_compiles_and_runs() {
     );
 }
 
+/// `await crypto.subtle.generateKey(…)` end-to-end — the WinterTC WebCrypto key
+/// factory. Exercises the `generateKey` dispatch, the `generateKey → DsCryptoKey`
+/// return-type inference (so the key local passes to a later `encrypt`/`sign`),
+/// the `generate_key_algorithm` `{name, length}` / `{name, hash, length}` triple
+/// extraction, and the `getrandom` key fill. Two paths in one fixture: an
+/// AES-GCM-256 key encrypts a 3-byte plaintext (19-byte ciphertext = 3 + 16-byte
+/// tag) then decrypts it (3-byte round-trip); an HMAC-SHA-256 key signs a 3-byte
+/// message (32-byte tag) and verifies it (`true`). AES-GCM's authentication and
+/// HMAC's determinism mean the length/`true` checks prove the keys are usable.
+#[test]
+fn wpt_subtle_generate_key_compiles_and_runs() {
+    let raw = RawFeature {
+        id: "wpt.subtle_generate_key_smoke".into(),
+        category: "smoke".into(),
+        fixture: r#"promise_test(async () => {
+    const aesKey = await crypto.subtle.generateKey({ name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]);
+    const iv = new Uint8Array([0,1,2,3,4,5,6,7,8,9,10,11]);
+    const ct = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, aesKey, new Uint8Array([7,8,9]));
+    assert_equals(ct.length, 19);
+    const pt = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, aesKey, ct);
+    assert_equals(pt.length, 3);
+
+    const hmacKey = await crypto.subtle.generateKey({ name: "HMAC", hash: "SHA-256", length: 256 }, false, ["sign", "verify"]);
+    const sig = await crypto.subtle.sign({ name: "HMAC" }, hmacKey, new Uint8Array([1,2,3]));
+    assert_equals(sig.length, 32);
+    const ok = await crypto.subtle.verify({ name: "HMAC" }, hmacKey, sig, new Uint8Array([1,2,3]));
+    assert_equals(ok, true);
+}, "subtle-generatekey");
+"#
+        .into(),
+        expect: None,
+        expect_output: None,
+        note: String::new(),
+        features: Vec::new(),
+        includes: Vec::new(),
+        flags: Vec::new(),
+    };
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let (status, detail) = run_wpt(&raw, &project, &target_dir);
+    assert_eq!(
+        status, "supported",
+        "SubtleCrypto generateKey smoke should be supported: {detail}"
+    );
+}
+
 /// `new Request(url, init?)` + the `.method`/`.url` read-only accessors
 /// end-to-end — the WinterTC FETCH §5.2 `Request` ctor. Exercises the ctor's
 /// `init` parsing (reusing `fetch_init`, the same path as `fetch(url, init)`),

@@ -543,6 +543,10 @@ impl RuntimeDep {
                 // re-export.
                 ("aes-gcm", "\"0.10\""),
                 ("aead", "\"0.5\""),
+                // `getrandom` — `crypto.subtle.generateKey(…)` fills the fresh
+                // key with cryptographically random bytes (the same source
+                // `crypto.getRandomValues` uses, listed under `Crypto`).
+                ("getrandom", "\"0.2\""),
             ]),
             // `urlpattern` (denoland/rust-urlpattern) — the WHATWG URLPattern
             // reference. `new URLPattern(…)` wraps `urlpattern::UrlPattern`; a

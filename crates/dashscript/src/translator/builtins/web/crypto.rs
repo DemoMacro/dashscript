@@ -9,9 +9,10 @@
 //! is the async hash backed by the RustCrypto `sha1`/`sha2` crates;
 //! `subtle.importKey` (raw format) builds a `DsCryptoKey`, `subtle.sign`/
 //! `.verify` are the async HMAC backed by `hmac`, and `subtle.encrypt`/`.decrypt`
-//! are the async AES-GCM backed by `aes-gcm` (pure-Rust — never degraded). The
-//! remaining `SubtleCrypto` methods (AES-CBC, `generateKey`/`deriveBits`) are not
-//! yet mapped.
+//! are the async AES-GCM backed by `aes-gcm` (pure-Rust — never degraded), and
+//! `crypto.subtle.generateKey` is the fresh-key factory (random AES/HMAC keys).
+//! The remaining `SubtleCrypto` methods (AES-CBC, `deriveBits`/`deriveKey`/
+//! PBKDF2, `wrapKey`) are not yet mapped.
 
 use oxc_ast::ast::{Argument, Expression, ObjectPropertyKind, PropertyKey, StaticMemberExpression};
 use syn::{parse_quote, Expr};
@@ -69,6 +70,29 @@ pub(in crate::translator) fn crypto_method(
                 let usages: Expr = parse_quote!(::std::vec![]);
                 return Some(parse_quote!(
                     crate::__ds::crypto_subtle_import_key(#algorithm, #hash, #key, #extractable, #usages)
+                ));
+            }
+        }
+    }
+    // `crypto.subtle.generateKey(algorithm, extractable, usages)` — the factory
+    // for a fresh `DsCryptoKey` (AES-GCM/AES-CBC/HMAC). The ES `algorithm`
+    // object's `name`+`length` (AES) or `name`+`hash`+`length` (HMAC) are
+    // extracted at translate time; the helper fills `length/8` cryptographically
+    // random bytes. ES returns `Promise<CryptoKey>`; the call site's `await`
+    // drives the future, and `callee_return_path` records the `DsCryptoKey` type
+    // (mirroring `importKey`, so a later `sign`/`encrypt` passes the key through).
+    if sm.property.name.as_str() == "generateKey" {
+        if let Expression::StaticMemberExpression(inner) = &sm.object {
+            if inner.property.name.as_str() == "subtle"
+                && is_crypto_receiver(&inner.object).is_some()
+            {
+                let (algorithm, hash, length) = generate_key_algorithm(args.first()?, ctx)?;
+                let extractable = bool_argument(args.get(1), ctx);
+                let usages: Expr = parse_quote!(::std::vec![]);
+                return Some(parse_quote!(
+                    crate::__ds::crypto_subtle_generate_key(
+                        #algorithm, #hash, #length, #extractable, #usages
+                    )
                 ));
             }
         }
@@ -277,6 +301,52 @@ fn import_key_algorithm(arg: &Argument, ctx: &Ctx<'_>) -> Option<(Expr, Expr)> {
         }
     }
     Some((name, hash))
+}
+
+/// `crypto.subtle.generateKey(…)`'s `algorithm` argument — the ES
+/// `{ name: "AES-GCM", length: 256 }` (AES) or
+/// `{ name: "HMAC", hash: "SHA-256", length: 256 }` (HMAC) object — lowered to
+/// the `(name, hash, length)` triple the runtime ctor takes. `name`/`hash` reuse
+/// the string extraction (the `hash` field may be a string or `{ name: "SHA-256"
+/// }`); `length` is a numeric literal (128/192/256) read as a `usize` (absent →
+/// `0`, the helper's "use the hash-block default" sentinel for HMAC). `None` for
+/// a non-object `algorithm` (the arm falls through).
+fn generate_key_algorithm(arg: &Argument, ctx: &Ctx<'_>) -> Option<(Expr, Expr, Expr)> {
+    let Expression::ObjectExpression(obj) = arg.as_expression()? else {
+        return None;
+    };
+    let mut name = parse_quote!(::std::string::String::new());
+    let mut hash = parse_quote!(::std::string::String::new());
+    let mut length: Option<Expr> = None;
+    for kind in &obj.properties {
+        let ObjectPropertyKind::ObjectProperty(p) = kind else {
+            continue;
+        };
+        let key = match &p.key {
+            PropertyKey::StaticIdentifier(id) => id.name.as_str(),
+            PropertyKey::StringLiteral(s) => s.value.as_str(),
+            _ => continue,
+        };
+        match key {
+            "name" => name = algo_string_value(&p.value, ctx),
+            "hash" => hash = algo_string_value(&p.value, ctx),
+            "length" => length = Some(length_value(&p.value)),
+            _ => {}
+        }
+    }
+    let length = length.unwrap_or_else(|| parse_quote!(0usize));
+    Some((name, hash, length))
+}
+
+/// Read a `length` algorithm field (the AES/HMAC key length in bits) as a `usize`
+/// expression. A numeric literal (`256`) lowers to a `usize` literal matching the
+/// helper's `length` param; any other shape lowers to `0` (the default sentinel).
+fn length_value(expr: &Expression) -> Expr {
+    if let Expression::NumericLiteral(n) = expr {
+        let v = n.value as usize;
+        return parse_quote!(#v);
+    }
+    parse_quote!(0usize)
 }
 
 /// Extract a string-valued algorithm field. ES WebCrypto uses string literals

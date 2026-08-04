@@ -1767,6 +1767,17 @@ fn callee_return_path(
         {
             Some(parse_quote!(crate::__ds::DsCryptoKey))
         }
+        // `crypto.subtle.generateKey(…)` → `crate::__ds::DsCryptoKey` (the
+        // WinterTC WebCrypto key factory), so an unannotated
+        // `let k = crypto.subtle.generateKey(…)` — and `await …` via the
+        // `AwaitExpression` arm — records the same type as `importKey`, and a
+        // later `sign`/`encrypt` passes the key through.
+        Expression::StaticMemberExpression(sm)
+            if sm.property.name.as_str() == "generateKey"
+                && super::builtins::is_crypto_subtle_member(&sm.object) =>
+        {
+            Some(parse_quote!(crate::__ds::DsCryptoKey))
+        }
         // `crypto.subtle.sign(…)` → `Vec<u8>` (the WinterTC WebCrypto HMAC tag
         // bytes), so an unannotated `let sig = crypto.subtle.sign(…)` (and `await
         // …` via the `AwaitExpression` arm) records the same `Vec<u8>` `new
