@@ -1,6 +1,6 @@
 # DashScript Conformance Matrix
 
-- 11 features: **11** supported, **0** partial, **0** unsupported, **0** untested
+- 11 features: **11** supported, **0** partial, **0** unsupported, **0** out-of-scope (reflection/non-API), **0** untested
 - correctness cases passing: 10
 
 ## correctness
