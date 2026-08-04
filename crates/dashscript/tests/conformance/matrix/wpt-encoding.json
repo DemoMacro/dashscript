@@ -27,8 +27,8 @@
     "id": "wpt.encoding.api-surrogates-utf8",
     "layer": "wpt",
     "category": "encoding",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: TextEncoder is not defined\n\nthread 'main' (30048) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: TextEncoder is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: Conversion from string failed: invalid utf-8 sequence of 1 bytes from index 0\n\nthread 'main' (41728) panicked at src\\__ds_engine.rs:338:17:\nTypeError: Conversion from string failed: invalid",
     "note": ""
   },
   {
@@ -172,7 +172,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: TextEncoderStream is not defined\n\nthread 'main' (36580) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: TextEncoderStream is not defined\nnote: run with `RUST_BACKTRACE=1` enviro",
+    "detail": "engine lacks built-in: ReferenceError: TextEncoderStream is not defined\n\nthread 'main' (46552) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: TextEncoderStream is not defined\nnote: run with `RUST_BACKTRACE=1` enviro",
     "note": ""
   },
   {
@@ -212,7 +212,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "AssertionError: expected TypeError but threw {}\n\nthread 'main' (47280) panicked at src\\__ds_engine.rs:337:17:\nAssertionError: expected TypeError but threw {}\nnote: run with `RUST_BACKTRACE=1` environm",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (6640) panicked at src\\__ds.rs:115:13:\nBox<dyn Any>\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -220,7 +220,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: location is not defined\n\nthread 'main' (8380) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: location is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
+    "detail": "engine lacks built-in: ReferenceError: location is not defined\n\nthread 'main' (23984) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: location is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
@@ -235,8 +235,8 @@
     "id": "wpt.encoding.textdecoder-ignorebom",
     "layer": "wpt",
     "category": "encoding",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: TextDecoder is not defined\n\nthread 'main' (35096) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: TextDecoder is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -283,8 +283,8 @@
     "id": "wpt.encoding.textencoder-utf16-surrogates",
     "layer": "wpt",
     "category": "encoding",
-    "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: TextEncoder is not defined\n\nthread 'main' (26364) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: TextEncoder is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: Conversion from string failed: invalid utf-8 sequence of 1 bytes from index 0\n\nthread 'main' (15012) panicked at src\\__ds_engine.rs:338:17:\nTypeError: Conversion from string failed: invalid",
     "note": ""
   },
   {

@@ -140,6 +140,36 @@ fn text_encoder_encode_flags_encoding_dep_and_ships_structs() {
 }
 
 #[test]
+fn degraded_body_text_encoder_stamps_encoding_for_engine_builtin() {
+    // A function that degrades per-function (runtime `typeof` of a member
+    // access — the static translator cannot lower it) and calls
+    // `new TextEncoder()` in its body. The static Rust marker probe sees only
+    // the Rust emit (the `call_fn` swap), not the JS body, so `Encoding` would
+    // be missed and `wire_web_apis` would skip `register_text_encoding` — the
+    // degraded body would hit `ReferenceError: TextEncoder is not defined`.
+    // `stamp_engine_js_body_deps` scans the body's JS for Web API use, the way
+    // the assert scan does.
+    let src = "function enc(o: { x: number }) {\n  const s = typeof o.x;\n  const e = new TextEncoder();\n  return e.encode(s);\n}\nenc({ x: 1 });\n";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.has(RuntimeDep::Engine),
+        "runtime typeof degrades per-function, got deps: {deps:?}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Encoding),
+        "degraded body `new TextEncoder()` must stamp Encoding for wire_web_apis, got deps: {deps:?}"
+    );
+    assert!(
+        deps.engine_helper_module()
+            .is_some_and(|s| s.contains("register_text_encoding(ctx)")),
+        "wire_web_apis stamps register_text_encoding for the engine builtin, got helper: {:?}",
+        deps.engine_helper_module()
+    );
+}
+
+#[test]
 fn text_encoder_encode_default_arg_lowers_to_empty_string() {
     // `TextEncoder.prototype.encode(input = "")` — both a missing argument and
     // an explicit `undefined` trigger the ES default (JS default-parameter

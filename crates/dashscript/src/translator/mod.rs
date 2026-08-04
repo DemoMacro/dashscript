@@ -946,7 +946,17 @@ fn append_dep(cargo_toml: &mut String, pkg: &str, req: &str) {
 /// `assert_throws` routes through `catch_quiet`/`DsError` in `ERROR_HELPER`.
 /// The engine's assert shims are pure JS (no `__ds::` delegate), so the static
 /// assert helpers emit but stay unused on a degrade-only crate.
-fn stamp_engine_assert_deps(deps: &mut RuntimeDeps, js: &str) {
+/// Stamp the engine-path builtins a degraded function's JS body reaches.
+///
+/// The static `__ds::` marker probe scans emitted Rust, but a degraded body is
+/// JS (`new TextEncoder()`, `assert.sameValue`, `performance.now()`, …) — the
+/// Rust probe never sees it, so `wire_web_apis` would skip the matching builtin
+/// and the body would hit a `ReferenceError`. This scans the JS body the way
+/// the Rust probe scans emitted Rust: the test262/WPT assert families (which
+/// also pull `Error`, the shared `catch_quiet`/`DsError` machinery) and the
+/// WinterTC Web APIs `wire_web_apis` registers via `engine_builtin()`
+/// (`Encoding`/`HrTime`/`Base64`/`Crypto`).
+fn stamp_engine_js_body_deps(deps: &mut RuntimeDeps, js: &str) {
     let had = deps.has(RuntimeDep::Assert) || deps.has(RuntimeDep::WptAssert);
     // test262 harness: `sta.js` defines `Test262Error`, `assert.js` throws it
     // via `assert.sameValue`/`notSameValue`/`throws`.
@@ -971,6 +981,22 @@ fn stamp_engine_assert_deps(deps: &mut RuntimeDeps, js: &str) {
     }
     if (deps.has(RuntimeDep::Assert) || deps.has(RuntimeDep::WptAssert)) && !had {
         deps.insert(RuntimeDep::Error);
+    }
+    // WinterTC Web APIs — a degraded body calling `new TextEncoder()` /
+    // `performance.now()` / `atob(…)` / `crypto.*` needs the matching engine
+    // builtin (registered by `wire_web_apis`) or it throws `ReferenceError`.
+    // The static Rust probe misses these (the body is JS, not `__ds::` Rust).
+    if js.contains("TextEncoder") || js.contains("TextDecoder") {
+        deps.insert(RuntimeDep::Encoding);
+    }
+    if js.contains("performance.") {
+        deps.insert(RuntimeDep::HrTime);
+    }
+    if js.contains("atob(") || js.contains("btoa(") {
+        deps.insert(RuntimeDep::Base64);
+    }
+    if js.contains("crypto.") {
+        deps.insert(RuntimeDep::Crypto);
     }
 }
 
@@ -1390,7 +1416,7 @@ impl Translator {
             });
             let mut deps = RuntimeDeps::empty();
             deps.insert(RuntimeDep::Engine);
-            stamp_engine_assert_deps(&mut deps, &js_source);
+            stamp_engine_js_body_deps(&mut deps, &js_source);
             return Ok((rust, deps));
         }
         // Per-function degradation: publish the dynamic-function set so
@@ -1952,7 +1978,7 @@ impl Translator {
             // inlined into `probe`) may use `assert.sameValue`/`assert_equals`,
             // which the Rust marker probe does not catch — scan it so the engine
             // registers the matching pure-JS assert shim.
-            stamp_engine_assert_deps(&mut deps, &probe);
+            stamp_engine_js_body_deps(&mut deps, &probe);
         }
         // Module mode: the per-function-degraded module's source goes into the
         // static table the engine loader reads at runtime (no `__DS_MODULE_JS`
