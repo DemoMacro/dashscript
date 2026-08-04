@@ -318,3 +318,44 @@ fn new_uint8_array_stays_static() {
         "new Uint8Array must stay static (Vec<u8>), got: {diags:?}"
     );
 }
+
+#[test]
+fn translates_navigator_user_agent_to_literal() {
+    // `navigator.userAgent` (WinterTC HTML §5) lowers to a static UA literal,
+    // never referencing a `navigator` value (there is no Rust binding).
+    let src = "function f(): string { return navigator.userAgent; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("\"Mozilla/5.0 (compatible; DashScript)\""),
+        "navigator.userAgent → UA literal, got:\n{rust}"
+    );
+    assert!(
+        !rust.contains("__ds_engine"),
+        "navigator.userAgent stays static (no engine degradation), got:\n{rust}"
+    );
+}
+
+#[test]
+fn translates_navigator_platform_to_cfg_expr() {
+    // `navigator.platform` tracks the host OS — `cfg!` selects at the user
+    // crate's compile time, so the right platform string compiles per target.
+    let src = "function f(): string { return navigator.platform; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("cfg!(windows)") && rust.contains("Win32"),
+        "navigator.platform → cfg!-selected platform, got:\n{rust}"
+    );
+}
+
+#[test]
+fn translates_self_navigator_browser_compat_constants() {
+    // `self.navigator.<prop>` mirrors the `self` global alias; the browser-compat
+    // constants every engine reports lower to literals.
+    let src =
+        "function f(): string { return self.navigator.appCodeName + self.navigator.product; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("\"Mozilla\"") && rust.contains("\"Gecko\""),
+        "self.navigator appCodeName and product → compat literals, got:\n{rust}"
+    );
+}

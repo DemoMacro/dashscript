@@ -29,6 +29,25 @@ interface performance {
   now(): number; // Monotonic milliseconds since timeOrigin.
 }
 
+// navigator — the WinterTC (HTML §5) `Navigator` global. Each property is a
+// static string (or a platform-selected one): the browser-compat constants
+// every engine reports plus a `DashScript` user-agent; `platform`/`oscpu`
+// track the host OS. Read-only globals; `self.navigator.<prop>` works the
+// same (`member.rs`, static Rust — never degraded).
+interface navigator {
+  readonly userAgent: string; // "Mozilla/5.0 (compatible; DashScript)"
+  readonly appCodeName: string; // "Mozilla"
+  readonly appName: string; // "Netscape"
+  readonly appVersion: string; // "5.0 (compatible; DashScript)"
+  readonly platform: string; // "Win32" | "MacIntel" | "Linux x86_64"
+  readonly oscpu: string; // host platform string (Firefox-style)
+  readonly product: string; // "Gecko"
+  readonly productSub: string; // "20030107"
+  readonly vendor: string; // "" (no vendor)
+  readonly vendorSub: string; // ""
+  readonly language: string; // "en-US"
+}
+
 // crypto — the WinterTC (W3C WebCrypto) global. `randomUUID()` returns an RFC
 // 4122 version-4 UUID string (`crypto.rs`, static Rust — never degraded).
 // `getRandomValues`/`subtle` are not Tier 1.

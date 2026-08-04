@@ -135,6 +135,18 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return parse_quote!(#ns::#member);
         }
     }
+    // `navigator.userAgent`/`.platform`/`.appCodeName`/… — the WHATWG
+    // `Navigator` global (WinterTC HTML §5). `navigator` is a read-only global
+    // object whose properties are static strings (or a `cfg!`-selected
+    // platform); each lowers to a literal, so the access never references a
+    // `navigator` value (there is no Rust binding — `navigator` is not a
+    // declared identifier). `self.navigator.X` mirrors the `self` global alias.
+    // An unknown property falls through to the generic field-read path.
+    if is_navigator_global(&sm.object) {
+        if let Some(lit) = navigator_property_expr(field_name) {
+            return lit;
+        }
+    }
     // `e.constructor.name` / `e.constructor.message` on a `DsError` local (a
     // `catch (e)` binding whose panic payload is a `DsError`) → `e.name` /
     // `e.message`. `throw new RangeError("m")` panics a `DsError { name,
@@ -1111,6 +1123,52 @@ fn url_accessor(field: &str) -> Option<&'static str> {
         "port" => "port",
         "username" => "username",
         "password" => "password",
+        _ => return None,
+    })
+}
+
+/// Whether `expr` is the `navigator` global — either a bare `navigator`
+/// identifier or `self.navigator` (the WinterTC `self` global-object alias).
+/// `navigator` is a read-only global, never a declared local, so this is a
+/// syntactic check (not a type query like `is_url_local`).
+fn is_navigator_global(expr: &Expression) -> bool {
+    match expr {
+        Expression::Identifier(id) if id.name.as_str() == "navigator" => true,
+        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "navigator" => {
+            matches!(&sm.object, Expression::Identifier(id) if id.name.as_str() == "self")
+        }
+        _ => false,
+    }
+}
+
+/// `navigator.<prop>` — a WHATWG `Navigator` static property (WinterTC HTML
+/// §5). Each maps to a literal: the browser-compat constants every engine
+/// reports (`appCodeName` = "Mozilla", `appName` = "Netscape", `product` =
+/// "Gecko", …) plus a `DashScript` user-agent; `platform`/`oscpu` are
+/// `cfg!`-selected so the right platform string compiles per target. `None`
+/// for any unknown property (the access falls through to a plain field read).
+fn navigator_property_expr(field: &str) -> Option<Expr> {
+    Some(match field {
+        "userAgent" => parse_quote!("Mozilla/5.0 (compatible; DashScript)"),
+        "appCodeName" => parse_quote!("Mozilla"),
+        "appName" => parse_quote!("Netscape"),
+        "appVersion" => parse_quote!("5.0 (compatible; DashScript)"),
+        "product" => parse_quote!("Gecko"),
+        "productSub" => parse_quote!("20030107"),
+        "vendor" => parse_quote!(""),
+        "vendorSub" => parse_quote!(""),
+        "language" => parse_quote!("en-US"),
+        // `platform`/`oscpu` track the host OS — `cfg!` selects at the user
+        // crate's compile time (the emitted Rust runs on the real target).
+        "platform" | "oscpu" => {
+            parse_quote!(if cfg!(windows) {
+                "Win32"
+            } else if cfg!(target_os = "macos") {
+                "MacIntel"
+            } else {
+                "Linux x86_64"
+            })
+        }
         _ => return None,
     })
 }
