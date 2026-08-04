@@ -2552,6 +2552,33 @@ impl ::std::default::Default for DsAbortController {
 }
 "#;
 
+/// Engine-path Web API builtin for the WHATWG Encoding API — the Javy split:
+/// a JS shim (`new TextEncoder()`, `.encode()`) over a native `Function::new`
+/// that delegates to `crate::__ds::TextEncoder` (the SAME Rust impl the static
+/// path lowers to). Emitted into `__ds_engine.rs` only when `RuntimeDep::Engine`
+/// ∧ `RuntimeDep::Encoding` are both active, and called from `wire_web_apis`
+/// (whose body [`engine_helper_module`](Translator::engine_helper_module)
+/// stamps). Returning `Vec<u8>` (rquickjs `IntoJs` → a JS Array of numbers) and
+/// wrapping it in `new Uint8Array(...)` in the shim sidesteps the
+/// `TypedArray<'js>` Ctx-lifetime trap (a closure cannot return a value tied to
+/// the call's `Ctx` lifetime). TextDecoder follows the same pattern (its
+/// byte-input handling is the next continuous-impl item).
+pub(super) const TEXT_ENCODING_ENGINE_BUILTIN: &str = r#"
+fn register_text_encoding(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    let encode = rquickjs::Function::new(ctx.clone(), |s: String| -> Vec<u8> {
+        crate::__ds::TextEncoder::new().encode(s)
+    })?;
+    ctx.globals().set("__ds_te_encode", encode)?;
+    ctx.eval_with_options::<(), _>(
+        "this.TextEncoder = function TextEncoder() { this.encoding = 'utf-8'; };
+         this.TextEncoder.prototype.encode = function(input) {
+             return new Uint8Array(__ds_te_encode(input === undefined ? '' : String(input)));
+         };",
+        sloppy(),
+    )
+}
+"#;
+
 /// WHATWG URL API helper — `__ds::DsUrlSearchParams`. An ordered name/value
 /// list (ES `URLSearchParams` preserves insertion order), backed by
 /// `Vec<(String, String)>`. Parsing and serialization route through
@@ -4816,6 +4843,21 @@ fn wire_console(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
     )
 }
 
+/// Wire WinterTC Web API builtins into the engine global — each a JS shim (the
+/// API surface) over a native `Function::new` that delegates to the SAME
+/// `crate::__ds::…` Rust impl the static path lowers to (the Javy split: JS
+/// surface + native compute, one implementation, two delivery paths). The body
+/// is stamped per-build from the active Web API `RuntimeDep`s by
+/// [`engine_helper_module`](Translator::engine_helper_module) — only APIs the
+/// static path already pulled in are registered, so the engine never references
+/// a `__ds::` type the crate lacks. Mirrors [`wire_console`]; the body is empty
+/// (`Ok(())`) when no Web API dep is active, so a non-Web-API engine fixture
+/// pays nothing.
+fn wire_web_apis(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    /* __DS_WIRE_WEB_APIS_BODY__ */
+    Ok(())
+}
+
 /// serde_json::Value -> rquickjs Value (recursive). Numbers fall back to `NaN`
 /// (ES `Number` cannot losslessly hold an out-of-range integer).
 pub fn json_to_js<'js>(ctx: &Ctx<'js>, v: &serde_json::Value) -> rquickjs::Result<Value<'js>> {
@@ -4918,6 +4960,7 @@ pub fn run(source: &str) {
         let ctx = Context::full(runtime).expect("rquickjs Context");
         ctx.with(|ctx: Ctx<'_>| {
             wire_console(&ctx)?;
+            wire_web_apis(&ctx)?;
             ctx.eval_with_options::<(), _>(source, sloppy())?;
             Ok(())
         })
@@ -4935,6 +4978,7 @@ pub fn call_fn(fn_name: &str, body_js: &str, args: &[serde_json::Value]) -> serd
         let ctx = Context::full(runtime).expect("rquickjs Context");
         ctx.with(|ctx: Ctx<'_>| {
             wire_console(&ctx)?;
+            wire_web_apis(&ctx)?;
             ctx.eval_with_options::<(), _>(body_js, sloppy())?;
             let js_args = Array::new(ctx.clone())?;
             for (i, a) in args.iter().enumerate() {
@@ -4988,6 +5032,7 @@ pub fn install_module(specifier: &str) {
     let result = CTX.with(|ctx| -> rquickjs::Result<()> {
         ctx.with(|ctx: Ctx<'_>| {
             wire_console(&ctx)?;
+            wire_web_apis(&ctx)?;
             ensure_module_installed(&ctx, specifier)
         })
     });
@@ -5006,6 +5051,7 @@ pub fn call_module_fn(
     let result = CTX.with(|ctx| -> rquickjs::Result<serde_json::Value> {
         ctx.with(|ctx: Ctx<'_>| {
             wire_console(&ctx)?;
+            wire_web_apis(&ctx)?;
             ensure_module_installed(&ctx, module_key)?;
             let js_args = Array::new(ctx.clone())?;
             for (i, a) in args.iter().enumerate() {

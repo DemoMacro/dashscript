@@ -555,6 +555,64 @@ fn crypto_get_random_values_emits_helper_and_flags_dep() {
 }
 
 #[test]
+fn engine_helper_module_stamps_web_api_builtins() {
+    // The Javy-pattern production wiring: when a degraded function runs under
+    // the engine AND the source used a WinterTC Web API the static path also
+    // pulled in, `wire_web_apis` must register that API as a QuickJS builtin
+    // delegating to the same `__ds::` impl — so a degraded `new TextEncoder()`
+    // resolves in the engine instead of throwing ReferenceError. Encoding alone
+    // (no Engine) emits no engine module at all.
+    let enc_only = RuntimeDeps::empty().with(RuntimeDep::Encoding);
+    assert!(
+        enc_only.engine_helper_module().is_none(),
+        "Encoding without Engine emits no __ds_engine module"
+    );
+    let both = RuntimeDeps::empty()
+        .with(RuntimeDep::Engine)
+        .with(RuntimeDep::Encoding);
+    let src = both
+        .engine_helper_module()
+        .expect("Engine + Encoding emits __ds_engine module");
+    // The placeholder is replaced with the register call (not left empty)…
+    assert!(
+        src.contains("register_text_encoding(ctx)?;"),
+        "wire_web_apis stamps the text-encoding register call, got:\n{src}"
+    );
+    // …the register fn is appended and delegates to the SAME Rust impl the
+    // static path lowers to (one implementation, two delivery paths)…
+    assert!(
+        src.contains("fn register_text_encoding(ctx: &Ctx<'_>)")
+            && src.contains("crate::__ds::TextEncoder::new().encode(s)"),
+        "register_text_encoding delegates to crate::__ds::TextEncoder, got:\n{src}"
+    );
+    // …and the three engine entry points call wire_web_apis next to wire_console.
+    assert!(
+        src.matches("wire_web_apis(&ctx)?;").count() >= 3,
+        "run/call_fn/call_module_fn each call wire_web_apis, got:\n{src}"
+    );
+}
+
+#[test]
+fn engine_helper_module_omits_web_api_builtins_without_their_dep() {
+    // An engine fixture that uses no Web API registers nothing — the
+    // placeholder resolves to an empty body (wire_web_apis is a no-op), and
+    // `register_text_encoding` is never emitted (so the crate never references
+    // a `__ds::TextEncoder` it lacks).
+    let engine_only = RuntimeDeps::empty().with(RuntimeDep::Engine);
+    let src = engine_only
+        .engine_helper_module()
+        .expect("Engine alone emits __ds_engine module");
+    assert!(
+        !src.contains("register_text_encoding"),
+        "no Encoding dep → no text-encoding builtin, got:\n{src}"
+    );
+    assert!(
+        !src.contains("/* __DS_WIRE_WEB_APIS_BODY__ */"),
+        "placeholder is replaced (with empty), not left in, got:\n{src}"
+    );
+}
+
+#[test]
 fn apply_to_cargo_toml_inserts_into_dependencies_section() {
     let mut toml = String::from("[package]\nname = \"x\"\n\n[dependencies]\nserde = \"1.0\"\n");
     let deps = RuntimeDeps::empty().with(RuntimeDep::RyuJs);

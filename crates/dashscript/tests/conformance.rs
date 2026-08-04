@@ -2691,6 +2691,141 @@ const ERROR_STACK_ACCESSOR_PRELUDE: &str = r#"
 const HARNESS_STA: &str = include_str!("conformance/data/harness/sta.js");
 const HARNESS_ASSERT: &str = include_str!("conformance/data/harness/assert.js");
 
+/// Minimal WPT `testharness.js` shim — `test`/`assert_equals`/`assert_true`/
+/// `assert_false`/`assert_not_equals`/`assert_array_equals`/`assert_own_property`/
+/// `assert_throws`/`setup`/`done`/`async_test`/`promise_test`. The full WPT
+/// testharness is ~1kloc (DOM-aware, async-queue, multi-test aggregation); this
+/// subset covers the synchronous + promise-based patterns the engine-path WPT
+/// fixtures use, where a thrown `AssertionError` = a failed assert (partial)
+/// and a clean eval = every assert held (supported). Mirrors Javy's "JS shim
+/// for the API surface, native for the compute" split — the testharness here is
+/// the shim, and the Web APIs (`TextEncoder`/…) are native builtins (see
+/// [`TEXT_ENCODING_PRELUDE`]).
+const WPT_TESTHARNESS_PRELUDE: &str = r#"
+function AssertionError(msg) { this.name = "AssertionError"; this.message = msg; }
+AssertionError.prototype = Object.create(Error.prototype);
+AssertionError.prototype.constructor = AssertionError;
+function __ds_fmt(v) {
+  try { return typeof v === "string" ? "«" + v + "»" : String(v); }
+  catch (e) { return "<unprintable>"; }
+}
+function __ds_same(a, b) {
+  if (a === b) return true;
+  if (a !== 0 || b !== 0) return false;
+  return 1 / a === 1 / b; // SameValue(±0, ∓0)
+}
+globalThis.assert_equals = function (actual, expected, msg) {
+  if (!__ds_same(actual, expected))
+    throw new AssertionError(msg + " Expected " + __ds_fmt(expected) + " but got " + __ds_fmt(actual));
+};
+globalThis.assert_true = function (actual, msg) { assert_equals(actual, true, msg); };
+globalThis.assert_false = function (actual, msg) { assert_equals(actual, false, msg); };
+globalThis.assert_not_equals = function (actual, unexpected, msg) {
+  if (__ds_same(actual, unexpected))
+    throw new AssertionError(msg + " Expected not " + __ds_fmt(unexpected) + " but got " + __ds_fmt(actual));
+};
+globalThis.assert_array_equals = function (actual, expected, msg) {
+  if (!Array.isArray(actual) || !Array.isArray(expected))
+    throw new AssertionError(msg + " both args must be arrays");
+  if (actual.length !== expected.length)
+    throw new AssertionError(msg + " lengths differ, expected " + expected.length + " got " + actual.length);
+  for (var i = 0; i < expected.length; i++)
+    if (!__ds_same(actual[i], expected[i]))
+      throw new AssertionError(msg + " at index " + i + " expected " + __ds_fmt(expected[i]) + " got " + __ds_fmt(actual[i]));
+};
+globalThis.assert_own_property = function (obj, prop, msg) {
+  if (!Object.prototype.hasOwnProperty.call(obj, prop))
+    throw new AssertionError(msg + " expected own property " + __ds_fmt(prop));
+};
+globalThis.assert_throws = function (code, fn, msg) {
+  var thrown = false, exc;
+  try { fn(); } catch (e) { thrown = true; exc = e; }
+  if (!thrown) throw new AssertionError(msg + " did not throw");
+  if (typeof code === "function") {
+    if (!(exc instanceof code)) throw new AssertionError(msg + " threw wrong type: " + __ds_fmt(exc));
+  } else if (code && typeof code === "object") {
+    if (String(exc.name) !== String(code.name)) throw new AssertionError(msg + " name mismatch: " + __ds_fmt(exc));
+  } else if (typeof code === "string") {
+    if (String(exc.name) !== code) throw new AssertionError(msg + " name mismatch: " + __ds_fmt(exc));
+  }
+};
+var __ds_tests = [];
+globalThis.test = function (fn, name, props) {
+  try { fn(); }
+  catch (e) {
+    if (e && e.name === "AssertionError") throw e;
+    throw new AssertionError(name + ": harness threw " + __ds_fmt(e));
+  }
+};
+globalThis.setup = function (fn, props) { try { fn && fn(); } catch (e) { throw e; } };
+globalThis.done = function () {};
+globalThis.async_test = function (fn, name, props) {
+  var t = { done: function () {}, step: function (f) { try { f(); } catch (e) { throw e; } } };
+  try { if (fn) fn(t); } catch (e) { throw e; }
+  return t;
+};
+globalThis.promise_test = function (fn, name) {
+  var p;
+  try { p = fn(); } catch (e) { throw e; }
+  if (p && typeof p.then === "function") {
+    p.then(null, function (e) { throw new AssertionError(name + ": promise rejected " + __ds_fmt(e)); });
+  }
+};
+"#;
+
+/// `TextEncoder`/`TextDecoder` as a Javy-style split: a JS shim (this prelude,
+/// adapted from Javy's `apis/text_encoding/text-encoding.js`) defining the two
+/// classes, delegating the compute to native `__ds_encode_utf8`/`__ds_decode_utf8`
+/// Rust builtins (registered by [`engine_eval`]). UTF-8 only — the WHATWG
+/// Encoding Standard's common case (Javy's own subset). Multi-encoding fixtures
+/// stay `partial` honestly; the static path's `encoding_rs`-backed
+/// `DsTextEncoder`/`DsTextDecoder` carries the full surface for hot code.
+const TEXT_ENCODING_PRELUDE: &str = r#"
+(function () {
+  class TextDecoder {
+    constructor(label, options) {
+      label = (label === undefined ? "utf-8" : String(label)).trim().toLowerCase();
+      var accepted = ["utf-8","utf8","unicode-1-1-utf-8","unicode11utf8","unicode20utf8","x-unicode20utf8"];
+      if (!accepted.includes(label)) throw new RangeError("The encoding label provided must be utf-8");
+      options = options || {};
+      Object.defineProperties(this, {
+        encoding: { value: "utf-8", enumerable: true, writable: false },
+        fatal: { value: !!options.fatal, enumerable: true, writable: false },
+        ignoreBOM: { value: !!options.ignoreBOM, enumerable: true, writable: false },
+      });
+    }
+    decode(input, options) {
+      if (input === undefined) return "";
+      options = options || {};
+      var byteOffset = input.byteOffset || 0;
+      var byteLength = input.byteLength;
+      var buf = input;
+      if (ArrayBuffer.isView(input)) buf = input.buffer;
+      if (!(buf instanceof ArrayBuffer)) throw new TypeError("The provided value is not of type '(ArrayBuffer or ArrayBufferView)'");
+      return __ds_decode_utf8(buf, byteOffset, byteLength, this.fatal, this.ignoreBOM);
+    }
+  }
+  class TextEncoder {
+    constructor() {
+      Object.defineProperties(this, { encoding: { value: "utf-8", enumerable: true } });
+    }
+    encode(input) {
+      if (input === undefined) input = "";
+      input = String(input);
+      return new Uint8Array(__ds_encode_utf8(input));
+    }
+    encodeInto(source, destination) {
+      var bytes = __ds_encode_utf8(String(source));
+      var n = Math.min(bytes.length, destination.length);
+      for (var i = 0; i < n; i++) destination[i] = bytes[i];
+      return { read: source.length, written: n };
+    }
+  }
+  globalThis.TextDecoder = TextDecoder;
+  globalThis.TextEncoder = TextEncoder;
+})();
+"#;
+
 /// Minimal `Intl` stub injected before the polyfill. rquickjs's QuickJS-NG
 /// build ships without `Intl`, but the polyfill's factory reads
 /// `Intl.DateTimeFormat` / `Intl.DurationFormat` to layer its Temporal-aware
@@ -3547,6 +3682,56 @@ fn engine_eval(
             // throw `requires SAB allocator hooks` (growable-sab fixtures).
             sab_alloc::install(&ctx);
             ctx.eval_with_options::<(), _>(CONSOLE_PRELUDE, sloppy())?;
+            // WinterTC (WPT) engine-fallback path — gated by
+            // `DASH_WPT_ENGINE_FALLBACK` in [`run_wpt`]. A fixture using WPT
+            // testharness APIs (`assert_equals`/`assert_array_equals`/…
+            // — not test262's `assert.sameValue`) is a WinterTC fixture the
+            // static translator could not lower; run it in QuickJS with the WPT
+            // testharness shim + any Web API builtins it references, in the
+            // Javy split (JS shim for the API surface, native Rust fn for the
+            // compute). The test262 harness below is harmless for WPT (different
+            // global names: `assert_equals` vs `assert.sameValue`).
+            let is_wpt = js_source.contains("assert_equals")
+                || js_source.contains("assert_array_equals")
+                || js_source.contains("assert_own_property");
+            if is_wpt {
+                ctx.eval_with_options::<(), _>(WPT_TESTHARNESS_PRELUDE, sloppy())?;
+                // `TextEncoder`/`TextDecoder` — native UTF-8 builtins + the JS
+                // class shim. PoC subset: UTF-8 only (Javy's own surface); the
+                // full `encoding_rs`-backed static path stays for hot code.
+                if js_source.contains("TextEncoder") || js_source.contains("TextDecoder") {
+                    // Native UTF-8 encode/decode — `Vec<u8>`/`String` return shapes
+                    // (rquickjs `IntoJs` → JS Array / JS String) sidestep the
+                    // `TypedArray<'js>` Ctx-lifetime trap; the JS shim wraps the
+                    // byte array in `new Uint8Array(...)`. PoC subset: UTF-8 only,
+                    // lossy on invalid bytes (fatal-mode edge cases stay partial).
+                    ctx.globals().set(
+                        "__ds_encode_utf8",
+                        Function::new(
+                            ctx.clone(),
+                            |s: String| -> Vec<u8> { s.into_bytes() },
+                        )?,
+                    )?;
+                    ctx.globals().set(
+                        "__ds_decode_utf8",
+                        Function::new(
+                            ctx.clone(),
+                            |buf: rquickjs::ArrayBuffer,
+                             off: usize,
+                             len: usize,
+                             _fatal: bool,
+                             _ignore_bom: bool|
+                             -> String {
+                                let bytes = buf.as_bytes().unwrap_or(&[]);
+                                let end = (off + len).min(bytes.len());
+                                let view: &[u8] = bytes.get(off..end).unwrap_or(&[]);
+                                String::from_utf8_lossy(view).into_owned()
+                            },
+                        )?,
+                    )?;
+                    ctx.eval_with_options::<(), _>(TEXT_ENCODING_PRELUDE, sloppy())?;
+                }
+            }
             // Temporal polyfill: QuickJS-NG lacks Temporal, so a fixture touching
             // it would ReferenceError. Inject the @js-temporal/polyfill (spec
             // reference) and expose under the spec-global name. Conditioned on the
@@ -3945,6 +4130,17 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
 /// `AssertionError` (the testharness builtin's prefix) → partial, a build
 /// failure or timeout → unsupported.
 fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str, String) {
+    // `DASH_WPT_ENGINE_FALLBACK=1` — PoC toggle: relax the WinterTC static-only
+    // contract and let a fixture the static translator cannot lower fall back
+    // to the in-process QuickJS engine path WITH Web API builtins registered
+    // (the Javy pattern — see [`engine_eval`]'s WPT branch). Mirrors
+    // `run_test262`'s "degrade, don't reject": only upgrades to `supported`;
+    // if the engine also fails, keep `partial` carrying both details (never a
+    // false `unsupported`). Default (unset) = the production static-only
+    // contract — WinterTC conformance is pure-Rust, no engine fallback.
+    let engine_fallback = std::env::var("DASH_WPT_ENGINE_FALLBACK")
+        .map(|v| v == "1" || v.eq_ignore_ascii_case("true"))
+        .unwrap_or(false);
     // A WPT fixture whose body `await`s needs an async entry — rewrap the
     // extractor's sync `function main` wrapper to `async function main` so the
     // translator emits a `#[tokio::main] async fn main` that resolves the body's
@@ -3957,17 +4153,45 @@ fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str
             .map(|d| format!("{d}"))
             .collect::<Vec<_>>()
             .join(" | ");
+        if engine_fallback {
+            let (estatus, edetail) = run_engine(raw);
+            if estatus == "supported" {
+                return (
+                    "supported",
+                    "engine fallback after static check failure".into(),
+                );
+            }
+            return (
+                "partial",
+                format!("static check: {msg} | engine: {edetail}"),
+            );
+        }
         return ("unsupported", msg);
     }
     let (rust, deps) = match translate_catch(&fixture) {
         Ok(r) => r,
         // No engine fallback (WinterTC is static-only): a translator failure is
         // an honest partial, not a degrade-to-QuickJS.
-        Err(e) => return ("partial", format!("translate: {e}")),
+        Err(e) => {
+            if engine_fallback {
+                let (estatus, edetail) = run_engine(raw);
+                if estatus == "supported" {
+                    return (
+                        "supported",
+                        "engine fallback after translate failure".into(),
+                    );
+                }
+                return ("partial", format!("translate: {e} | engine: {edetail}"));
+            }
+            return ("partial", format!("translate: {e}"));
+        }
     };
     if deps.needs_engine() {
         // The testharness builtin is `Mapped`, so this means classify let an
         // unmapped construct through — honest partial, no engine fallback.
+        if engine_fallback {
+            return run_engine(raw);
+        }
         return (
             "partial",
             "static classify flagged engine; WinterTC has no fallback".into(),
@@ -3980,10 +4204,38 @@ fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str
         &["check", "--quiet", "--message-format=short"],
     );
     if !ok {
+        if engine_fallback {
+            let (estatus, edetail) = run_engine(raw);
+            if estatus == "supported" {
+                return (
+                    "supported",
+                    "engine fallback after static build failure".into(),
+                );
+            }
+            return (
+                "partial",
+                format!("static build: {err} | engine: {edetail}"),
+            );
+        }
         return ("partial", format!("static build: {err}"));
     }
     let (verdict, _stdout) = cargo_run_full(project, target_dir);
-    judge_run(verdict)
+    match verdict {
+        RunOutcome::RunError(err) if engine_fallback => {
+            let (estatus, edetail) = run_engine(raw);
+            if estatus == "supported" {
+                return (
+                    "supported",
+                    "engine fallback after static runtime panic".into(),
+                );
+            }
+            (
+                "partial",
+                format!("runtime error: {err} | engine: {edetail}"),
+            )
+        }
+        other => judge_run(other),
+    }
 }
 
 /// Whether a WPT fixture's failure detail is a WinterTC out-of-scope pattern

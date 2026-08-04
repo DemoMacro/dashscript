@@ -673,6 +673,25 @@ impl RuntimeDep {
             RuntimeDep::FormData => Some(FORM_DATA_HELPER),
         }
     }
+
+    /// The engine-path Web API builtin for this dep — `(register_call,
+    /// fn_source)` — when this is a WinterTC Web API the engine should register
+    /// via `wire_web_apis` so a degraded function calling it finds it in the
+    /// QuickJS global. `None` for non-Web-API deps and for Web APIs whose engine
+    /// builtin isn't wired yet (added per the Javy pattern — JS shim + native
+    /// `Function::new` delegating to the same `__ds::` impl the static path
+    /// uses). `register_call` is stamped into `wire_web_apis`'s body;
+    /// `fn_source` (defining `fn <register_call>(ctx)`) is appended to the
+    /// engine module. Emitted only when `Engine` is also active, so a non-engine
+    /// fixture never references these.
+    fn engine_builtin(self) -> Option<(&'static str, &'static str)> {
+        match self {
+            RuntimeDep::Encoding => {
+                Some(("register_text_encoding(ctx)", TEXT_ENCODING_ENGINE_BUILTIN))
+            }
+            _ => None,
+        }
+    }
 }
 
 /// Runtime dependencies a translated file pulls in. Collected during
@@ -824,6 +843,26 @@ impl RuntimeDeps {
                 src.push_str(&format!("({spec:?}, {source:?}),"));
             }
             src.push_str("];\n");
+            // Stamp `wire_web_apis`'s body with one `register_<api>(ctx)?;` call
+            // per active Web API RuntimeDep that has an engine builtin, and
+            // append each builtin's `fn register_<api>(ctx)` (the Javy pattern:
+            // JS shim + native fn delegating to the same `__ds::` impl the
+            // static path lowers to). Only APIs the static path already pulled
+            // in are registered, so the engine never references a `__ds::` type
+            // the crate lacks. The placeholder stays (empty body) when no Web
+            // API dep is active — `wire_web_apis` is a no-op then.
+            let mut wire_body = String::new();
+            let mut builtin_fns = String::new();
+            for d in RuntimeDep::ALL {
+                if self.has(d) {
+                    if let Some((call, fn_src)) = d.engine_builtin() {
+                        wire_body.push_str(&format!("    {call}?;\n"));
+                        builtin_fns.push_str(fn_src);
+                    }
+                }
+            }
+            src = src.replace("/* __DS_WIRE_WEB_APIS_BODY__ */", &wire_body);
+            src.push_str(&builtin_fns);
             src
         })
     }
