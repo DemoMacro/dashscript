@@ -4,7 +4,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -12,7 +12,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -20,15 +20,15 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.is-a-constructor",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (32052) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -36,7 +36,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -44,7 +44,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -52,7 +52,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -60,7 +60,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -68,7 +68,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -76,7 +76,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -84,7 +84,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -92,7 +92,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -100,7 +100,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -108,7 +108,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -116,15 +116,15 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.options-maxbytelength-poisoned",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -132,7 +132,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -140,15 +140,15 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.proto-from-ctor-realm",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (6004) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -156,7 +156,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -164,7 +164,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -172,15 +172,15 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.bytelength.prop-desc",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyNotEnumerable is not defined\n\nthread 'main' (45048) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: verifyNotEnumerable is not defined\nnote: run with `RUST_BACKTRACE=1` en",
     "note": ""
   },
   {
@@ -188,7 +188,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -196,7 +196,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -204,7 +204,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -212,47 +212,47 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.constructor",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (43376) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.extensible",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: assert is not defined\n\nthread 'main' (31260) panicked at src\\__ds_engine.rs:344:17:\nReferenceError: assert is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to disp",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-larger-size",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: growable SharedArrayBuffer requires SAB allocator hooks\n\nthread 'main' (45992) panicked at src\\__ds_engine.rs:345:17:\nTypeError: growable SharedArrayBuffer requires SAB allocator hooks\nnote",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-same-size",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: growable SharedArrayBuffer requires SAB allocator hooks\n\nthread 'main' (14820) panicked at src\\__ds_engine.rs:345:17:\nTypeError: growable SharedArrayBuffer requires SAB allocator hooks\nnote",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.grow-smaller-size",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: growable SharedArrayBuffer requires SAB allocator hooks\n\nthread 'main' (13252) panicked at src\\__ds_engine.rs:345:17:\nTypeError: growable SharedArrayBuffer requires SAB allocator hooks\nnote",
     "note": ""
   },
   {
@@ -260,7 +260,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -268,23 +268,23 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.new-length-non-number",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: growable SharedArrayBuffer requires SAB allocator hooks\n\nthread 'main' (4312) panicked at src\\__ds_engine.rs:345:17:\nTypeError: growable SharedArrayBuffer requires SAB allocator hooks\nnote:",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.grow.nonconstructor",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (40676) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -292,7 +292,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -300,7 +300,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -308,7 +308,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -316,7 +316,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -324,7 +324,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -332,15 +332,15 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.growable.prop-desc",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (34916) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -348,7 +348,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -356,7 +356,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -364,7 +364,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -372,7 +372,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -380,7 +380,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -388,23 +388,23 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.prop-desc",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (43344) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.maxbytelength.return-maxbytelength-growable",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: growable SharedArrayBuffer requires SAB allocator hooks\n\nthread 'main' (41220) panicked at src\\__ds_engine.rs:345:17:\nTypeError: growable SharedArrayBuffer requires SAB allocator hooks\nnote",
     "note": ""
   },
   {
@@ -412,7 +412,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -420,7 +420,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -428,7 +428,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -436,7 +436,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -444,7 +444,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -460,7 +460,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -468,7 +468,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -476,15 +476,15 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.extensible",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: assert is not defined\n\nthread 'main' (31452) panicked at src\\__ds_engine.rs:344:17:\nReferenceError: assert is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to disp",
     "note": ""
   },
   {
@@ -492,7 +492,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -500,23 +500,23 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.nonconstructor",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (39808) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.slice.not-a-constructor",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (46152) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -524,7 +524,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -532,7 +532,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -540,7 +540,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -548,7 +548,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -556,7 +556,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -564,7 +564,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -572,7 +572,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -580,7 +580,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -588,7 +588,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -596,7 +596,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -604,7 +604,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -612,7 +612,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -620,7 +620,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -628,7 +628,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -636,7 +636,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -644,7 +644,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -652,7 +652,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -660,7 +660,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -668,15 +668,15 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.sharedarraybuffer.prototype.symbol.tostringtag",
     "layer": "test262",
     "category": "sharedarraybuffer",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (7024) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment v",
     "note": ""
   },
   {
@@ -684,7 +684,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -692,7 +692,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -700,7 +700,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -708,7 +708,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -716,7 +716,7 @@
     "layer": "test262",
     "category": "sharedarraybuffer",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   }
 ]
