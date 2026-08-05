@@ -2770,6 +2770,16 @@ fn register_abort(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
          AbortSignal.prototype.constructor = AbortSignal;\n\
          Object.defineProperty(AbortSignal.prototype, 'aborted', { get: function () { return this.__aborted; }, configurable: true, enumerable: true });\n\
          Object.defineProperty(AbortSignal.prototype, 'reason', { get: function () { return this.__reason; }, configurable: true, enumerable: true });\n\
+         Object.defineProperty(AbortSignal.prototype, 'onabort', {\n\
+             get: function () { return this.__onabort || null; },\n\
+             set: function (fn) {\n\
+                 var prev = this.__onabort;\n\
+                 if (prev) this.removeEventListener('abort', prev);\n\
+                 this.__onabort = fn;\n\
+                 if (typeof fn === 'function') this.addEventListener('abort', fn);\n\
+             },\n\
+             configurable: true, enumerable: true\n\
+         });\n\
          AbortSignal.any = function (signals) {\n\
              var s = new AbortSignal();\n\
              (signals || []).forEach(function (sig) {\n\
@@ -2879,6 +2889,16 @@ fn register_wpt_assert(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
              try { return typeof v === 'object' && v !== null ? JSON.stringify(v) : String(v); }\n\
              catch (_) { return String(v); }\n\
          }\n\
+         function __ds_wpt_t() {\n\
+             return {\n\
+                 done: function () {},\n\
+                 step: function (f) { f(); },\n\
+                 step_func: function (f) { return function () { try { f.apply(this, arguments); } catch (e) { throw e; } }; },\n\
+                 step_func_done: function (f) { return function () { try { f.apply(this, arguments); } catch (e) { throw e; } }; },\n\
+                 unreached_func: function (msg) { return function () { throw new AssertionError(msg || 'unreached'); }; },\n\
+                 asserts: self\n\
+             };\n\
+         }\n\
          this.assert_equals = function (a, b, msg) {\n\
              if (Object.is(a, b)) return;\n\
              throw new AssertionError((msg ? msg + ' ' : '') + 'expected ' + __ds_wpt_fmt(b) + ' but got ' + __ds_wpt_fmt(a));\n\
@@ -2910,22 +2930,15 @@ fn register_wpt_assert(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
              }\n\
              throw new AssertionError((msg ? msg + ' ' : '') + 'expected ' + (ErrorCtor && ErrorCtor.name) + ' but nothing threw');\n\
          };\n\
-         this.test = function (fn, _name) { fn({}); };\n\
+         this.test = function (fn, _name) { fn(__ds_wpt_t()); };\n\
          this.setup = function () {};\n\
          this.done = function () {};\n\
          this.async_test = function (fn, _name) {\n\
-             var t = {\n\
-                 done: function () {},\n\
-                 step: function (f) { f(); },\n\
-                 step_func: function (f) { return function () { try { f.apply(this, arguments); } catch (e) { throw e; } }; },\n\
-                 step_func_done: function (f) { return function () { try { f.apply(this, arguments); } catch (e) { throw e; } }; },\n\
-                 unreached_func: function (msg) { return function () { throw new AssertionError(msg || 'unreached'); }; },\n\
-                 asserts: self\n\
-             };\n\
+             var t = __ds_wpt_t();\n\
              try { fn(t); } catch (e) { throw e; }\n\
              return t;\n\
          };\n\
-         this.promise_test = function (fn, _name) { try { fn({}); } catch (e) { throw e; } };\n\
+         this.promise_test = function (fn, _name) { try { fn(__ds_wpt_t()); } catch (e) { throw e; } };\n\
              this.assert_object_equals = function (a, b, msg) {\n\
                  function __ds_deep_eq(x, y) {\n\
                      if (Object.is(x, y)) return true;\n\
@@ -2947,8 +2960,8 @@ fn register_wpt_assert(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
              this.assert_greater = function (a, b, msg) { if (!(a > b)) throw new AssertionError((msg || '') + a + ' is not greater than ' + b); };\n\
              this.assert_between = function (a, lo, hi, msg) { if (!(a >= lo && a <= hi)) throw new AssertionError((msg || '') + a + ' not in [' + lo + ',' + hi + ']'); };\n\
              this.generate_string = function (n, ch) { var s = ''; for (var i = 0; i < n; i++) s += ch; return s; };\n\
-             this.subset_test = function (fn, _name) { fn({}); };\n\
-             this.subsetTestByKey = function (_key, fn, _name) { fn({}); };\n\
+             this.subset_test = function (fn, _name) { fn(__ds_wpt_t()); };\n\
+             this.subsetTestByKey = function (_key, fn, _name) { fn(__ds_wpt_t()); };\n\
              this.step_timeout = function (fn, _ms) { fn(); }",
         sloppy(),
     )
