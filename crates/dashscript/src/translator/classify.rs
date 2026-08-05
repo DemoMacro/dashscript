@@ -161,9 +161,14 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
             name if is_harness_helper(name) => degrade_owned(format!(
                 "`{name}` is a test262 harness helper — runs under the engine"
             )),
-            name if is_static_only_global(name) => reject_owned(format!(
-                "`{name}` as a value is unsupported (use it only as a static-call/new receiver or \
-                 type annotation)"
+            // A `STATIC_ONLY_GLOBALS` name (`Object`/`Math`/`Array`/…) carries
+            // static-call/new mappings but no bare-value lowering — a reference
+            // like `[Object, Math]` (test262's `testWithAtomicsNonViewValues`)
+            // has no static form. The engine ships these as globals natively, so
+            // the enclosing function degrades (degrade, don't reject — a bare
+            // value is not unsupported, only the static path can't lower it).
+            name if is_static_only_global(name) => degrade_owned(format!(
+                "`{name}` as a bare value has no static lowering — runs under the engine"
             )),
             _ => Mapping::Mapped,
         },
@@ -182,9 +187,12 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
         // A reflection call, a `Function`-value callee/argument, or a dynamic
         // method whose engine routing depends on the argument/loop context.
         Expression::CallExpression(c) => classify_call(c, ctx),
-        // `.constructor` — prototype reflection.
+        // `.constructor` — prototype reflection. The engine tracks ES
+        // prototype chains natively (a DashScript struct carries no such
+        // metadata), so the enclosing function degrades — mirrors
+        // `hasOwnProperty`/`propertyIsEnumerable` below.
         Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "constructor" => {
-            reject("`.constructor` reflection is unsupported")
+            degrade("`.constructor` reflection needs the engine (no static lowering)")
         }
         // `<re>.lastIndex` — the ES regex stateful cursor; regress is
         // stateless, so route to the engine.
@@ -226,8 +234,12 @@ pub(super) fn classify_expr(expr: &Expression, ctx: &ClassifyCtx) -> Mapping {
                 Mapping::Mapped
             }
         }
-        // `123n` — BigInt literals.
-        Expression::BigIntLiteral(_) => reject("`BigInt` literals are unsupported"),
+        // `123n` — BigInt literals. DashScript has no static BigInt type, but
+        // QuickJS ships one, so degrade — the enclosing function runs under
+        // the engine rather than short-circuiting as unsupported.
+        Expression::BigIntLiteral(_) => {
+            degrade("`BigInt` literals have no static lowering — runs under the engine")
+        }
         // A string literal carrying a real lone surrogate (`"\uD800"`) — oxc
         // decodes the surrogate to U+FFFD in `value` (Rust `&str` cannot hold
         // surrogates), so the static string diverges from ES and any regex/
@@ -741,12 +753,18 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
     if matches!(prop, "toLocaleUpperCase" | "toLocaleLowerCase") && !c.arguments.is_empty() {
         return reject("locale-aware `toLocale*` with a locale argument is unsupported");
     }
-    // Instance prototype reflection methods.
+    // Instance prototype reflection methods. The engine tracks ES property
+    // attributes natively, so the enclosing function degrades — these have no
+    // static lowering. (A future compile-time fold for `hasOwnProperty` on a
+    // known struct field would short-circuit earlier; static mapping wins over
+    // degrade.)
     if matches!(
         prop,
         "hasOwnProperty" | "propertyIsEnumerable" | "isPrototypeOf"
     ) {
-        return reject_owned(format!("`{prop}` (prototype reflection) is unsupported"));
+        return degrade_owned(format!(
+            "`{prop}` (prototype reflection) needs the engine (no static lowering)"
+        ));
     }
     if let Expression::Identifier(obj) = &sm.object {
         let is_object_reflection = matches!(
@@ -761,7 +779,13 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
                 | "getOwnPropertySymbols"
         );
         if obj.name.as_str() == "Object" && is_object_reflection {
-            return reject_owned(format!("`Object.{prop}` reflection is unsupported"));
+            // Property-descriptor / prototype-chain reflection has no static
+            // lowering (a DashScript struct carries no attribute metadata), so
+            // the enclosing function degrades — the engine tracks ES property
+            // semantics natively. Mirrors `Object.freeze`/… below.
+            return degrade_owned(format!(
+                "`Object.{prop}` reflection needs the engine (no static lowering)"
+            ));
         }
         // `Object.freeze`/`seal`/`preventExtensions` mutate, and `isFrozen`/
         // `isSealed`/`isExtensible` query, an object's [[Extensible]]/property
@@ -936,10 +960,6 @@ fn reject(msg: &'static str) -> Mapping {
     Mapping::Reject(Cow::Borrowed(msg))
 }
 
-fn reject_owned(msg: String) -> Mapping {
-    Mapping::Reject(Cow::Owned(msg))
-}
-
 fn degrade(msg: &'static str) -> Mapping {
     Mapping::DegradeEngine(Cow::Borrowed(msg))
 }
@@ -1108,9 +1128,22 @@ mod tests {
     }
 
     #[test]
-    fn rejects_global_as_value() {
-        assert!(matches!(classify_first_expr("Math"), Mapping::Reject(_)));
-        assert!(matches!(classify_first_expr("Array"), Mapping::Reject(_)));
+    fn degrades_static_only_global_as_value() {
+        // A bare `Object`/`Math`/`Array` value has no static lowering, but the
+        // engine ships them as globals — degrade (don't reject). A static-call
+        // receiver (`Math.max(…)`) stays `Mapped` via a different arm.
+        assert!(matches!(
+            classify_first_expr("Math"),
+            Mapping::DegradeEngine(_)
+        ));
+        assert!(matches!(
+            classify_first_expr("Array"),
+            Mapping::DegradeEngine(_)
+        ));
+        assert!(matches!(
+            classify_first_expr("Object"),
+            Mapping::DegradeEngine(_)
+        ));
     }
 
     #[test]
@@ -1123,8 +1156,12 @@ mod tests {
     }
 
     #[test]
-    fn rejects_bigint() {
-        assert!(matches!(classify_first_expr("123n"), Mapping::Reject(_)));
+    fn degrades_bigint() {
+        // No static BigInt type, but QuickJS ships one — degrade.
+        assert!(matches!(
+            classify_first_expr("123n"),
+            Mapping::DegradeEngine(_)
+        ));
     }
 
     #[test]
@@ -1136,10 +1173,10 @@ mod tests {
     }
 
     #[test]
-    fn rejects_constructor_reflection() {
+    fn degrades_constructor_reflection() {
         assert!(matches!(
             classify_first_expr("x.constructor"),
-            Mapping::Reject(_)
+            Mapping::DegradeEngine(_)
         ));
     }
 
@@ -1170,10 +1207,12 @@ mod tests {
     }
 
     #[test]
-    fn rejects_object_reflection_call() {
+    fn degrades_object_reflection_call() {
+        // Property-descriptor / prototype-chain reflection has no static
+        // lowering; the engine tracks ES property semantics natively.
         assert!(matches!(
             classify_first_expr("Object.defineProperty({}, \"x\", { value: 1 })"),
-            Mapping::Reject(_)
+            Mapping::DegradeEngine(_)
         ));
     }
 
@@ -1206,10 +1245,12 @@ mod tests {
     }
 
     #[test]
-    fn rejects_has_own_property() {
+    fn degrades_has_own_property() {
+        // Instance prototype reflection degrades — the engine tracks ES
+        // property attributes natively.
         assert!(matches!(
             classify_first_expr("({}).hasOwnProperty(\"x\")"),
-            Mapping::Reject(_)
+            Mapping::DegradeEngine(_)
         ));
     }
 

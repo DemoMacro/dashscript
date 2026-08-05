@@ -213,14 +213,23 @@ fn check_as_inner(source: &str, role: FileRole, include_degrades: bool) -> Vec<O
             &registry,
             &mutable_top_level,
         );
-        check_escape(
-            &program.body,
-            &names,
-            &registry,
-            &mutable_top_level,
-            &escaped_lazy,
-            &mut diagnostics,
-        );
+        // `dynamic_fns` lets `check_escape` skip degraded functions — their
+        // bodies run under the engine, where a top-level binding capture is
+        // legal (no Rust fn-item restriction). And when a dynamic construct
+        // sits at top level (`top_level_dynamic`), the *whole* program runs
+        // under the engine, so `check_escape` does not apply at all — skip it.
+        let sites = program_engine_sites(program);
+        if !sites.top_level_dynamic {
+            check_escape(
+                &program.body,
+                &names,
+                &registry,
+                &mutable_top_level,
+                &escaped_lazy,
+                &sites.dynamic_fns,
+                &mut diagnostics,
+            );
+        }
     }
     diagnostics
 }
@@ -240,6 +249,7 @@ fn check_escape(
     registry: &registry::TypeRegistry,
     mutable_names: &HashSet<String>,
     escaped_lazy: &HashSet<String>,
+    dynamic_fns: &HashSet<String>,
     out: &mut Vec<OxcDiagnostic>,
 ) {
     // A const-expr `const` number/boolean literal referenced from a top-level
@@ -273,6 +283,17 @@ fn check_escape(
         let Statement::FunctionDeclaration(f) = stmt else {
             continue;
         };
+        // A degraded function's body runs under the embedded engine (JS),
+        // where it closes over top-level bindings the usual JS way — the Rust
+        // fn-item capture restriction does not apply. Skip it: the engine
+        // finds both the function and the binding in `__DS_MODULE_JS`.
+        if f.id
+            .as_ref()
+            .map(|id| dynamic_fns.contains(id.name.as_str()))
+            .unwrap_or(false)
+        {
+            continue;
+        }
         let Some(body) = &f.body else { continue };
         let analysis = analysis::analyze(
             &body.statements,
