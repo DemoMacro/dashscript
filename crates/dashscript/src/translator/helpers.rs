@@ -2720,6 +2720,258 @@ fn register_crypto(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
 }
 "#;
 
+/// `$262.agent` engine builtin — the tc39 test262 agent API for true
+/// cross-thread `Atomics.wait`/`notify`. test262's atomics fixtures drive a
+/// real OS thread per agent (the spec's agent model); a single-threaded mock
+/// degrades to "InternalError: interrupted" (the main thread's `wait` blocks
+/// to the engine deadline) or `Atomics.notify` returning 0 (no waiter). This
+/// builtin mirrors QuickJS's own `run-test262.c` agent model: each agent is an
+/// independent `Runtime` + `JS_SetCanBlock(true)` + own thread, the
+/// `SharedArrayBuffer` is shared by raw backing pointer, and broadcast sync
+/// uses a `Mutex`+`Condvar` (not QuickJS's internal lock). The whole
+/// `$262.agent` bottom layer (`start`/`broadcast`/`getReport`/`sleep`/
+/// `monotonicNow` main-side; `report`/`leaving`/`receiveBroadcast`/`sleep`
+/// agent-side) lives here; `atomicsHelper.js`'s high-level `safeBroadcast`/
+/// `waitUntil`/`tryYield`/`timeouts` ride on top of it unchanged.
+///
+/// The drain loop (`__ds_agent_loop`) runs OUTSIDE `ctx.with`: `rt.
+/// is_job_pending`/`execute_pending_job` lock `runtime.inner` (a `RefCell`),
+/// the same cell `Context::with` holds for its whole closure — calling them
+/// inside a `with`-closure re-enters the `RefCell` and panics. Only the
+/// receiver invocation enters `ctx.with`, briefly.
+pub(super) const AGENT_262_ENGINE_BUILTIN: &str = r#"
+use rquickjs::{ArrayBuffer, ArrayBufferSource, Function, qjs};
+use std::collections::VecDeque;
+use std::sync::Arc;
+use std::sync::Condvar;
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::thread;
+use std::time::{Duration, Instant};
+
+/// One broadcast payload: raw SAB backing pointer + len + sync value +
+/// delivered flag. The pointer is onto the main ctx's SAB backing store and
+/// is sound to share across threads (QuickJS's futex is OS-level), so the
+/// whole shared state is `Send`+`Sync`.
+struct __DsAgentBroadcast { buf: *mut u8, len: usize, val: i32, delivered: bool }
+struct __DsAgentInner { reports: VecDeque<String>, broadcast: Option<__DsAgentBroadcast> }
+struct __DsAgentShared { inner: Mutex<__DsAgentInner>, cond: Condvar }
+unsafe impl Send for __DsAgentShared {}
+unsafe impl Sync for __DsAgentShared {}
+
+/// Owns nothing — a view onto SAB backing bytes owned by the main thread's
+/// SAB. `drop` is a no-op (the main thread owns the storage).
+struct __DsAgentSabBuf(*mut u8, usize);
+unsafe impl Send for __DsAgentSabBuf {}
+unsafe impl ArrayBufferSource for __DsAgentSabBuf {
+    fn as_ptr(&self) -> *mut u8 { self.0 }
+    fn len(&self) -> usize { self.1 }
+}
+
+/// Enable QuickJS blocking mode on the runtime backing this ctx — required for
+/// `Atomics.wait` to truly block (otherwise it throws "main thread" TypeError).
+fn __ds_enable_can_block(ctx: &Ctx<'_>) {
+    let rt = unsafe { qjs::JS_GetRuntime(ctx.as_raw().as_ptr()) };
+    unsafe { qjs::JS_SetCanBlock(rt, true) };
+}
+
+/// Build the agent-side `$262.agent` (report/leaving/receiveBroadcast/sleep).
+fn __ds_register_agent_262(
+    ctx: &Ctx<'_>,
+    shared: Arc<__DsAgentShared>,
+    leaving: Arc<AtomicBool>,
+) -> rquickjs::Result<()> {
+    let agent = Object::new(ctx.clone())?;
+    let shared_rep = shared.clone();
+    let report = Function::new(ctx.clone(), move |s: String| -> () {
+        shared_rep.inner.lock().unwrap().reports.push_back(s);
+    })?;
+    agent.set("report", report)?;
+    let leaving_for_fn = leaving.clone();
+    let leaving_fn = Function::new(ctx.clone(), move || -> () {
+        leaving_for_fn.store(true, Ordering::SeqCst);
+    })?;
+    agent.set("leaving", leaving_fn)?;
+    let sleep = Function::new(ctx.clone(), |ms: u32| -> () {
+        thread::sleep(Duration::from_millis(u64::from(ms)));
+    })?;
+    agent.set("sleep", sleep)?;
+    let now = Function::new(ctx.clone(), || -> i64 {
+        use std::time::SystemTime;
+        SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)
+            .map(|d| d.as_millis() as i64)
+            .unwrap_or(0)
+    })?;
+    agent.set("monotonicNow", now)?;
+    let dollar = Object::new(ctx.clone())?;
+    dollar.set("agent", agent)?;
+    ctx.globals().set("$262", dollar)?;
+    // receiveBroadcast is a pure-JS shim (avoids the Function<'js> Ctx-lifetime
+    // trap): stash the callback on the agent global for the loop to invoke.
+    ctx.eval_with_options::<(), _>(
+        "$262.agent.receiveBroadcast = function(fn) { globalThis.__ds_receiver = fn; };",
+        sloppy(),
+    )
+}
+
+/// Mark the current broadcast delivered and wake the main thread's `broadcast`.
+fn __ds_mark_delivered(shared: &__DsAgentShared) {
+    let mut inner = shared.inner.lock().unwrap();
+    if let Some(p) = inner.broadcast.as_mut() {
+        p.delivered = true;
+    }
+    shared.cond.notify_all();
+}
+
+/// Agent thread main loop — runs OUTSIDE `ctx.with` (see the const doc).
+fn __ds_agent_loop(
+    ctx: &Context,
+    rt: &Runtime,
+    shared: Arc<__DsAgentShared>,
+    leaving: Arc<AtomicBool>,
+) {
+    loop {
+        while rt.is_job_pending() {
+            if rt.execute_pending_job().is_err() {
+                break;
+            }
+        }
+        if leaving.load(Ordering::SeqCst) {
+            return;
+        }
+        let (buf, len, val) = {
+            let mut inner = shared.inner.lock().unwrap();
+            loop {
+                if leaving.load(Ordering::SeqCst) {
+                    return;
+                }
+                if let Some(ref p) = inner.broadcast {
+                    if !p.delivered {
+                        break (p.buf, p.len, p.val);
+                    }
+                }
+                inner = shared.cond.wait(inner).unwrap();
+            }
+        };
+        ctx.with(|actx: Ctx<'_>| {
+            let receiver: Function = match actx.globals().get("__ds_receiver") {
+                Ok(f) => f,
+                Err(_) => return,
+            };
+            let sab = ArrayBuffer::from_source_shared(actx.clone(), __DsAgentSabBuf(buf, len));
+            if let Ok(sab) = sab {
+                let _: () = receiver.call((sab, val)).unwrap_or(());
+            }
+        });
+        __ds_mark_delivered(&shared);
+    }
+}
+
+/// Main-side `$262` (the entry `wire_web_apis` registers under
+/// `RuntimeDep::Atomics`). Creates one shared-state `Arc` captured by every
+/// `$262.agent.*` closure; `$262.agent.start(script)` clones it into the
+/// spawned agent thread.
+fn register_atomics_agent(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    let shared = Arc::new(__DsAgentShared {
+        inner: Mutex::new(__DsAgentInner { reports: VecDeque::new(), broadcast: None }),
+        cond: Condvar::new(),
+    });
+    let agent = Object::new(ctx.clone())?;
+
+    // $262.agent.start(script) — spawn an agent thread with its own Runtime.
+    let shared_start = shared.clone();
+    let start = Function::new(ctx.clone(), move |script: String| -> () {
+        let shared = shared_start.clone();
+        thread::spawn(move || {
+            let rt = match Runtime::new() {
+                Ok(r) => r,
+                Err(_) => return,
+            };
+            let actx = match Context::full(&rt) {
+                Ok(c) => c,
+                Err(_) => return,
+            };
+            let leaving = Arc::new(AtomicBool::new(false));
+            // Phase 1 (inside ctx.with): enable blocking, register agent-side
+            // $262, eval the script (stashes receiveBroadcast callback).
+            let _ = actx.with(|actx: Ctx<'_>| -> rquickjs::Result<()> {
+                __ds_enable_can_block(&actx);
+                __ds_register_agent_262(&actx, shared.clone(), leaving.clone())?;
+                if actx.eval_with_options::<(), _>(script.as_str(), sloppy()).is_err() {
+                    return Err(rquickjs::Error::Unknown);
+                }
+                Ok(())
+            });
+            // Phase 2 (OUTSIDE ctx.with): the drain loop.
+            __ds_agent_loop(&actx, &rt, shared.clone(), leaving);
+        });
+    })?;
+    agent.set("start", start)?;
+
+    // $262.agent.broadcast(sab) — publish the SAB, wait until the agent has
+    // run its receiveBroadcast callback. The arg is a `Value` (SAB is rejected
+    // by `FromJs<ArrayBuffer>` on the typed path); `into_object` + `from_object`
+    // + `as_raw` reach the shared backing pointer through `JS_GetArrayBuffer`.
+    let shared_bc = shared.clone();
+    let broadcast = Function::new(ctx.clone(), move |sab: Value<'_>| -> () {
+        let obj = match sab.into_object() {
+            Some(o) => o,
+            None => return,
+        };
+        let raw = match ArrayBuffer::from_object(obj).and_then(|ab| ab.as_raw()) {
+            Some(r) => r,
+            None => return,
+        };
+        let payload = __DsAgentBroadcast {
+            buf: raw.ptr.as_ptr(),
+            len: raw.len,
+            val: 0,
+            delivered: false,
+        };
+        let mut inner = shared_bc.inner.lock().unwrap();
+        inner.broadcast = Some(payload);
+        shared_bc.cond.notify_all();
+        // Bounded wait: an agent that never starts must not deadlock the main
+        // thread (run-test262.c blocks, but has a test-level timeout).
+        let deadline = Instant::now() + Duration::from_secs(10);
+        while inner.broadcast.as_ref().map_or(false, |p| !p.delivered) {
+            let next = deadline.saturating_duration_since(Instant::now());
+            let (g, wait) = shared_bc.cond.wait_timeout(inner, next).unwrap();
+            inner = g;
+            if wait.timed_out() {
+                break;
+            }
+        }
+    })?;
+    agent.set("broadcast", broadcast)?;
+
+    // $262.agent.getReport() -> string|null.
+    let shared_gr = shared.clone();
+    let get_report = Function::new(ctx.clone(), move || -> Option<String> {
+        shared_gr.inner.lock().unwrap().reports.pop_front()
+    })?;
+    agent.set("getReport", get_report)?;
+
+    let sleep = Function::new(ctx.clone(), |ms: u32| -> () {
+        thread::sleep(Duration::from_millis(u64::from(ms)));
+    })?;
+    agent.set("sleep", sleep)?;
+    let now = Function::new(ctx.clone(), || -> i64 {
+        use std::time::SystemTime;
+        SystemTime::now()
+            .duration_since(SystemTime::UNIX_EPOCH)
+            .map(|d| d.as_millis() as i64)
+            .unwrap_or(0)
+    })?;
+    agent.set("monotonicNow", now)?;
+
+    let dollar = Object::new(ctx.clone())?;
+    dollar.set("agent", agent)?;
+    dollar.set("global", ctx.globals())?;
+    ctx.globals().set("$262", dollar)
+}
+"#;
+
 /// `EventTarget` / `AbortSignal` / `AbortController` engine builtin — the
 /// Javy-pattern wiring for the WHATWG abort/event family. Unlike the encoding
 /// or crypto builtins there is no native `fn` delegation: the static path's
@@ -5243,6 +5495,14 @@ fn wire_console(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
 /// (`Ok(())`) when no Web API dep is active, so a non-Web-API engine fixture
 /// pays nothing.
 fn wire_web_apis(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    // Enable QuickJS blocking mode on this runtime so `Atomics.wait` truly
+    // blocks (otherwise it throws "main thread" TypeError). Idempotent and
+    // harmless for fixtures that never wait — set unconditionally so any
+    // engine-run thread (the per-function degrade path, $262.agent main side)
+    // can host a real wait without a per-dep gate. The agent threads spawned by
+    // `register_atomics_agent` set this on their own independent runtimes too.
+    let rt_ptr = unsafe { rquickjs::qjs::JS_GetRuntime(ctx.as_raw().as_ptr()) };
+    unsafe { rquickjs::qjs::JS_SetCanBlock(rt_ptr, true) };
     // `self` — WinterTC §5 global alias for globalThis. Registered
     // unconditionally (the alias is part of the global shape, not a per-API
     // dep), so a degraded function reaching a Web API via `self.` resolves it

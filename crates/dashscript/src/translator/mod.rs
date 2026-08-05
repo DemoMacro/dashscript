@@ -55,6 +55,19 @@ pub enum RuntimeDep {
     /// via `__ds_engine` (the `rquickjs` crate). A gated compat fallback — the
     /// body is never lowered, so it carries no text marker.
     Engine,
+    /// tc39 test262 `$262.agent` API — the bottom-layer agent surface
+    /// (`start`/`broadcast`/`getReport`/`sleep`/`monotonicNow` main-side;
+    /// `report`/`leaving`/`receiveBroadcast` agent-side) that drives true
+    /// cross-thread `Atomics.wait`/`notify`. Mirrors QuickJS's own
+    /// `run-test262.c` agent model: each agent is an independent `Runtime` +
+    /// `JS_SetCanBlock(true)` + own OS thread; the `SharedArrayBuffer` is
+    /// shared by raw backing pointer; broadcast sync uses a `Mutex`+`Condvar`.
+    /// Registered as an engine builtin (`register_atomics_agent`) under
+    /// `wire_web_apis`, so an atomics fixture that reaches `$262.agent.*`
+    /// degrades per-function and the agent threads run inside the production
+    /// binary. No text marker (the body degrades to the engine, like `Engine`);
+    /// no cargo dep (pure `std` + the `rquickjs` `Engine` already pulls).
+    Atomics,
     /// An indexed assignment `xs[i] = v` that may auto-grow; routes through
     /// `__ds::array_set`. Pure `std` — no cargo dep.
     ArrayHelper,
@@ -311,10 +324,11 @@ pub enum RuntimeDep {
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 35] = [
+    const ALL: [RuntimeDep; 36] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
+        RuntimeDep::Atomics,
         RuntimeDep::ArrayHelper,
         RuntimeDep::Regress,
         RuntimeDep::Temporal,
@@ -445,6 +459,9 @@ impl RuntimeDep {
             RuntimeDep::File => Some("__ds::DsFile"),
             RuntimeDep::FormData => Some("__ds::DsFormData"),
             RuntimeDep::Engine => None,
+            // `$262.agent` is engine-only — the body degrades to `__ds_engine`
+            // (like `Engine`), so no static text marker.
+            RuntimeDep::Atomics => None,
         }
     }
 
@@ -476,6 +493,10 @@ impl RuntimeDep {
                 ("serde", "{ version = \"1\", features = [\"derive\"] }"),
                 ("serde_json", "\"1\""),
             ]),
+            // `$262.agent` reuses the engine's `rquickjs` (already pulled by
+            // `Engine` — atomics fixtures degrade the whole body, so `Engine`
+            // is always set alongside). No extra crate.
+            RuntimeDep::Atomics => None,
             RuntimeDep::Regress => Some(&[("regress", "\"0.11\"")]),
             // `temporal_rs` (boa-dev/temporal-rs) — the Rust implementation of
             // ECMAScript Temporal. Default features embed time-zone data
@@ -635,7 +656,10 @@ impl RuntimeDep {
             RuntimeDep::RyuJs => Some(RYUJS_HELPERS),
             RuntimeDep::ArrayHelper => Some(ARRAY_HELPER),
             RuntimeDep::Regress => Some(REGRESS_HELPERS),
-            RuntimeDep::SerdeJson | RuntimeDep::Engine | RuntimeDep::Temporal => None,
+            RuntimeDep::SerdeJson
+            | RuntimeDep::Engine
+            | RuntimeDep::Temporal
+            | RuntimeDep::Atomics => None,
             RuntimeDep::Worker => Some(WORKER_HELPER),
             RuntimeDep::Truthy => Some(TRUTHY_HELPER),
             RuntimeDep::Display => Some(DISPLAY_HELPER),
@@ -715,6 +739,15 @@ impl RuntimeDep {
             // boxes that cannot cross the serde boundary, but the ES semantics
             // are a small state machine the shim runs faithfully.
             RuntimeDep::EventTarget => Some(("register_abort(ctx)", ABORT_ENGINE_BUILTIN)),
+            // `$262.agent` — the tc39 test262 agent API for true cross-thread
+            // `Atomics.wait`/`notify`. Each agent is an independent `Runtime` +
+            // own OS thread (QuickJS's `run-test262.c` model); the SAB is
+            // shared by raw backing pointer, broadcast sync via `Mutex`+
+            // `Condvar`. No native `__ds::` delegation — the whole agent state
+            // machine lives in the builtin (it owns the threads + shared
+            // state); `atomicsHelper.js`'s high-level `safeBroadcast`/`waitUntil`
+            // ride on top unchanged.
+            RuntimeDep::Atomics => Some(("register_atomics_agent(ctx)", AGENT_262_ENGINE_BUILTIN)),
             _ => None,
         }
     }
@@ -1046,6 +1079,14 @@ fn stamp_engine_js_body_deps(deps: &mut RuntimeDeps, js: &str) {
         || js.contains("dispatchEvent")
     {
         deps.insert(RuntimeDep::EventTarget);
+    }
+    // `$262.agent` — a degraded atomics body needs `register_atomics_agent`
+    // to have supplied the `$262` object (start/broadcast/getReport/… +
+    // agent-side receiveBroadcast/report/leaving), or `$262.agent.start`
+    // throws `ReferenceError`. test262's `$262` is only ever reached via
+    // `.agent`, so any `$262` occurrence gates the builtin.
+    if js.contains("$262") {
+        deps.insert(RuntimeDep::Atomics);
     }
 }
 

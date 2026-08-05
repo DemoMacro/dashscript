@@ -194,6 +194,36 @@ fn degraded_body_text_encoder_stamps_encoding_for_engine_builtin() {
 }
 
 #[test]
+fn degraded_body_dollar_262_stamps_atomics_for_engine_builtin() {
+    // A function that degrades per-function (runtime `typeof` of a member
+    // access — the static translator cannot lower it) and references test262's
+    // `$262.agent` in its body. `$262` is an engine-value global, so the body
+    // degrades; the static Rust marker probe sees only the Rust emit (the
+    // `call_fn` swap), not the JS body, so `Atomics` would be missed and
+    // `wire_web_apis` would skip `register_atomics_agent` — the degraded body
+    // would hit `ReferenceError: $262 is not defined`. `stamp_engine_js_body_deps`
+    // scans the body's JS for `$262` the way the assert/Web-API scans do.
+    let src = "function ag(o: { x: number }) {\n  const s = typeof o.x;\n  $262.agent.start(s);\n  return s;\n}\nag({ x: 1 });\n";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.has(RuntimeDep::Engine),
+        "runtime typeof degrades per-function, got deps: {deps:?}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Atomics),
+        "degraded body `$262` must stamp Atomics for wire_web_apis, got deps: {deps:?}"
+    );
+    assert!(
+        deps.engine_helper_module()
+            .is_some_and(|s| s.contains("register_atomics_agent(ctx)")),
+        "wire_web_apis stamps register_atomics_agent for the engine builtin, got helper: {:?}",
+        deps.engine_helper_module()
+    );
+}
+
+#[test]
 fn text_encoder_encode_default_arg_lowers_to_empty_string() {
     // `TextEncoder.prototype.encode(input = "")` — both a missing argument and
     // an explicit `undefined` trigger the ES default (JS default-parameter
