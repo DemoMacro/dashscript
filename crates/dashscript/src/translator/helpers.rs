@@ -2740,7 +2740,7 @@ fn register_crypto(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
 /// inside a `with`-closure re-enters the `RefCell` and panics. Only the
 /// receiver invocation enters `ctx.with`, briefly.
 pub(super) const AGENT_262_ENGINE_BUILTIN: &str = r#"
-use rquickjs::{ArrayBuffer, ArrayBufferSource, Function, qjs};
+use rquickjs::{ArrayBuffer, ArrayBufferSource, Function, convert::Coerced, qjs};
 use std::collections::VecDeque;
 use std::sync::Arc;
 use std::sync::Condvar;
@@ -2800,8 +2800,13 @@ fn __ds_register_agent_262(
 ) -> rquickjs::Result<()> {
     let agent = Object::new(ctx.clone())?;
     let shared_rep = shared.clone();
-    let report = Function::new(ctx.clone(), move |s: String| -> () {
-        shared_rep.inner.lock().unwrap().reports.push_back(s);
+    // Coerced<String> runs JS ToString on the arg, so `$262.agent.report` accepts
+    // any value (fixtures pass `Atomics.store`/`Atomics.add` numbers, not just
+    // strings). A strict `String` param rejects numbers, throws inside the
+    // receiver, leaves no report, and the main thread spins forever in
+    // `getReport` — the root cause of the 26 atomics timeout fixtures.
+    let report = Function::new(ctx.clone(), move |v: Coerced<std::string::String>| -> () {
+        shared_rep.inner.lock().unwrap().reports.push_back(v.0);
     })?;
     agent.set("report", report)?;
     // leaving sets THIS agent's channel flag (per-agent, not a shared bool).
