@@ -1772,6 +1772,52 @@ enc();
 }
 
 #[test]
+fn atomics_engine_module_with_async_drain_compiles() {
+    // waitAsync drain guard: `run` was rewritten to add a microtask drain +
+    // `$DONE`/`__ds_async_error` (so async atomics fixtures complete under the
+    // embedded QuickJS). `run` lives in the emitted `__ds_engine.rs`, so a lib
+    // build never type-checks it — this test forces Engine + Atomics deps
+    // active (Object.defineProperty → Engine, `$262.agent` → Atomics), emits
+    // the stamped engine module beside `main.rs`, and cargo-checks the probe.
+    // The first `ctx.with` closure in `run` needs an explicit
+    // `-> rquickjs::Result<()>` annotation now it is no longer the tail
+    // expression (E0282 otherwise — bidirectional `From` on the `?` error type).
+    let tmp = TempDir::new().expect("tempdir");
+    let project = tmp.path().join("probe");
+    let target_dir = tmp.path().join("target");
+    fs::create_dir_all(project.join("src")).expect("probe src");
+    let src = "\
+interface Item { v: number }
+function reflect(b: Item): string {
+  Object.defineProperty(b, \"k\", { value: 1 });
+  $262.agent.start(\"0\");
+  return \"done\";
+}
+const x: Item = { v: 2 };
+console.log(reflect(x));
+";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate atomics engine source");
+    assert!(deps.needs_engine(), "reflection should flip needs_engine");
+    assert!(
+        deps.has(dashscript::translator::RuntimeDep::Atomics),
+        "$262.agent should pull Atomics dep, got: {:?}",
+        deps
+    );
+    write_project(&project, &rust, &deps);
+    let (ok, err) = cargo(
+        &project,
+        &target_dir,
+        &["check", "--quiet", "--message-format=short"],
+    );
+    assert!(
+        ok,
+        "engine path with Atomics + async drain must compile: {err}\n--- emitted ---\n{rust}"
+    );
+}
+
+#[test]
 fn engine_loads_multi_file_js_module_graph() {
     // B6-2: the engine's `Loader`/`Resolver` loads a multi-file ESM `.js`
     // module graph (a.js imports b.js), `call_module_fn` lazily declares +

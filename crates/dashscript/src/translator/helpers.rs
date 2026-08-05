@@ -2747,6 +2747,36 @@ use std::sync::Condvar;
 use std::thread;
 use std::time::{Duration, Instant};
 
+/// `Atomics.waitAsync` polyfill — QuickJS-NG 0.12 lacks it (`test262.conf`:
+/// `Atomics.waitAsync=skip`). The polyfill delegates to `Atomics.wait` (both
+/// runtimes this module touches set `JS_SetCanBlock(true)`). Probe with
+/// timeout 0 so the call validates the typed array / shared buffer / index
+/// (throwing TypeError/RangeError synchronously, as the spec requires) and
+/// returns the fast-path verdict without blocking. The async case blocks the
+/// caller — safe because test262 only awaits `waitAsync().value` from a
+/// `$262.agent` worker thread while the notifier runs on a different thread
+/// (verified across all 98 waitAsync fixtures), so there is no deadlock.
+const __DS_WAITASYNC_POLYFILL: &str = "(function () {
+  if (typeof Atomics === 'undefined' || typeof Atomics.wait !== 'function') return;
+  if (typeof Atomics.waitAsync === 'function') return;
+  Object.defineProperty(Atomics, 'waitAsync', {
+    value: function waitAsync(typedArray, index, value, timeout) {
+      if (timeout === undefined) timeout = Infinity;
+      var probe = Atomics.wait(typedArray, index, value, 0);
+      if (probe === 'not-equal') return { async: false, value: 'not-equal' };
+      if (!(timeout > 0)) return { async: false, value: 'timed-out' };
+      return {
+        async: true,
+        value: new Promise(function (resolve) {
+          resolve(Atomics.wait(typedArray, index, value, Math.min(timeout, 10000)));
+        })
+      };
+    },
+    writable: true, configurable: true, enumerable: false
+  });
+})();";
+
+
 /// One broadcast payload: raw SAB backing pointer + len + sync value. The
 /// pointer is onto the main ctx's SAB backing store and is sound to share
 /// across threads (QuickJS's futex is OS-level), so the shared state is
@@ -2838,7 +2868,10 @@ fn __ds_register_agent_262(
     ctx.eval_with_options::<(), _>(
         "$262.agent.receiveBroadcast = function(fn) { globalThis.__ds_receiver = fn; };",
         sloppy(),
-    )
+    )?;
+    // Atomics.waitAsync is awaited from agent bodies (async=true fixtures) —
+    // inject the polyfill on the agent runtime too.
+    ctx.eval_with_options::<(), _>(__DS_WAITASYNC_POLYFILL, sloppy())
 }
 
 /// Agent thread main loop — runs OUTSIDE `ctx.with` (see the const doc).
@@ -5554,6 +5587,39 @@ fn wire_console(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
 /// a `__ds::` type the crate lacks. Mirrors [`wire_console`]; the body is empty
 /// (`Ok(())`) when no Web API dep is active, so a non-Web-API engine fixture
 /// pays nothing.
+/// `Atomics.waitAsync` polyfill (host copy) — injected unconditionally on the
+/// main runtime so any degraded fixture reaching `Atomics.waitAsync` resolves
+/// it, not just `$262.agent` fixtures. The agent runtime gets its own copy
+/// (`__DS_WAITASYNC_POLYFILL` in `AGENT_262_ENGINE_BUILTIN`). See that const
+/// for the rationale (QuickJS-NG 0.12 lacks waitAsync; delegate to wait).
+const ATOMICS_WAIT_ASYNC_POLYFILL: &str = "(function () {
+  if (typeof Atomics === 'undefined' || typeof Atomics.wait !== 'function') return;
+  if (typeof Atomics.waitAsync === 'function') return;
+  Object.defineProperty(Atomics, 'waitAsync', {
+    value: function waitAsync(typedArray, index, value, timeout) {
+      if (timeout === undefined) timeout = Infinity;
+      var probe = Atomics.wait(typedArray, index, value, 0);
+      if (probe === 'not-equal') return { async: false, value: 'not-equal' };
+      if (!(timeout > 0)) return { async: false, value: 'timed-out' };
+      return {
+        async: true,
+        value: new Promise(function (resolve) {
+          // Cap the blocking wait at test262's largest timeout (huge = 10s):
+          // the async branch is reached only when the value matches and a wait
+          // is genuinely needed, so a notifier (a `$262.agent` on another
+          // thread) usually resolves this within milliseconds via the shared
+          // SAB futex. The cap bounds the rare lost-notify / Infinity-timeout
+          // case (a fixture no notifier reaches) to 10s instead of hanging the
+          // 30s harness — `timed-out` still drives the fixture's own assert, so
+          // the verdict stays honest (no fake green).
+          resolve(Atomics.wait(typedArray, index, value, Math.min(timeout, 10000)));
+        })
+      };
+    },
+    writable: true, configurable: true, enumerable: false
+  });
+})();";
+
 fn wire_web_apis(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
     // Enable QuickJS blocking mode on this runtime so `Atomics.wait` truly
     // blocks (otherwise it throws "main thread" TypeError). Idempotent and
@@ -5573,6 +5639,10 @@ fn wire_web_apis(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
         sloppy(),
     )?;
     /* __DS_WIRE_WEB_APIS_BODY__ */
+    // Atomics.waitAsync — QuickJS-NG 0.12 lacks it; inject the polyfill on
+    // every engine runtime so any degraded fixture (not just $262.agent ones)
+    // resolves `typeof Atomics.waitAsync === 'function'`. Idempotent.
+    ctx.eval_with_options::<(), _>(ATOMICS_WAIT_ASYNC_POLYFILL, sloppy())?;
     Ok(())
 }
 
@@ -5698,19 +5768,85 @@ fn throw_msg(ctx: &Ctx<'_>) -> String {
 /// `ReferenceError` panics with its string form — `eprintln!`'d first so the
 /// name leads the stderr snippet the conformance verdict reads, ahead of the
 /// Rust panic frame.
+///
+/// Async fixtures (`asyncTest`, `Promise.then`, `Atomics.waitAsync`) queue their
+/// asserts as microtasks that run only when the engine drains its pending-job
+/// queue — Node drains microtasks before exit; the embedded engine must do it
+/// explicitly. `$DONE` is test262's async-completion marker (provided by the
+/// host runner, not a harness file): `asyncTest` wraps the body so a rejection
+/// routes to `$DONE(error)`, which stashes the error for the post-drain check.
+/// Without these two, async fixtures `ReferenceError` on `$DONE` and never run
+/// their async asserts.
 pub fn run(source: &str) {
     let result = RUNTIME.with(|runtime| -> rquickjs::Result<()> {
         let ctx = Context::full(runtime).expect("rquickjs Context");
-        ctx.with(|ctx: Ctx<'_>| {
+        // The closure return is annotated `-> rquickjs::Result<()>` (not left to
+        // inference): `ctx.with(...)?` is no longer the tail expression (the
+        // drain loop follows), so without the annotation the inner `?`s want
+        // `From<rquickjs::Error> for E` while the outer `?` wants
+        // `From<E> for rquickjs::Error` — a bidirectional constraint Rust won't
+        // solve, surfacing as E0282 on the `Ok(())` tail. The annotation pins E.
+        ctx.with(|ctx: Ctx<'_>| -> rquickjs::Result<()> {
             wire_console(&ctx)?;
             wire_web_apis(&ctx)?;
+            // $DONE + __ds_async_error — test262 async completion. $DONE(error)
+            // stashes the first failure for the post-drain check below; the
+            // guard keeps the FIRST error (a later $DONE on a derived rejection
+            // would otherwise clobber the root cause).
+            ctx.eval_with_options::<(), _>(
+                "globalThis.__ds_async_error = null;\
+                 globalThis.$DONE = function (error) {\
+                   if (error !== undefined && error !== null && globalThis.__ds_async_error === null) {\
+                     globalThis.__ds_async_error = error;\
+                   }\
+                 };",
+                sloppy(),
+            )?;
             if ctx.eval_with_options::<(), _>(source, sloppy()).is_err() {
                 let msg = throw_msg(&ctx);
                 eprintln!("{msg}");
                 panic!("{msg}");
             }
             Ok(())
-        })
+        })?;
+        // Drain the microtask queue — runs OUTSIDE `ctx.with`:
+        // `is_job_pending`/`execute_pending_job` lock `runtime.inner` (a
+        // `RefCell`) that `Context::with` holds for its whole closure, so
+        // calling them inside re-enters the `RefCell` and panics (same shape as
+        // `__ds_agent_loop`). A pending job that throws sets a pending
+        // exception on the ctx, read below via `throw_msg`.
+        let mut job_threw = false;
+        while runtime.is_job_pending() {
+            if runtime.execute_pending_job().is_err() {
+                job_threw = true;
+                break;
+            }
+        }
+        // Surface an async failure: a pending job that threw (rare for Promise
+        // reactions — their throws become rejections) OR the `$DONE(error)`
+        // stash from an `asyncTest`-wrapped rejection (the common path). The
+        // closure returns `Option<String>` directly (the eval is a `match`, no
+        // `?`), so it needs no `Result` error-type inference.
+        let failure: Option<String> = ctx.with(|ctx: Ctx<'_>| -> Option<String> {
+            if job_threw {
+                let m = throw_msg(&ctx);
+                if !m.is_empty() {
+                    return Some(m);
+                }
+            }
+            match ctx.eval_with_options::<String, _>(
+                "(globalThis.__ds_async_error == null) ? '' : String(globalThis.__ds_async_error)",
+                sloppy(),
+            ) {
+                Ok(s) if !s.is_empty() => Some(s),
+                _ => None,
+            }
+        });
+        if let Some(msg) = failure {
+            eprintln!("{msg}");
+            panic!("{msg}");
+        }
+        Ok(())
     });
     result.expect("rquickjs runtime");
 }
