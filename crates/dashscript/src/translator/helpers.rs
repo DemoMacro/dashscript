@@ -2744,17 +2744,35 @@ use rquickjs::{ArrayBuffer, ArrayBufferSource, Function, qjs};
 use std::collections::VecDeque;
 use std::sync::Arc;
 use std::sync::Condvar;
-use std::sync::atomic::{AtomicBool, Ordering};
 use std::thread;
 use std::time::{Duration, Instant};
 
-/// One broadcast payload: raw SAB backing pointer + len + sync value +
-/// delivered flag. The pointer is onto the main ctx's SAB backing store and
-/// is sound to share across threads (QuickJS's futex is OS-level), so the
-/// whole shared state is `Send`+`Sync`.
-struct __DsAgentBroadcast { buf: *mut u8, len: usize, val: i32, delivered: bool }
-struct __DsAgentInner { reports: VecDeque<String>, broadcast: Option<__DsAgentBroadcast> }
-struct __DsAgentShared { inner: Mutex<__DsAgentInner>, cond: Condvar }
+/// One broadcast payload: raw SAB backing pointer + len + sync value. The
+/// pointer is onto the main ctx's SAB backing store and is sound to share
+/// across threads (QuickJS's futex is OS-level), so the shared state is
+/// `Send`+`Sync`.
+struct __DsAgentBroadcast { buf: *mut u8, len: usize, val: i32 }
+
+/// Per-agent channel: one payload slot + a delivered flag + a leaving flag.
+/// Each agent thread holds its own `__DsAgentChannel`; `broadcast` writes the
+/// payload to EVERY channel and waits for EVERY channel's `delivered` —
+/// mirroring run-test262.c's per-agent broadcast (L735-775) where every agent
+/// receives the broadcast independently. This replaces the earlier single
+/// shared broadcast-slot + shared delivered-flag, which only worked for
+/// multi-agent fixtures by accident (delivered-after-receiver let every agent
+/// grab the same payload while the first agent's receiver was blocked in
+/// Atomics.wait).
+struct __DsAgentChan {
+    payload: Option<__DsAgentBroadcast>,
+    delivered: bool,
+    leaving: bool,
+}
+unsafe impl Send for __DsAgentChan {}
+unsafe impl Sync for __DsAgentChan {}
+type __DsAgentChannel = Arc<(Mutex<__DsAgentChan>, Condvar)>;
+
+struct __DsAgentInner { reports: VecDeque<String>, agents: Vec<__DsAgentChannel> }
+struct __DsAgentShared { inner: Mutex<__DsAgentInner> }
 unsafe impl Send for __DsAgentShared {}
 unsafe impl Sync for __DsAgentShared {}
 
@@ -2778,7 +2796,7 @@ fn __ds_enable_can_block(ctx: &Ctx<'_>) {
 fn __ds_register_agent_262(
     ctx: &Ctx<'_>,
     shared: Arc<__DsAgentShared>,
-    leaving: Arc<AtomicBool>,
+    chan: __DsAgentChannel,
 ) -> rquickjs::Result<()> {
     let agent = Object::new(ctx.clone())?;
     let shared_rep = shared.clone();
@@ -2786,9 +2804,13 @@ fn __ds_register_agent_262(
         shared_rep.inner.lock().unwrap().reports.push_back(s);
     })?;
     agent.set("report", report)?;
-    let leaving_for_fn = leaving.clone();
+    // leaving sets THIS agent's channel flag (per-agent, not a shared bool).
+    let chan_for_leave = chan.clone();
     let leaving_fn = Function::new(ctx.clone(), move || -> () {
-        leaving_for_fn.store(true, Ordering::SeqCst);
+        let (m, c) = &*chan_for_leave;
+        let mut g = m.lock().unwrap();
+        g.leaving = true;
+        c.notify_all();
     })?;
     agent.set("leaving", leaving_fn)?;
     let sleep = Function::new(ctx.clone(), |ms: u32| -> () {
@@ -2814,45 +2836,51 @@ fn __ds_register_agent_262(
     )
 }
 
-/// Mark the current broadcast delivered and wake the main thread's `broadcast`.
-fn __ds_mark_delivered(shared: &__DsAgentShared) {
-    let mut inner = shared.inner.lock().unwrap();
-    if let Some(p) = inner.broadcast.as_mut() {
-        p.delivered = true;
-    }
-    shared.cond.notify_all();
-}
-
 /// Agent thread main loop — runs OUTSIDE `ctx.with` (see the const doc).
+/// Consumes THIS agent's channel (per-agent, not a shared slot).
 fn __ds_agent_loop(
     ctx: &Context,
     rt: &Runtime,
     shared: Arc<__DsAgentShared>,
-    leaving: Arc<AtomicBool>,
+    chan: __DsAgentChannel,
 ) {
+    let _ = shared; // reports go through `shared.inner.reports`; the broadcast
+                    // payload + delivered flag are per-agent on `chan`.
     loop {
         while rt.is_job_pending() {
             if rt.execute_pending_job().is_err() {
                 break;
             }
         }
-        if leaving.load(Ordering::SeqCst) {
-            return;
-        }
+        // Wait for a payload on THIS agent's channel.
         let (buf, len, val) = {
-            let mut inner = shared.inner.lock().unwrap();
+            let (m, c) = &*chan;
+            let mut g = m.lock().unwrap();
             loop {
-                if leaving.load(Ordering::SeqCst) {
+                if g.leaving {
                     return;
                 }
-                if let Some(ref p) = inner.broadcast {
-                    if !p.delivered {
+                if let Some(ref p) = g.payload {
+                    if !g.delivered {
                         break (p.buf, p.len, p.val);
                     }
                 }
-                inner = shared.cond.wait(inner).unwrap();
+                g = c.wait(g).unwrap();
             }
         };
+        // Mark delivered BEFORE invoking the receiver (mirrors run-test262.c
+        // L646-656: `broadcast_pending = false; js_cond_signal` before the
+        // receiver call). The receiver typically does `Atomics.add; sleep;
+        // Atomics.notify`, and the main thread's broadcast() must return so it
+        // can reach its own Atomics.wait BEFORE the receiver's notify fires —
+        // otherwise notify finds no waiter and returns 0. Per-agent channel,
+        // so this no longer starves sibling agents (each has its own delivered).
+        {
+            let (m, c) = &*chan;
+            let mut g = m.lock().unwrap();
+            g.delivered = true;
+            c.notify_all();
+        }
         ctx.with(|actx: Ctx<'_>| {
             let receiver: Function = match actx.globals().get("__ds_receiver") {
                 Ok(f) => f,
@@ -2863,7 +2891,6 @@ fn __ds_agent_loop(
                 let _: () = receiver.call((sab, val)).unwrap_or(());
             }
         });
-        __ds_mark_delivered(&shared);
     }
 }
 
@@ -2873,15 +2900,22 @@ fn __ds_agent_loop(
 /// spawned agent thread.
 fn register_atomics_agent(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
     let shared = Arc::new(__DsAgentShared {
-        inner: Mutex::new(__DsAgentInner { reports: VecDeque::new(), broadcast: None }),
-        cond: Condvar::new(),
+        inner: Mutex::new(__DsAgentInner { reports: VecDeque::new(), agents: Vec::new() }),
     });
     let agent = Object::new(ctx.clone())?;
 
     // $262.agent.start(script) — spawn an agent thread with its own Runtime.
+    // The per-agent channel is registered synchronously on the main thread
+    // BEFORE spawning, so a broadcast issued immediately after start() sees
+    // this agent (the spawned thread may not have run yet).
     let shared_start = shared.clone();
     let start = Function::new(ctx.clone(), move |script: String| -> () {
         let shared = shared_start.clone();
+        let chan: __DsAgentChannel = Arc::new((
+            Mutex::new(__DsAgentChan { payload: None, delivered: false, leaving: false }),
+            Condvar::new(),
+        ));
+        shared.inner.lock().unwrap().agents.push(chan.clone());
         thread::spawn(move || {
             let rt = match Runtime::new() {
                 Ok(r) => r,
@@ -2891,27 +2925,27 @@ fn register_atomics_agent(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
                 Ok(c) => c,
                 Err(_) => return,
             };
-            let leaving = Arc::new(AtomicBool::new(false));
             // Phase 1 (inside ctx.with): enable blocking, register agent-side
             // $262, eval the script (stashes receiveBroadcast callback).
             let _ = actx.with(|actx: Ctx<'_>| -> rquickjs::Result<()> {
                 __ds_enable_can_block(&actx);
-                __ds_register_agent_262(&actx, shared.clone(), leaving.clone())?;
+                __ds_register_agent_262(&actx, shared.clone(), chan.clone())?;
                 if actx.eval_with_options::<(), _>(script.as_str(), sloppy()).is_err() {
                     return Err(rquickjs::Error::Unknown);
                 }
                 Ok(())
             });
             // Phase 2 (OUTSIDE ctx.with): the drain loop.
-            __ds_agent_loop(&actx, &rt, shared.clone(), leaving);
+            __ds_agent_loop(&actx, &rt, shared.clone(), chan);
         });
     })?;
     agent.set("start", start)?;
 
-    // $262.agent.broadcast(sab) — publish the SAB, wait until the agent has
-    // run its receiveBroadcast callback. The arg is a `Value` (SAB is rejected
-    // by `FromJs<ArrayBuffer>` on the typed path); `into_object` + `from_object`
-    // + `as_raw` reach the shared backing pointer through `JS_GetArrayBuffer`.
+    // $262.agent.broadcast(sab) — publish the SAB to EVERY started agent and
+    // wait until each has begun calling its receiveBroadcast callback. The arg
+    // is a `Value` (SAB is rejected by `FromJs<ArrayBuffer>` on the typed
+    // path); `into_object` + `from_object` + `as_raw` reach the shared backing
+    // pointer through `JS_GetArrayBuffer`.
     let shared_bc = shared.clone();
     let broadcast = Function::new(ctx.clone(), move |sab: Value<'_>| -> () {
         let obj = match sab.into_object() {
@@ -2922,24 +2956,45 @@ fn register_atomics_agent(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
             Some(r) => r,
             None => return,
         };
-        let payload = __DsAgentBroadcast {
-            buf: raw.ptr.as_ptr(),
-            len: raw.len,
-            val: 0,
-            delivered: false,
+        let payload = __DsAgentBroadcast { buf: raw.ptr.as_ptr(), len: raw.len, val: 0 };
+        // Snapshot every LIVE agent's channel (skip agents that called
+        // `leaving()` — their thread has exited and would never mark
+        // `delivered`), then deliver the payload to each one independently
+        // (run-test262.c broadcast model L735-775).
+        let chans: Vec<__DsAgentChannel> = {
+            let inner = shared_bc.inner.lock().unwrap();
+            let mut live: Vec<__DsAgentChannel> = Vec::with_capacity(inner.agents.len());
+            for chan in inner.agents.iter() {
+                let (m, _) = &**chan; // chan: &Arc → &**chan: &(Mutex, Condvar)
+                if !m.lock().unwrap().leaving {
+                    live.push(Arc::clone(chan));
+                }
+            }
+            live
         };
-        let mut inner = shared_bc.inner.lock().unwrap();
-        inner.broadcast = Some(payload);
-        shared_bc.cond.notify_all();
-        // Bounded wait: an agent that never starts must not deadlock the main
-        // thread (run-test262.c blocks, but has a test-level timeout).
+        if chans.is_empty() {
+            return;
+        }
+        for chan in &chans {
+            let (m, c) = &**chan;
+            let mut g = m.lock().unwrap();
+            g.payload = Some(__DsAgentBroadcast { buf: payload.buf, len: payload.len, val: payload.val });
+            g.delivered = false;
+            c.notify_all();
+        }
+        // Wait for EVERY agent to mark delivered (bounded — an agent that never
+        // reaches the receiver must not deadlock the main thread).
         let deadline = Instant::now() + Duration::from_secs(10);
-        while inner.broadcast.as_ref().map_or(false, |p| !p.delivered) {
-            let next = deadline.saturating_duration_since(Instant::now());
-            let (g, wait) = shared_bc.cond.wait_timeout(inner, next).unwrap();
-            inner = g;
-            if wait.timed_out() {
-                break;
+        for chan in &chans {
+            let (m, c) = &**chan;
+            let mut g = m.lock().unwrap();
+            while !g.delivered {
+                let next = deadline.saturating_duration_since(Instant::now());
+                let (g2, wait) = c.wait_timeout(g, next).unwrap();
+                g = g2;
+                if wait.timed_out() {
+                    break;
+                }
             }
         }
     })?;
