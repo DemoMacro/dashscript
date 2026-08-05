@@ -4,15 +4,15 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (2796) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.abort-after-send",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `instanceof` on a non-identifier operand — engine runs the real check | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (45832) panicked at src\\__ds_engine.rs:338:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -20,7 +20,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (24280) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -28,7 +28,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine error: TypeError: not a function",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (36760) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -36,7 +36,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static build: src\\main.rs:4:15: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error | engine: engine error: TypeError: not a function",
+    "detail": "cargo build failed: src\\main.rs:4:15: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -44,15 +44,15 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (32108) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.abort-during-upload",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `instanceof` on a non-identifier operand — engine runs the real check | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `new Array()` has no static mapping — runs under the engine | `new Array()` has no static mapping — runs under the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (21464) panicked at src\\__ds_engine.rs:338:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -60,7 +60,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (29144) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -68,39 +68,39 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (4016) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.abort-event-loadend",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `instanceof` on a local of unknown type — engine runs the real check | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (36080) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.abort-progress-events",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (19984) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.abort-upload-event-abort",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `instanceof` on a local of unknown type — engine runs the real check | engine: engine error: TypeError: not a function",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (5912) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.abort-upload-event-loadend",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `instanceof` on a local of unknown type — engine runs the real check | engine: engine error: TypeError: not a function",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (24668) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -108,7 +108,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (43256) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -116,7 +116,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine error: AssertionError: Local sync redirect to remote origin: harness threw TypeError: cannot read property 'protocol' of undefined",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (17428) panicked at src\\__ds_engine.rs:337:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKT",
     "note": ""
   },
   {
@@ -124,15 +124,15 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine error: TypeError: cannot read property 'protocol' of undefined",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (11940) panicked at src\\__ds_engine.rs:337:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKT",
     "note": ""
   },
   {
     "id": "wpt.xhr.access-control-and-redirects-async-same-origin",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (31840) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -140,23 +140,23 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static build: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:142:19: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:147:18: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:53:9: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, String>`\nsrc\\main.rs:132:38: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:133:24: error[E0610]: `f64` is a primitive type and therefore doesn't have fields | engine: engine error: AssertionError: Allow basic: harness threw ReferenceError: XMLHttpRequest is not defined",
+    "detail": "cargo build failed: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:142:19: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:147:18: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:53:9: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, String>`\nsrc\\main.rs:132:38: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:133:24: error[E0610]: `f64` is a primitive type and therefore doesn't have fields",
     "note": ""
   },
   {
     "id": "wpt.xhr.access-control-basic-allow-access-control-origin-header",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (33244) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.access-control-basic-allow-async",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (44144) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -164,15 +164,15 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static build: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:142:19: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:147:18: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:53:9: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, String>`\nsrc\\main.rs:132:38: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:133:24: error[E0610]: `f64` is a primitive type and therefore doesn't have fields | engine: engine error: AssertionError: Allow PUT request: harness threw ReferenceError: XMLHttpRequest is not defined",
+    "detail": "cargo build failed: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:142:19: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:147:18: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:53:9: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, String>`\nsrc\\main.rs:132:38: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:133:24: error[E0610]: `f64` is a primitive type and therefore doesn't have fields",
     "note": ""
   },
   {
     "id": "wpt.xhr.access-control-basic-allow-non-cors-safelisted-method-async",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (3888) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment v",
     "note": ""
   },
   {
@@ -180,7 +180,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "out-of-scope",
-    "detail": "static check: `hasOwnProperty` (prototype reflection) is unsupported | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -188,7 +188,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "out-of-scope",
-    "detail": "static check: `hasOwnProperty` (prototype reflection) is unsupported | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -196,7 +196,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "out-of-scope",
-    "detail": "static check: `hasOwnProperty` (prototype reflection) is unsupported | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -204,7 +204,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "out-of-scope",
-    "detail": "static check: `hasOwnProperty` (prototype reflection) is unsupported | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
     "note": ""
   },
   {
@@ -212,55 +212,55 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static build: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:141:15: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:147:18: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:142:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:53:9: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, String>`\nsrc\\main.rs:132:38: error[E0610]: `f64` is a primitive type and therefore doesn't have fields | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "cargo build failed: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:141:15: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:147:18: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:142:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:53:9: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, String>`\nsrc\\main.rs:132:38: error[E0610]: `f64` is a primitive type and therefore doesn't have fields",
     "note": ""
   },
   {
     "id": "wpt.xhr.access-control-preflight-request-allow-headers-returns-star",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (47924) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.access-control-preflight-request-header-returns-origin",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (1104) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment v",
     "note": ""
   },
   {
     "id": "wpt.xhr.blob-range",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `new Promise()` has no static mapping — runs under the engine | engine: engine lacks built-in: ReferenceError: Blob is not defined",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.xhr.content-type-unmodified",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (14196) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.cors-expose-star.sub",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `instanceof` on a non-identifier operand — engine runs the real check | `instanceof` on a non-identifier operand — engine runs the real check | `new Promise()` has no static mapping — runs under the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | engine: engine lacks built-in: ReferenceError: location is not defined",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.xhr.cors-upload",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: FormData is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: FormData is not defined\n\nthread 'main' (12056) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: FormData is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
@@ -268,55 +268,55 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (31392) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.event-error.sub",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `instanceof` on a local of unknown type — engine runs the real check | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (30692) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.event-load",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `instanceof` on a local of unknown type — engine runs the real check | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (47192) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.event-loadend",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `instanceof` on a local of unknown type — engine runs the real check | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (33056) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.event-loadstart",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `instanceof` on a local of unknown type — engine runs the real check | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (42080) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.event-loadstart-upload",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `instanceof` on a local of unknown type — engine runs the real check | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (40856) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.event-progress",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `instanceof` on a local of unknown type — engine runs the real check | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (33080) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -324,7 +324,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static build: src\\main.rs:6:26: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:15:26: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors | engine: engine error: AssertionError: XMLHttpRequest: open() call fires sync readystate event (sync): harness threw ReferenceError: XMLHttpRequest is not defined",
+    "detail": "cargo build failed: src\\main.rs:6:26: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:15:26: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -332,7 +332,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (25284) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -340,15 +340,15 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (22588) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.event-timeout-order",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `instanceof` on a non-identifier operand — engine runs the real check | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (424) panicked at src\\__ds_engine.rs:338:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -356,7 +356,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine error: TypeError: cannot read property 'protocol' of undefined",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (41724) panicked at src\\__ds_engine.rs:337:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKT",
     "note": ""
   },
   {
@@ -364,15 +364,15 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine error: TypeError: cannot read property 'protocol' of undefined",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (6588) panicked at src\\__ds_engine.rs:337:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKTR",
     "note": ""
   },
   {
     "id": "wpt.xhr.formdata.append",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `new Date()` has no static mapping — runs under the engine | `new Date()` has no static mapping — runs under the engine | `new Date()` has no static mapping — runs under the engine | the `arguments` object is unsupported | the `arguments` object is unsupported | engine: engine error: AssertionError: testFormDataAppend1: harness threw ReferenceError: FormData is not defined",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -380,15 +380,15 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "\nthread 'main' (35312) panicked at src\\__ds.rs:310:13:\nAssertionError: Expected a TypeError to be thrown but got a Error\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "\nthread 'main' (28600) panicked at src\\__ds.rs:310:13:\nAssertionError: Expected a TypeError to be thrown but got a Error\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.formdata.delete",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: the `arguments` object is unsupported | the `arguments` object is unsupported | engine: engine error: AssertionError: testFormDataDelete: harness threw ReferenceError: FormData is not defined",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -396,23 +396,23 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static build: src\\main.rs:49:81: error[E0308]: mismatched types: expected `String`, found `DsFile`\nsrc\\main.rs:54:22: error[E0277]: `&DsFormData` is not an iterator: `&DsFormData` is not an iterator\nsrc\\main.rs:65:26: error[E0599]: no method named `entries` found for struct `DsFormData` in the current scope: field, not a method\nsrc\\main.rs:75:26: error[E0599]: no method named `keys` found for struct `DsFormData` in the current scope: method not found in `DsFormData`\nsrc\\main.rs:82:26: error[E0599]: no method named `values` found for struct `DsFormData` in the current scope: method not found in `DsFormData`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors | engine: engine lacks built-in: ReferenceError: FormData is not defined",
+    "detail": "cargo build failed: src\\main.rs:49:81: error[E0308]: mismatched types: expected `String`, found `DsFile`\nsrc\\main.rs:54:22: error[E0277]: `&DsFormData` is not an iterator: `&DsFormData` is not an iterator\nsrc\\main.rs:65:26: error[E0599]: no method named `entries` found for struct `DsFormData` in the current scope: field, not a method\nsrc\\main.rs:75:26: error[E0599]: no method named `keys` found for struct `DsFormData` in the current scope: method not found in `DsFormData`\nsrc\\main.rs:82:26: error[E0599]: no method named `values` found for struct `DsFormData` in the current scope: method not found in `DsFormData`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
     "id": "wpt.xhr.formdata.get",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: the `arguments` object is unsupported | the `arguments` object is unsupported | engine: engine error: AssertionError: testFormDataGet: harness threw ReferenceError: FormData is not defined",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | the `arguments` object is unsupported",
     "note": ""
   },
   {
     "id": "wpt.xhr.formdata.has",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: the `arguments` object is unsupported | the `arguments` object is unsupported | engine: engine error: AssertionError: testFormDataHas: harness threw ReferenceError: FormData is not defined",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -420,31 +420,31 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static build: src\\__ds.rs:413:32: error[E0433]: cannot find `DsBlob` in `__ds`: could not find `DsBlob` in `__ds`\nsrc\\__ds.rs:398:28: error[E0425]: cannot find type `DsBlob` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\__ds.rs:446:23: error[E0425]: cannot find type `DsBlob` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:7:38: error[E0425]: cannot find value `name` in this scope: not found in this scope\nsrc\\main.rs:7:44: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:22:30: error[E0425]: cannot find value `name` in this scope: not found in this scope | engine: engine error: AssertionError: Iteration skips elements removed while iterating: harness threw ReferenceError: FormData is not defined",
+    "detail": "cargo build failed: src\\__ds.rs:413:32: error[E0433]: cannot find `DsBlob` in `__ds`: could not find `DsBlob` in `__ds`\nsrc\\__ds.rs:398:28: error[E0425]: cannot find type `DsBlob` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\__ds.rs:446:23: error[E0425]: cannot find type `DsBlob` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:7:38: error[E0425]: cannot find value `name` in this scope: not found in this scope\nsrc\\main.rs:7:44: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:22:30: error[E0425]: cannot find value `name` in this scope: not found in this scope",
     "note": ""
   },
   {
     "id": "wpt.xhr.formdata.set",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: `instanceof` on a local of unknown type — engine runs the real check | the `arguments` object is unsupported | the `arguments` object is unsupported | engine: engine error: AssertionError: testFormDataSet1: harness threw ReferenceError: FormData is not defined",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | the `arguments` object is unsupported",
     "note": ""
   },
   {
     "id": "wpt.xhr.formdata.set-blob",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `Date.<method>` has no static mapping — runs under the engine | `Date.<method>` has no static mapping — runs under the engine | `Date.<method>` has no static mapping — runs under the engine | `Date.<method>` has no static mapping — runs under the engine | engine: engine lacks built-in: ReferenceError: FormData is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: FormData is not defined\n\nthread 'main' (43992) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: FormData is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
     "id": "wpt.xhr.getresponseheader",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (19960) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -452,23 +452,23 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "out-of-scope",
-    "detail": "static check: `.constructor` reflection is unsupported | `new <non-identifier>(…)` has no static lowering → engine | `new Proxy()` has no static mapping — runs under the engine | `new Proxy()` has no static mapping — runs under the engine | `this` outside a class method needs the engine (no static lowering) | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a local of unknown type — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a local of unknown type — engine runs the real check | `instanceof` on a local of unknown type — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a local of unknown type — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a local of unknown type — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a local of unknown type — engine runs the real check | `instanceof` on a local of unknown type — engine runs the real check | `instanceof` on a local of unknown type — engine runs the real check | `instanceof` on a local of unknown type — engine runs the real check | `instanceof` on a local of unknown type — engine runs the real check | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a local of unknown type — engine runs the real check | `instanceof` on a local of unknown type — engine runs the real check | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a local of unknown type — engine runs the real check | `instanceof` on a local of unknown type — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `isPrototypeOf` (prototype reflection) is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a local of unknown type — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `Object.isFrozen` (extensibility state) needs the engine (no static freeze tracking) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `instanceof` on a local of unknown type — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a non-identifier operand — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `this` outside a class method needs the engine (no static lowering) | `isConstructor` is a test262 harness helper — runs under the engine | `isConstructor` is a test262 harness helper — runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `.constructor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `Symbol` has no static mapping — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Symbol` has no static mapping — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertySymbols` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `Symbol` has no static mapping — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Reflect.<method>` has no static mapping — runs under the engine | `Reflect.<method>` has no static mapping — runs under the engine | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `Reflect.<method>` has no static mapping — runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `delete` has no DashScript mapping | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine | `Symbol` has no static mapping — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Symbol` has no static mapping — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `eval` is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `instanceof` on a local of unknown type — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `assert_inherits` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `assert_inherits` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.create` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.create` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.create` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `assert_own_property` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.isExtensible` (extensibility state) needs the engine (no static freeze tracking) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `instanceof` on a local of unknown type — engine runs the real check | `this` outside a class method needs the engine (no static lowering) | `Object.getPrototypeOf` reflection is unsupported | `Reflect.<method>` has no static mapping — runs under the engine | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `typeof` of a runtime value (a user identifier, member access, or call) has no static lowering — the function runs under the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | `prototype` mutation is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | engine: engine lacks built-in: ReferenceError: fetch is not defined",
+    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "wpt.xhr.json",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (46860) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.over-1-meg",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (32528) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -476,47 +476,47 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (36500) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.overridemimetype-unsent-state-force-shiftjis",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (39172) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.request-content-length",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (19900) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.response-body-errors",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine error: AssertionError: Synchronous XMLHttpRequest should throw on bad chunk: harness threw ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (30796) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.responsetype",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | engine: engine error: AssertionError: Initial value of responseType: harness threw ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (3576) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment v",
     "note": ""
   },
   {
     "id": "wpt.xhr.responseurl-after-abort",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (23716) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -524,7 +524,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `new ArrayBuffer()` has no static mapping — runs under the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (33664) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -532,7 +532,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (30636) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -540,7 +540,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "out-of-scope",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `hasOwnProperty` (prototype reflection) is unsupported | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | `Object.create` reflection is unsupported | `this` outside a class method needs the engine (no static lowering) | engine: engine error: TypeError: not a function",
+    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object.create` reflection is unsupported",
     "note": ""
   },
   {
@@ -548,23 +548,23 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (20556) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.send-data-sharedarraybuffer",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | `new <non-identifier>(…)` has no static lowering → engine | engine: engine error: AssertionError: sending a SharedArrayBuffer: harness threw ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (24744) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.send-data-string-invalid-unicode",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "static check: a string literal with a lone surrogate needs the engine | a string literal with a lone surrogate needs the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (20376) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -572,7 +572,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static build: src\\main.rs:4:22: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error | engine: engine error: AssertionError: XMLHttpRequest: send() - send(): harness threw ReferenceError: XMLHttpRequest is not defined",
+    "detail": "cargo build failed: src\\main.rs:4:22: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -580,7 +580,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | engine: engine error: TypeError: not a function",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (20896) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -588,7 +588,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static build: src\\main.rs:4:23: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:3:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors | engine: engine error: AssertionError: progress event should not be fired by sync XHR: harness threw ReferenceError: XMLHttpRequest is not defined",
+    "detail": "cargo build failed: src\\main.rs:4:23: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:3:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -596,7 +596,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "static build: src\\main.rs:3:19: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:2:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors | engine: engine lacks built-in: ReferenceError: test is not defined",
+    "detail": "cargo build failed: src\\main.rs:3:19: error[E0433]: cannot find type `XMLHttpRequest` in this scope: use of undeclared type `XMLHttpRequest`\nsrc\\main.rs:2:5: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -604,23 +604,23 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "supported",
-    "detail": "engine fallback after static check",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.xhr.xhr-timeout-longtask",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | engine: engine lacks built-in: ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (41656) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.xmlhttprequest-withcredentials",
     "layer": "wpt",
     "category": "xhr",
-    "status": "partial",
-    "detail": "static check: `async_test` is a WPT testharness function with no static lowering (async/composite) — the fixture falls back to the engine | `this` outside a class method needs the engine (no static lowering) | `this` outside a class method needs the engine (no static lowering) | engine: engine error: AssertionError: default value is false, set value is true: harness threw ReferenceError: XMLHttpRequest is not defined",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (28208) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   }
 ]
