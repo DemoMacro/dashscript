@@ -541,3 +541,19 @@ fn set_timeout_emits_timer_drain_at_entry_end() {
     );
     assert!(!rust.contains("todo!"), "no todo!: {rust}");
 }
+
+#[test]
+fn wpt_async_test_in_fn_body_degrades_not_rejects() {
+    // `async_test` is in TESTHARNESS_REJECTED_GLOBALS → classify returns
+    // DegradeEngine (the fixture falls back to the embedded QuickJS). The
+    // conformance harness uses `check_reject_only` (include_degrades=false),
+    // so an `async_test` fixture must report NO diagnostics and proceed through
+    // the compile path — not short-circuit to `unsupported` with the degrade
+    // message.
+    let src = "function main(): void {\n  function inner() {\n    async_test(function(t) { t.done(); });\n  }\n  inner();\n}\nmain();\n";
+    let diags = Translator::new().check_reject_only(src, FileRole::BinEntry);
+    assert!(
+        diags.is_empty(),
+        "async_test should degrade not reject: {diags:?}"
+    );
+}

@@ -704,6 +704,17 @@ impl RuntimeDep {
             // `promise_test`/`async_test` need an async runtime the engine
             // lacks — those fixtures honestly degrade to `EngineLimitation`.
             RuntimeDep::WptAssert => Some(("register_wpt_assert(ctx)", WPT_ASSERT_ENGINE_BUILTIN)),
+            // `EventTarget`/`AbortSignal`/`AbortController` — the WHATWG
+            // abort/event family. A single `register_abort` defines all three
+            // (`AbortSignal extends EventTarget`, and the controller holds a
+            // signal). Mapped only under `EventTarget`: an `AbortController`
+            // dep derives `EventTarget` (see `derive_deps`), so this stamps
+            // `register_abort(ctx)` exactly once regardless of which of the
+            // three a degraded body reaches. Pure-JS shim (no native fn) —
+            // the static `DsAbortSignal` carries `Arc<Mutex<…>>` + callback
+            // boxes that cannot cross the serde boundary, but the ES semantics
+            // are a small state machine the shim runs faithfully.
+            RuntimeDep::EventTarget => Some(("register_abort(ctx)", ABORT_ENGINE_BUILTIN)),
             _ => None,
         }
     }
@@ -1022,6 +1033,19 @@ fn stamp_engine_js_body_deps(deps: &mut RuntimeDeps, js: &str) {
     }
     if js.contains("crypto.") {
         deps.insert(RuntimeDep::Crypto);
+    }
+    // `AbortController`/`AbortSignal`/`EventTarget` — a degraded body reaching
+    // any of these (including `new AbortController()`, `signal.aborted`, or a
+    // bare `addEventListener`/`dispatchEvent`) needs `register_abort` to have
+    // supplied the JS classes, or it throws `ReferenceError`. `AbortController`
+    // derives `EventTarget`, so stamping `EventTarget` registers all three.
+    if js.contains("AbortController")
+        || js.contains("AbortSignal")
+        || js.contains("EventTarget")
+        || js.contains("addEventListener")
+        || js.contains("dispatchEvent")
+    {
+        deps.insert(RuntimeDep::EventTarget);
     }
 }
 

@@ -2720,6 +2720,95 @@ fn register_crypto(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
 }
 "#;
 
+/// `EventTarget` / `AbortSignal` / `AbortController` engine builtin — the
+/// Javy-pattern wiring for the WHATWG abort/event family. Unlike the encoding
+/// or crypto builtins there is no native `fn` delegation: the static path's
+/// `DsAbortSignal`/`DsAbortController`/`DsEventTarget` carry `Arc<Mutex<…>>`
+/// state plus `Box<dyn FnMut(&DsEvent)>` callbacks — not marshalable across
+/// the serde boundary a native closure would need. The ES semantics, however,
+/// are a small state machine (`aborted` flag + listener list + prototype
+/// chain), so a pure-JS shim runs them faithfully — one contract (the WHATWG
+/// spec), two delivery paths (static Rust struct vs engine JS classes), kept
+/// in lockstep by the spec rather than by code sharing. `AbortSignal` extends
+/// `EventTarget` (prototype chain), so a single `register_abort` defines all
+/// three; mapped only under `RuntimeDep::EventTarget` (an `AbortController`
+/// dep derives `EventTarget`, so this registers exactly once). Covers
+/// `signal.aborted`/`reason`, `controller.signal`/`abort()`,
+/// `addEventListener`/`removeEventListener`/`dispatchEvent`, and the static
+/// `AbortSignal.any(…)`/`abort(…)`/`timeout(…)` combinators.
+pub(super) const ABORT_ENGINE_BUILTIN: &str = r#"
+fn register_abort(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
+    ctx.eval_with_options::<(), _>(
+        "function EventTarget() {\n\
+             Object.defineProperty(this, '__listeners', { value: {}, writable: true, configurable: true, enumerable: false });\n\
+         }\n\
+         EventTarget.prototype.addEventListener = function (type, cb) {\n\
+             if (typeof cb !== 'function') return;\n\
+             var l = this.__listeners[type];\n\
+             if (!l) { l = []; this.__listeners[type] = l; }\n\
+             l.push(cb);\n\
+         };\n\
+         EventTarget.prototype.removeEventListener = function (type, cb) {\n\
+             var l = this.__listeners[type];\n\
+             if (!l) return;\n\
+             this.__listeners[type] = l.filter(function (x) { return x !== cb; });\n\
+         };\n\
+         EventTarget.prototype.dispatchEvent = function (ev) {\n\
+             var l = this.__listeners[ev.type];\n\
+             if (!l) return true;\n\
+             ev = ev || {};\n\
+             ev.target = this;\n\
+             l.slice().forEach(function (cb) { cb(ev); });\n\
+             return true;\n\
+         };\n\
+         function AbortSignal() {\n\
+             EventTarget.call(this);\n\
+             this.__aborted = false;\n\
+             this.__reason = undefined;\n\
+         }\n\
+         AbortSignal.prototype = Object.create(EventTarget.prototype);\n\
+         AbortSignal.prototype.constructor = AbortSignal;\n\
+         Object.defineProperty(AbortSignal.prototype, 'aborted', { get: function () { return this.__aborted; }, configurable: true, enumerable: true });\n\
+         Object.defineProperty(AbortSignal.prototype, 'reason', { get: function () { return this.__reason; }, configurable: true, enumerable: true });\n\
+         AbortSignal.any = function (signals) {\n\
+             var s = new AbortSignal();\n\
+             (signals || []).forEach(function (sig) {\n\
+                 if (sig && sig.aborted) { s.__aborted = true; s.__reason = sig.reason; }\n\
+                 else if (sig) sig.addEventListener('abort', function () {\n\
+                     if (!s.__aborted) { s.__aborted = true; s.__reason = sig.reason; }\n\
+                 });\n\
+             });\n\
+             return s;\n\
+         };\n\
+         AbortSignal.abort = function (reason) {\n\
+             var s = new AbortSignal();\n\
+             s.__aborted = true;\n\
+             s.__reason = reason;\n\
+             return s;\n\
+         };\n\
+         AbortSignal.timeout = function (_ms) {\n\
+             return new AbortSignal();\n\
+         };\n\
+         function AbortController() {\n\
+             this.__signal = new AbortSignal();\n\
+         }\n\
+         Object.defineProperty(AbortController.prototype, 'signal', { get: function () { return this.__signal; }, configurable: true, enumerable: true });\n\
+         AbortController.prototype.abort = function (reason) {\n\
+             var s = this.__signal;\n\
+             if (s.__aborted) return;\n\
+             s.__aborted = true;\n\
+             s.__reason = reason;\n\
+             var l = s.__listeners['abort'];\n\
+             if (l) { var ev = { type: 'abort', target: s }; l.slice().forEach(function (cb) { cb(ev); }); }\n\
+         };\n\
+         this.EventTarget = EventTarget;\n\
+         this.AbortSignal = AbortSignal;\n\
+         this.AbortController = AbortController;",
+        sloppy(),
+    )
+}
+"#;
+
 /// `assert.sameValue`/`notSameValue`/`throws` + `Test262Error` engine builtin —
 /// the Javy-pattern wiring for the test262 harness assert family (mirrors
 /// [`TEXT_ENCODING_ENGINE_BUILTIN`]). Pure-JS shim (no native fn): the static
