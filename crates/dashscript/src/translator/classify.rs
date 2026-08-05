@@ -616,11 +616,13 @@ fn classify_call(c: &CallExpression, ctx: &ClassifyCtx) -> Mapping {
         }
         // WPT testharness globals — `test()`/`assert_equals`/… (the
         // web-platform analogue of test262's `assert`). The mapped set lowers
-        // statically to `__ds::wpt_*`; the rejected set (async/composite) has
-        // no static lowering — the fixture falls back to the engine (WinterTC
-        // is static-first + per-function degrade, same as test262).
+        // statically to `__ds::wpt_*`; the async/composite set has no static
+        // lowering, so the whole function degrades to the engine, where
+        // `register_wpt_assert` supplies the JS shim (WinterTC is static-first
+        // + per-function degrade, same model as test262 — and consistent with
+        // the production binary's embedded QuickJS, not a test-only host).
         if is_testharness_rejected(id.name.as_str()) {
-            return reject_owned(format!(
+            return degrade_owned(format!(
                 "`{name}` is a WPT testharness function with no static lowering (async/composite) \
                  — the fixture falls back to the engine",
                 name = id.name.as_str()

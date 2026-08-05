@@ -968,6 +968,11 @@ fn stamp_engine_js_body_deps(deps: &mut RuntimeDeps, js: &str) {
         deps.insert(RuntimeDep::Assert);
     }
     // WPT testharness: `AssertionError` + `assert_equals`/`true`/`false`/…
+    // plus the async/composite entry points (`async_test`/`promise_test`/…
+    // — `TESTHARNESS_REJECTED_GLOBALS`, which now degrade) and the composite
+    // asserts (`assert_object_equals`/`assert_own_property`/…): a degraded
+    // body calling any of these needs `register_wpt_assert` to have supplied
+    // the JS shim, or it throws `ReferenceError`.
     if js.contains("assert_equals")
         || js.contains("assert_not_equals")
         || js.contains("assert_true")
@@ -975,7 +980,27 @@ fn stamp_engine_js_body_deps(deps: &mut RuntimeDeps, js: &str) {
         || js.contains("assert_throws_js")
         || js.contains("assert_approx_equals")
         || js.contains("assert_array_equals")
+        || js.contains("assert_object_equals")
+        || js.contains("assert_own_property")
+        || js.contains("assert_not_own_property")
+        || js.contains("assert_inherits")
+        || js.contains("assert_readonly")
+        || js.contains("assert_implements")
+        || js.contains("assert_less")
+        || js.contains("assert_greater")
+        || js.contains("assert_between")
+        || js.contains("async_test")
+        || js.contains("promise_test")
         || js.contains("AssertionError")
+        // `test(…)` / `setup(…)` / `done()` — the sync testharness entry
+        // points. A degraded body using `test(…)` with no other assert keyword
+        // still needs `register_wpt_assert` to define `test`/`AssertionError`.
+        // Match the bare call (`test(`) rather than a specific body form so
+        // `test(() => …)` / `test(function …)` / `test (…)` all land here; a
+        // false positive (e.g. `.test(`) only over-registers the shim — the
+        // body never calls it, so it is inert.
+        || js.contains("test(")
+        || js.contains("setup(")
     {
         deps.insert(RuntimeDep::WptAssert);
     }

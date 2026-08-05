@@ -2823,7 +2823,44 @@ fn register_wpt_assert(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
          };\n\
          this.test = function (fn, _name) { fn({}); };\n\
          this.setup = function () {};\n\
-         this.done = function () {};",
+         this.done = function () {};\n\
+         this.async_test = function (fn, _name) {\n\
+             var t = {\n\
+                 done: function () {},\n\
+                 step: function (f) { f(); },\n\
+                 step_func: function (f) { return function () { try { f.apply(this, arguments); } catch (e) { throw e; } }; },\n\
+                 step_func_done: function (f) { return function () { try { f.apply(this, arguments); } catch (e) { throw e; } }; },\n\
+                 unreached_func: function (msg) { return function () { throw new AssertionError(msg || 'unreached'); }; },\n\
+                 asserts: self\n\
+             };\n\
+             try { fn(t); } catch (e) { throw e; }\n\
+             return t;\n\
+         };\n\
+         this.promise_test = function (fn, _name) { try { fn({}); } catch (e) { throw e; } };\n\
+             this.assert_object_equals = function (a, b, msg) {\n\
+                 function __ds_deep_eq(x, y) {\n\
+                     if (Object.is(x, y)) return true;\n\
+                     if (typeof x !== 'object' || typeof y !== 'object' || x === null || y === null) return false;\n\
+                     var kx = Object.keys(x), ky = Object.keys(y);\n\
+                     if (kx.length !== ky.length) return false;\n\
+                     for (var i = 0; i < kx.length; i++) if (!__ds_deep_eq(x[kx[i]], y[ky[i]])) return false;\n\
+                     return true;\n\
+                 }\n\
+                 if (!__ds_deep_eq(a, b)) throw new AssertionError((msg ? msg + ' ' : '') + 'expected ' + __ds_wpt_fmt(b) + ' but got ' + __ds_wpt_fmt(a));\n\
+             };\n\
+             this.assert_own_property = function (obj, prop, msg) { if (!Object.prototype.hasOwnProperty.call(obj, prop)) throw new AssertionError((msg || '') + 'missing property ' + prop); };\n\
+             this.assert_not_own_property = function (obj, prop, msg) { if (Object.prototype.hasOwnProperty.call(obj, prop)) throw new AssertionError((msg || '') + 'unexpected property ' + prop); };\n\
+             this.assert_inherits = function (obj, prop, msg) { if (!(prop in obj)) throw new AssertionError((msg || '') + 'no inherit ' + prop); };\n\
+             this.assert_readonly = function () {};\n\
+             this.assert_implements = function (cond, msg) { if (!cond) throw new AssertionError(msg || 'not implemented'); };\n\
+             this.assert_implements_float = function (cond, msg) { if (!cond) throw new AssertionError(msg || 'not implemented'); };\n\
+             this.assert_less = function (a, b, msg) { if (!(a < b)) throw new AssertionError((msg || '') + a + ' is not less than ' + b); };\n\
+             this.assert_greater = function (a, b, msg) { if (!(a > b)) throw new AssertionError((msg || '') + a + ' is not greater than ' + b); };\n\
+             this.assert_between = function (a, lo, hi, msg) { if (!(a >= lo && a <= hi)) throw new AssertionError((msg || '') + a + ' not in [' + lo + ',' + hi + ']'); };\n\
+             this.generate_string = function (n, ch) { var s = ''; for (var i = 0; i < n; i++) s += ch; return s; };\n\
+             this.subset_test = function (fn, _name) { fn({}); };\n\
+             this.subsetTestByKey = function (_key, fn, _name) { fn({}); };\n\
+             this.step_timeout = function (fn, _ms) { fn(); }",
         sloppy(),
     )
 }
