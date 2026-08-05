@@ -3,32 +3,32 @@
     "id": "test262.test.built-ins.atomics.add.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (43224) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.bigint.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.bigint.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -36,103 +36,103 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (23508) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.immutable-buffer",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Int32Array and makeImmutableArrayBuffer.)",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAllTypedArrayConstructors is not defined\n\nthread 'main' (38868) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAllTypedArrayConstructors is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (11556) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsFriendlyTypedArrayConstructors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.non-shared-int-views-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithNonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (15420) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithNonAtomicsFriendlyTypedArrayConstr",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.non-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsNonViewValues is not defined\n\nthread 'main' (33964) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsNonViewValues is not defined\nnote: run with `RU",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (41820) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (19048) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.add.validate-arraytype-before-value-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (28936) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (47216) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.bigint.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.bigint.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -140,103 +140,103 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (17276) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.immutable-buffer",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Int32Array and makeImmutableArrayBuffer.)",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAllTypedArrayConstructors is not defined\n\nthread 'main' (21404) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAllTypedArrayConstructors is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (428) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsFriendlyTypedArrayConstructors i",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.non-shared-int-views-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithNonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (41424) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithNonAtomicsFriendlyTypedArrayConstr",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.non-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsNonViewValues is not defined\n\nthread 'main' (36464) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsNonViewValues is not defined\nnote: run with `RU",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (33868) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (43556) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.and.validate-arraytype-before-value-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (44248) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (4836) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.bigint.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.bigint.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -244,111 +244,111 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (43016) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.immutable-buffer",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Int32Array and makeImmutableArrayBuffer.)",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAllTypedArrayConstructors is not defined\n\nthread 'main' (14096) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAllTypedArrayConstructors is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (17548) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsFriendlyTypedArrayConstructors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.non-shared-int-views-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithNonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (31780) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithNonAtomicsFriendlyTypedArrayConstr",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.non-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsNonViewValues is not defined\n\nthread 'main' (22908) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsNonViewValues is not defined\nnote: run with `RU",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (20628) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.validate-arraytype-before-expectedvalue-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (24564) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (32372) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.compareexchange.validate-arraytype-before-replacementvalue-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (29440) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (26416) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.bigint.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.bigint.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -356,79 +356,79 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (32520) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.immutable-buffer",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Int32Array and makeImmutableArrayBuffer.)",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAllTypedArrayConstructors is not defined\n\nthread 'main' (39376) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAllTypedArrayConstructors is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (26416) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsFriendlyTypedArrayConstructors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.non-shared-int-views-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithNonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (40496) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithNonAtomicsFriendlyTypedArrayConstr",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.non-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsNonViewValues is not defined\n\nthread 'main' (19340) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsNonViewValues is not defined\nnote: run with `RU",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (26700) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (45076) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.exchange.validate-arraytype-before-value-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (41348) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.islockfree.bigint.expected-return-value",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithBigIntTypedArrayConstructors is not defined\n\nthread 'main' (43416) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithBigIntTypedArrayConstructors is not defined\nno",
     "note": ""
   },
   {
@@ -436,7 +436,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -444,47 +444,47 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.islockfree.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (39872) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.load.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (3300) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.load.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithBigIntTypedArrayConstructors is not defined\n\nthread 'main' (10536) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithBigIntTypedArrayConstructors is not defined\nno",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.load.bigint.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.load.bigint.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -492,79 +492,79 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.load.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (43196) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.load.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (31264) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsFriendlyTypedArrayConstructors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.load.non-shared-int-views-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithNonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (6492) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithNonAtomicsFriendlyTypedArrayConstru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.load.non-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsNonViewValues is not defined\n\nthread 'main' (42184) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsNonViewValues is not defined\nnote: run with `RU",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.load.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (43376) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.load.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (16880) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsOutOfBoundsIndices is not defined\n\nthread 'main' (24908) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsOutOfBoundsIndices is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsOutOfBoundsIndices is not defined\n\nthread 'main' (36120) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsOutOfBoundsIndices is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.bigint.non-bigint64-typedarray-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -572,7 +572,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -580,7 +580,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -588,7 +588,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -596,23 +596,23 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.bigint.notify-all-on-loc",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.bigint.null-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: An unexpected error occurred when detaching ArrayBuffer: $DETACHBUFFER is not defined\n\nthread 'main' (7696) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: An unexpected error occur",
     "note": ""
   },
   {
@@ -620,7 +620,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -628,7 +628,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (40856) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -636,15 +636,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (41112) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.count-from-nans",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: NaNs is not defined\n\nthread 'main' (28088) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: NaNs is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to display ",
     "note": ""
   },
   {
@@ -652,7 +652,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -660,23 +660,23 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.immutable-buffer-returns-0",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAllTypedArrayConstructors is not defined\n\nthread 'main' (34296) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAllTypedArrayConstructors is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.negative-count",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'long' of undefined\n\nthread 'main' (47512) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'long' of undefined\nnote: run with `RUST_BACKTRACE=1` ",
     "note": ""
   },
   {
@@ -684,7 +684,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -692,7 +692,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -700,7 +700,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -708,7 +708,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -716,7 +716,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -724,7 +724,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -732,23 +732,23 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.non-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsNonViewValues is not defined\n\nthread 'main' (45824) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsNonViewValues is not defined\nnote: run with `RU",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (19368) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -756,7 +756,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -764,7 +764,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -772,7 +772,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (17872) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -780,7 +780,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'long' of undefined\n\nthread 'main' (32836) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'long' of undefined\nnote: run with `RUST_BACKTRACE=1` ",
     "note": ""
   },
   {
@@ -788,7 +788,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (43428) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -796,15 +796,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (5136) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.notify-nan",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'long' of undefined\n\nthread 'main' (45512) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'long' of undefined\nnote: run with `RUST_BACKTRACE=1` ",
     "note": ""
   },
   {
@@ -812,7 +812,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'long' of undefined\n\nthread 'main' (43224) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'long' of undefined\nnote: run with `RUST_BACKTRACE=1` ",
     "note": ""
   },
   {
@@ -820,7 +820,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Atomics.notify(i32a, 0, 1) returns 1 Expected SameValue(«0», «1») to be true",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'long' of undefined\n\nthread 'main' (31600) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'long' of undefined\nnote: run with `RUST_BACKTRACE=1` ",
     "note": ""
   },
   {
@@ -828,23 +828,23 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'long' of undefined\n\nthread 'main' (31776) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'long' of undefined\nnote: run with `RUST_BACKTRACE=1` ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.notify-with-no-agents-waiting",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (20436) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.notify-with-no-matching-agents-waiting",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (44908) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -852,15 +852,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'long' of undefined\n\nthread 'main' (3868) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'long' of undefined\nnote: run with `RUST_BACKTRACE=1` e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.null-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: An unexpected error occurred when detaching ArrayBuffer: $DETACHBUFFER is not defined\n\nthread 'main' (37220) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: An unexpected error occu",
     "note": ""
   },
   {
@@ -868,7 +868,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -876,7 +876,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a RangeError but got a Test262Error",
+    "detail": "runtime error: exit exit code: 101: TypeError: growable SharedArrayBuffer requires SAB allocator hooks\n\nthread 'main' (46460) panicked at src\\__ds_engine.rs:345:17:\nTypeError: growable SharedArrayBuffer requires SAB allocator hooks\nnote",
     "note": ""
   },
   {
@@ -884,15 +884,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a RangeError but got a Test262Error",
+    "detail": "Test262Error: Expected RangeError but threw Test262Error: Unexpected count coercion\n\nthread 'main' (3136) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected RangeError but threw Test262Erro",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.retrieve-length-before-index-coercion-non-shared-detached",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "engine error: RangeError: out-of-bound access",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: $DETACHBUFFER is not defined\n\nthread 'main' (30272) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: $DETACHBUFFER is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -900,7 +900,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: RangeError: out-of-bound access",
+    "detail": "runtime error: exit exit code: 101: RangeError: out-of-bound access\n\nthread 'main' (45808) panicked at src\\__ds_engine.rs:345:17:\nRangeError: out-of-bound access\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtr",
     "note": ""
   },
   {
@@ -908,7 +908,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -916,55 +916,55 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (3616) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.validate-arraytype-before-count-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: typedArrayConstructors is not defined\n\nthread 'main' (28024) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: typedArrayConstructors is not defined\nnote: run with `RUST_BACKTRACE",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.notify.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: typedArrayConstructors is not defined\n\nthread 'main' (18240) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: typedArrayConstructors is not defined\nnote: run with `RUST_BACKTRACE",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (41660) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.bigint.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.bigint.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -972,79 +972,79 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (21748) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.immutable-buffer",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Int32Array and makeImmutableArrayBuffer.)",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAllTypedArrayConstructors is not defined\n\nthread 'main' (28916) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAllTypedArrayConstructors is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (47232) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsFriendlyTypedArrayConstructors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.non-shared-int-views-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithNonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (29880) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithNonAtomicsFriendlyTypedArrayConstr",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.non-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsNonViewValues is not defined\n\nthread 'main' (35200) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsNonViewValues is not defined\nnote: run with `RU",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (47248) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (40984) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.or.validate-arraytype-before-value-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (43124) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.pause.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (18256) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -1052,55 +1052,55 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.prop-desc",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (36584) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.proto",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (12216) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.bigint.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.bigint.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -1108,111 +1108,111 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.expected-return-value-negative-zero",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (31852) panicked at src\\__ds_engine.rs:345:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (33148) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.immutable-buffer",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Int32Array and makeImmutableArrayBuffer.)",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAllTypedArrayConstructors is not defined\n\nthread 'main' (18860) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAllTypedArrayConstructors is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (27720) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsFriendlyTypedArrayConstructors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.non-shared-int-views-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithNonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (47392) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithNonAtomicsFriendlyTypedArrayConstr",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.non-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsNonViewValues is not defined\n\nthread 'main' (35048) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsNonViewValues is not defined\nnote: run with `RU",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (44620) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (41348) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.store.validate-arraytype-before-value-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (32956) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (34480) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.bigint.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.bigint.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -1220,127 +1220,127 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (24000) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.immutable-buffer",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Int32Array and makeImmutableArrayBuffer.)",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAllTypedArrayConstructors is not defined\n\nthread 'main' (34592) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAllTypedArrayConstructors is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (45224) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsFriendlyTypedArrayConstructors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.non-shared-int-views-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithNonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (37700) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithNonAtomicsFriendlyTypedArrayConstr",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.non-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsNonViewValues is not defined\n\nthread 'main' (47444) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsNonViewValues is not defined\nnote: run with `RU",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (37376) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (36944) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.sub.validate-arraytype-before-value-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (46528) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.symbol.tostringtag",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (20072) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsOutOfBoundsIndices is not defined\n\nthread 'main' (15904) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsOutOfBoundsIndices is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.cannot-suspend-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.false-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.false-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.nan-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Atomics.notify(i64a, 0) returns 1 Expected SameValue(«0», «1») to be true",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -1348,119 +1348,119 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.negative-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.negative-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.no-spurious-wakeup-no-operation",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.no-spurious-wakeup-on-add",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.no-spurious-wakeup-on-and",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.no-spurious-wakeup-on-compareexchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.no-spurious-wakeup-on-exchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.no-spurious-wakeup-on-or",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.no-spurious-wakeup-on-store",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.no-spurious-wakeup-on-sub",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.no-spurious-wakeup-on-xor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.non-bigint64-typedarray-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.non-shared-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.null-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: An unexpected error occurred when detaching ArrayBuffer: $DETACHBUFFER is not defined\n\nthread 'main' (26140) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: An unexpected error occu",
     "note": ""
   },
   {
@@ -1468,15 +1468,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.value-not-equal",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -1484,23 +1484,23 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (29136) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.waiterlist-order-of-operations-is-fifo",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.bigint.was-woken-before-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Atomics.notify(i64a, 0) returns 1 Expected SameValue(«0», «1») to be true",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -1508,7 +1508,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "detail": "Test262Error: Expected TypeError but nothing threw\n\nthread 'main' (10308) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected TypeError but nothing threw\nnote: run with `RUST_BACKTRACE=1` en",
     "note": ""
   },
   {
@@ -1516,23 +1516,23 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.false-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (43332) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:3:5: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:10:11: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:14:11: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nsrc\\main.rs:18:16: error[E0425]: cannot find value `_262` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1540,7 +1540,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Atomics.notify(i32a, 0) returns 1 Expected SameValue(«0», «1») to be true",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (44536) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1548,7 +1548,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1556,103 +1556,103 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.negative-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (46012) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.no-spurious-wakeup-no-operation",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'small' of undefined\n\nthread 'main' (45324) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'small' of undefined\nnote: run with `RUST_BACKTRACE=1",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.no-spurious-wakeup-on-add",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'small' of undefined\n\nthread 'main' (40016) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'small' of undefined\nnote: run with `RUST_BACKTRACE=1",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.no-spurious-wakeup-on-and",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'small' of undefined\n\nthread 'main' (45328) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'small' of undefined\nnote: run with `RUST_BACKTRACE=1",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.no-spurious-wakeup-on-compareexchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'small' of undefined\n\nthread 'main' (32820) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'small' of undefined\nnote: run with `RUST_BACKTRACE=1",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.no-spurious-wakeup-on-exchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'small' of undefined\n\nthread 'main' (18500) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'small' of undefined\nnote: run with `RUST_BACKTRACE=1",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.no-spurious-wakeup-on-or",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'small' of undefined\n\nthread 'main' (22700) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'small' of undefined\nnote: run with `RUST_BACKTRACE=1",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.no-spurious-wakeup-on-store",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'small' of undefined\n\nthread 'main' (37004) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'small' of undefined\nnote: run with `RUST_BACKTRACE=1",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.no-spurious-wakeup-on-sub",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'small' of undefined\n\nthread 'main' (35944) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'small' of undefined\nnote: run with `RUST_BACKTRACE=1",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.no-spurious-wakeup-on-xor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'small' of undefined\n\nthread 'main' (17688) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'small' of undefined\nnote: run with `RUST_BACKTRACE=1",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.non-int32-typedarray-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a Test262Error",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.non-shared-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1660,7 +1660,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1668,15 +1668,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.null-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: An unexpected error occurred when detaching ArrayBuffer: $DETACHBUFFER is not defined\n\nthread 'main' (47204) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: An unexpected error occu",
     "note": ""
   },
   {
@@ -1684,15 +1684,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.null-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (23572) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1700,15 +1700,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.object-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (46572) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1716,7 +1716,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1724,15 +1724,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.poisoned-object-for-timeout-throws-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (47408) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1740,7 +1740,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a RangeError to be thrown but no exception was thrown at all",
+    "detail": "runtime error: exit exit code: 101: TypeError: growable SharedArrayBuffer requires SAB allocator hooks\n\nthread 'main' (34992) panicked at src\\__ds_engine.rs:345:17:\nTypeError: growable SharedArrayBuffer requires SAB allocator hooks\nnote",
     "note": ""
   },
   {
@@ -1748,15 +1748,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.symbol-for-index-throws-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (30420) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1764,23 +1764,23 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.symbol-for-timeout-throws-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (46144) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.symbol-for-value-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a Test262Error to be thrown but no exception was thrown at all",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1788,7 +1788,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: agent getReport exhausted (no report enqueued)",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (21812) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1796,15 +1796,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.true-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (34224) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1812,7 +1812,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (43852) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1820,47 +1820,47 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Atomics.notify(i32a, 0) returns 1 Expected SameValue(«0», «1») to be true",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'long' of undefined\n\nthread 'main' (8568) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'long' of undefined\nnote: run with `RUST_BACKTRACE=1` e",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a Test262Error",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: typedArrayConstructors is not defined\n\nthread 'main' (40648) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: typedArrayConstructors is not defined\nnote: run with `RUST_BACKTRACE",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.validate-arraytype-before-timeout-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError but got a Test262Error",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: typedArrayConstructors is not defined\n\nthread 'main' (4852) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: typedArrayConstructors is not defined\nnote: run with `RUST_BACKTRACE=",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.validate-arraytype-before-value-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: typedArrayConstructors is not defined\n\nthread 'main' (6928) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: typedArrayConstructors is not defined\nnote: run with `RUST_BACKTRACE=",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.value-not-equal",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (47212) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.wait.wait-index-value-not-equal",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'small' of undefined\n\nthread 'main' (42336) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'small' of undefined\nnote: run with `RUST_BACKTRACE=1",
     "note": ""
   },
   {
@@ -1868,7 +1868,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (6652) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1876,7 +1876,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "engine error: InternalError: interrupted",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (22960) panicked at src\\__ds_engine.rs:346:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1884,151 +1884,151 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Atomics.notify(i32a, 0) returns 1 Expected SameValue(«0», «1») to be true",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'huge' of undefined\n\nthread 'main' (38212) panicked at src\\__ds_engine.rs:346:17:\nTypeError: cannot read property 'huge' of undefined\nnote: run with `RUST_BACKTRACE=1` ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (41788) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.false-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.false-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (24564) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.nan-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: Atomics.notify(new BigInt64Array(new SharedArrayBuffer(BigInt64Array.BYTES_PER_ELEMENT * 4)), 0) must return 1 Expected SameValue(«0», «1») to be true",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.negative-index-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (424) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` enviro",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.negative-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.negative-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-no-operation",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-add",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-and",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-compareexchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-exchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-or",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-store",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-sub",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.no-spurious-wakeup-on-xor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -2036,127 +2036,127 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: `const view = new BigUint64Array(new SharedArrayBuffer(BigUint64Array.BYTES_PER_ELEMENT * 8)); Atomics.waitAsync(view, poisoned, poisoned, poisoned)` throws a TypeError exception Expected a TypeError but got a Test262Error",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (36540) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.non-shared-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: `Atomics.waitAsync(i64a, 0, 0n, 0)` throws a TypeError exception Expected a TypeError to be thrown but no exception was thrown at all",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.not-a-typedarray-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.not-an-object-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (46160) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.null-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (46896) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.null-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.null-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.object-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.object-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.out-of-range-index-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (41320) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.poisoned-object-for-timeout-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.poisoned-object-for-timeout-throws-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.symbol-for-index-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (46572) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.symbol-for-index-throws-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.symbol-for-timeout-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.symbol-for-timeout-throws-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -2164,111 +2164,111 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: `Atomics.waitAsync(i64a, 0, Symbol(\"foo\"), poisonedValueOf)` throws a TypeError exception Expected a TypeError but got a Test262Error",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (46556) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.symbol-for-value-throws-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: (await $262.agent.getReportAsync()) resolves to the value \"A TypeError\" Expected SameValue(«\"A undefined\"», «\"A TypeError\"») to be true",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.true-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.true-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.undefined-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The value of outcomes[0] is \"ok\" Expected SameValue(«\"timed-out\"», «\"ok\"») to be true",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.undefined-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "unsupported",
-    "detail": "engine lacks async surface: $DONE() was never called (async chain did not resolve)",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (34628) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.undefined-index-defaults-to-zero-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "unsupported",
-    "detail": "engine lacks async surface: $DONE() was never called (async chain did not resolve)",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (30748) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.value-not-equal",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.value-not-equal-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.waiterlist-block-indexedposition-wake",
     "layer": "test262",
     "category": "atomics",
-    "status": "unsupported",
-    "detail": "engine lacks async surface: $DONE() was never called (async chain did not resolve)",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (25716) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.bigint.was-woken-before-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: Atomics.notify(new BigInt64Array(new SharedArrayBuffer(BigInt64Array.BYTES_PER_ELEMENT * 4)), 0) must return 1 Expected SameValue(«0», «1») to be true",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.false-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (12648) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.false-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (31392) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (31836) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2276,15 +2276,15 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The value of `result` is \"ok\" Expected SameValue(«\"timed-out\"», «\"ok\"») to be true",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (42200) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.is-function",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (10208) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2292,103 +2292,103 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: Atomics.notify(new Int32Array(new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT * 4)), 0) must return 1 Expected SameValue(«0», «1») to be true",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (12220) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.negative-index-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (45088) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.negative-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (44052) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.negative-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (16060) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-no-operation",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (34052) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-add",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (48016) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-and",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (12020) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-compareexchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (32548) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-exchange",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (8452) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envir",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-or",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (28504) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-store",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (42620) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-sub",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (12648) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.no-spurious-wakeup-on-xor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (45236) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2396,7 +2396,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: `const view = new Int16Array( new SharedArrayBuffer(Int16Array.BYTES_PER_ELEMENT * 2) ); Atomics.waitAsync(view, poisoned, poisoned, poisoned)` throws a TypeError exception Expected a TypeError but got a Test262Error",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (40472) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2404,87 +2404,87 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: `Atomics.waitAsync(i32a, 0, 0, 0)` throws a TypeError exception Expected a TypeError to be thrown but no exception was thrown at all",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (6736) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envir",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.not-a-typedarray-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (42264) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.not-an-object-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (9040) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envir",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.null-bufferdata-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (4852) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envir",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.null-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (34988) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.null-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (40204) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.object-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (46404) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.object-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (10336) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.out-of-range-index-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (9552) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envir",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.poisoned-object-for-timeout-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (41884) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.poisoned-object-for-timeout-throws-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (40608) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2492,71 +2492,71 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a RangeError but got a Test262Error",
+    "detail": "runtime error: exit exit code: 101: TypeError: growable SharedArrayBuffer requires SAB allocator hooks\n\nthread 'main' (9484) panicked at src\\__ds_engine.rs:345:17:\nTypeError: growable SharedArrayBuffer requires SAB allocator hooks\nnote:",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.returns-result-object-value-is-promise-resolves-to-ok",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The value of `outcome` is \"ok\" Expected SameValue(«\"timed-out\"», «\"ok\"») to be true",
+    "status": "unsupported",
+    "detail": "`Object.getPrototypeOf` reflection is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.returns-result-object-value-is-promise-resolves-to-timed-out",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (33908) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.returns-result-object-value-is-string-not-equal",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (9012) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envir",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.returns-result-object-value-is-string-timed-out",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (6552) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envir",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.symbol-for-index-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (32576) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.symbol-for-index-throws-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (2516) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envir",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.symbol-for-timeout-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (19104) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.symbol-for-timeout-throws-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (26140) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2564,7 +2564,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: `Atomics.waitAsync(i32a, 0, Symbol(\"foo\"), poisonedValueOf)` throws a TypeError exception Expected a TypeError but got a Test262Error",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (17260) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2572,23 +2572,23 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: (await $262.agent.getReportAsync()) resolves to the value \"A TypeError\" Expected SameValue(«\"A undefined\"», «\"A TypeError\"») to be true",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (37332) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.true-for-timeout",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (32436) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.true-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (32792) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2596,23 +2596,23 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: The value of outcomes[0] is \"ok\" Expected SameValue(«\"timed-out\"», «\"ok\"») to be true",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (43572) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.undefined-for-timeout-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "unsupported",
-    "detail": "engine lacks async surface: $DONE() was never called (async chain did not resolve)",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (41628) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.undefined-index-defaults-to-zero-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "unsupported",
-    "detail": "engine lacks async surface: $DONE() was never called (async chain did not resolve)",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (29300) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2620,7 +2620,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: `Atomics.waitAsync(typedArray, index, 0, 0)` throws a TypeError exception Expected a TypeError but got a Test262Error",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (43912) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2628,7 +2628,7 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: `Atomics.waitAsync(typedArray, 0, 0, timeout)` throws a TypeError exception Expected a TypeError but got a Test262Error",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (45684) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
@@ -2636,31 +2636,31 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: `Atomics.waitAsync(typedArray, 0, value, 0)` throws a TypeError exception Expected a TypeError but got a Test262Error",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (33052) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.value-not-equal",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (7752) panicked at src\\__ds_engine.rs:345:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envir",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.value-not-equal-agent",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (44396) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.waitasync.waiterlist-block-indexedposition-wake",
     "layer": "test262",
     "category": "atomics",
-    "status": "unsupported",
-    "detail": "engine lacks async surface: $DONE() was never called (async chain did not resolve)",
+    "status": "partial",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (8100) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envir",
     "note": ""
   },
   {
@@ -2668,39 +2668,39 @@
     "layer": "test262",
     "category": "atomics",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Test262Error: Atomics.notify(new Int32Array(new SharedArrayBuffer(Int32Array.BYTES_PER_ELEMENT * 4)), 0) must return 1 Expected SameValue(«0», «1») to be true",
+    "detail": "Test262Error: Expected function but got undefined\n\nthread 'main' (20684) panicked at src\\__ds_engine.rs:346:17:\nTest262Error: Expected function but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (41644) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.bigint.bad-range",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithBigIntTypedArrayConstructors is not defined\n\nthread 'main' (47208) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithBigIntTypedArrayConstructors is not defined\nno",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.bigint.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.bigint.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
     "note": ""
   },
   {
@@ -2708,71 +2708,71 @@
     "layer": "test262",
     "category": "atomics",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.good-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonClampedIntArrayConstructors is not defined\n\nthread 'main' (34716) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonClampedIntArrayConstructors is not defined\nnote: run with",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.immutable-buffer",
     "layer": "test262",
     "category": "atomics",
-    "status": "partial",
-    "detail": "Test262Error: Test262Error: Expected a TypeError to be thrown but no exception was thrown at all (Testing with Int32Array and makeImmutableArrayBuffer.)",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAllTypedArrayConstructors is not defined\n\nthread 'main' (13584) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAllTypedArrayConstructors is not defined\nnote: ru",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.non-shared-bufferdata",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (21276) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsFriendlyTypedArrayConstructors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.non-shared-int-views-throws",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithNonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (25824) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithNonAtomicsFriendlyTypedArrayConstr",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.non-views",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: testWithAtomicsNonViewValues is not defined\n\nthread 'main' (23584) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: testWithAtomicsNonViewValues is not defined\nnote: run with `RU",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.not-a-constructor",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (37328) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.validate-arraytype-before-index-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (1980) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not def",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.atomics.xor.validate-arraytype-before-value-coercion",
     "layer": "test262",
     "category": "atomics",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not defined\n\nthread 'main' (47136) panicked at src\\__ds_engine.rs:345:17:\nReferenceError: nonAtomicsFriendlyTypedArrayConstructors is not de",
     "note": ""
   }
 ]
