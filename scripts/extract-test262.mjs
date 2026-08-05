@@ -101,6 +101,43 @@ function frontmatter(src) {
   return { flags, includes, features, bodyStart: m.index + m[0].length };
 }
 
+// Inline a fixture's `includes:` harness files verbatim before its body, so
+// the translator sees the same helpers the test262 runner injects via
+// $INCLUDE (testWithTypedArrayConstructors, compareArray, … defined in
+// harness/<file>.js). A fixture whose body references one of these degrades
+// per-function to the engine; `__ds_engine::call_fn` evals the whole module's
+// JS (`__DS_MODULE_JS`, including these inlined helpers) before invoking the
+// degraded function, so the helper is in scope. Recursive depth-first: a
+// harness file's own `includes:` are inlined before its body. A `seen` set
+// breaks cycles; a missing file is skipped. The frontmatter block is stripped
+// — only the JS body is inlined.
+function inlineIncludes(includes, seen = new Set()) {
+  let out = "";
+  for (const inc of includes) {
+    const incPath = resolve(TEST262, "harness", inc);
+    const norm = inc.replace(/\\/g, "/");
+    if (seen.has(norm) || !existsSync(incPath)) continue;
+    seen.add(norm);
+    const src = readFileSync(incPath, "utf8");
+    const { includes: nested, bodyStart } = frontmatter(src);
+    out += inlineIncludes(nested, seen);
+    out += src.slice(bodyStart).trim() + "\n";
+  }
+  return out;
+}
+
+// test262's runner injects `sta.js` + `assert.js` into *every* fixture by
+// default (they are NOT listed in frontmatter `includes:`), so harness helpers
+// freely call their globals — e.g. `testTypedArray.js`'s
+// `testWithTypedArrayConstructors` calls `isPrimitive` from `assert.js`.
+// Inline `assert.js` verbatim before any explicit includes so a degraded
+// fixture finds `isPrimitive`/`assert` in `__DS_MODULE_JS`. `sta.js` is not
+// inlined: its `Test262Error` is provided (more completely) by the production
+// `register_assert` engine builtin, `$DONOTEVALUATE` is almost never used, and
+// `$262` comes from the test262 host — DashScript's engine supplies the
+// stronger real-thread `$262` (AGENT_262_ENGINE_BUILTIN), not `sta.js`.
+const DEFAULT_INCLUDES = ["assert.js"];
+
 const ASSERTS = new Set(["sameValue", "notSameValue", "throws"]);
 
 // Parse `body`, count its asserts, and detect reflection. The body is returned
@@ -196,11 +233,16 @@ function extract() {
         else tally.noassert++;
         continue;
       }
-      // frontmatter `includes:` lists $INCLUDE harness files (isConstructor.js,
-      // propertyHelper.js, …) the extractor does not inline; the conformance
-      // harness injects them on the engine path, so carry them through rather
-      // than skip. `new`/`Reflect`/`new.target` likewise route to the engine.
-      const fixture = `function main(): void {\n${r.body.trim()}\n}\nmain();\n`;
+      // frontmatter `includes:` lists $INCLUDE harness files (testTypedArray.js,
+      // atomicsHelper.js, …). These are inlined verbatim before the body so the
+      // translator sees the same helpers the test262 runner injects: a fixture
+      // referencing one (e.g. testWithTypedArrayConstructors) degrades to the
+      // engine, where `__DS_MODULE_JS` (the whole module's JS) carries the
+      // helper into scope. `new`/`Reflect`/`new.target` likewise route to engine.
+      const inlined = inlineIncludes([...DEFAULT_INCLUDES, ...includes]);
+      const fixture = inlined
+        ? `${inlined}\nfunction main(): void {\n${r.body.trim()}\n}\nmain();\n`
+        : `function main(): void {\n${r.body.trim()}\n}\nmain();\n`;
       const id = "test262." + rel.replace(/\.js$/, "").replace(/[/.]/g, ".").toLowerCase();
       if (seen.has(id)) continue;
       seen.add(id);
@@ -223,8 +265,10 @@ function extract() {
     "Auto-extracted from tc39/test262 by scripts/extract-test262.mjs (category scope). " +
     "Each fixture wraps a test262 file's body verbatim in `function main(): void { … }` " +
     "— assert.sameValue/throws stay as-is (DashScript lowers them to a SameValue check / " +
-    "the engine). `includes` lists the test262 harness files ($INCLUDE) the conformance " +
-    "harness injects on the engine path. DO NOT edit by hand.";
+    "the engine). The frontmatter `includes:` ($INCLUDE harness files like " +
+    "testTypedArray.js) are inlined verbatim before the body, so a fixture referencing " +
+    "a harness helper degrades to the engine and finds the helper in `__DS_MODULE_JS`. " +
+    "DO NOT edit by hand.";
   let total = 0;
   const summary = [];
   for (const [cat, feats] of [...byCat.entries()].sort((a, b) => a[0].localeCompare(b[0]))) {
