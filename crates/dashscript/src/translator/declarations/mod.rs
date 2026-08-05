@@ -71,10 +71,12 @@ pub(in crate::translator) fn add_serde_derives(items: &mut [Item]) {
     }
 }
 
-/// True where a type mention contains a function pointer (`fn(...) -> ...`),
-/// recursing through the wrappers a TS callback lowers into — `Option<fn(...)>`,
-/// `Vec<fn(...)>`, `&fn(...)`, tuples, slices, arrays. Used to skip serde
-/// derives on a struct/enum that carries a callback field.
+/// True where a type mention is not serde-serializable — a function pointer
+/// (`fn(...) -> ...`, a TS callback) or a `DsPromise<T>` (a `Pin<Box<dyn
+/// Future>>` — a runtime value, not data). Recurses through the wrappers a TS
+/// field lowers into — `Option<…>`, `Vec<…>`, `&…`, tuples, slices, arrays.
+/// Used to `#[serde(skip)]` the field so a struct/enum carrying it still
+/// derives `Serialize`/`Deserialize`.
 fn type_contains_fn(ty: &Type) -> bool {
     match ty {
         Type::BareFn(_) => true,
@@ -83,12 +85,20 @@ fn type_contains_fn(ty: &Type) -> bool {
         Type::Slice(s) => type_contains_fn(&s.elem),
         Type::Array(a) => type_contains_fn(&a.elem),
         Type::Tuple(t) => t.elems.iter().any(type_contains_fn),
-        Type::Path(p) => p.path.segments.iter().any(|seg| match &seg.arguments {
-            syn::PathArguments::AngleBracketed(ab) => ab.args.iter().any(|arg| match arg {
-                syn::GenericArgument::Type(t) => type_contains_fn(t),
+        Type::Path(p) => p.path.segments.iter().any(|seg| {
+            // `DsPromise<T>` (`Pin<Box<dyn Future>>`) is a runtime value, not
+            // serde data — a struct field holding a promise skips serde the way
+            // a callback field does.
+            if seg.ident == "DsPromise" {
+                return true;
+            }
+            match &seg.arguments {
+                syn::PathArguments::AngleBracketed(ab) => ab.args.iter().any(|arg| match arg {
+                    syn::GenericArgument::Type(t) => type_contains_fn(t),
+                    _ => false,
+                }),
                 _ => false,
-            }),
-            _ => false,
+            }
         }),
         _ => false,
     }

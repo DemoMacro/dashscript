@@ -516,6 +516,20 @@ fn reference_type(r: &TSTypeReference) -> Type {
             return parse_quote!(::std::collections::HashSet<#inner_ty>);
         }
     }
+    // `Promise<T>` → `crate::__ds::DsPromise<T>` — the value layer's
+    // `ds_promise_resolve`/`new Promise(…)`/`.then` already emit `DsPromise<T>`
+    // (the `Future<Output = T>` alias in `DS_PROMISE_HELPER`), so a `let p:
+    // Promise<T>` annotation (or a non-async fn returning `Promise<T>`) must
+    // agree, or it surfaces as E0425 cannot find type `Promise`. An `async fn …
+    // : Promise<T>` strips the wrapper at the return-type position
+    // ([`unwrap_promise`]) since the async fn wraps the return in
+    // `Future<Output = T>` itself; this branch is the plain annotation path.
+    if name == "Promise" {
+        if let Some(inner) = r.type_arguments.as_ref().and_then(|a| a.params.first()) {
+            let inner_ty = translate_type(inner);
+            return parse_quote!(crate::__ds::DsPromise<#inner_ty>);
+        }
+    }
     // A WinterTC Web API global constructor used as a type annotation
     // (`const p: URLPattern = …`, `const u: URL = …`, `… : URLSearchParams`)
     // → its `__ds::Ds*` wrapper — the same type the `new` lowering builds, so

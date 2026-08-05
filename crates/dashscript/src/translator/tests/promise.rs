@@ -121,3 +121,36 @@ fn promise_then_on_promise_local_lowers_to_ds_promise_then() {
         "p.then(cb) on a DsPromise local → ds_promise_then, got:\n{rust}"
     );
 }
+
+#[test]
+fn async_fn_degrade_stub_drops_promise_return() {
+    // An `async fn` degraded to QuickJS returns a JS `Promise`, which cannot
+    // marshal across the serde boundary to Rust's `DsPromise<T>` (a
+    // `Pin<Box<dyn Future>>` — not `DeserializeOwned`). The degraded stub is a
+    // sync `fn` calling `__ds_engine::call_fn`; it drops the return (the JS
+    // Promise resolves inside QuickJS's event loop). Guards against the stub
+    // emitting `-> DsPromise<T>` + `from_value::<DsPromise<T>>` (E0277), which
+    // the conformance WPT layer hit on every `promise_test` fixture rewrapped
+    // to `async function main(): Promise<void>`.
+    // A bare `Promise` value forces the engine path for `main`.
+    let src = "async function main(): Promise<void> { const C = Promise; }\nmain();\n";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.needs_engine(),
+        "bare Promise forces the engine path, got deps: {deps:?}"
+    );
+    assert!(
+        !rust.contains("from_value::<crate::__ds::DsPromise"),
+        "async degrade stub must not deserialize a DsPromise (E0277), got:\n{rust}"
+    );
+    assert!(
+        !rust.contains("-> crate::__ds::DsPromise"),
+        "async degrade stub drops the Promise return, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("async fn __ds_main"),
+        "async degrade stub keeps `async fn` so the injected `.await` resolves, got:\n{rust}"
+    );
+}

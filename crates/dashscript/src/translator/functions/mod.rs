@@ -811,13 +811,30 @@ fn engine_fn_item(
             parse_quote!(#pname: #ty)
         })
         .collect();
-    let output: ReturnType = func
-        .return_type
-        .as_deref()
-        .map_or(ReturnType::Default, |rt| {
-            let ty = types::translate_type_degraded_for_signature(&rt.type_annotation, registry);
-            parse_quote!(-> #ty)
-        });
+    let output: ReturnType = if func.r#async {
+        // An `async fn` degraded to QuickJS returns a JS `Promise`, which
+        // cannot marshal across the serde boundary to Rust's `DsPromise<T>` (a
+        // `Pin<Box<dyn Future>>` — not `DeserializeOwned`). The degraded stub
+        // keeps the `async` keyword (see below) so the entry's injected
+        // `__ds_main().await` resolves, but drops the JS return type: the stub
+        // is an `async fn` wrapping a sync `__ds_engine::call_fn`, returning
+        // `impl Future<Output = ()>`; the JS Promise the body returns resolves
+        // inside QuickJS's event loop during that sync `call_fn`, unreachable
+        // (and unneeded) from Rust. The static [`fn_output`] path unwraps
+        // `Promise<T>` to `T` for the body's actual return; the degraded stub
+        // has no body return to unwrap. (A static caller that `.await`s a
+        // degraded async fn and uses the value is an inherent async-over-
+        // degrade contradiction; the conformance entry `main` never does.)
+        ReturnType::Default
+    } else {
+        func.return_type
+            .as_deref()
+            .map_or(ReturnType::Default, |rt| {
+                let ty =
+                    types::translate_type_degraded_for_signature(&rt.type_annotation, registry);
+                parse_quote!(-> #ty)
+            })
+    };
     let generics: Vec<Ident> = func.type_parameters.as_deref().map_or_else(Vec::new, |tp| {
         tp.params
             .iter()
@@ -863,13 +880,20 @@ fn engine_fn_item(
                 .expect("engine return value did not deserialize to the declared return type")
         }),
     };
+    // Keep the `async` keyword on a degraded `async fn` so the entry's
+    // injected `__ds_main().await` resolves: the stub is an `async fn` wrapping
+    // a sync `call_fn`, returning `impl Future<Output = ()>` (immediately ready
+    // — `call_fn` is synchronous), and `.await` yields `()`. Without the
+    // keyword the stub is a sync `fn` returning `()`, and the injected
+    // `.await` fails (`() is not a future`).
+    let async_kw: Option<proc_macro2::TokenStream> = func.r#async.then(|| quote!(async));
     if generics.is_empty() {
         parse_quote! {
-            fn #name(#(#inputs),*) #output #block
+            #async_kw fn #name(#(#inputs),*) #output #block
         }
     } else {
         parse_quote! {
-            fn #name<#(#generics),*>(#(#inputs),*) #output #block
+            #async_kw fn #name<#(#generics),*>(#(#inputs),*) #output #block
         }
     }
 }

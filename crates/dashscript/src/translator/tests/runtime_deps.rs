@@ -19,6 +19,30 @@ fn with_deps_matches_translate() {
 }
 
 #[test]
+fn promise_type_annotation_maps_to_ds_promise_and_stamps_dep() {
+    // A `Promise<T>` parameter annotation with no value-layer `ds_promise_*`
+    // call (the WPT encodings.js helper shape) maps to `__ds::DsPromise<T>` —
+    // the same type the value layer emits — and stamps `Promise` via the
+    // explicit `__ds::DsPromise` probe. The value-layer marker
+    // `__ds::ds_promise_` is absent here, so without the explicit stamp
+    // `DS_PROMISE_HELPER` (the `DsPromise` alias + `futures`) is not injected
+    // and `DsPromise` is E0433; without the type-layer branch the annotation
+    // emits a bare `Promise<T>` (E0425).
+    let src = "function f(p: Promise<number>): void { console.log(p); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("__ds::DsPromise"),
+        "a Promise<T> annotation should lower to __ds::DsPromise<T>, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Promise),
+        "a Promise<T> annotation should stamp Promise (DS_PROMISE_HELPER), got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn numeric_console_log_routes_through_helper_and_flags_dep() {
     // `console.log(1e21)` must route the literal through `__ds::number_to_string`
     // (ryu_js), not Rust's `f64` `Display`, and flag the file as needing `ryu_js`.

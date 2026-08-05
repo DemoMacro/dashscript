@@ -28,7 +28,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: Conversion from string failed: invalid utf-8 sequence of 1 bytes from index 0\n\nthread 'main' (41728) panicked at src\\__ds_engine.rs:338:17:\nTypeError: Conversion from string failed: invalid",
+    "detail": "runtime error: exit exit code: 101: TypeError: Conversion from string failed: invalid utf-8 sequence of 1 bytes from index 0\n\nthread 'main' (42400) panicked at src\\__ds_engine.rs:338:17:\nTypeError: Conversion from string failed: invalid",
     "note": ""
   },
   {
@@ -75,8 +75,8 @@
     "id": "wpt.encoding.replacement-encodings",
     "layer": "wpt",
     "category": "encoding",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:3:19: error[E0425]: cannot find type `Promise` in this scope: not found in this scope\nsrc\\main.rs:6:30: error[E0425]: cannot find type `Promise` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -91,8 +91,8 @@
     "id": "wpt.encoding.streams.backpressure",
     "layer": "wpt",
     "category": "encoding",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:3:19: error[E0425]: cannot find type `Promise` in this scope: not found in this scope\nsrc\\main.rs:6:30: error[E0425]: cannot find type `Promise` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -172,7 +172,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: TextEncoderStream is not defined\n\nthread 'main' (46552) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: TextEncoderStream is not defined\nnote: run with `RUST_BACKTRACE=1` enviro",
+    "detail": "engine lacks built-in: ReferenceError: TextEncoderStream is not defined\n\nthread 'main' (4928) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: TextEncoderStream is not defined\nnote: run with `RUST_BACKTRACE=1` environ",
     "note": ""
   },
   {
@@ -212,7 +212,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (6640) panicked at src\\__ds.rs:115:13:\nBox<dyn Any>\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (4144) panicked at src\\__ds.rs:115:13:\nBox<dyn Any>\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -220,7 +220,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: location is not defined\n\nthread 'main' (23984) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: location is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
+    "detail": "engine lacks built-in: ReferenceError: location is not defined\n\nthread 'main' (31840) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: location is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
@@ -284,15 +284,15 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: Conversion from string failed: invalid utf-8 sequence of 1 bytes from index 0\n\nthread 'main' (15012) panicked at src\\__ds_engine.rs:338:17:\nTypeError: Conversion from string failed: invalid",
+    "detail": "runtime error: exit exit code: 101: TypeError: Conversion from string failed: invalid utf-8 sequence of 1 bytes from index 0\n\nthread 'main' (45896) panicked at src\\__ds_engine.rs:338:17:\nTypeError: Conversion from string failed: invalid",
     "note": ""
   },
   {
     "id": "wpt.encoding.unsupported-encodings",
     "layer": "wpt",
     "category": "encoding",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:3:19: error[E0425]: cannot find type `Promise` in this scope: not found in this scope\nsrc\\main.rs:6:30: error[E0425]: cannot find type `Promise` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   }
 ]

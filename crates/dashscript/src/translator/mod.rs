@@ -1931,6 +1931,17 @@ impl Translator {
         if probe.contains("__ds::DsRequest") || probe.contains("__ds::DsResponse") {
             deps.insert(RuntimeDep::Fetch);
         }
+        // `DsPromise<T>` (a `Promise<T>` type annotation — `let p: Promise<T>`
+        // or a non-async fn returning `Promise<T>`) lives in DS_PROMISE_HELPER
+        // alongside `ds_promise_resolve`/`ds_promise_all`, so a fixture whose
+        // emit references the type but not the value-layer `ds_promise_*`
+        // functions must pull the slice + `futures`, or `DsPromise` is E0433.
+        // The marker probe catches `__ds::ds_promise_` (the value functions) but
+        // not a type-annotation-only fixture whose sole emit is `DsPromise<T>` —
+        // insert `Promise` the way a `new Request(…)`-only fixture inserts Fetch.
+        if probe.contains("__ds::DsPromise") {
+            deps.insert(RuntimeDep::Promise);
+        }
         // `DsCustomEvent` lives in EVENT_TARGET_HELPER alongside `DsEvent`/
         // `DsEventTarget`/`DsEventInit`, so any CustomEvent-bearing fixture must
         // pull EVENT_TARGET_HELPER, or `DsCustomEvent` is E0433. The marker
