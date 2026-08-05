@@ -2761,7 +2761,7 @@ const __DS_WAITASYNC_POLYFILL: &str = "(function () {
   if (typeof Atomics.waitAsync === 'function') return;
   Object.defineProperty(Atomics, 'waitAsync', {
     value: function waitAsync(typedArray, index, value, timeout) {
-      if (timeout === undefined) timeout = Infinity;
+      if (timeout === undefined || timeout !== timeout) timeout = Infinity;
       var probe = Atomics.wait(typedArray, index, value, 0);
       if (probe === 'not-equal') return { async: false, value: 'not-equal' };
       if (!(timeout > 0)) return { async: false, value: 'timed-out' };
@@ -5597,7 +5597,12 @@ const ATOMICS_WAIT_ASYNC_POLYFILL: &str = "(function () {
   if (typeof Atomics.waitAsync === 'function') return;
   Object.defineProperty(Atomics, 'waitAsync', {
     value: function waitAsync(typedArray, index, value, timeout) {
-      if (timeout === undefined) timeout = Infinity;
+      // ES: undefined OR NaN timeout -> +infinity. The NaN case matters:
+      // Math.min(NaN, 10000) is NaN, and QuickJS Atomics.wait with a NaN
+      // timeout returns timed-out WITHOUT registering a waiter — so a fixture
+      // whose agent waitAsyncs with a NaN timeout would see the main-side
+      // Atomics.notify return 0 (no waiter) and fail.
+      if (timeout === undefined || timeout !== timeout) timeout = Infinity;
       var probe = Atomics.wait(typedArray, index, value, 0);
       if (probe === 'not-equal') return { async: false, value: 'not-equal' };
       if (!(timeout > 0)) return { async: false, value: 'timed-out' };
