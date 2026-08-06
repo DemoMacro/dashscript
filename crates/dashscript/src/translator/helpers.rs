@@ -5625,6 +5625,89 @@ const ATOMICS_WAIT_ASYNC_POLYFILL: &str = "(function () {
   });
 })();";
 
+/// QuickJS-NG `JSSharedArrayBufferFunctions` — the host hooks a `Runtime` needs
+/// to allocate the backing store of a **growable** `SharedArrayBuffer`
+/// (`new SharedArrayBuffer(n, { maxByteLength: m })` then `.grow()`). Without
+/// them QuickJS throws `TypeError: growable SharedArrayBuffer requires SAB
+/// allocator hooks`, so the sharedarraybuffer/growable-sab fixtures (and a few
+/// atomics ones) fail. rquickjs 0.12 does not expose the setter, so we FFI
+/// straight to the linked libquickjs: `JS_GetRuntime(ctx)` yields the
+/// `JSRuntime*`, and `JS_SetSharedArrayBufferFunctions` copies the struct into
+/// the runtime. The hooks are a refcounting allocator: each block carries an
+/// inline header `[refcount, total_size]` above the payload pointer QuickJS
+/// sees, so `sab_dup`/`sab_free` (matched per logical reference, including
+/// multi-view SABs and cross-runtime shares like a `$262.agent` view) never
+/// double-free. The refcount is atomic, so concurrent runtimes are safe.
+mod sab_alloc {
+    use std::alloc::{alloc as sys_alloc, dealloc as sys_dealloc, Layout};
+    use std::os::raw::c_void;
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    /// Typed-array backing memory must be aligned for any view (Float64Array
+    /// needs 8); 16 covers every element width on the platforms we target.
+    const ALIGN: usize = 16;
+    /// Inline header above each payload: a refcount + the total allocation
+    /// size (so `dealloc` can reconstruct its `Layout` without an extern map).
+    const HEADER: usize = 2 * std::mem::size_of::<usize>();
+
+    #[repr(C)]
+    struct JSSharedArrayBufferFunctions {
+        sab_alloc: Option<unsafe extern "C" fn(*mut c_void, usize) -> *mut c_void>,
+        sab_free: Option<unsafe extern "C" fn(*mut c_void, *mut c_void)>,
+        sab_dup: Option<unsafe extern "C" fn(*mut c_void, *mut c_void)>,
+        sab_opaque: *mut c_void,
+    }
+
+    extern "C" {
+        fn JS_GetRuntime(ctx: *mut c_void) -> *mut c_void;
+        fn JS_SetSharedArrayBufferFunctions(rt: *mut c_void, sf: *const JSSharedArrayBufferFunctions);
+    }
+
+    unsafe extern "C" fn alloc(_opaque: *mut c_void, size: usize) -> *mut c_void {
+        let total = HEADER + size;
+        let layout = match Layout::from_size_align(total, ALIGN) {
+            Ok(l) => l,
+            Err(_) => return std::ptr::null_mut(),
+        };
+        let base = sys_alloc(layout);
+        if base.is_null() {
+            return std::ptr::null_mut();
+        }
+        (base as *mut AtomicUsize).write(AtomicUsize::new(1));
+        (base.add(std::mem::size_of::<usize>()) as *mut usize).write(total);
+        base.add(HEADER) as *mut c_void
+    }
+
+    unsafe extern "C" fn dup(_opaque: *mut c_void, ptr: *mut c_void) {
+        let base = (ptr as *mut u8).sub(HEADER) as *mut AtomicUsize;
+        (*base).fetch_add(1, Ordering::Relaxed);
+    }
+
+    unsafe extern "C" fn free(_opaque: *mut c_void, ptr: *mut c_void) {
+        let base = (ptr as *mut u8).sub(HEADER);
+        let rc = base as *mut AtomicUsize;
+        if (*rc).fetch_sub(1, Ordering::Relaxed) == 1 {
+            let total = (base.add(std::mem::size_of::<usize>()) as *mut usize).read();
+            let layout = Layout::from_size_align_unchecked(total, ALIGN);
+            sys_dealloc(base, layout);
+        }
+    }
+
+    /// Register the SAB allocator on a runtime reached via any of its
+    /// contexts. Idempotent: QuickJS overwrites `rt->sab_funcs` each call, and
+    /// the function pointers are static, so re-installing is a no-op.
+    pub fn install(ctx: &rquickjs::Ctx<'_>) {
+        let rt = unsafe { JS_GetRuntime(ctx.as_raw().as_ptr() as *mut c_void) };
+        let funcs = JSSharedArrayBufferFunctions {
+            sab_alloc: Some(alloc),
+            sab_free: Some(free),
+            sab_dup: Some(dup),
+            sab_opaque: std::ptr::null_mut(),
+        };
+        unsafe { JS_SetSharedArrayBufferFunctions(rt, &funcs) };
+    }
+}
+
 fn wire_web_apis(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
     // Enable QuickJS blocking mode on this runtime so `Atomics.wait` truly
     // blocks (otherwise it throws "main thread" TypeError). Idempotent and
@@ -5634,6 +5717,11 @@ fn wire_web_apis(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
     // `register_atomics_agent` set this on their own independent runtimes too.
     let rt_ptr = unsafe { rquickjs::qjs::JS_GetRuntime(ctx.as_raw().as_ptr()) };
     unsafe { rquickjs::qjs::JS_SetCanBlock(rt_ptr, true) };
+    // Register the growable-SharedArrayBuffer allocator on this runtime so
+    // `new SharedArrayBuffer(n, { maxByteLength })` + `.grow()` work (QuickJS
+    // throws "growable SharedArrayBuffer requires SAB allocator hooks"
+    // otherwise). Idempotent; the per-agent runtimes install it themselves.
+    sab_alloc::install(ctx);
     // `self` — WinterTC §5 global alias for globalThis. Registered
     // unconditionally (the alias is part of the global shape, not a per-API
     // dep), so a degraded function reaching a Web API via `self.` resolves it
