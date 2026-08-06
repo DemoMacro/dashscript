@@ -270,15 +270,22 @@ fn instant_from_epoch_millis(args: &[Argument], ctx: &Ctx<'_>) -> Option<Expr> {
     }))
 }
 
-/// Whether `arg` is a string for `Temporal.<Type>.from` — a string literal or a
-/// local inferred to be `String` (a string variable parses; a non-string local
-/// or any other expression lowers to the `TypeError` path above).
+/// Whether `arg` is a string for `Temporal.<Type>.from` — a string literal or
+/// a local inferred to be `String` (bound to a string literal). Only such a
+/// local reaches the static `from_utf8` path: classify's `from_arg_needs_engine`
+/// routes any non-`String` or untracked identifier (a for-of loop variable, an
+/// untyped callback parameter) to the engine — quantified at -50 fixtures if
+/// forced static (the polyfill is the ES reference and is more conformant than
+/// temporal-rs on edge-case ISO strings; see `rejects_four_digit_minute_offset`).
+/// A tracked non-string local or any other expression lowers to the `TypeError`
+/// path above.
 fn is_string_arg(a: &Argument, ctx: &Ctx<'_>) -> bool {
     match a {
         Argument::StringLiteral(_) => true,
-        Argument::Identifier(id) => ctx
-            .local_type(&bindings::snake(&id.name).to_string())
-            .is_some_and(|p| p.is_ident("String")),
+        Argument::Identifier(id) => {
+            let lt = ctx.local_type(&bindings::snake(&id.name).to_string());
+            lt.is_some_and(|p| p.is_ident("String"))
+        }
         _ => false,
     }
 }
@@ -611,5 +618,33 @@ mod drift {
                 "temporal_new_maps({ty:?}) = true, but `temporal_new` has no arm for it"
             );
         }
+    }
+}
+
+/// Behavior probes for `temporal-rs` 0.2's ISO-string parsing — these do not
+/// test DashScript emit, they pin the crate's acceptance so a future upgrade
+/// that changes it surfaces here. The `*.from.argument-string-invalid`
+/// fixtures expect a `RangeError` for each entry; a probe asserting `is_ok()`
+/// documents that `temporal-rs` over-accepts, which is why the static `from`
+/// lowering pre-validates the offset.
+#[cfg(test)]
+mod temporal_rs_behavior {
+    /// `+00:0000` is a spec-illegal offset — `TimeZoneNumericUTCOffset`
+    /// permits `±HH`, `±HHMM`, `±HHMMSS`, `±HH:MM`, `±HH:MM:SS`, never four
+    /// digits after the colon. Pin that `temporal-rs` 0.2 rejects it: the
+    /// static `from` lowering turns the `Err` into a `RangeError`, so the
+    /// `*.from.argument-string-invalid` partials are NOT a static-path gap
+    /// (their "no exception thrown" failure is downstream — the fixture
+    /// degrades to the engine, whose Temporal polyfill over-accepts). If a
+    /// future crate version starts accepting `+00:0000`, a pre-validation
+    /// would become necessary.
+    #[test]
+    fn rejects_four_digit_minute_offset() {
+        let r = temporal_rs::Instant::from_utf8("2025-01-01T00:00:00+00:0000".as_bytes());
+        assert!(
+            r.is_err(),
+            "temporal-rs now accepts +00:0000 — temporal_from would not throw RangeError; \
+             add a pre-validation in the static from lowering"
+        );
     }
 }

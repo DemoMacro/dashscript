@@ -420,13 +420,16 @@ fn from_arg_needs_engine(arg: Option<&Argument>, ctx: &ClassifyCtx) -> bool {
             // Only a local bound to a string literal stays on the static
             // `from_utf8` path (the emit's `is_string_arg` infers `String` for
             // it); a Temporal/NonString local, or an untracked local (an
-            // untyped callback parameter, an unknown) needs the polyfill. The
-            // polyfill (@js-temporal/polyfill) is the ES reference and is MORE
-            // conformant than temporal-rs on edge-case ISO strings (minus-sign,
-            // calendar annotations, UTC designators), so `for (const s of arr)
-            // from(s)` that degrades runs more fixtures supported than the
-            // static temporal-rs path — the untracked loop variable routes to
-            // the engine on purpose.
+            // untyped callback parameter, a for-of loop variable, an unknown)
+            // needs the polyfill. The polyfill (@js-temporal/polyfill) is the
+            // ES reference and is MORE conformant than temporal-rs overall on
+            // edge-case ISO strings (minus-sign, calendar annotations, UTC
+            // designators): forcing the untracked loop variable static was
+            // quantified at -50 fixtures — the polyfill-only conformant
+            // fixtures outweigh the handful temporal-rs additionally rejects
+            // (`+00:0000`-style four-digit offsets — see the
+            // `rejects_four_digit_minute_offset` probe). The untracked loop
+            // variable routes to the engine on purpose.
             !matches!(
                 ctx.local_kinds.get(id.name.as_str()),
                 Some(LocalKind::String)
