@@ -17,6 +17,10 @@ use control_flow::{
     translate_while,
 };
 use destructure::{destructure_array, destructure_object};
+// Re-exported so `expressions::closure_block_body` can destructure a closure
+// parameter's sub-bindings (`({ value, done }) => …`) — the only `destructure`
+// helper an `expressions` call site needs.
+pub(in crate::translator) use destructure::destructure_param_binding;
 use infer::{index_access_type, infer_literal_type, match_result_type, object_assign_type};
 use switch::translate_switch;
 use try_throw::{throw_stmt, translate_try};

@@ -177,3 +177,95 @@ fn expr_type_path(expr: &Expression, locals: &Locals) -> Option<syn::Path> {
     };
     locals.get(&bindings::snake(&id.name).to_string()).cloned()
 }
+
+/// A destructuring parameter `({ value, done }) => …` (and the
+/// `function f({ … })` form): the parameter binds to a synthesized name
+/// (`__ds_arg{i}` emitted by the caller), and each sub-binding is extracted at
+/// the body top so the names enter scope. This mirrors [`destructure_object`]'s
+/// compound-init fallback, but the init here is already a `syn::Ident` (the
+/// synthesized param name) — no temp binding or `translate_expr` is needed, and
+/// Rust infers each field's type from the access. Defaults (`{ value = d }`),
+/// renamed sub-patterns (`{ x: { y } }`), and computed keys are not yet handled
+/// — an honest partial when met. Returns empty for a plain-identifier param.
+pub(in crate::translator) fn destructure_param_binding(
+    pattern: &BindingPattern,
+    init: Ident,
+    mutable: bool,
+    names: &NameTable<'_>,
+) -> Vec<Stmt> {
+    match pattern {
+        BindingPattern::ObjectPattern(obj) => obj_param_bindings(obj, &init, mutable, names),
+        BindingPattern::ArrayPattern(arr) => arr_param_bindings(arr, &init, mutable, names),
+        _ => Vec::new(),
+    }
+}
+
+/// `{ value, done }` parameter sub-bindings — `let value = __arg.value;` per
+/// field (shorthand `{ value }` and renamed `{ src: dst }` both lower to the
+/// binding name; the field access is by the source key).
+fn obj_param_bindings(
+    obj: &ObjectPattern,
+    init: &Ident,
+    mutable: bool,
+    names: &NameTable<'_>,
+) -> Vec<Stmt> {
+    let mut out = Vec::new();
+    for p in &obj.properties {
+        let Some(key_name) = bindings::property_key_name(&p.key) else {
+            continue;
+        };
+        let binding_name = match &p.value {
+            BindingPattern::BindingIdentifier(id) => {
+                let var = names.of_binding(id);
+                if var != key_name {
+                    var
+                } else {
+                    key_name.clone()
+                }
+            }
+            _ => key_name.clone(),
+        };
+        let binding = if mutable {
+            quote!(mut #binding_name)
+        } else {
+            quote!(#binding_name)
+        };
+        out.push(parse_quote!(let #binding = #init.#key_name;));
+    }
+    out
+}
+
+/// `[a, b]` parameter sub-bindings — `let a = __arg[0];` per position; a
+/// `...rest` collects the tail as a new `Vec` (matching [`destructure_array`]).
+fn arr_param_bindings(
+    arr: &ArrayPattern,
+    init: &Ident,
+    mutable: bool,
+    names: &NameTable<'_>,
+) -> Vec<Stmt> {
+    let mut out = Vec::new();
+    for (i, elem) in arr.elements.iter().enumerate() {
+        let Some(pat) = elem else {
+            continue;
+        };
+        let name = names.of_pattern(pat);
+        let idx = syn::Index::from(i);
+        let binding = if mutable {
+            quote!(mut #name)
+        } else {
+            quote!(#name)
+        };
+        out.push(parse_quote!(let #binding = #init[#idx];));
+    }
+    if let Some(rest) = &arr.rest {
+        let name = names.of_pattern(&rest.argument);
+        let start = syn::Index::from(arr.elements.len());
+        let binding = if mutable {
+            quote!(mut #name)
+        } else {
+            quote!(#name)
+        };
+        out.push(parse_quote!(let #binding = #init[#start..].to_vec();));
+    }
+    out
+}

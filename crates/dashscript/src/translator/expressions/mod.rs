@@ -1046,7 +1046,17 @@ pub(in crate::translator) fn arrow_expr(
         let body = single_expression_body(&arrow.body)
             .map(|e| translate_expr(e, ctx))
             .unwrap_or_else(|| parse_quote!(::core::todo!()));
-        parse_quote!(|#(#params),*| #body)
+        // `({ value }) => value`: a destructuring parameter on an expression
+        // body has no block to hold a prelude, so wrap the body in one —
+        // `{ let value = __ds_arg0.value; value }` (the trailing expression is
+        // the closure's return value). A no-op (inline body) when no parameter
+        // destructures.
+        let prelude = param_destructure_prelude(&arrow.params, ctx);
+        if !prelude.is_empty() {
+            parse_quote!(|#(#params),*| { #(#prelude)* #body })
+        } else {
+            parse_quote!(|#(#params),*| #body)
+        }
     } else {
         closure_block_body(&arrow.params, &arrow.body, ctx, borrow_params)
     }
@@ -1055,12 +1065,26 @@ pub(in crate::translator) fn arrow_expr(
 /// The `|p0, p1, …|` parameter list shared by every closure lowering — a plain
 /// `name` pat, or `&name` when `borrow` wraps the param so a `.filter` callback
 /// reads owned values from a `&` pattern.
+///
+/// A destructuring parameter (`({ value, done }) => …`) has no single Rust
+/// pattern — [`bindings::binding_name`] would fold it to `_`, dropping every
+/// sub-binding. Such a parameter binds to a synthesized name `__ds_arg{i}`,
+/// which [`param_destructure_prelude`] then reads to emit `let value =
+/// __ds_arg0.value;` at the body top. The naming convention (`__ds_arg{i}`,
+/// positional) is shared with that prelude — the two are a pair.
 fn closure_pats(params: &oxc_ast::ast::FormalParameters, borrow: bool) -> Vec<Pat> {
     params
         .items
         .iter()
-        .map(|fp| {
-            let name = bindings::binding_name(&fp.pattern);
+        .enumerate()
+        .map(|(i, fp)| {
+            let name = match &fp.pattern {
+                oxc_ast::ast::BindingPattern::ObjectPattern(_)
+                | oxc_ast::ast::BindingPattern::ArrayPattern(_) => {
+                    Ident::new(&format!("__ds_arg{i}"), Span::call_site())
+                }
+                _ => bindings::binding_name(&fp.pattern),
+            };
             if borrow {
                 parse_quote!(&#name)
             } else {
@@ -1132,8 +1156,46 @@ fn closure_block_body(
     borrow_params: bool,
 ) -> Expr {
     let pats = closure_pats(params, borrow_params);
-    let block = body_block(params, body, ctx);
+    let mut block = body_block(params, body, ctx);
+    // `({ value, done }) => { … }`: each destructuring parameter's sub-bindings
+    // are extracted at the body top so the names a plain `body_block`
+    // translation references (`done`/`value`) are in scope. A no-op when no
+    // parameter destructures.
+    let prelude = param_destructure_prelude(params, ctx);
+    if !prelude.is_empty() {
+        let mut stmts = prelude;
+        stmts.append(&mut block.stmts);
+        block.stmts = stmts;
+    }
     parse_quote!(|#(#pats),*| #block)
+}
+
+/// Emit, for each destructuring parameter, the sub-binding extractions that
+/// open the body (`let value = __ds_arg0.value;` per field) — paired with
+/// [`closure_pats`]'s `__ds_arg{i}` naming. Plain-identifier parameters
+/// contribute nothing. The field-extraction statements delegate to
+/// [`super::functions::destructure_param_binding`], which mirrors
+/// `destructure_object`'s compound-init fallback; Rust infers each field's
+/// type from the access, so the parameter's struct type need not be known.
+fn param_destructure_prelude(params: &oxc_ast::ast::FormalParameters, ctx: &Ctx<'_>) -> Vec<Stmt> {
+    let mut prelude = Vec::new();
+    for (i, fp) in params.items.iter().enumerate() {
+        if !matches!(
+            &fp.pattern,
+            oxc_ast::ast::BindingPattern::ObjectPattern(_)
+                | oxc_ast::ast::BindingPattern::ArrayPattern(_)
+        ) {
+            continue;
+        }
+        let init = Ident::new(&format!("__ds_arg{i}"), Span::call_site());
+        prelude.extend(super::functions::destructure_param_binding(
+            &fp.pattern,
+            init,
+            false,
+            ctx.names(),
+        ));
+    }
+    prelude
 }
 
 /// A non-async, non-generator `FunctionExpression` lowers to the same closure
