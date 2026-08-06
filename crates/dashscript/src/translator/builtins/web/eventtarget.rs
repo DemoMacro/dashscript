@@ -240,10 +240,37 @@ pub(in crate::translator) fn abort_method(
                 let event = translate_argument(args.first()?, ctx);
                 Some(parse_quote!(#obj.dispatch_event(&#event)))
             }
+            // `signal.throwIfAborted()` — if aborted, panic the reason (a
+            // `DsError`); else a no-op.
+            "throwIfAborted" if args.is_empty() => Some(parse_quote!({ #obj.throw_if_aborted(); })),
             _ => None,
         };
     }
     None
+}
+
+/// `AbortSignal` static methods, dispatched when the receiver is the
+/// `AbortSignal` constructor itself (a global-scope identifier, not a
+/// `DsAbortSignal` value). `AbortSignal.abort()` → a fresh aborted signal (the
+/// default `AbortError` reason); mirrors `url_static_method`'s `URL` guard.
+/// Returns `None` for any other receiver/name (the call falls through to a
+/// plain method call → cargo check honestly). `AbortSignal.any()` (multi-signal
+/// aggregation) and `.timeout()` (a timer) are out of scope (honest partials).
+pub(in crate::translator) fn abort_static(
+    sm: &StaticMemberExpression,
+    args: &[Argument],
+) -> Option<Expr> {
+    match &sm.object {
+        Expression::Identifier(id) if id.name.as_str() == "AbortSignal" => {}
+        _ => return None,
+    }
+    let name = sm.property.name.as_str();
+    Some(match name {
+        "abort" if args.is_empty() => {
+            parse_quote!(crate::__ds::DsAbortSignal::aborted_signal())
+        }
+        _ => return None,
+    })
 }
 
 /// Lower an `addEventListener` callback argument to a `Box<dyn FnMut(&DsEvent)>`
@@ -262,9 +289,41 @@ fn event_listener_callback(arg: &Argument, ctx: &Ctx<'_>) -> Option<Expr> {
         _ => {}
     }
     let cb = translate_argument(arg, ctx);
-    Some(parse_quote!(
-        ::std::boxed::Box::new(move |__ds_evt: &crate::__ds::DsEvent| {
-            let _ = (#cb)(__ds_evt);
-        })
-    ))
+    // A 0-arg listener (`function handler() { … }` / `() => { … }`) lowers to a
+    // Rust fn item / closure taking no args, so forwarding `__ds_evt` would be
+    // E0057. Detect a 0-arg callback and emit a discard-arg adapter that drops
+    // the event; otherwise forward the event to the callback.
+    if callback_is_zero_arg(arg, ctx) {
+        Some(parse_quote!(
+            ::std::boxed::Box::new(move |__ds_evt: &crate::__ds::DsEvent| {
+                let _ = __ds_evt;
+                let _ = (#cb)();
+            })
+        ))
+    } else {
+        Some(parse_quote!(
+            ::std::boxed::Box::new(move |__ds_evt: &crate::__ds::DsEvent| {
+                let _ = (#cb)(__ds_evt);
+            })
+        ))
+    }
+}
+
+/// Whether an `addEventListener` callback is a 0-arg callable — a listener
+/// that does not take the event, so the discard-arg adapter is safe. An inline
+/// function/arrow expression with no parameters is 0-arg; a named reference is
+/// 0-arg only when it resolves to a registered top-level fn with no params (the
+/// registry does not recurse into fn bodies, so a nested fn or a closure local
+/// reads as unknown — forward the event rather than guess, since assuming 0-arg
+/// would mis-forward a 1-arg listener with E0061). Any other shape forwards.
+fn callback_is_zero_arg(arg: &Argument, ctx: &Ctx<'_>) -> bool {
+    match arg.as_expression() {
+        Some(Expression::FunctionExpression(f)) => f.params.items.is_empty(),
+        Some(Expression::ArrowFunctionExpression(a)) => a.params.items.is_empty(),
+        Some(Expression::Identifier(id)) => matches!(
+            ctx.function_params(id.name.as_str()),
+            Some(params) if params.is_empty()
+        ),
+        _ => false,
+    }
 }

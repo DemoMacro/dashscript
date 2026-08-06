@@ -101,6 +101,15 @@ pub(in crate::translator) fn url_search_params_method(
             let cb = translate_argument(args.first()?, ctx);
             parse_quote!(#obj.for_each(#cb))
         }
+        // `params.entries()` / `.keys()` / `.values()` — the iteration methods
+        // as materialized `Vec`s (the static path trades an ES iterator wrapper
+        // for a `Vec`, the same trade `Headers.keys`/`values`/`entries` makes).
+        // `entries` is `Vec<Vec<String>>` — each pair as a `[name, value]` array
+        // matching the live `DsUrlSearchParamsIter` item shape, so a WPT
+        // `assert_array_equals(entry, ["a", "1"])` holds.
+        "entries" if args.is_empty() => parse_quote!(#obj.entries_vec()),
+        "keys" if args.is_empty() => parse_quote!(#obj.keys_vec()),
+        "values" if args.is_empty() => parse_quote!(#obj.values_vec()),
         _ => return None,
     })
 }
@@ -171,6 +180,11 @@ pub(in crate::translator) fn url_search_params_on_url_method(
             let cb = translate_argument(args.first()?, ctx);
             parse_quote!(#url.sp_for_each(#cb))
         }
+        // `url.searchParams.entries/keys/values()` — the live-query iteration
+        // methods as materialized `Vec`s (see `url_search_params_method`).
+        "entries" if args.is_empty() => parse_quote!(#url.sp_entries_vec()),
+        "keys" if args.is_empty() => parse_quote!(#url.sp_keys_vec()),
+        "values" if args.is_empty() => parse_quote!(#url.sp_values_vec()),
         _ => return None,
     })
 }
@@ -216,6 +230,29 @@ pub(in crate::translator) fn url_static_method(
                 }
             }
         }
+        _ => return None,
+    })
+}
+
+/// `url.toJSON()` / `url.toString()` on a DsUrl local — both serialize the URL
+/// to its WHATWG form, identical to `url.href` (URL §7.4: `toJSON` returns the
+/// serialization, equal to `href`; `toString` is the same serialization). The
+/// receiver guard is `is_url_local`, so a non-DsUrl falls through. Returns
+/// `None` for an unmapped name, so the call falls through to a plain method
+/// call (cargo check rejects it honestly).
+pub(in crate::translator) fn url_method(
+    sm: &StaticMemberExpression,
+    args: &[Argument],
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    if !is_url_local(&sm.object, ctx) {
+        return None;
+    }
+    let name = sm.property.name.as_str();
+    let obj = translate_expr(&sm.object, ctx);
+    Some(match name {
+        "toJSON" if args.is_empty() => parse_quote!(#obj.href()),
+        "toString" if args.is_empty() => parse_quote!(#obj.href()),
         _ => return None,
     })
 }

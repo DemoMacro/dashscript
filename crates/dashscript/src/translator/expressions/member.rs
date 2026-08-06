@@ -147,6 +147,24 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             return lit;
         }
     }
+    // `performance.timeOrigin` — the WinterTC (W3C hr-time) global's timeOrigin
+    // member (a DOMHighResTimeStamp, ms since the Unix epoch). A member access,
+    // not a method call, so it dispatches here (vs `performance.now()` in
+    // `call.rs`). The bare `performance` global and the `self.performance` alias
+    // both match; an unknown property falls through to the generic field read.
+    if let Some(expr) = builtins::perf_member(sm) {
+        return expr;
+    }
+    // `console.<X>` value read → `undefined`. The static console model has only
+    // methods (log/warn/error/...), no data properties, so any value-position
+    // member read on `console` (e.g. the legacy non-existent `console.timeline`)
+    // is `undefined` — matching the WPT historical fixture that asserts these
+    // are absent. `console.log(...)` calls are intercepted earlier in call.rs,
+    // so only value reads reach here; DashScript has no function-object reified
+    // for a console method, so reading one as a value is `undefined`.
+    if builtins::is_ident(&sm.object, "console") {
+        return parse_quote!(::core::option::Option::<()>::None);
+    }
     // `e.constructor.name` / `e.constructor.message` on a `DsError` local (a
     // `catch (e)` binding whose panic payload is a `DsError`) → `e.name` /
     // `e.message`. `throw new RangeError("m")` panics a `DsError { name,
@@ -294,6 +312,14 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     if field_name == "aborted" && is_abort_signal_receiver(&sm.object, ctx) {
         let obj = translate_expr(&sm.object, ctx);
         return parse_quote!(#obj.aborted());
+    }
+    // `signal.reason` on a DsAbortSignal value — the abort reason (a `DsError`,
+    // defaulting to the `AbortError` DOMException when aborted without one).
+    // Same receiver shape as `signal.aborted` (an Identifier local or a chained
+    // `controller.signal`).
+    if field_name == "reason" && is_abort_signal_receiver(&sm.object, ctx) {
+        let obj = translate_expr(&sm.object, ctx);
+        return parse_quote!(#obj.reason());
     }
     // `url.searchParams` as a standalone read (assigned/passed, not chained
     // into a method call or `.size`) — a live view sharing the URL's query

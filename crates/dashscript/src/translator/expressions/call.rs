@@ -551,6 +551,13 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         {
             return expr;
         }
+        // `url.toJSON()` / `url.toString()` on a DsUrl local — both serialize
+        // the URL to its WHATWG form, equal to `url.href` (URL §7.4). Dispatched
+        // after the URLSearchParams tables: a DsUrl receiver is neither a
+        // DsUrlSearchParams local nor a `<DsUrl>.searchParams` chain.
+        if let Some(expr) = builtins::url_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
         // `buf.set(source, offset)` on a `Uint8Array` (`Vec<u8>` local) — a
         // byte-buffer copy. Dispatched after `collection_method` so a `Map.set`
         // (a HashMap receiver) is handled first; only a `Vec<u8>` receiver
@@ -593,6 +600,13 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         // DsEventTarget); the abort listener reuses the EventTarget callback
         // adapter so any callback shape type-checks against `Box<dyn FnMut(&DsEvent)>`.
         if let Some(expr) = builtins::abort_method(sm, call.arguments.as_slice(), ctx) {
+            return expr;
+        }
+        // `AbortSignal.abort()` (static, on the constructor identifier) → a
+        // fresh aborted signal. Dispatched after the instance `abort_method`
+        // (which keys off a `DsAbortSignal`/`DsAbortController` value
+        // receiver); the static guard matches an `AbortSignal` identifier.
+        if let Some(expr) = builtins::abort_static(sm, call.arguments.as_slice()) {
             return expr;
         }
         // `h.get(name)` / `h.has(name)` / `h.set(name, value)` / `h.append(…)` /

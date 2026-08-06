@@ -224,6 +224,36 @@ fn degraded_body_dollar_262_stamps_atomics_for_engine_builtin() {
 }
 
 #[test]
+fn degraded_body_promise_rejects_stamps_wpt_assert_for_engine_builtin() {
+    // A function that degrades per-function (runtime `typeof` of a member
+    // access — the static translator cannot lower it) and calls
+    // `promise_rejects_js(…)` in its body. The static Rust marker probe sees
+    // only the Rust emit (the `call_fn` swap), not the JS body, so `WptAssert`
+    // would be missed and `wire_web_apis` would skip `register_wpt_assert` —
+    // the degraded body would hit `ReferenceError: promise_rejects_js is not
+    // defined`. `stamp_engine_js_body_deps` scans the body's JS for
+    // `promise_rejects` the way the assert/Web-API scans do.
+    let src = "function pr(o: { x: number }) {\n  const s = typeof o.x;\n  promise_rejects_js(null, TypeError, Promise.resolve(s), 'x');\n  return s;\n}\npr({ x: 1 });\n";
+    let (_rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        deps.has(RuntimeDep::Engine),
+        "runtime typeof degrades per-function, got deps: {deps:?}"
+    );
+    assert!(
+        deps.has(RuntimeDep::WptAssert),
+        "degraded body `promise_rejects_js` must stamp WptAssert for wire_web_apis, got deps: {deps:?}"
+    );
+    assert!(
+        deps.engine_helper_module()
+            .is_some_and(|s| s.contains("register_wpt_assert(ctx)?;")),
+        "wire_web_apis stamps register_wpt_assert for the engine builtin, got helper: {:?}",
+        deps.engine_helper_module()
+    );
+}
+
+#[test]
 fn text_encoder_encode_default_arg_lowers_to_empty_string() {
     // `TextEncoder.prototype.encode(input = "")` — both a missing argument and
     // an explicit `undefined` trigger the ES default (JS default-parameter
@@ -566,6 +596,144 @@ fn url_static_methods_emit_url_dep_helpers() {
 }
 
 #[test]
+fn url_to_json_and_to_string_dispatch_to_href() {
+    // `url.toJSON()` / `url.toString()` (WinterTC WHATWG URL) both serialize to
+    // the href (URL §7.4: `toJSON` returns the serialization, equal to `href`;
+    // `toString` is the same serialization). The `url_method` dispatch lowers
+    // each to `url.href()` on a DsUrl local.
+    let src = "function f(): string { const u = new URL(\"https://example.com/\"); const a = u.toJSON(); const b = u.toString(); return a + b; }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains(".href()"),
+        "url.toJSON/toString → .href(), got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Url),
+        "Url dep must flag, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn url_search_params_iterators_emit_vec_methods() {
+    // `params.entries()` / `.keys()` / `.values()` (WinterTC WHATWG
+    // URLSearchParams) materialize to `Vec`-returning methods — the static path
+    // trades an ES iterator wrapper for a `Vec` (the same trade `Headers` makes).
+    // `entries_vec` yields `Vec<Vec<String>>` (`[name, value]` arrays); `keys`/
+    // `values` yield `Vec<String>`. The `url.searchParams.entries()` live-view
+    // form lowers to `sp_entries_vec` on the DsUrl.
+    let src = "function f(): void {\n  const p = new URLSearchParams(\"a=1&b=2\");\n  const e = p.entries();\n  const k = p.keys();\n  const v = p.values();\n  const u = new URL(\"https://example.com/?a=1\");\n  const se = u.searchParams.entries();\n}";
+    let (rust, _deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains(".entries_vec()")
+            && rust.contains(".keys_vec()")
+            && rust.contains(".values_vec()"),
+        "params.entries/keys/values → *_vec(), got:\n{rust}"
+    );
+    assert!(
+        rust.contains(".sp_entries_vec()"),
+        "url.searchParams.entries → sp_entries_vec(), got:\n{rust}"
+    );
+}
+
+#[test]
+fn headers_get_set_cookie_emits_vec() {
+    // `headers.getSetCookie()` (FETCH §5.2) returns one array element per
+    // Set-Cookie header (unlike `get()`, which joins with ", "). Lowers to
+    // `DsHeaders::get_set_cookie` — a `Vec<String>` view over the multi-value
+    // pairs `append` storage already keeps.
+    let src = "function f(): string[] { const h = new Headers(); h.append(\"set-cookie\", \"a=1\"); h.append(\"set-cookie\", \"b=2\"); return h.getSetCookie(); }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains(".get_set_cookie()"),
+        "headers.getSetCookie → get_set_cookie(), got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Headers),
+        "Headers dep must flag, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn performance_time_origin_member_dispatches_to_helper() {
+    // `performance.timeOrigin` (WinterTC W3C hr-time) is a member access, not a
+    // method call — a DOMHighResTimeStamp (ms since the Unix epoch). Lowers to
+    // `__ds::perf_time_origin()` on the bare `performance` global or the
+    // `self.performance` alias; dispatched from `member_expr` (vs `now()` in call).
+    let src = "function f(): number { const a = performance.timeOrigin; const b = self.performance.timeOrigin; return a + b; }";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::perf_time_origin()"),
+        "performance.timeOrigin → perf_time_origin(), got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::HrTime),
+        "HrTime dep must flag, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn abort_signal_reason_and_throw_if_aborted_dispatch_to_helper() {
+    // `signal.reason` (member access) → `signal.reason()` (a `DsError`, the
+    // default `AbortError` when aborted without a reason); `signal.
+    // throwIfAborted()` (instance method) → `signal.throw_if_aborted()` (a
+    // `panic_any(DsError)` when aborted). Both ride the existing
+    // `DsAbortSignal` receiver check (an Identifier local or a chained
+    // `controller.signal`), so `c.signal.reason`/`c.signal.throwIfAborted()`
+    // lower inline. `reason`/`throw_if_aborted` carry a `DsError`, so the
+    // `AbortController` dep derives `Error` (the `DsError` model).
+    let src = "function f(): void {\n  const c = new AbortController();\n  c.abort();\n  const r = c.signal.reason;\n  c.signal.throwIfAborted();\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains(".reason()"),
+        "signal.reason → reason(), got:\n{rust}"
+    );
+    assert!(
+        rust.contains(".throw_if_aborted()"),
+        "throwIfAborted → throw_if_aborted(), got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::AbortController),
+        "AbortController dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Error),
+        "reason/throw_if_aborted carry DsError → Error dep, got deps: {deps:?}"
+    );
+}
+
+#[test]
+fn abort_signal_abort_static_dispatches_to_helper() {
+    // `AbortSignal.abort()` (static, on the constructor identifier) →
+    // `DsAbortSignal::aborted_signal()` (a fresh aborted signal with the
+    // default `AbortError` reason). Mirrors `URL.canParse()`'s static guard;
+    // the `DsAbortSignal::aborted_signal` emit shares the `__ds::DsAbort`
+    // marker prefix, so the `AbortController` dep flags without an explicit
+    // probe.
+    let src = "function f(): boolean {\n  const s: AbortSignal = AbortSignal.abort();\n  return s.aborted;\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("DsAbortSignal::aborted_signal()"),
+        "AbortSignal.abort() static → aborted_signal(), got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::AbortController),
+        "AbortController dep must flag, got deps: {deps:?}"
+    );
+}
+
+#[test]
 fn crypto_random_uuid_emits_crypto_dep_helper() {
     // `crypto.randomUUID()` (WinterTC WebCrypto) lowers to `__ds::crypto_random_uuid`;
     // the `__ds::crypto_random_uuid` marker flags the `Crypto` dep, which pulls
@@ -807,8 +975,10 @@ fn engine_helper_module_stamps_wpt_assert_builtin() {
             && src.contains("AssertionError")
             && src.contains("assert_equals")
             && src.contains("assert_true")
-            && src.contains("assert_throws_js"),
-        "register_wpt_assert defines AssertionError + the WPT assert family, got:\n{src}"
+            && src.contains("assert_throws_js")
+            && src.contains("promise_rejects_js")
+            && src.contains("promise_rejects_exactly"),
+        "register_wpt_assert defines AssertionError + the WPT assert family + promise_rejects_*, got:\n{src}"
     );
 }
 

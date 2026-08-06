@@ -272,9 +272,15 @@ pub fn is_testharness_mapped(name: &str) -> bool {
 /// (WinterTC is static-first + per-function degrade, same model as test262).
 /// Growing [`TESTHARNESS_MAPPED_GLOBALS`] (add a `__ds::wpt_*` helper + a
 /// `testharness_function` arm, then move the name here→there) is how WinterTC
-/// coverage expands.
+/// coverage expands. `promise_rejects_js`/`promise_rejects_exactly` are here
+/// for a different reason: the static path's `DsPromiseFuture::poll` panics on
+/// rejection, so a `.await` inside an `assert_throws_js`-style guard cannot
+/// catch the rejection before it unwinds. The engine path's native Promise
+/// catches it (`register_wpt_assert` supplies the shim).
 pub const TESTHARNESS_REJECTED_GLOBALS: &[&str] = &[
     "async_test",
+    "promise_rejects_js",
+    "promise_rejects_exactly",
     "assert_object_equals",
     "assert_less",
     "assert_greater",

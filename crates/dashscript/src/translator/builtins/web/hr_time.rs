@@ -22,6 +22,19 @@ pub(in crate::translator) fn perf_method(sm: &StaticMemberExpression) -> Option<
     Some(parse_quote!(crate::__ds::perf_now()))
 }
 
+/// `performance.timeOrigin` → `__ds::perf_time_origin()`. A member access (not
+/// a method call), so this dispatches from `member_expr`, not `call`. Returns
+/// `None` unless the receiver is the global `performance` (bare or via the
+/// WinterTC `self` global-object alias), so any other receiver/name falls
+/// through to a generic field read (cargo check rejects it honestly).
+pub(in crate::translator) fn perf_member(sm: &StaticMemberExpression) -> Option<Expr> {
+    if sm.property.name.as_str() != "timeOrigin" {
+        return None;
+    }
+    is_performance_receiver(&sm.object)?;
+    Some(parse_quote!(crate::__ds::perf_time_origin()))
+}
+
 /// Whether `expr` is the global `performance` object: the bare identifier, or
 /// `self.performance` (the WinterTC `self` global-object alias).
 fn is_performance_receiver(expr: &Expression) -> Option<()> {

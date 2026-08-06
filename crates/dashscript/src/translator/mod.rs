@@ -401,7 +401,10 @@ impl RuntimeDep {
             RuntimeDep::StringReplace => Some("__ds::ds_replace"),
             RuntimeDep::F64MaxMin => Some("__ds::ds_f64_max"),
             RuntimeDep::Base64 => Some("__ds::b64_"),
-            RuntimeDep::HrTime => Some("__ds::perf_now"),
+            // Common prefix of `perf_now`/`perf_time_origin`, so a fixture using
+            // `performance.now()` (call) or `performance.timeOrigin` (member)
+            // pulls PERF_HELPER (sibling free fns in the slice).
+            RuntimeDep::HrTime => Some("__ds::perf_"),
             // Common prefix of `crypto_random_uuid`/`crypto_get_random_values`,
             // so a fixture using either WebCrypto method (`randomUUID`/
             // `getRandomValues`) pulls CRYPTO_HELPER (sibling free fns in the
@@ -1035,6 +1038,7 @@ fn stamp_engine_js_body_deps(deps: &mut RuntimeDeps, js: &str) {
         || js.contains("assert_between")
         || js.contains("async_test")
         || js.contains("promise_test")
+        || js.contains("promise_rejects")
         || js.contains("AssertionError")
         // `test(…)` / `setup(…)` / `done()` — the sync testharness entry
         // points. A degraded body using `test(…)` with no other assert keyword
@@ -1994,6 +1998,12 @@ impl Translator {
         // emit) but not the transitive EventTarget use inside the helper source.
         if deps.has(RuntimeDep::AbortController) {
             deps.insert(RuntimeDep::EventTarget);
+            // DS_ABORT_HELPER's `reason()`/`throw_if_aborted()` carry a
+            // `DsError` (the default `AbortError` DOMException), so an
+            // AbortController-bearing fixture must also pull ERROR_HELPER, or
+            // `DsError` is E0433. The marker probe sees the struct emit but
+            // not this transitive use inside the helper source.
+            deps.insert(RuntimeDep::Error);
         }
         // FILE_HELPER's `DsFile` wraps a `DsBlob` (a `File` extends `Blob`), so
         // any File-bearing fixture must also pull BLOB_HELPER, or `DsBlob` is

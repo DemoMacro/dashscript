@@ -328,6 +328,20 @@ pub fn perf_now() -> f64 {
     let epoch = EPOCH.get_or_init(::std::time::Instant::now);
     epoch.elapsed().as_secs_f64() * 1000.0
 }
+/// `performance.timeOrigin` — the process's timeOrigin as a
+/// DOMHighResTimeStamp (ms since the Unix epoch). Approximated as the first
+/// call's wall-clock reading (function-local static), so a WPT
+/// `assert_true(performance.timeOrigin > 0)` holds and `timeOrigin + now()`
+/// stays close to `Date.now()` within first-call jitter.
+pub fn perf_time_origin() -> f64 {
+    static ORIGIN: ::std::sync::OnceLock<::std::time::Duration> = ::std::sync::OnceLock::new();
+    let origin = ORIGIN.get_or_init(|| {
+        ::std::time::SystemTime::now()
+            .duration_since(::std::time::UNIX_EPOCH)
+            .unwrap_or_default()
+    });
+    origin.as_secs_f64() * 1000.0
+}
 "#;
 
 /// WinterTC WebCrypto helper — `__ds::crypto_random_uuid`. `crypto.randomUUID()`
@@ -2132,6 +2146,17 @@ impl DsHeaders {
     pub fn entries_vec(&self) -> ::std::vec::Vec<(::std::string::String, ::std::string::String)> {
         self.entries.clone()
     }
+    /// `headers.getSetCookie()` — every `set-cookie` value as its own element
+    /// (FETCH §5.2). Unlike `get()` (which joins values with ", "),
+    /// `getSetCookie()` returns one array element per Set-Cookie header,
+    /// preserving the multi-value semantics `append` storage already keeps.
+    pub fn get_set_cookie(&self) -> ::std::vec::Vec<::std::string::String> {
+        self.entries
+            .iter()
+            .filter(|(n, _)| n == "set-cookie")
+            .map(|(_, v)| v.clone())
+            .collect()
+    }
 }
 impl ::std::default::Default for DsHeaders {
     fn default() -> Self {
@@ -2485,6 +2510,7 @@ pub(super) const DS_ABORT_HELPER: &str = r#"
 #[derive(Clone)]
 pub struct DsAbortSignal {
     aborted: ::std::sync::Arc<::std::sync::Mutex<bool>>,
+    reason: ::std::sync::Arc<::std::sync::Mutex<::std::option::Option<DsError>>>,
     target: DsEventTarget,
 }
 impl DsAbortSignal {
@@ -2513,16 +2539,19 @@ impl DsAbortSignal {
     pub fn dispatch_event(&self, event: &DsEvent) -> bool {
         self.target.dispatch_event(event)
     }
-    /// Flip `aborted` to `true` and fire the `"abort"` event once. ES queues the
-    /// event as a microtask; this static model fires it synchronously on
-    /// `controller.abort()` — the common WPT shape (assert `aborted` / a
-    /// listener fired right after `abort()`) passes; a fixture depending on the
-    /// microtask ordering is an honest partial. The guard is dropped before
-    /// dispatch so a listener that itself reads `aborted` re-locks cleanly.
-    fn signal_abort(&self) {
+    /// Flip `aborted` to `true`, store `reason` (ES `controller.abort(reason)` /
+    /// `AbortSignal.abort(reason)`'s arg), and fire the `"abort"` event once.
+    /// ES queues the event as a microtask; this static model fires it
+    /// synchronously on `controller.abort()` — the common WPT shape (assert
+    /// `aborted` / a listener fired right after `abort()`) passes; a fixture
+    /// depending on the microtask ordering is an honest partial. The guard is
+    /// dropped before dispatch so a listener that itself re-locks
+    /// `aborted`/`reason` does so cleanly.
+    fn signal_abort(&self, reason: ::std::option::Option<DsError>) {
         let mut guard = self.aborted.lock().unwrap();
         if !*guard {
             *guard = true;
+            *self.reason.lock().unwrap() = reason;
             ::std::mem::drop(guard);
             let evt = DsEvent::new(
                 ::std::string::String::from("abort"),
@@ -2531,11 +2560,48 @@ impl DsAbortSignal {
             self.target.dispatch_event(&evt);
         }
     }
+    /// `signal.reason` (a property; `member.rs` dispatches). ES returns the
+    /// abort reason — `controller.abort(reason)`'s arg, else a `DOMException`
+    /// named `"AbortError"` (the default). The Rust accessor returns that
+    /// default for an abort with no reason; for an un-aborted signal ES returns
+    /// `undefined`, but a fixture only reads `reason` after abort, so the
+    /// default is the honest common path (an un-aborted read is an honest
+    /// partial). `DsError` (the `DOMException`/`Error` model) is pulled
+    /// alongside — `AbortController` derives `Error` (see `derive_deps`).
+    #[inline]
+    pub fn reason(&self) -> DsError {
+        self.reason
+            .lock()
+            .unwrap()
+            .clone()
+            .unwrap_or_else(|| DsError::new("AbortError", "signal is aborted without reason"))
+    }
+    /// `signal.throwIfAborted()` — if `aborted`, throw `signal.reason` (a
+    /// `DsError`), else a no-op. The throw lowers to `panic_any(DsError)`, so a
+    /// surrounding `try`/`catch` recovers the same `DsError` ES would (with
+    /// `e.name`/`e.message` intact, the way `throw new Error(…)` does).
+    pub fn throw_if_aborted(&self) {
+        if self.aborted() {
+            ::std::panic::panic_any(self.reason());
+        }
+    }
+    /// `AbortSignal.abort()` (static) — a fresh signal already in the aborted
+    /// state with the default `AbortError` reason. `abort_static` dispatches
+    /// `AbortSignal.abort()` here; named `aborted_signal` (not `abort`, the
+    /// instance method) so the static-vs-instance split is unambiguous, and the
+    /// marker probe still catches the emit (`DsAbortSignal::aborted_signal`
+    /// shares the `__ds::DsAbort` prefix with the struct).
+    pub fn aborted_signal() -> DsAbortSignal {
+        let s = DsAbortSignal::default();
+        s.signal_abort(::std::option::Option::None);
+        s
+    }
 }
 impl ::std::default::Default for DsAbortSignal {
     fn default() -> Self {
         Self {
             aborted: ::std::sync::Arc::new(::std::sync::Mutex::new(false)),
+            reason: ::std::sync::Arc::new(::std::sync::Mutex::new(::std::option::Option::None)),
             target: DsEventTarget::new(),
         }
     }
@@ -2563,9 +2629,10 @@ impl DsAbortController {
         self.signal.clone()
     }
     /// `controller.abort([reason])` — flip `aborted` and fire `"abort"` once.
-    /// The ES `reason` arg is dropped (the common WPT shape does not read it).
+    /// The ES `reason` arg is dropped (the common WPT shape aborts without a
+    /// reason; `signal.reason` then returns the default `AbortError`).
     pub fn abort(&self) {
-        self.signal.signal_abort();
+        self.signal.signal_abort(::std::option::Option::None);
     }
 }
 impl ::std::default::Default for DsAbortController {
@@ -3090,7 +3157,13 @@ fn register_atomics_agent(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
 /// dep derives `EventTarget`, so this registers exactly once). Covers
 /// `signal.aborted`/`reason`, `controller.signal`/`abort()`,
 /// `addEventListener`/`removeEventListener`/`dispatchEvent`, and the static
-/// `AbortSignal.any(…)`/`abort(…)`/`timeout(…)` combinators.
+/// `AbortSignal.any(…)`/`abort(…)`/`timeout(…)` combinators. Also registers
+/// the `Event` constructor (a `{ type, bubbles, cancelable, target }` shim —
+/// the engine subset a degraded fixture reads) and, when `performance` is
+/// present (set by `register_perf_now` under `HrTime`, which sorts before
+/// `EventTarget`), upgrades it to an `EventTarget` (WHATWG `Performance
+/// extends EventTarget`), so `performance.addEventListener`/`dispatchEvent`
+/// resolve.
 pub(super) const ABORT_ENGINE_BUILTIN: &str = r#"
 fn register_abort(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
     ctx.eval_with_options::<(), _>(
@@ -3166,9 +3239,15 @@ fn register_abort(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
              var l = s.__listeners['abort'];\n\
              if (l) { var ev = { type: 'abort', target: s }; l.slice().forEach(function (cb) { cb(ev); }); }\n\
          };\n\
+         function Event(type) { this.type = type; this.bubbles = false; this.cancelable = false; this.target = null; }\n\
+         this.Event = Event;\n\
          this.EventTarget = EventTarget;\n\
          this.AbortSignal = AbortSignal;\n\
-         this.AbortController = AbortController;",
+         this.AbortController = AbortController;\n\
+         if (this.performance) {\n\
+             Object.setPrototypeOf(this.performance, EventTarget.prototype);\n\
+             EventTarget.call(this.performance);\n\
+         }",
         sloppy(),
     )
 }
@@ -3294,6 +3373,21 @@ fn register_wpt_assert(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
              return t;\n\
          };\n\
          this.promise_test = function (fn, _name) { try { fn(__ds_wpt_t()); } catch (e) { throw e; } };\n\
+        this.promise_rejects_js = function (_test, ctor, p, msg) {\n\
+            return p.then(function () {\n\
+                throw new AssertionError((msg ? msg + ' ' : '') + 'promise should have rejected');\n\
+            }).catch(function (e) {\n\
+                if (e === null || e === undefined) throw new AssertionError((msg ? msg + ' ' : '') + 'must throw a non-None value');\n\
+                if (!(e instanceof ctor)) throw new AssertionError((msg ? msg + ' ' : '') + 'expected ' + (ctor && ctor.name) + ' but threw ' + __ds_wpt_fmt(e));\n\
+            });\n\
+        };\n\
+        this.promise_rejects_exactly = function (_test, p, value, msg) {\n\
+            return p.then(function () {\n\
+                throw new AssertionError((msg ? msg + ' ' : '') + 'promise should have rejected');\n\
+            }).catch(function (e) {\n\
+                if (!Object.is(e, value)) throw new AssertionError((msg ? msg + ' ' : '') + 'expected ' + __ds_wpt_fmt(value) + ' but got ' + __ds_wpt_fmt(e));\n\
+            });\n\
+        };\n\
              this.assert_object_equals = function (a, b, msg) {\n\
                  function __ds_deep_eq(x, y) {\n\
                      if (Object.is(x, y)) return true;\n\
@@ -3540,6 +3634,19 @@ impl DsUrl {
             f(v, k);
         }
     }
+    /// `url.searchParams.entries()` — see `DsUrlSearchParams::entries_vec`.
+    /// Operates on the URL's live query; same `[name, value]` array shape.
+    pub fn sp_entries_vec(&self) -> Vec<Vec<String>> {
+        self.sp_pairs().into_iter().map(|(k, v)| vec![k, v]).collect()
+    }
+    /// `url.searchParams.keys()` — see `DsUrlSearchParams::keys_vec`.
+    pub fn sp_keys_vec(&self) -> Vec<String> {
+        self.sp_pairs().into_iter().map(|(k, _)| k).collect()
+    }
+    /// `url.searchParams.values()` — see `DsUrlSearchParams::values_vec`.
+    pub fn sp_values_vec(&self) -> Vec<String> {
+        self.sp_pairs().into_iter().map(|(_, v)| v).collect()
+    }
     /// `url.searchParams` — a live view of this URL's query. Returns a
     /// `DsUrlSearchParams` sharing the same ref-counted `url::Url` (an `Rc`
     /// clone), so a mutation through the view (`params.append(…)`) is
@@ -3771,6 +3878,23 @@ impl DsUrlSearchParams {
         for (k, v) in dsq_pairs(&self.0) {
             f(v, k);
         }
+    }
+    /// `params.entries()` — every `[name, value]` pair as a materialized
+    /// `Vec<Vec<String>>` (insertion order). The static path trades the ES
+    /// iterator wrapper for a `Vec`; each pair is a two-element `[name, value]`
+    /// array matching the live `DsUrlSearchParamsIter` item shape, so a WPT
+    /// `assert_array_equals(entry, [\"a\", \"1\"])` holds. `for (const [k, v] of
+    /// params.entries())` then destructures each array via index access.
+    pub fn entries_vec(&self) -> Vec<Vec<String>> {
+        dsq_pairs(&self.0).into_iter().map(|(k, v)| vec![k, v]).collect()
+    }
+    /// `params.keys()` — every name as a `Vec<String>` (insertion order).
+    pub fn keys_vec(&self) -> Vec<String> {
+        dsq_pairs(&self.0).into_iter().map(|(k, _)| k).collect()
+    }
+    /// `params.values()` — every value as a `Vec<String>` (insertion order).
+    pub fn values_vec(&self) -> Vec<String> {
+        dsq_pairs(&self.0).into_iter().map(|(_, v)| v).collect()
     }
 }
 impl ::core::fmt::Display for DsUrlSearchParams {

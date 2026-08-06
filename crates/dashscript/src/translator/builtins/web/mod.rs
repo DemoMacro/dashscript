@@ -39,17 +39,19 @@ pub(in crate::translator) use encoding::{
     encoding_ctor_type, text_decoder_method, text_encoder_method,
 };
 pub(in crate::translator) use eventtarget::{
-    abort_method, custom_event_init, event_init, event_target_ctor_type, event_target_method,
+    abort_method, abort_static, custom_event_init, event_init, event_target_ctor_type,
+    event_target_method,
 };
 pub(in crate::translator) use file::{file_ctor, file_ctor_type};
 pub(in crate::translator) use form_data::{form_data_ctor, form_data_ctor_type, form_data_method};
 pub(in crate::translator) use headers::{headers_ctor, headers_ctor_type, headers_method};
-pub(in crate::translator) use hr_time::perf_method;
+pub(in crate::translator) use hr_time::{perf_member, perf_method};
 pub(in crate::translator) use request::{request_ctor, request_ctor_type};
 pub(in crate::translator) use response::{response_ctor, response_ctor_type};
 pub(in crate::translator) use streams::{readable_stream_ctor, streams_ctor_type, streams_method};
 pub(in crate::translator) use timers::timer_function;
 pub(in crate::translator) use url::{
-    url_ctor_type, url_search_params_method, url_search_params_on_url_method, url_static_method,
+    url_ctor_type, url_method, url_search_params_method, url_search_params_on_url_method,
+    url_static_method,
 };
 pub(in crate::translator) use urlpattern::urlpattern_ctor_type;

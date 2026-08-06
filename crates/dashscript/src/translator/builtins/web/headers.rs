@@ -111,6 +111,7 @@ pub(in crate::translator) fn headers_method(
         "keys" if args.is_empty() => parse_quote!(#obj.keys_vec()),
         "values" if args.is_empty() => parse_quote!(#obj.values_vec()),
         "entries" if args.is_empty() => parse_quote!(#obj.entries_vec()),
+        "getSetCookie" if args.is_empty() => parse_quote!(#obj.get_set_cookie()),
         _ => return None,
     })
 }

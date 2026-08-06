@@ -557,3 +557,22 @@ fn wpt_async_test_in_fn_body_degrades_not_rejects() {
         "async_test should degrade not reject: {diags:?}"
     );
 }
+
+#[test]
+fn wpt_promise_rejects_js_degrades_not_rejects() {
+    // `promise_rejects_js`/`promise_rejects_exactly` are in
+    // TESTHARNESS_REJECTED_GLOBALS — the static path's panic-on-reject model
+    // (`DsPromiseFuture::poll` panics on Rejected) cannot catch a Promise
+    // rejection inside an `assert_throws_js`-style guard, so they have no
+    // static lowering. classify returns DegradeEngine; `check_reject_only`
+    // (include_degrades=false) must report NO diagnostics so the fixture
+    // proceeds through the compile path, where `register_wpt_assert` supplies
+    // the JS shim (the native Promise catches the rejection) — rather than
+    // short-circuiting to `unsupported`.
+    let src = "function main(): void {\n  function inner() {\n    promise_rejects_js();\n  }\n  inner();\n}\nmain();\n";
+    let diags = Translator::new().check_reject_only(src, FileRole::BinEntry);
+    assert!(
+        diags.is_empty(),
+        "promise_rejects_js should degrade not reject: {diags:?}"
+    );
+}
