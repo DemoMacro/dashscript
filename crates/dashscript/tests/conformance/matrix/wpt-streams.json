@@ -412,7 +412,7 @@
     "layer": "wpt",
     "category": "streams",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:78:48: error[E0425]: cannot find value `promise` in this scope\nsrc\\main.rs:86:78: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:87:78: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:97:80: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:101:25: error[E0425]: cannot find value `promise` in this scope\nsrc\\main.rs:63:69: warning: unnecessary parentheses around function argument",
+    "detail": "cargo build failed: src\\main.rs:78:48: error[E0425]: cannot find value `promise` in this scope\nsrc\\main.rs:100:43: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:106:25: error[E0425]: cannot find value `promise` in this scope\nsrc\\main.rs:63:69: warning: unnecessary parentheses around function argument\nsrc\\main.rs:58:38: error[E0609]: no field `input` on type `&HashMap<String, Vec<String>>`: unknown field\nsrc\\main.rs:59:39: error[E0609]: no field `output` on type `&HashMap<String, Vec<String>>`: unknown field",
     "note": ""
   },
   {
