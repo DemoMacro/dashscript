@@ -118,6 +118,31 @@ pub(in crate::translator) fn global_function(
             let s = es_to_string_arg(args.first()?, ctx);
             parse_quote!(crate::__ds::b64_encode(#s))
         }
+        // `encodeURI(s)` / `encodeURIComponent(s)` — the ES legacy URI
+        // percent-escape functions (ECMA-262 §B.2.1). Each ToString-coerces its
+        // arg; `encodeURI` leaves the unreserved set + RFC 3986 reserved + `#`
+        // as-is and percent-encodes the rest, `encodeURIComponent` leaves only
+        // the unreserved set. See `URI_HELPER`.
+        "encodeURI" => {
+            let s = es_to_string_arg(args.first()?, ctx);
+            parse_quote!(crate::__ds::uri_encode(#s))
+        }
+        "encodeURIComponent" => {
+            let s = es_to_string_arg(args.first()?, ctx);
+            parse_quote!(crate::__ds::uri_encode_component(#s))
+        }
+        // `decodeURI(s)` / `decodeURIComponent(s)` — percent-decode to bytes
+        // then UTF-8 decode. `decodeURI` leaves `%HH` escapes of reserved-set
+        // bytes (`;/?:@&=+$,#`) intact; both throw a `URIError`-equivalent on a
+        // malformed escape or invalid UTF-8 (panicked, lowered to a throw).
+        "decodeURI" => {
+            let s = es_to_string_arg(args.first()?, ctx);
+            parse_quote!(crate::__ds::uri_decode(#s))
+        }
+        "decodeURIComponent" => {
+            let s = es_to_string_arg(args.first()?, ctx);
+            parse_quote!(crate::__ds::uri_decode_component(#s))
+        }
         // `structuredClone(v)` — WinterTC deep clone. DashScript's subset
         // (primitives, plain records, arrays — all `Clone`) lowers to
         // `v.clone()`; a non-`Clone` value surfaces honestly at `cargo check`.

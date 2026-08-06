@@ -319,12 +319,19 @@ pub enum RuntimeDep {
     /// dep of its own; the marker is `__ds::DsFormData`, and the dep resolution
     /// pulls `File` alongside (the value enum carries a `DsFile`).
     FormData,
+    /// ES legacy URI globals (ECMA-262 §B.2.1) — `encodeURI`/`decodeURI`/
+    /// `encodeURIComponent`/`decodeURIComponent`, the percent-escape/unescape
+    /// functions every JS host ships. Pure `std` (UTF-8 byte percent-encode/
+    /// decode); the marker is `__ds::uri_` (common prefix of `uri_encode`/
+    /// `uri_decode`/`uri_encode_component`/`uri_decode_component`), so a
+    /// fixture using any one pulls URI_HELPER (sibling free fns in the slice).
+    Uri,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 36] = [
+    const ALL: [RuntimeDep; 37] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -361,6 +368,7 @@ impl RuntimeDep {
         RuntimeDep::Blob,
         RuntimeDep::File,
         RuntimeDep::FormData,
+        RuntimeDep::Uri,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -461,6 +469,10 @@ impl RuntimeDep {
             // is defined.
             RuntimeDep::File => Some("__ds::DsFile"),
             RuntimeDep::FormData => Some("__ds::DsFormData"),
+            // Common prefix of `uri_encode`/`uri_decode`/`uri_encode_component`/
+            // `uri_decode_component`, so any of the four ES URI globals pulls
+            // URI_HELPER (sibling free fns in the slice).
+            RuntimeDep::Uri => Some("__ds::uri_"),
             RuntimeDep::Engine => None,
             // `$262.agent` is engine-only — the body degrades to `__ds_engine`
             // (like `Engine`), so no static text marker.
@@ -650,6 +662,9 @@ impl RuntimeDep {
             // The `DsFile` its value enum carries comes from FILE_HELPER, pulled
             // by derivation.
             RuntimeDep::FormData => None,
+            // ES URI globals are pure `std` (UTF-8 byte percent-encode/decode);
+            // no cargo dep.
+            RuntimeDep::Uri => None,
         }
     }
 
@@ -697,6 +712,7 @@ impl RuntimeDep {
             RuntimeDep::Blob => Some(BLOB_HELPER),
             RuntimeDep::File => Some(FILE_HELPER),
             RuntimeDep::FormData => Some(FORM_DATA_HELPER),
+            RuntimeDep::Uri => Some(URI_HELPER),
         }
     }
 

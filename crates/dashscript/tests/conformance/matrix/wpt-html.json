@@ -28,7 +28,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: Origin is not defined\n\nthread 'main' (16688) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: Origin is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to disp",
+    "detail": "engine lacks built-in: ReferenceError: Origin is not defined\n\nthread 'main' (33652) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: Origin is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to disp",
     "note": ""
   },
   {
@@ -148,7 +148,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "partial",
-    "detail": "AssertionError: expected undefined but got function SharedArrayBuffer() {\n    [native code]\n}\n\nthread 'main' (31524) panicked at src\\__ds_engine.rs:541:17:\nAssertionError: expected undefined but got f",
+    "detail": "AssertionError: expected undefined but got function SharedArrayBuffer() {\n    [native code]\n}\n\nthread 'main' (48372) panicked at src\\__ds_engine.rs:541:17:\nAssertionError: expected undefined but got f",
     "note": ""
   },
   {
@@ -212,7 +212,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (24692) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (50744) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -220,7 +220,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (39992) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (33048) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -228,7 +228,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (31328) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (42972) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -308,7 +308,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:70:44: error[E0425]: cannot find function `encode_uri_component` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
+    "detail": "cargo build failed: src\\main.rs:73:39: error[E0277]: `()` is not a future: `()` is not a future\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -348,7 +348,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (23212) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (40028) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -364,7 +364,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (47632) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (22120) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -372,7 +372,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (48960) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (27852) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -396,7 +396,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: navigator is not defined\n\nthread 'main' (31048) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: navigator is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable t",
+    "detail": "engine lacks built-in: ReferenceError: navigator is not defined\n\nthread 'main' (20804) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: navigator is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable t",
     "note": ""
   },
   {
@@ -404,7 +404,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: setInterval is not defined\n\nthread 'main' (12384) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: setInterval is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: setInterval is not defined\n\nthread 'main' (6668) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: setInterval is not defined\nnote: run with `RUST_BACKTRACE=1` environment variabl",
     "note": ""
   },
   {
@@ -412,7 +412,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: setTimeout is not defined\n\nthread 'main' (14756) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: setTimeout is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable",
+    "detail": "engine lacks built-in: ReferenceError: setTimeout is not defined\n\nthread 'main' (33888) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: setTimeout is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable",
     "note": ""
   },
   {
@@ -420,7 +420,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (12104) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (41464) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -428,7 +428,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: setInterval is not defined\n\nthread 'main' (42632) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: setInterval is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: setInterval is not defined\n\nthread 'main' (23240) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: setInterval is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "wpt",
     "category": "html",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: setInterval is not defined\n\nthread 'main' (21156) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: setInterval is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: setInterval is not defined\n\nthread 'main' (22108) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: setInterval is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {

@@ -311,6 +311,103 @@ pub fn b64_decode<S: AsRef<str>>(s: S) -> String {
 }
 "#;
 
+/// ES legacy URI globals — `__ds::uri_encode`/`uri_decode`/
+/// `uri_encode_component`/`uri_decode_component` for `encodeURI`/`decodeURI`/
+/// `encodeURIComponent`/`decodeURIComponent` (ECMA-262 §B.2.1). The encoders
+/// UTF-8 byte-encode, leaving the `encodeURI` unreserved set + the RFC 3986
+/// reserved + `#` (or just the `encodeURIComponent` unreserved set) as-is; the
+/// rest become `%HH` (uppercase hex). The decoders percent-decode to bytes then
+/// UTF-8 decode; `decodeURI` leaves `%HH` escapes of reserved-set bytes
+/// (`;/?:@&=+$,#`) intact, `decodeURIComponent` decodes all. A `%` not followed
+/// by two hex digits or invalid UTF-8 panics, lowered to a thrown
+/// `URIError`-equivalent. Pure `std` — no cargo dep.
+pub(super) const URI_HELPER: &str = r#"
+const URI_HEX_DIGITS: &[u8; 16] = b"0123456789ABCDEF";
+
+fn uri_encode_bytes(s: &str, extra_keep: &[u8]) -> String {
+    let mut out = String::with_capacity(s.len());
+    for &b in s.as_bytes() {
+        let keep = b.is_ascii_alphanumeric()
+            || matches!(b, b'-' | b'_' | b'.' | b'!' | b'~' | b'*' | b'\'' | b'(' | b')')
+            || extra_keep.contains(&b);
+        if keep {
+            out.push(b as char);
+        } else {
+            out.push('%');
+            out.push(URI_HEX_DIGITS[(b >> 4) as usize] as char);
+            out.push(URI_HEX_DIGITS[(b & 0x0F) as usize] as char);
+        }
+    }
+    out
+}
+
+pub fn uri_encode<S: AsRef<str>>(s: S) -> String {
+    uri_encode_bytes(s.as_ref(), b";,/?:@&=+$#")
+}
+
+pub fn uri_encode_component<S: AsRef<str>>(s: S) -> String {
+    uri_encode_bytes(s.as_ref(), b"")
+}
+
+fn uri_hex_digit(b: u8) -> Option<u8> {
+    match b {
+        b'0'..=b'9' => Some(b - b'0'),
+        b'A'..=b'F' => Some(b - b'A' + 10),
+        b'a'..=b'f' => Some(b - b'a' + 10),
+        _ => None,
+    }
+}
+
+fn is_uri_reserved(b: u8) -> bool {
+    matches!(b, b';' | b',' | b'/' | b'?' | b':' | b'@' | b'&' | b'=' | b'+' | b'$' | b'#')
+}
+
+fn uri_decode_bytes(s: &str, keep_reserved: bool) -> Result<String, ()> {
+    let bytes = s.as_bytes();
+    let mut out: Vec<u8> = Vec::with_capacity(bytes.len());
+    let mut i = 0;
+    while i < bytes.len() {
+        if bytes[i] == b'%' {
+            // ES: `%` must be followed by two hex digits, else URIError.
+            if i + 2 >= bytes.len() {
+                return Err(());
+            }
+            let (h, l) = match (uri_hex_digit(bytes[i + 1]), uri_hex_digit(bytes[i + 2])) {
+                (Some(h), Some(l)) => (h, l),
+                _ => return Err(()),
+            };
+            let decoded = h * 16 + l;
+            if keep_reserved && is_uri_reserved(decoded) {
+                out.push(b'%');
+                out.push(bytes[i + 1]);
+                out.push(bytes[i + 2]);
+            } else {
+                out.push(decoded);
+            }
+            i += 3;
+        } else {
+            out.push(bytes[i]);
+            i += 1;
+        }
+    }
+    String::from_utf8(out).map_err(|_| ())
+}
+
+pub fn uri_decode<S: AsRef<str>>(s: S) -> String {
+    match uri_decode_bytes(s.as_ref(), true) {
+        Ok(s) => s,
+        Err(()) => panic!("decodeURI: invalid URI sequence"),
+    }
+}
+
+pub fn uri_decode_component<S: AsRef<str>>(s: S) -> String {
+    match uri_decode_bytes(s.as_ref(), false) {
+        Ok(s) => s,
+        Err(()) => panic!("decodeURIComponent: invalid URI sequence"),
+    }
+}
+"#;
+
 /// High Resolution Time helper — `__ds::perf_now`. The WinterTC (W3C hr-time)
 /// `performance.now()` returns a monotonic DOMHighResTimeStamp (milliseconds
 /// since the process timeOrigin). The hr-time spec constrains monotonicity and

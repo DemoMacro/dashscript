@@ -370,6 +370,47 @@ fn atob_btoa_flag_base64_dep_and_ships_helpers() {
 }
 
 #[test]
+fn encode_decode_uri_flag_uri_dep_and_ships_helpers() {
+    // `encodeURI`/`decodeURI`/`encodeURIComponent`/`decodeURIComponent` (ES
+    // legacy URI globals, ECMA-262 §B.2.1) map to `__ds::uri_encode`/
+    // `uri_decode`/`uri_encode_component`/`uri_decode_component`; the
+    // `__ds::uri_` marker flags the `Uri` dep, which ships all four fns in
+    // `__ds`. Pure `std` — no cargo dep.
+    let src = "function f(s: string): string {\n  return decodeURI(decodeURIComponent(encodeURI(encodeURIComponent(s))));\n}";
+    let (rust, deps) = Translator::new()
+        .translate_with_deps(src)
+        .expect("translate_with_deps");
+    assert!(
+        rust.contains("crate::__ds::uri_encode")
+            && rust.contains("crate::__ds::uri_decode")
+            && rust.contains("crate::__ds::uri_encode_component")
+            && rust.contains("crate::__ds::uri_decode_component"),
+        "URI globals → __ds::uri_* helpers, got:\n{rust}"
+    );
+    assert!(
+        deps.has(RuntimeDep::Uri),
+        "Uri dep must flag, got deps: {deps:?}"
+    );
+    assert!(
+        deps.helper_module().is_some_and(|s| {
+            s.contains("pub fn uri_encode")
+                && s.contains("pub fn uri_decode")
+                && s.contains("pub fn uri_encode_component")
+                && s.contains("pub fn uri_decode_component")
+        }),
+        "Uri dep ships all four fns, got helper: {:?}",
+        deps.helper_module()
+    );
+    // Pure `std` — no cargo dep appended.
+    let mut toml = String::from("[dependencies]\n");
+    deps.apply_to_cargo_toml(&mut toml);
+    assert!(
+        !toml.contains("percent"),
+        "Uri is pure std (no percent-encoding crate), got Cargo.toml:\n{toml}"
+    );
+}
+
+#[test]
 fn fetch_lowers_to_ds_fetch_flags_reqwest() {
     // `fetch(url)` (WinterTC Web API) maps to `__ds::ds_fetch(url)`; the
     // `__ds::ds_fetch` marker flags the `Fetch` dep, which pulls `reqwest` and
