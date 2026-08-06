@@ -30,7 +30,42 @@ pub(super) fn destructure_object(
     let ctx = Ctx::new(&*locals, registry, narrow, names);
     let value = expressions::translate_expr(init_expr, &ctx);
     let Some(path) = expr_type_path(init_expr, locals) else {
-        return vec![parse_quote!(let _ = #value;)];
+        // Fallback: init is a compound expression whose type can't be statically
+        // resolved (`await reader.read()`, a member/chain expression, …) —
+        // `expr_type_path` only recognizes a plain identifier, so there's no
+        // struct name to emit a struct pattern. The old `let _ = #value;`
+        // dropped every field binding, so `done`/`value`/… were never in scope
+        // (E0425). Bind a temp first (init evaluates once), then emit one field
+        // access per binding so the names enter scope; Rust infers field types.
+        let tmp: Ident = parse_quote!(__ds_tmp);
+        let mut out: Vec<Stmt> = vec![parse_quote!(let #tmp = #value;)];
+        for p in &obj.properties {
+            let Some(key_name) = bindings::property_key_name(&p.key) else {
+                continue;
+            };
+            let binding_name = match &p.value {
+                BindingPattern::BindingIdentifier(id) => {
+                    let var = names.of_binding(id);
+                    if var != key_name {
+                        var
+                    } else {
+                        key_name.clone()
+                    }
+                }
+                _ => key_name.clone(),
+            };
+            let binding = if mutable {
+                quote!(mut #binding_name)
+            } else {
+                quote!(#binding_name)
+            };
+            out.push(parse_quote!(let #binding = #tmp.#key_name;));
+            if let BindingPattern::AssignmentPattern(ap) = &p.value {
+                let default = expressions::translate_expr(&ap.right, &ctx);
+                out.push(parse_quote!(let #binding_name = #binding_name.unwrap_or(#default);));
+            }
+        }
+        return out;
     };
     let mut fields: Vec<TokenStream> = Vec::new();
     // `{ x = d }`: a default on a (typically optional) field — after the struct

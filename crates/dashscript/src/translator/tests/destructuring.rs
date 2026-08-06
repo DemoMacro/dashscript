@@ -76,3 +76,36 @@ fn translates_object_destructure_rename() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("x: renamed"), "got:\n{rust}");
 }
+
+#[test]
+fn translates_object_destructure_compound_init_to_field_access() {
+    // init is a CallExpression (not a plain identifier), so `expr_type_path`
+    // can't resolve a struct name → the field-access fallback must bind each
+    // field via a temp so `done`/`value` enter scope (regression: E0425, the
+    // old `let _ = makeResult();` dropped every binding).
+    let src = "interface ReadResult { done: boolean; value: number; } function makeResult(): ReadResult { return { done: false, value: 42 }; } function f(): number { const { done, value } = makeResult(); return done ? 0 : value; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("let __ds_tmp = make_result();"),
+        "temp binding keeps init single-eval, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("let done = __ds_tmp.done;"),
+        "field-access binding enters scope, got:\n{rust}"
+    );
+    assert!(
+        rust.contains("let value = __ds_tmp.value;"),
+        "field-access binding enters scope, got:\n{rust}"
+    );
+}
+
+#[test]
+fn translates_object_destructure_compound_init_mutable() {
+    // `let` destructure on a compound init → `mut` field-access binding.
+    let src = "interface Cell { v: number; } function makeCell(): Cell { return { v: 1 }; } function f(): void { let { v } = makeCell(); v = v + 1; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("let mut v = __ds_tmp.v;"),
+        "mutable field-access binding, got:\n{rust}"
+    );
+}
