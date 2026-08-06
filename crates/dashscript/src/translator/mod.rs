@@ -326,12 +326,18 @@ pub enum RuntimeDep {
     /// `uri_decode`/`uri_encode_component`/`uri_decode_component`), so a
     /// fixture using any one pulls URI_HELPER (sibling free fns in the slice).
     Uri,
+    /// ES2025 `Math.sumPrecise` — exact summation of a `number` array/iterable,
+    /// rounded to nearest-even. The finite path delegates to the `xsum` crate
+    /// (`__ds::sum_precise_exact` wraps `XsumAuto`); the NaN/±∞/−0 state
+    /// machine stays inline at the call site. Cargo dep `xsum`; marker
+    /// `__ds::sum_precise`.
+    SumPrecise,
 }
 
 impl RuntimeDep {
     /// All variants in declaration order — the order helper slices and cargo
     /// deps are emitted, so output stays deterministic.
-    const ALL: [RuntimeDep; 37] = [
+    const ALL: [RuntimeDep; 38] = [
         RuntimeDep::RyuJs,
         RuntimeDep::SerdeJson,
         RuntimeDep::Engine,
@@ -369,6 +375,7 @@ impl RuntimeDep {
         RuntimeDep::File,
         RuntimeDep::FormData,
         RuntimeDep::Uri,
+        RuntimeDep::SumPrecise,
     ];
 
     /// The emitted-text marker that signals this dep was pulled in. `None` for
@@ -473,6 +480,8 @@ impl RuntimeDep {
             // `uri_decode_component`, so any of the four ES URI globals pulls
             // URI_HELPER (sibling free fns in the slice).
             RuntimeDep::Uri => Some("__ds::uri_"),
+            // `__ds::sum_precise_exact` — the Math.sumPrecise finite path.
+            RuntimeDep::SumPrecise => Some("__ds::sum_precise"),
             RuntimeDep::Engine => None,
             // `$262.agent` is engine-only — the body degrades to `__ds_engine`
             // (like `Engine`), so no static text marker.
@@ -665,6 +674,10 @@ impl RuntimeDep {
             // ES URI globals are pure `std` (UTF-8 byte percent-encode/decode);
             // no cargo dep.
             RuntimeDep::Uri => None,
+            // Math.sumPrecise's exact summation delegates to the `xsum` crate
+            // (Radford Neal's superaccumulator); the NaN/±∞/−0 state machine
+            // stays inline at the call site.
+            RuntimeDep::SumPrecise => Some(&[("xsum", "\"0.1\"")]),
         }
     }
 
@@ -713,6 +726,7 @@ impl RuntimeDep {
             RuntimeDep::File => Some(FILE_HELPER),
             RuntimeDep::FormData => Some(FORM_DATA_HELPER),
             RuntimeDep::Uri => Some(URI_HELPER),
+            RuntimeDep::SumPrecise => Some(SUM_PRECISE_HELPER),
         }
     }
 

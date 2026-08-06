@@ -408,6 +408,27 @@ pub fn uri_decode_component<S: AsRef<str>>(s: S) -> String {
 }
 "#;
 
+/// ES2025 `Math.sumPrecise` finite-path: exact sum of the finite, non-(-0)
+/// elements, rounded once to nearest-even. Delegates to the `xsum` crate
+/// (Radford Neal's superaccumulator) so the round-to-nearest-even edge cases —
+/// the spec "exercised real-implementation bugs" fixtures where huge
+/// magnitudes cancel to a tiny residue — land on a vetted implementation
+/// rather than a hand roll. The NaN/±∞/−0 state machine stays inline at the
+/// call site (`builtins::math`); this only sums the finite part the state
+/// machine collected. Cargo dep `xsum`; marker `__ds::sum_precise`.
+pub(super) const SUM_PRECISE_HELPER: &str = r#"
+/// Exact sum of `finites` rounded to nearest-even (ES2025 `Math.sumPrecise`'s
+/// finite path). The caller has already stripped NaN/±∞/−0 via the spec state
+/// machine, so every input here is a finite f64. `XsumAuto` selects the small
+/// or large superaccumulator by length, so any input size is exact.
+pub fn sum_precise_exact(finites: &[f64]) -> f64 {
+    use xsum::Xsum;
+    let mut acc = xsum::XsumAuto::new();
+    acc.add_list(finites);
+    acc.sum()
+}
+"#;
+
 /// High Resolution Time helper — `__ds::perf_now`. The WinterTC (W3C hr-time)
 /// `performance.now()` returns a monotonic DOMHighResTimeStamp (milliseconds
 /// since the process timeOrigin). The hr-time spec constrains monotonicity and

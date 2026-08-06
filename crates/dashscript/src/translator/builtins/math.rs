@@ -181,18 +181,17 @@ pub(in crate::translator) fn math_method(
         }
         // `Math.sumPrecise(iterable)` (ES2026) — the spec state machine: NaN
         // propagates; +∞/-∞ flip to ±infinity (mixed signs → NaN); an empty or
-        // all-`-0` input returns -0; otherwise the finite sum. The finite sum
-        // here is plain f64 accumulation, which matches the spec for inputs
-        // without catastrophic cancellation. The extreme "exercised real-
-        // implementation bugs" fixtures (huge magnitudes that cancel to a tiny
-        // residue) need a true exact-summation algorithm (Shewchuk /
-        // superaccumulator) and stay partial until that lands.
+        // all-`-0` input returns -0; otherwise the finite values are summed
+        // exactly and rounded once to nearest-even. The exact sum runs in
+        // `__ds::sum_precise_exact` (the `xsum` crate's superaccumulator), so
+        // even the "exercised real-implementation bugs" fixtures — huge
+        // magnitudes that cancel to a tiny residue — match the spec.
         "sumPrecise" => {
             let arr = translate_argument(args.first()?, ctx);
             Some(parse_quote!({
                 let __arr: ::std::vec::Vec<f64> = #arr;
                 let mut __state: i8 = 0;
-                let mut __sum = 0_f64;
+                let mut __finites: ::std::vec::Vec<f64> = ::std::vec::Vec::new();
                 for &__n in &__arr {
                     if __state != 4 {
                         if __n.is_nan() {
@@ -205,7 +204,7 @@ pub(in crate::translator) fn math_method(
                             let __neg0 = __n == 0_f64 && __n.is_sign_negative();
                             if !__neg0 && (__state == 0 || __state == 1) {
                                 __state = 1;
-                                __sum += __n;
+                                __finites.push(__n);
                             }
                         }
                     }
@@ -215,7 +214,7 @@ pub(in crate::translator) fn math_method(
                     2 => ::core::f64::INFINITY,
                     3 => ::core::f64::NEG_INFINITY,
                     0 => -0.0f64,
-                    _ => __sum,
+                    _ => crate::__ds::sum_precise_exact(&__finites),
                 }
             }))
         }
