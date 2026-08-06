@@ -56,9 +56,11 @@ pub fn snake(name: &str) -> Ident {
     if out.is_empty() {
         out.push('_');
     }
-    // A `.ts` name that lands on a Rust keyword (`dyn`, `match`, `type`, …) is
-    // emitted as a valid identifier so the generated code still parses.
-    if is_rust_keyword(&out) {
+    // A `.ts` name that lands on a Rust keyword (`dyn`, `match`, `type`, …) or
+    // a prelude macro name (`format`, `vec`, `panic`, …) is emitted as a valid
+    // identifier so the generated code still parses — a bare `format` in value
+    // position is otherwise parsed as the `format!` macro.
+    if is_rust_keyword(&out) || is_rust_prelude_macro(&out) {
         keyword_ident(&out)
     } else {
         format_ident!("{}", out)
@@ -129,6 +131,45 @@ fn is_rust_keyword(s: &str) -> bool {
             | "typeof"
             | "unsized"
             | "virtual"
+    )
+}
+
+/// Whether `s` is a Rust *prelude macro* name that collides with a value
+/// binding in generated code. A bare `format` / `vec` / `panic` / … in value
+/// position parses as the macro invocation `format!` / `vec!` / …
+/// (`expected value, found macro `format``), so a `.ts` binding named `format`
+/// (e.g. `for (const format of formats)` in the WPT compression fixtures) is
+/// emitted as `r#format`. Macro *calls* (`format!(…)`) are unaffected — only a
+/// same-named binding collides. The set is the standard-prelude macros that are
+/// also common English-word identifiers; rare ones (`module_path`, `option_env`)
+/// are omitted until a fixture hits them.
+fn is_rust_prelude_macro(s: &str) -> bool {
+    matches!(
+        s,
+        "assert"
+            | "cfg"
+            | "concat"
+            | "dbg"
+            | "env"
+            | "eprint"
+            | "eprintln"
+            | "file"
+            | "format"
+            | "include"
+            | "include_bytes"
+            | "include_str"
+            | "line"
+            | "matches"
+            | "panic"
+            | "print"
+            | "println"
+            | "stringify"
+            | "todo"
+            | "unimplemented"
+            | "unreachable"
+            | "vec"
+            | "write"
+            | "writeln"
     )
 }
 
@@ -220,7 +261,7 @@ pub fn property_key_name(key: &PropertyKey) -> Option<Ident> {
 
 #[cfg(test)]
 mod tests {
-    use super::pascal;
+    use super::{pascal, snake};
 
     #[test]
     fn pascal_digit_prefix_gets_underscore() {
@@ -245,5 +286,22 @@ mod tests {
     fn pascal_normal_still_pascalcase() {
         assert_eq!(pascal("in_progress").to_string(), "InProgress");
         assert_eq!(pascal("red").to_string(), "Red");
+    }
+
+    #[test]
+    fn snake_prelude_macro_name_is_raw_ident() {
+        // `format` is a Rust prelude macro; a binding named `format` (WPT
+        // compression fixtures: `for (const format of formats)`) emits `r#format`
+        // so it isn't parsed as the `format!` macro in value position.
+        assert_eq!(snake("format").to_string(), "r#format");
+        assert_eq!(snake("vec").to_string(), "r#vec");
+        assert_eq!(snake("Format").to_string(), "r#format");
+    }
+
+    #[test]
+    fn snake_non_macro_name_unchanged() {
+        // A name that merely *contains* the macro substring is unaffected.
+        assert_eq!(snake("formatter").to_string(), "formatter");
+        assert_eq!(snake("vector").to_string(), "vector");
     }
 }
