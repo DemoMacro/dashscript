@@ -3,56 +3,56 @@
     "id": "wpt.streams.idlharness",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "wpt.streams.piping.abort",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.piping.close-propagation-backward",
     "layer": "wpt",
     "category": "streams",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:3:5: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:17:5: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:34:25: error[E0425]: cannot find value `stream` in this scope: not found in this scope\nsrc\\main.rs:44:25: error[E0425]: cannot find value `stream` in this scope: not found in this scope\nsrc\\main.rs:54:25: error[E0425]: cannot find value `stream` in this scope: not found in this scope\nsrc\\main.rs:68:5: error[E0425]: cannot find value `self_` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.piping.close-propagation-forward",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.piping.error-propagation-backward",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.piping.error-propagation-forward",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.piping.flow-control",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -60,7 +60,7 @@
     "layer": "wpt",
     "category": "streams",
     "status": "out-of-scope",
-    "detail": "`Object.create` reflection is unsupported | `Object.create` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -75,8 +75,8 @@
     "id": "wpt.streams.piping.multiple-propagation",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -84,23 +84,23 @@
     "layer": "wpt",
     "category": "streams",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | object accessor properties (get/set) are unsupported | `Object.create` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `Object.create` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.streams.piping.then-interception",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "wpt.streams.piping.throwing-options",
     "layer": "wpt",
     "category": "streams",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:34:37: error[E0425]: cannot find value `error` in this scope: not found in this scope\nsrc\\main.rs:31:43: error[E0433]: cannot find type `ThrowingOptions` in this scope: use of undeclared type `ThrowingOptions`\nsrc\\main.rs:36:42: error[E0599]: no method named `pipe_to` found for struct `DsReadableStream<T>` in the current scope: method not found in `DsReadableStream<()>`\nsrc\\main.rs:36:50: error[E0433]: cannot find type `WritableStream` in this scope: use of undeclared type `WritableStream`\nsrc\\main.rs:32:29: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:30:25: error[E0057]: this function takes 1 argument but 0 arguments were supplied",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -131,8 +131,8 @@
     "id": "wpt.streams.readable-byte-streams.construct-byob-request",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`Object.create` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -147,16 +147,16 @@
     "id": "wpt.streams.readable-byte-streams.enqueue-with-detached-buffer",
     "layer": "wpt",
     "category": "streams",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:18:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:12:22: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:20:28: error[E0061]: this method takes 0 arguments but 1 argument was supplied\nsrc\\main.rs:17:18: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-byte-streams.general",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -171,16 +171,16 @@
     "id": "wpt.streams.readable-byte-streams.patched-global",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `delete` has no DashScript mapping | `.constructor` reflection is unsupported | `BigInt` literals are unsupported",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-byte-streams.read-min",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -188,31 +188,31 @@
     "layer": "wpt",
     "category": "streams",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:9:50: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:11:23: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:23:50: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:25:23: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:46:21: error[E0308]: mismatched types: expected `&[_]`, found `&Option<()>`\nsrc\\main.rs:51:21: error[E0308]: mismatched types: expected `&[_]`, found `&Option<()>`",
+    "detail": "cargo build failed: src\\main.rs:13:21: error[E0308]: mismatched types: expected `&[_]`, found `&Option<()>`\nsrc\\main.rs:29:21: error[E0308]: mismatched types: expected `&[_]`, found `&Option<()>`\nsrc\\main.rs:50:21: error[E0308]: mismatched types: expected `&[_]`, found `&Option<()>`\nsrc\\main.rs:55:21: error[E0308]: mismatched types: expected `&[_]`, found `&Option<()>`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-byte-streams.tee",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-byte-streams.templated",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-streams.async-iterator",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -235,8 +235,8 @@
     "id": "wpt.streams.readable-streams.cancel",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -276,23 +276,23 @@
     "layer": "wpt",
     "category": "streams",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:8:21: error[E0425]: cannot find value `controller` in this scope: not found in this scope\nsrc\\main.rs:10:27: error[E0425]: cannot find value `controller` in this scope: not found in this scope\nsrc\\main.rs:13:21: error[E0425]: cannot find value `controller` in this scope: not found in this scope\nsrc\\main.rs:15:27: error[E0425]: cannot find value `controller` in this scope: not found in this scope\nsrc\\main.rs:18:21: error[E0425]: cannot find value `reader` in this scope: not found in this scope\nsrc\\main.rs:22:35: error[E0425]: cannot find value `controller` in this scope: not found in this scope",
+    "detail": "cargo build failed: src\\main.rs:8:43: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:9:47: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:45:43: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:46:47: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:83:43: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:84:47: error[E0610]: `f64` is a primitive type and therefore doesn't have fields",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-streams.from",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.create` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-streams.garbage-collection",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
@@ -300,23 +300,23 @@
     "layer": "wpt",
     "category": "streams",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-streams.owning-type-message-port.tentative",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-streams.owning-type-video-frame.tentative",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -324,39 +324,39 @@
     "layer": "wpt",
     "category": "streams",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-streams.patched-global",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `delete` has no DashScript mapping | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-streams.reentrant-strategies",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-streams.tee",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.readable-streams.templated",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -371,40 +371,40 @@
     "id": "wpt.streams.transform-streams.backpressure",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.transform-streams.cancel",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.transform-streams.errors",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.transform-streams.flush",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.transform-streams.general",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -419,8 +419,8 @@
     "id": "wpt.streams.transform-streams.patched-global",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -428,39 +428,39 @@
     "layer": "wpt",
     "category": "streams",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:8:44: error[E0425]: cannot find value `promise` in this scope: not found in this scope\nsrc\\main.rs:41:54: error[E0425]: cannot find value `args` in this scope: not found in this scope\nsrc\\main.rs:53:80: error[E0425]: cannot find value `length` in this scope: not found in this scope\nsrc\\main.rs:41:53: warning: unnecessary parentheses around assigned value\nsrc\\main.rs:27:37: error[E0308]: mismatched types: expected `&_`, found `usize`\nsrc\\main.rs:36:34: error[E0433]: cannot find type `TransformStream` in this scope: use of undeclared type `TransformStream`",
+    "detail": "cargo build failed: src\\main.rs:8:44: error[E0425]: cannot find value `promise` in this scope: not found in this scope\nsrc\\main.rs:43:54: error[E0425]: cannot find value `args` in this scope: not found in this scope\nsrc\\main.rs:43:53: warning: unnecessary parentheses around assigned value\nsrc\\main.rs:27:44: error[E0308]: mismatched types: expected `&_`, found `usize`\nsrc\\main.rs:28:31: error[E0609]: no field `length` on type `HashMap<String, f64>`: unknown field\nsrc\\main.rs:29:32: error[E0609]: no field `trigger` on type `HashMap<String, f64>`: unknown field",
     "note": ""
   },
   {
     "id": "wpt.streams.transform-streams.reentrant-strategies",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.transform-streams.strategies",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.transform-streams.terminate",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.writable-streams.aborting",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -476,7 +476,7 @@
     "layer": "wpt",
     "category": "streams",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -491,8 +491,8 @@
     "id": "wpt.streams.writable-streams.close",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -500,15 +500,15 @@
     "layer": "wpt",
     "category": "streams",
     "status": "out-of-scope",
-    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.streams.writable-streams.count-queuing-strategy",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`Object.create` reflection is unsupported | `Object.create` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -523,8 +523,8 @@
     "id": "wpt.streams.writable-streams.error",
     "layer": "wpt",
     "category": "streams",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:7:19: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:12:19: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:17:30: error[E0433]: cannot find type `WritableStream` in this scope: use of undeclared type `WritableStream`\nsrc\\main.rs:27:21: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope\nsrc\\main.rs:16:17: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:40:18: error[E0433]: cannot find type `WritableStream` in this scope: use of undeclared type `WritableStream`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -547,8 +547,8 @@
     "id": "wpt.streams.writable-streams.general",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -556,31 +556,31 @@
     "layer": "wpt",
     "category": "streams",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:8:44: error[E0425]: cannot find value `promise` in this scope: not found in this scope\nsrc\\main.rs:48:54: error[E0425]: cannot find value `args` in this scope: not found in this scope\nsrc\\main.rs:56:80: error[E0425]: cannot find value `length` in this scope: not found in this scope\nsrc\\main.rs:81:54: error[E0433]: cannot find type `Sink` in this scope: use of undeclared type `Sink`\nsrc\\main.rs:48:53: warning: unnecessary parentheses around assigned value\nsrc\\main.rs:34:30: error[E0308]: mismatched types: expected `&_`, found `usize`",
+    "detail": "cargo build failed: src\\main.rs:8:44: error[E0425]: cannot find value `promise` in this scope: not found in this scope\nsrc\\main.rs:50:54: error[E0425]: cannot find value `args` in this scope: not found in this scope\nsrc\\main.rs:83:54: error[E0433]: cannot find type `Sink` in this scope: use of undeclared type `Sink`\nsrc\\main.rs:50:53: warning: unnecessary parentheses around assigned value\nsrc\\main.rs:34:37: error[E0308]: mismatched types: expected `&_`, found `usize`\nsrc\\main.rs:35:31: error[E0609]: no field `length` on type `HashMap<String, f64>`: unknown field",
     "note": ""
   },
   {
     "id": "wpt.streams.writable-streams.reentrant-strategy",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.writable-streams.start",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.streams.writable-streams.write",
     "layer": "wpt",
     "category": "streams",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   }
 ]

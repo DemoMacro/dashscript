@@ -20,7 +20,7 @@
     "layer": "wpt",
     "category": "compression",
     "status": "unsupported",
-    "detail": "the `arguments` object is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | match-result property assignment is unsupported | `prototype` mutation is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
+    "detail": "the `arguments` object is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -28,7 +28,7 @@
     "layer": "wpt",
     "category": "compression",
     "status": "unsupported",
-    "detail": "the `arguments` object is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | match-result property assignment is unsupported | `prototype` mutation is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
+    "detail": "the `arguments` object is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -36,7 +36,7 @@
     "layer": "wpt",
     "category": "compression",
     "status": "unsupported",
-    "detail": "the `arguments` object is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | match-result property assignment is unsupported | `prototype` mutation is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
+    "detail": "the `arguments` object is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -44,7 +44,7 @@
     "layer": "wpt",
     "category": "compression",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:20:38: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:23:22: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:24:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:18:9: warning: denote infinite loops with `loop { ... }`: help: use `loop`\nsrc\\main.rs:53:48: warning: unnecessary parentheses around assigned value\nsrc\\main.rs:56:50: warning: unnecessary parentheses around assigned value",
+    "detail": "cargo build failed: src\\main.rs:18:9: warning: denote infinite loops with `loop { ... }`: help: use `loop`\nsrc\\main.rs:55:48: warning: unnecessary parentheses around assigned value\nsrc\\main.rs:58:50: warning: unnecessary parentheses around assigned value\nsrc\\main.rs:56:44: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:58:67: error[E0599]: no method named `len` found for type `f64` in the current scope\nsrc\\main.rs:59:21: error[E0425]: cannot find function `assert_less_than` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -52,15 +52,15 @@
     "layer": "wpt",
     "category": "compression",
     "status": "unsupported",
-    "detail": "the `arguments` object is unsupported | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Array` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | match-result property assignment is unsupported | `prototype` mutation is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
+    "detail": "the `arguments` object is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | match-result property assignment is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "wpt.compression.compression-with-detach",
     "layer": "wpt",
     "category": "compression",
-    "status": "out-of-scope",
-    "detail": "`Object.defineProperty` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -92,7 +92,7 @@
     "layer": "wpt",
     "category": "compression",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:47:22: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:50:55: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:53:54: error[E0425]: cannot find value `chunk` in this scope: not found in this scope\nsrc\\main.rs:56:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:36:37: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`\nsrc\\main.rs:37:9: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`",
+    "detail": "cargo build failed: src\\main.rs:47:22: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:50:55: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:53:54: error[E0425]: cannot find value `chunk` in this scope: not found in this scope\nsrc\\main.rs:36:37: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`\nsrc\\main.rs:37:9: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`\nsrc\\main.rs:37:60: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`",
     "note": ""
   },
   {
@@ -108,15 +108,15 @@
     "layer": "wpt",
     "category": "compression",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:18:22: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:21:55: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:24:54: error[E0425]: cannot find value `empty_value` in this scope\nsrc\\main.rs:27:54: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:29:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:4:34: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`",
+    "detail": "cargo build failed: src\\main.rs:18:22: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:21:55: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:24:54: error[E0425]: cannot find value `empty_value` in this scope\nsrc\\main.rs:4:34: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`\nsrc\\main.rs:7:51: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`\nsrc\\main.rs:9:71: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`",
     "note": ""
   },
   {
     "id": "wpt.compression.decompression-extra-input",
     "layer": "wpt",
     "category": "compression",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:46:17: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:46:27: error[E0425]: cannot find value `chunk` in this scope: not found in this scope\nsrc\\main.rs:54:46: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:57:55: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:60:34: error[E0425]: cannot find value `chunk` in this scope: not found in this scope\nsrc\\main.rs:63:27: error[E0425]: cannot find value `value` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -124,31 +124,31 @@
     "layer": "wpt",
     "category": "compression",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:76:38: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:79:22: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:80:27: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:103:48: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:107:33: error[E0425]: cannot find value `bytes` in this scope: not found in this scope\nsrc\\main.rs:108:33: error[E0423]: expected value, found macro `format`: not a value",
+    "detail": "cargo build failed: src\\main.rs:105:48: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:109:33: error[E0425]: cannot find value `bytes` in this scope: not found in this scope\nsrc\\main.rs:110:33: error[E0423]: expected value, found macro `format`: not a value\nsrc\\main.rs:74:9: warning: denote infinite loops with `loop { ... }`: help: use `loop`\nsrc\\main.rs:36:37: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`\nsrc\\main.rs:37:9: error[E0308]: mismatched types: expected `String`, found `Vec<u8>`",
     "note": ""
   },
   {
     "id": "wpt.compression.decompression-uint8array-output",
     "layer": "wpt",
     "category": "compression",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.compression.decompression-with-detach",
     "layer": "wpt",
     "category": "compression",
-    "status": "out-of-scope",
-    "detail": "`Object.defineProperty` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.compression.idlharness.https",
     "layer": "wpt",
     "category": "compression",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   }
 ]

@@ -28,23 +28,23 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: Conversion from string failed: invalid utf-8 sequence of 1 bytes from index 0\n\nthread 'main' (1980) panicked at src\\__ds_engine.rs:338:17:\nTypeError: Conversion from string failed: invalid ",
+    "detail": "runtime error: exit exit code: 101: TypeError: Conversion from string failed: invalid utf-8 sequence of 1 bytes from index 0\n\nthread 'main' (17444) panicked at src\\__ds_engine.rs:542:17:\nTypeError: Conversion from string failed: invalid",
     "note": ""
   },
   {
     "id": "wpt.encoding.encodeinto",
     "layer": "wpt",
     "category": "encoding",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (10404) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.encoding.idlharness",
     "layer": "wpt",
     "category": "encoding",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -84,7 +84,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: location is not defined\n\nthread 'main' (37580) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: location is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
+    "detail": "engine lacks built-in: ReferenceError: location is not defined\n\nthread 'main' (41964) panicked at src\\__ds_engine.rs:542:17:\nReferenceError: location is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
@@ -107,8 +107,8 @@
     "id": "wpt.encoding.streams.decode-bad-chunks",
     "layer": "wpt",
     "category": "encoding",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:27:25: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:28:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:34:25: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:35:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:5:31: error[E0308]: mismatched types: expected `String`, found `Option<_>`\nsrc\\main.rs:6:66: error[E0308]: mismatched types: expected `String`, found `Option<_>`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -123,16 +123,16 @@
     "id": "wpt.encoding.streams.decode-incomplete-input",
     "layer": "wpt",
     "category": "encoding",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:68:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:69:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:41:60: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:35:17: error[E0308]: mismatched types: expected `f64`, found `Vec<Vec<u8>>`\nsrc\\main.rs:40:32: error[E0599]: no method named `pipe_through` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:40:45: error[E0433]: cannot find type `TextDecoderStream` in this scope: use of undeclared type `TextDecoderStream`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.encoding.streams.decode-non-utf8",
     "layer": "wpt",
     "category": "encoding",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:39:54: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:40:54: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:62:50: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:63:50: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:88:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:95:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -147,16 +147,16 @@
     "id": "wpt.encoding.streams.decode-utf8",
     "layer": "wpt",
     "category": "encoding",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.encoding.streams.encode-bad-chunks",
     "layer": "wpt",
     "category": "encoding",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:35:19: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:40:30: error[E0433]: cannot find type `TextEncoderStream` in this scope: use of undeclared type `TextEncoderStream`\nsrc\\main.rs:59:29: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope\nsrc\\main.rs:61:29: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope\nsrc\\main.rs:63:29: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope\nsrc\\main.rs:65:29: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -172,7 +172,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: TextEncoderStream is not defined\n\nthread 'main' (38628) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: TextEncoderStream is not defined\nnote: run with `RUST_BACKTRACE=1` enviro",
+    "detail": "engine lacks built-in: ReferenceError: TextEncoderStream is not defined\n\nthread 'main' (44680) panicked at src\\__ds_engine.rs:542:17:\nReferenceError: TextEncoderStream is not defined\nnote: run with `RUST_BACKTRACE=1` enviro",
     "note": ""
   },
   {
@@ -195,8 +195,8 @@
     "id": "wpt.encoding.textdecoder-copy",
     "layer": "wpt",
     "category": "encoding",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "partial",
+    "detail": "AssertionError: expected  but got �\n\nthread 'main' (24612) panicked at src\\__ds_engine.rs:542:17:\nAssertionError: expected  but got �\nnote: run with `RUST_BACKTRACE=1` environment variable to display ",
     "note": ""
   },
   {
@@ -212,7 +212,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (40236) panicked at src\\__ds.rs:115:13:\nBox<dyn Any>\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (20168) panicked at src\\__ds.rs:115:13:\nBox<dyn Any>\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -220,7 +220,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: location is not defined\n\nthread 'main' (28876) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: location is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
+    "detail": "engine lacks built-in: ReferenceError: location is not defined\n\nthread 'main' (24912) panicked at src\\__ds_engine.rs:542:17:\nReferenceError: location is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
@@ -259,8 +259,8 @@
     "id": "wpt.encoding.textdecoder-streaming",
     "layer": "wpt",
     "category": "encoding",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "partial",
+    "detail": "AssertionError: expected \u0000123ABCabcÿĀက�𐀀􏿿 but got \u0000123ABCabc��������������������\n\nthread 'main' (12552) panicked at src\\__ds_engine.rs:542:17:\nAssertionError: expected \u0000123ABCabcÿĀက�𐀀􏿿 but got \u0000123A",
     "note": ""
   },
   {
@@ -284,7 +284,7 @@
     "layer": "wpt",
     "category": "encoding",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: Conversion from string failed: invalid utf-8 sequence of 1 bytes from index 0\n\nthread 'main' (17260) panicked at src\\__ds_engine.rs:338:17:\nTypeError: Conversion from string failed: invalid",
+    "detail": "runtime error: exit exit code: 101: TypeError: Conversion from string failed: invalid utf-8 sequence of 1 bytes from index 0\n\nthread 'main' (41208) panicked at src\\__ds_engine.rs:542:17:\nTypeError: Conversion from string failed: invalid",
     "note": ""
   },
   {

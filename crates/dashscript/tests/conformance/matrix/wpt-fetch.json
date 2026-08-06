@@ -11,16 +11,16 @@
     "id": "wpt.fetch.api.abort.general",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.abort.request",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:126:25: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:127:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:6:35: error[E0308]: mismatched types: expected `Option<_>`, found `DsFormData`\nsrc\\main.rs:9:13: error[E0308]: mismatched types: expected `Option<_>`, found `DsBlob`\nsrc\\main.rs:33:53: error[E0308]: mismatched types: expected `String`, found `Option<_>`\nsrc\\main.rs:39:29: error[E0608]: cannot index into a value of type `DsRequest`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -35,8 +35,8 @@
     "id": "wpt.fetch.api.basic.conditional-get",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -67,8 +67,8 @@
     "id": "wpt.fetch.api.basic.header-value-null-byte",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:9:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:13:33: error[E0425]: cannot find function `encode_uri_component` in this scope: not found in this scope\nsrc\\main.rs:7:21: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:6:17: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -83,8 +83,8 @@
     "id": "wpt.fetch.api.basic.http-response-code",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -99,8 +99,8 @@
     "id": "wpt.fetch.api.basic.keepalive",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -139,8 +139,8 @@
     "id": "wpt.fetch.api.basic.request-head",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:13:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:11:21: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:6:17: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -179,8 +179,8 @@
     "id": "wpt.fetch.api.basic.request-upload",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -188,7 +188,7 @@
     "layer": "wpt",
     "category": "fetch",
     "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -259,8 +259,8 @@
     "id": "wpt.fetch.api.basic.stream-safe-creation",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`Object.defineProperty` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -315,8 +315,8 @@
     "id": "wpt.fetch.api.cors.cors-cookies-redirect",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -339,8 +339,8 @@
     "id": "wpt.fetch.api.cors.cors-keepalive",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -355,64 +355,64 @@
     "id": "wpt.fetch.api.cors.cors-no-preflight",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.cors.cors-origin",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.cors.cors-preflight",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.cors.cors-preflight-cache",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.cors.cors-preflight-not-cors-safelisted",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.cors.cors-preflight-redirect",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.cors.cors-preflight-referrer",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.cors.cors-preflight-response-validation",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -427,16 +427,16 @@
     "id": "wpt.fetch.api.cors.cors-preflight-status",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.cors.cors-redirect",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -451,8 +451,8 @@
     "id": "wpt.fetch.api.cors.cors-redirect-preflight",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -460,7 +460,7 @@
     "layer": "wpt",
     "category": "fetch",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:12:50: error[E0425]: cannot find value `done` in this scope\nsrc\\main.rs:14:21: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:23:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:10:44: error[E0599]: no method named `get_reader` found for struct `Vec<u8>` in the current scope\nsrc\\main.rs:13:17: error[E0425]: cannot find function `assert_greater_than` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "detail": "cargo build failed: src\\main.rs:25:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:10:44: error[E0599]: no method named `get_reader` found for struct `Vec<u8>` in the current scope\nsrc\\main.rs:15:17: error[E0425]: cannot find function `assert_greater_than` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -492,7 +492,7 @@
     "layer": "wpt",
     "category": "fetch",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: Headers is not defined\n\nthread 'main' (13620) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: Headers is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to di",
+    "detail": "engine lacks built-in: ReferenceError: Headers is not defined\n\nthread 'main' (42060) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: Headers is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to di",
     "note": ""
   },
   {
@@ -515,8 +515,8 @@
     "id": "wpt.fetch.api.headers.headers-basic",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: Headers is not defined\n\nthread 'main' (44868) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: Headers is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to di",
     "note": ""
   },
   {
@@ -571,8 +571,8 @@
     "id": "wpt.fetch.api.headers.headers-record",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`Object.create` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: Headers is not defined\n\nthread 'main' (47052) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: Headers is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to di",
     "note": ""
   },
   {
@@ -587,8 +587,8 @@
     "id": "wpt.fetch.api.idlharness.https",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -603,8 +603,8 @@
     "id": "wpt.fetch.api.redirect.redirect-count",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -619,16 +619,16 @@
     "id": "wpt.fetch.api.redirect.redirect-keepalive",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.redirect.redirect-keepalive.https",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -659,56 +659,56 @@
     "id": "wpt.fetch.api.redirect.redirect-mode",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:151:13: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:176:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:245:70: error[E0425]: cannot find value `origin` in this scope: not found in this scope\nsrc\\main.rs:249:22: error[E0425]: cannot find value `remote_origin` in this scope: not found in this scope\nsrc\\main.rs:252:21: error[E0425]: cannot find value `t` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.redirect.redirect-origin",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.redirect.redirect-referrer",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.redirect.redirect-referrer-override",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.redirect.redirect-schemes",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:150:42: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:148:10: error[E0599]: no method named `for_each` found for struct `Vec<std::string::String>` in the current scope: `Vec<std::string::String>` is not an iterator\nsrc\\main.rs:150:17: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:149:13: error[E0425]: cannot find function `promise_test` in this scope: not found in this scope\nsrc\\main.rs:53:9: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, String>`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.redirect.redirect-to-dataurl",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:152:47: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:146:50: error[E0425]: cannot find function `encode_uri_component` in this scope: not found in this scope\nsrc\\main.rs:152:22: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:151:9: error[E0425]: cannot find function `promise_test` in this scope: not found in this scope\nsrc\\main.rs:157:63: error[E0610]: `f64` is a primitive type and therefore doesn't have fields",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.redirect.redirect-upload.h2",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -723,64 +723,64 @@
     "id": "wpt.fetch.api.request.request-bad-port",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:23:67: error[E0425]: cannot find value `location` in this scope: not found in this scope\nsrc\\main.rs:24:54: error[E0425]: cannot find value `location` in this scope: not found in this scope\nsrc\\main.rs:28:43: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:25:45: error[E0277]: the trait bound `f64: DsDisplay` is not satisfied: the trait `DsDisplay` is not implemented for `f64`\nsrc\\main.rs:28:77: error[E0277]: the trait bound `DsUrl: IntoUrl` is not satisfied: unsatisfied trait bound\nsrc\\main.rs:28:21: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.request.request-cache-default",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.request.request-cache-default-conditional",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.request.request-cache-force-cache",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.request.request-cache-no-cache",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.request.request-cache-no-store",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.request.request-cache-only-if-cached",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.request.request-cache-reload",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -859,8 +859,8 @@
     "id": "wpt.fetch.api.request.request-init-priority",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:25:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:23:21: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:22:17: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -875,8 +875,8 @@
     "id": "wpt.fetch.api.request.request-keepalive",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: Request is not defined\n\nthread 'main' (24552) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: Request is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to di",
     "note": ""
   },
   {
@@ -891,8 +891,8 @@
     "id": "wpt.fetch.api.response.json",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:27:36: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:27:39: error[E0425]: cannot find value `syntax_error` in this scope: not found in this scope\nsrc\\main.rs:12:28: error[E0599]: no method named `keys` found for enum `Value` in the current scope: method not found in `Value`\nsrc\\main.rs:15:55: error[E0609]: no field `a` on type `Value`: unknown field\nsrc\\main.rs:16:55: error[E0609]: no field `b` on type `Value`: unknown field\nsrc\\main.rs:27:17: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -915,8 +915,8 @@
     "id": "wpt.fetch.api.response.response-clone",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -940,15 +940,15 @@
     "layer": "wpt",
     "category": "fetch",
     "status": "partial",
-    "detail": "\nthread 'main' (23916) panicked at src\\__ds.rs:315:13:\nAssertionError: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display ",
+    "detail": "\nthread 'main' (34480) panicked at src\\__ds.rs:315:13:\nAssertionError: Expected a RangeError to be thrown but no exception was thrown\nnote: run with `RUST_BACKTRACE=1` environment variable to display ",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.response.response-error-from-stream",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:29:21: error[E0425]: cannot find value `err` in this scope\nsrc\\main.rs:31:26: error[E0425]: cannot find value `stream` in this scope: not found in this scope\nsrc\\main.rs:46:63: error[E0608]: cannot index into a value of type `f64`\nsrc\\main.rs:47:60: error[E0608]: cannot index into a value of type `f64`\nsrc\\main.rs:48:21: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope\nsrc\\main.rs:45:17: error[E0057]: this function takes 1 argument but 0 arguments were supplied",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -964,7 +964,7 @@
     "layer": "wpt",
     "category": "fetch",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: \nthread 'main' (10652) panicked at src\\__ds.rs:507:10:\nfetch network error: reqwest::Error { kind: Builder, source: RelativeUrlWithoutBase }\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
+    "detail": "runtime error: exit exit code: 101: \nthread 'main' (6420) panicked at src\\__ds.rs:507:10:\nfetch network error: reqwest::Error { kind: Builder, source: RelativeUrlWithoutBase }\nnote: run with `RUST_BACKTRACE=1` environment variable to di",
     "note": ""
   },
   {
@@ -996,7 +996,7 @@
     "layer": "wpt",
     "category": "fetch",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: Response is not defined\n\nthread 'main' (39000) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: Response is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
+    "detail": "engine lacks built-in: ReferenceError: Response is not defined\n\nthread 'main' (34884) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: Response is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
@@ -1019,8 +1019,8 @@
     "id": "wpt.fetch.api.response.response-stream-bad-chunk",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:16:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:29:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:34:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:39:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:44:5: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:49:5: error[E0308]: arguments to this function are incorrect",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1035,24 +1035,24 @@
     "id": "wpt.fetch.api.response.response-stream-disturbed-2",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:11:83: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:25:22: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:56:58: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:74:58: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:92:58: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:112:37: error[E0425]: cannot find value `type_error` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.response.response-stream-disturbed-3",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:11:83: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:25:22: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:57:58: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:75:58: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:93:58: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:113:37: error[E0425]: cannot find value `type_error` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.api.response.response-stream-disturbed-4",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:11:83: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:25:22: error[E0434]: can't capture dynamic environment in a fn item\nsrc\\main.rs:56:58: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:74:58: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:92:58: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:112:37: error[E0425]: cannot find value `type_error` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1091,8 +1091,8 @@
     "id": "wpt.fetch.content-encoding.br.bad-br-body.https",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:19:37: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:15:30: error[E0599]: no method named `then` found for opaque type `impl Future<Output = DsResponse>` in the current scope: method not found in `impl Future<Output = DsResponse>`\nsrc\\main.rs:17:33: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:12:17: error[E0425]: cannot find function `promise_test` in this scope: not found in this scope\nsrc\\main.rs:20:41: error[E0605]: non-primitive cast: `std::string::String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1100,7 +1100,7 @@
     "layer": "wpt",
     "category": "fetch",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:56:42: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:62:26: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:64:65: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:66:25: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:70:30: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:70:50: error[E0425]: cannot find value `value` in this scope: not found in this scope",
+    "detail": "cargo build failed: src\\main.rs:56:42: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:20:36: error[E0609]: no field `byte_length` on type `Vec<u8>`: unknown field\nsrc\\main.rs:25:36: error[E0599]: `Vec<u8>` doesn't implement `std::fmt::Display`: method cannot be called on `Vec<u8>` due to unsatisfied trait bounds\nsrc\\main.rs:48:22: error[E0599]: no method named `get_reader` found for struct `Vec<u8>` in the current scope\nsrc\\main.rs:55:32: error[E0308]: mismatched types: expected `f64`, found `i64`\nsrc\\main.rs:58:46: error[E0277]: cannot subtract `f64` from `i64`: no implementation for `i64 - f64`",
     "note": ""
   },
   {
@@ -1115,8 +1115,8 @@
     "id": "wpt.fetch.content-encoding.gzip.bad-gzip-body",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:32:37: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:8:26: error[E0599]: no method named `then` found for opaque type `impl Future<Output = DsResponse>` in the current scope: method not found in `impl Future<Output = DsResponse>`\nsrc\\main.rs:6:17: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:28:30: error[E0599]: no method named `then` found for opaque type `impl Future<Output = DsResponse>` in the current scope: method not found in `impl Future<Output = DsResponse>`\nsrc\\main.rs:30:33: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:25:17: error[E0425]: cannot find function `promise_test` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1124,7 +1124,7 @@
     "layer": "wpt",
     "category": "fetch",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:56:42: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:62:26: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:64:65: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:66:25: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:70:30: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:70:50: error[E0425]: cannot find value `value` in this scope: not found in this scope",
+    "detail": "cargo build failed: src\\main.rs:56:42: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:20:36: error[E0609]: no field `byte_length` on type `Vec<u8>`: unknown field\nsrc\\main.rs:25:36: error[E0599]: `Vec<u8>` doesn't implement `std::fmt::Display`: method cannot be called on `Vec<u8>` due to unsatisfied trait bounds\nsrc\\main.rs:48:22: error[E0599]: no method named `get_reader` found for struct `Vec<u8>` in the current scope\nsrc\\main.rs:55:32: error[E0308]: mismatched types: expected `f64`, found `i64`\nsrc\\main.rs:58:46: error[E0277]: cannot subtract `f64` from `i64`: no implementation for `i64 - f64`",
     "note": ""
   },
   {
@@ -1139,16 +1139,16 @@
     "id": "wpt.fetch.content-encoding.zstd.bad-zstd-body.https",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:32:37: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:8:26: error[E0599]: no method named `then` found for opaque type `impl Future<Output = DsResponse>` in the current scope: method not found in `impl Future<Output = DsResponse>`\nsrc\\main.rs:6:17: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:28:30: error[E0599]: no method named `then` found for opaque type `impl Future<Output = DsResponse>` in the current scope: method not found in `impl Future<Output = DsResponse>`\nsrc\\main.rs:30:33: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:25:17: error[E0425]: cannot find function `promise_test` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.content-encoding.zstd.big-window-zstd-body.tentative.https",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:11:37: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:11:40: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:11:18: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1156,7 +1156,7 @@
     "layer": "wpt",
     "category": "fetch",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:56:42: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:62:26: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:64:65: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:66:25: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:70:30: error[E0425]: cannot find value `value` in this scope: not found in this scope\nsrc\\main.rs:70:50: error[E0425]: cannot find value `value` in this scope: not found in this scope",
+    "detail": "cargo build failed: src\\main.rs:56:42: error[E0425]: cannot find value `math` in this scope: not found in this scope\nsrc\\main.rs:20:36: error[E0609]: no field `byte_length` on type `Vec<u8>`: unknown field\nsrc\\main.rs:25:36: error[E0599]: `Vec<u8>` doesn't implement `std::fmt::Display`: method cannot be called on `Vec<u8>` due to unsatisfied trait bounds\nsrc\\main.rs:48:22: error[E0599]: no method named `get_reader` found for struct `Vec<u8>` in the current scope\nsrc\\main.rs:55:32: error[E0308]: mismatched types: expected `f64`, found `i64`\nsrc\\main.rs:58:46: error[E0277]: cannot subtract `f64` from `i64`: no implementation for `i64 - f64`",
     "note": ""
   },
   {
@@ -1179,32 +1179,32 @@
     "id": "wpt.fetch.content-type.multipart-malformed",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:29:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:20:30: error[E0599]: `DsBlob` doesn't implement `std::fmt::Display`: method cannot be called on `DsBlob` due to unsatisfied trait bounds\nsrc\\main.rs:30:27: error[E0599]: no method named `form_data` found for struct `DsResponse` in the current scope: method not found in `DsResponse`\nsrc\\main.rs:27:21: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:6:17: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.cross-origin-resource-policy.fetch",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:220:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:242:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:264:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:286:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:313:21: error[E0423]: expected value, found attribute macro `test`: not a value",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.cross-origin-resource-policy.fetch.https",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:216:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:238:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:260:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:311:21: error[E0423]: expected value, found attribute macro `test`: not a value\nsrc\\main.rs:312:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.cross-origin-resource-policy.scheme-restriction",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:8:24: error[E0425]: cannot find value `self_` in this scope: not found in this scope\nsrc\\main.rs:147:25: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:151:49: error[E0610]: `f64` is a primitive type and therefore doesn't have fields\nsrc\\main.rs:145:21: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:144:17: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:53:9: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, String>`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1219,112 +1219,112 @@
     "id": "wpt.fetch.data-urls.base64",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:27:33: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:8:26: error[E0599]: no method named `then` found for opaque type `impl Future<Output = DsResponse>` in the current scope: method not found in `impl Future<Output = DsResponse>`\nsrc\\main.rs:18:39: error[E0599]: no method named `len` found for type `f64` in the current scope\nsrc\\main.rs:19:34: error[E0608]: cannot index into a value of type `f64`\nsrc\\main.rs:20:35: error[E0608]: cannot index into a value of type `f64`\nsrc\\main.rs:25:36: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.data-urls.processing",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:33:33: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:8:26: error[E0599]: no method named `then` found for opaque type `impl Future<Output = DsResponse>` in the current scope: method not found in `impl Future<Output = DsResponse>`\nsrc\\main.rs:18:39: error[E0599]: no method named `len` found for type `f64` in the current scope\nsrc\\main.rs:19:34: error[E0608]: cannot index into a value of type `f64`\nsrc\\main.rs:20:47: error[E0608]: cannot index into a value of type `f64`\nsrc\\main.rs:23:30: error[E0608]: cannot index into a value of type `f64`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.304-update",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.cache-mode",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.cc-request",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.credentials.tentative",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.freshness",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.heuristic",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.invalidate",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.no-vary-search.tentative",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.partial",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.post-patch",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.status",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.http-cache.vary",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -1395,40 +1395,40 @@
     "id": "wpt.fetch.range.blob",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.range.data",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.range.general",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.security.1xx-response",
     "layer": "wpt",
     "category": "fetch",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:7:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:8:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:34:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:35:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:48:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:49:21: error[E0425]: cannot find value `type_error` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.fetch.stale-while-revalidate.fetch",
     "layer": "wpt",
     "category": "fetch",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   }
 ]

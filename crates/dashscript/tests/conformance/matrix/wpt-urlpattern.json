@@ -44,7 +44,7 @@
     "layer": "wpt",
     "category": "urlpattern",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: URLPattern is not defined\n\nthread 'main' (4064) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: URLPattern is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable ",
+    "detail": "engine lacks built-in: ReferenceError: URLPattern is not defined\n\nthread 'main' (36840) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: URLPattern is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable",
     "note": ""
   },
   {

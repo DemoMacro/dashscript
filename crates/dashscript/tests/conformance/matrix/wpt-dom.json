@@ -4,7 +4,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "AssertionError: expected true\n\nthread 'main' (4804) panicked at src\\__ds_engine.rs:338:17:\nAssertionError: expected true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "AssertionError: expected true\n\nthread 'main' (25860) panicked at src\\__ds_engine.rs:542:17:\nAssertionError: expected true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -12,7 +12,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (47924) panicked at src\\__ds_engine.rs:338:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (20424) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -20,7 +20,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "AssertionError: signal.reason is DOMException\n\nthread 'main' (37220) panicked at src\\__ds_engine.rs:338:17:\nAssertionError: signal.reason is DOMException\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "AssertionError: signal.reason is DOMException\n\nthread 'main' (32456) panicked at src\\__ds_engine.rs:542:17:\nAssertionError: signal.reason is DOMException\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -67,8 +67,8 @@
     "id": "wpt.dom.events.event-istrusted",
     "layer": "wpt",
     "category": "dom",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: Event is not defined\n\nthread 'main' (45800) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: Event is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to displa",
     "note": ""
   },
   {
@@ -107,8 +107,8 @@
     "id": "wpt.dom.idlharness",
     "layer": "wpt",
     "category": "dom",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -140,7 +140,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "AssertionError: The Observable interface is not implemented\n\nthread 'main' (41504) panicked at src\\__ds_engine.rs:338:17:\nAssertionError: The Observable interface is not implemented\nnote: run with `RU",
+    "detail": "AssertionError: The Observable interface is not implemented\n\nthread 'main' (41584) panicked at src\\__ds_engine.rs:542:17:\nAssertionError: The Observable interface is not implemented\nnote: run with `RU",
     "note": ""
   },
   {
@@ -156,7 +156,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "AssertionError: The EventTarget interface has an `when` method\n\nthread 'main' (34408) panicked at src\\__ds_engine.rs:338:17:\nAssertionError: The EventTarget interface has an `when` method\nnote: run wi",
+    "detail": "AssertionError: The EventTarget interface has an `when` method\n\nthread 'main' (11556) panicked at src\\__ds_engine.rs:542:17:\nAssertionError: The EventTarget interface has an `when` method\nnote: run wi",
     "note": ""
   },
   {
@@ -187,16 +187,16 @@
     "id": "wpt.dom.observable.tentative.observable-find",
     "layer": "wpt",
     "category": "dom",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:48:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:69:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:131:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:7:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:23:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:44:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.dom.observable.tentative.observable-first",
     "layer": "wpt",
     "category": "dom",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:52:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:67:17: error[E0425]: cannot find value `range_error` in this scope: not found in this scope\nsrc\\main.rs:91:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:7:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:48:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:51:17: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -204,7 +204,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: Observable is not defined\n\nthread 'main' (40144) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: Observable is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable",
+    "detail": "engine lacks built-in: ReferenceError: Observable is not defined\n\nthread 'main' (37192) panicked at src\\__ds_engine.rs:542:17:\nReferenceError: Observable is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable",
     "note": ""
   },
   {
@@ -212,7 +212,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:154:46: error[E0425]: cannot find function `wpt_queue_microtask` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:186:50: error[E0425]: cannot find function `wpt_queue_microtask` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:240:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:289:18: error[E0425]: cannot find function `wpt_drain_microtasks` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:290:18: error[E0425]: cannot find function `wpt_run_timers` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:43:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
+    "detail": "cargo build failed: src\\main.rs:154:46: error[E0425]: cannot find function `wpt_queue_microtask` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:187:50: error[E0425]: cannot find function `wpt_queue_microtask` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:241:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:290:18: error[E0425]: cannot find function `wpt_drain_microtasks` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:291:18: error[E0425]: cannot find function `wpt_run_timers` in module `crate::__ds`: not found in `crate::__ds`\nsrc\\main.rs:43:30: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
     "note": ""
   },
   {
@@ -220,7 +220,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "out-of-scope",
-    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -235,8 +235,8 @@
     "id": "wpt.dom.observable.tentative.observable-last",
     "layer": "wpt",
     "category": "dom",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:26:41: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:35:35: error[E0425]: cannot find value `range_error` in this scope: not found in this scope\nsrc\\main.rs:56:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:6:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:23:30: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`\nsrc\\main.rs:26:17: error[E0425]: cannot find function `promise_rejects_exactly` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -244,23 +244,23 @@
     "layer": "wpt",
     "category": "dom",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: Observable is not defined\n\nthread 'main' (42156) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: Observable is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable",
+    "detail": "engine lacks built-in: ReferenceError: Observable is not defined\n\nthread 'main' (32748) panicked at src\\__ds_engine.rs:542:17:\nReferenceError: Observable is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable",
     "note": ""
   },
   {
     "id": "wpt.dom.observable.tentative.observable-reduce",
     "layer": "wpt",
     "category": "dom",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:55:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:127:42: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:157:35: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:36:46: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:88:46: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:5:26: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.dom.observable.tentative.observable-some",
     "layer": "wpt",
     "category": "dom",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:51:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:76:21: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:118:37: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:27:73: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:37:73: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:90:49: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -292,7 +292,7 @@
     "layer": "wpt",
     "category": "dom",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:158:48: error[E0425]: cannot find value `abort_signal` in this scope: not found in this scope\nsrc\\main.rs:173:17: error[E0425]: cannot find value `promise` in this scope: not found in this scope\nsrc\\main.rs:209:21: error[E0425]: cannot find value `promise` in this scope: not found in this scope\nsrc\\main.rs:291:18: error[E0425]: cannot find value `promise` in this scope: not found in this scope\nsrc\\main.rs:47:61: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:176:32: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks",
+    "detail": "cargo build failed: src\\main.rs:176:17: error[E0425]: cannot find value `promise` in this scope: not found in this scope\nsrc\\main.rs:212:21: error[E0425]: cannot find value `promise` in this scope: not found in this scope\nsrc\\main.rs:294:18: error[E0425]: cannot find value `promise` in this scope: not found in this scope\nsrc\\main.rs:47:61: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:179:32: error[E0728]: `await` is only allowed inside `async` functions and blocks: only allowed inside `async` functions and blocks\nsrc\\main.rs:7:34: error[E0433]: cannot find type `Observable` in this scope: use of undeclared type `Observable`",
     "note": ""
   }
 ]

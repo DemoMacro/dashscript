@@ -3,8 +3,8 @@
     "id": "wpt.wasm.jsapi.constructor.compile",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -12,15 +12,15 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `Object.getPrototypeOf` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.constructor.instantiate-bad-imports",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.create` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -28,15 +28,15 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.constructor.tostringtag",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -44,7 +44,7 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "partial",
-    "detail": "AssertionError: expected TypeError but threw {}\n\nthread 'main' (43236) panicked at src\\__ds_engine.rs:337:17:\nAssertionError: expected TypeError but threw {}\nnote: run with `RUST_BACKTRACE=1` environm",
+    "detail": "AssertionError: expected TypeError but threw {}\n\nthread 'main' (50512) panicked at src\\__ds_engine.rs:541:17:\nAssertionError: expected TypeError but threw {}\nnote: run with `RUST_BACKTRACE=1` environm",
     "note": ""
   },
   {
@@ -59,16 +59,16 @@
     "id": "wpt.wasm.jsapi.esm-integration.global-exports-live-bindings.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "unsupported",
-    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.esm-integration.global-exports.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "unsupported",
-    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -76,7 +76,7 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:7:17: warning: unreachable statement: unreachable statement\nsrc\\main.rs:7:50: error[E0425]: cannot find function `f` in this scope: not found in this scope\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
+    "detail": "cargo build failed: src\\main.rs:7:17: warning: unreachable statement: unreachable statement\nsrc\\main.rs:6:21: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
@@ -99,16 +99,16 @@
     "id": "wpt.wasm.jsapi.esm-integration.reserved-import-names.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:6:37: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:6:40: error[E0425]: cannot find value `web_assembly` in this scope: not found in this scope\nsrc\\main.rs:13:37: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:13:40: error[E0425]: cannot find value `web_assembly` in this scope: not found in this scope\nsrc\\main.rs:20:37: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:20:40: error[E0425]: cannot find value `web_assembly` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.esm-integration.resolve-export.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:6:37: error[E0425]: cannot find value `t` in this scope: not found in this scope\nsrc\\main.rs:6:40: error[E0425]: cannot find value `syntax_error` in this scope: not found in this scope\nsrc\\main.rs:6:18: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:6:18: warning: unreachable call: unreachable call\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors; 1 warning emitted",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -155,96 +155,96 @@
     "id": "wpt.wasm.jsapi.exception.constructor.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (13728) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.exception.getarg.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (46172) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.exception.identity.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (6344) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variabl",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.exception.is.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (45380) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.exception.tostring.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (37220) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.function.call.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (46768) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.function.constructor.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (4048) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variabl",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.function.table.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (43936) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.function.type.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (35572) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.gc.casts.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "unsupported",
-    "detail": "`BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (42804) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.gc.exported-object.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.defineProperty` reflection is unsupported | `Object.defineProperty` reflection is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.gc.i31.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "unsupported",
-    "detail": "`BigInt` literals are unsupported",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (50964) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -252,31 +252,31 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | object accessor properties (get/set) are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.global.tostring",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (16540) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.global.type.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (39100) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.global.value-get-set",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `Object.create` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (32792) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -284,15 +284,15 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (24744) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (10652) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.idlharness",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -300,15 +300,15 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.instance.constructor-bad-imports",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.create` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: format_value is not defined\n\nthread 'main' (40448) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: format_value is not defined\nnote: run with `RUST_BACKTRACE=1` environment vari",
     "note": ""
   },
   {
@@ -316,39 +316,39 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (37540) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (46628) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.instance.exports",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (46768) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.instance.tostring",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (31292) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.interface",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "partial",
+    "detail": "AssertionError: expected object but got undefined\n\nthread 'main' (32040) panicked at src\\__ds_engine.rs:541:17:\nAssertionError: expected object but got undefined\nnote: run with `RUST_BACKTRACE=1` envi",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.js-string.basic",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `BigInt` literals are unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (36244) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -356,7 +356,7 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (44804) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (47540) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -364,7 +364,7 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (33124) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (12708) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -395,8 +395,8 @@
     "id": "wpt.wasm.jsapi.memory.buffer",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (43408) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -404,7 +404,7 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -412,31 +412,31 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.memory.constructor-types.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "partial",
+    "detail": "AssertionError: expected TypeError but threw {}\n\nthread 'main' (15876) panicked at src\\__ds_engine.rs:541:17:\nAssertionError: expected TypeError but threw {}\nnote: run with `RUST_BACKTRACE=1` environm",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.memory.grow",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (50208) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.memory.to-fixed-length-buffer",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (42988) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -444,15 +444,15 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (41276) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (3052) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variabl",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.memory.to-resizable-buffer",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (48972) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -460,79 +460,79 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (32656) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (25232) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.memory.tostring",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (11744) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.memory.type.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (33040) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.module.constructor",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (40040) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.module.customsections",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "partial",
+    "detail": "AssertionError: expected TypeError but threw {}\n\nthread 'main' (23380) panicked at src\\__ds_engine.rs:541:17:\nAssertionError: expected TypeError but threw {}\nnote: run with `RUST_BACKTRACE=1` environm",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.module.exports",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "partial",
+    "detail": "AssertionError: expected TypeError but threw {}\n\nthread 'main' (36580) panicked at src\\__ds_engine.rs:541:17:\nAssertionError: expected TypeError but threw {}\nnote: run with `RUST_BACKTRACE=1` environm",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.module.imports",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "partial",
+    "detail": "AssertionError: expected TypeError but threw {}\n\nthread 'main' (31600) panicked at src\\__ds_engine.rs:541:17:\nAssertionError: expected TypeError but threw {}\nnote: run with `RUST_BACKTRACE=1` environm",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.module.modulesource.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (13760) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.module.tostring",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (42868) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.prototypes",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (37240) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -540,79 +540,79 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.table.constructor-types.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "partial",
+    "detail": "AssertionError: expected TypeError but threw {}\n\nthread 'main' (42080) panicked at src\\__ds_engine.rs:541:17:\nAssertionError: expected TypeError but threw {}\nnote: run with `RUST_BACKTRACE=1` environm",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.table.get-set",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (41572) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.table.grow",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getPrototypeOf` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (48568) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.table.length",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (14792) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.table.tostring",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (49996) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.table.type.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (38264) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.tag.constructor.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (30728) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.tag.tostring.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (36872) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "wpt.wasm.jsapi.tag.type.tentative",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (21004) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -620,7 +620,7 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (33432) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
+    "detail": "engine lacks built-in: ReferenceError: WebAssembly is not defined\n\nthread 'main' (44000) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: WebAssembly is not defined\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
@@ -636,7 +636,7 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "out-of-scope",
-    "detail": "`Object.defineProperty` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -667,16 +667,16 @@
     "id": "wpt.wasm.webapi.contenttype",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.wasm.webapi.empty-body",
     "layer": "wpt",
     "category": "wasm",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:16:44: error[E0425]: cannot find value `name` in this scope: not found in this scope\nsrc\\main.rs:23:33: error[E0425]: cannot find value `web_assembly` in this scope: not found in this scope\nsrc\\main.rs:24:33: error[E0425]: cannot find value `web_assembly` in this scope: not found in this scope\nsrc\\main.rs:34:44: error[E0425]: cannot find value `name` in this scope: not found in this scope\nsrc\\main.rs:43:33: error[E0425]: cannot find value `web_assembly` in this scope: not found in this scope\nsrc\\main.rs:44:33: error[E0425]: cannot find value `web_assembly` in this scope: not found in this scope",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -691,8 +691,8 @@
     "id": "wpt.wasm.webapi.idlharness",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -700,15 +700,15 @@
     "layer": "wpt",
     "category": "wasm",
     "status": "out-of-scope",
-    "detail": "`Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.wasm.webapi.instantiatestreaming-bad-imports",
     "layer": "wpt",
     "category": "wasm",
-    "status": "out-of-scope",
-    "detail": "`Object.create` reflection is unsupported | `BigInt` literals are unsupported | `BigInt` literals are unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -739,8 +739,8 @@
     "id": "wpt.wasm.webapi.origin.sub",
     "layer": "wpt",
     "category": "wasm",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:20:29: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:21:29: error[E0425]: cannot find value `web_assembly` in this scope: not found in this scope\nsrc\\main.rs:44:29: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:45:29: error[E0425]: cannot find value `web_assembly` in this scope: not found in this scope\nsrc\\main.rs:18:25: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:9:21: error[E0057]: this function takes 1 argument but 0 arguments were supplied",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -755,8 +755,8 @@
     "id": "wpt.wasm.webapi.status",
     "layer": "wpt",
     "category": "wasm",
-    "status": "partial",
-    "detail": "cargo build failed: src\\main.rs:23:33: error[E0425]: cannot find value `type_error` in this scope: not found in this scope\nsrc\\main.rs:24:33: error[E0425]: cannot find value `web_assembly` in this scope: not found in this scope\nsrc\\main.rs:18:82: error[E0277]: the trait bound `f64: DsDisplay` is not satisfied: the trait `DsDisplay` is not implemented for `f64`\nsrc\\main.rs:21:29: error[E0425]: cannot find function `promise_rejects_js` in this scope: not found in this scope\nsrc\\main.rs:15:25: error[E0057]: this function takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:24:46: error[E0606]: casting `&std::string::String` as `usize` is invalid",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {

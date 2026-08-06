@@ -11,88 +11,88 @@
     "id": "wpt.webcryptoapi.derive_bits_keys.argon2.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.derive_bits_keys.cfrg_curves_bits_curve25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.derive_bits_keys.cfrg_curves_bits_curve448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.derive_bits_keys.cfrg_curves_keys_curve25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.derive_bits_keys.cfrg_curves_keys_curve448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.derive_bits_keys.derive_key_and_encrypt.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.derive_bits_keys.derived_bits_length.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.derive_bits_keys.ecdh_bits.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.derive_bits_keys.ecdh_keys.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.derive_bits_keys.hkdf.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.derive_bits_keys.pbkdf2.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -100,7 +100,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -108,7 +108,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -116,7 +116,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -124,7 +124,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -132,23 +132,23 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.encap_decap.encap_decap_bits.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.encap_decap.encap_decap_keys.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `hasOwnProperty` (prototype reflection) is unsupported | `hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -156,7 +156,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -164,7 +164,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -172,7 +172,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -180,7 +180,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -188,15 +188,15 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.encrypt_decrypt.chacha20_poly1305.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -204,327 +204,327 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_aes-cbc.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_aes-ctr.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_aes-gcm.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_aes-kw.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_aes-ocb.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_chacha20_poly1305.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_ecdh.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_ecdsa.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_ed25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_ed448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_hmac.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_kmac.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_ml-dsa.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_ml-kem.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_rsa-oaep.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_rsa-pss.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_rsassa-pkcs1-v1_5.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_x25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.failures_x448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_aes-cbc.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_aes-ctr.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_aes-gcm.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_aes-kw.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_aes-ocb.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_chacha20_poly1305.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_ecdh.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_ecdsa.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_ed25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_ed448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_hmac.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_kmac.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_ml-dsa.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_ml-kem.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_rsa-oaep.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_rsa-pss.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_rsassa-pkcs1-v1_5.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_x25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.generatekey.successes_x448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
+    "status": "unsupported",
+    "detail": "optional chaining beyond a single `?.field` (a `?.method()` call, `?.[k]`, or a nested `a?.b?.c`) has no static lowering — the function runs under the engine",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.getpublickey.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.getrandomvalues",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: assert_throws_dom is not defined\n\nthread 'main' (30592) panicked at src\\__ds_engine.rs:542:17:\nReferenceError: assert_throws_dom is not defined\nnote: run with `RUST_BACKTRACE=1` enviro",
     "note": ""
   },
   {
@@ -539,16 +539,16 @@
     "id": "wpt.webcryptoapi.idlharness.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.idlharness.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -556,7 +556,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -564,7 +564,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -572,7 +572,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -587,24 +587,24 @@
     "id": "wpt.webcryptoapi.import_export.ec_importkey.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.ec_importkey_failures_ecdh.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.ec_importkey_failures_ecdsa.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -612,103 +612,103 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.ml-dsa_importkey.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.ml-kem_importkey.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.okp_importkey_ed25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.okp_importkey_ed448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.okp_importkey_failures_ed25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.okp_importkey_failures_ed448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.okp_importkey_failures_x25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.okp_importkey_failures_x448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.okp_importkey_x25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.okp_importkey_x448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.raw_format_aliases.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.import_export.rsa_importkey.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -716,7 +716,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -739,152 +739,152 @@
     "id": "wpt.webcryptoapi.serialization.aes-cbc.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.aes-ctr.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.aes-gcm.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.aes-kw.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.aes-ocb.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.chacha20-poly1305.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.ecdh.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.ecdsa.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.ed25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.ed448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.hmac.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.kmac.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.mldsa.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.mlkem.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.rsa-oaep.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.rsa-pss.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.rsassa-pkcs1-v1_5.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.x25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.serialization.x448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -892,31 +892,31 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.sign_verify.eddsa_curve25519.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.sign_verify.eddsa_curve448.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.sign_verify.eddsa_small_order_points.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -924,7 +924,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -932,7 +932,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -940,7 +940,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -948,7 +948,7 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -956,31 +956,31 @@
     "layer": "wpt",
     "category": "webcryptoapi",
     "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
+    "detail": "object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported | object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.supports-modern.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.supports.tentative.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
     "id": "wpt.webcryptoapi.wrapkey_unwrapkey.wrapkey_unwrapkey.https",
     "layer": "wpt",
     "category": "webcryptoapi",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `Object.create` reflection is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping | `delete` has no DashScript mapping",
     "note": ""
   }
 ]

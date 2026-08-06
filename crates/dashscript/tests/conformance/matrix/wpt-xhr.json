@@ -4,7 +4,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (2796) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (32852) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -12,7 +12,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (45832) panicked at src\\__ds_engine.rs:338:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (14808) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -20,7 +20,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (24280) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (11584) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -28,7 +28,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (36760) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (18452) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -44,7 +44,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (32108) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (41276) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -52,7 +52,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (21464) panicked at src\\__ds_engine.rs:338:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (31156) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -60,7 +60,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (29144) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (5668) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -68,7 +68,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (4016) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (31960) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -76,7 +76,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (36080) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (3068) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment v",
     "note": ""
   },
   {
@@ -84,7 +84,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (19984) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (14020) panicked at src\\__ds_engine.rs:542:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -92,7 +92,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (5912) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (24616) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -100,7 +100,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (24668) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (7332) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -108,7 +108,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (43256) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (18996) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -116,7 +116,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (17428) panicked at src\\__ds_engine.rs:337:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKT",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (46564) panicked at src\\__ds_engine.rs:541:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKT",
     "note": ""
   },
   {
@@ -124,7 +124,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (11940) panicked at src\\__ds_engine.rs:337:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKT",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (32612) panicked at src\\__ds_engine.rs:541:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKT",
     "note": ""
   },
   {
@@ -132,7 +132,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (31840) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (16244) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -148,7 +148,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (33244) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (49108) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -156,7 +156,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (44144) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (23408) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -172,39 +172,39 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (3888) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment v",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (48368) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.access-control-basic-allow-preflight-cache",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (36816) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.access-control-basic-allow-preflight-cache-invalidation-by-header",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (50960) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.access-control-basic-allow-preflight-cache-invalidation-by-method",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (11340) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.access-control-basic-allow-preflight-cache-timeout",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (48152) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -220,7 +220,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (47924) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (31188) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -228,7 +228,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (1104) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment v",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (32608) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -244,7 +244,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (14196) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (35552) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -260,7 +260,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: FormData is not defined\n\nthread 'main' (12056) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: FormData is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
+    "detail": "engine lacks built-in: ReferenceError: FormData is not defined\n\nthread 'main' (13812) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: FormData is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
@@ -268,7 +268,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (31392) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (33012) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -276,7 +276,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (30692) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (44004) panicked at src\\__ds_engine.rs:542:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -284,7 +284,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (47192) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (34152) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -292,7 +292,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (33056) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (42092) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -300,7 +300,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (42080) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (21876) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -308,7 +308,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (40856) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (9184) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -316,7 +316,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (33080) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (34664) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -332,7 +332,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (25284) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (44728) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -340,7 +340,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (22588) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (45588) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -348,7 +348,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (424) panicked at src\\__ds_engine.rs:338:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (10508) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -356,7 +356,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (41724) panicked at src\\__ds_engine.rs:337:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKT",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (47004) panicked at src\\__ds_engine.rs:541:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKT",
     "note": ""
   },
   {
@@ -364,7 +364,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (6588) panicked at src\\__ds_engine.rs:337:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKTR",
+    "detail": "runtime error: exit exit code: 101: TypeError: cannot read property 'protocol' of undefined\n\nthread 'main' (14780) panicked at src\\__ds_engine.rs:541:17:\nTypeError: cannot read property 'protocol' of undefined\nnote: run with `RUST_BACKT",
     "note": ""
   },
   {
@@ -380,7 +380,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "\nthread 'main' (28600) panicked at src\\__ds.rs:310:13:\nAssertionError: Expected a TypeError to be thrown but got a Error\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "\nthread 'main' (26372) panicked at src\\__ds.rs:310:13:\nAssertionError: Expected a TypeError to be thrown but got a Error\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -436,7 +436,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: FormData is not defined\n\nthread 'main' (43992) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: FormData is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
+    "detail": "engine lacks built-in: ReferenceError: FormData is not defined\n\nthread 'main' (34480) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: FormData is not defined\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
@@ -444,15 +444,15 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (19960) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (24612) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "wpt.xhr.idlharness",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "`.constructor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `isPrototypeOf` (prototype reflection) is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Function` as a value is unsupported (use it only as a static-call/new receiver or type annotation) | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `.constructor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertySymbols` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.create` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.setPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `Object.getPrototypeOf` reflection is unsupported | `prototype` mutation is unsupported | `.constructor` reflection is unsupported | `.constructor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `Object.create` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getPrototypeOf` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `Object.getOwnPropertyDescriptor` reflection is unsupported | `prototype` mutation is unsupported",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `delete` has no DashScript mapping | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `eval` is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -460,7 +460,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (46860) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (43364) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -468,7 +468,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (32528) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (6992) panicked at src\\__ds_engine.rs:542:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment v",
     "note": ""
   },
   {
@@ -476,7 +476,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (36500) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (3700) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (39172) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (34104) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -492,7 +492,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (19900) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (46540) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -500,7 +500,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (30796) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (39592) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -508,7 +508,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (3576) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment v",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (45380) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -516,7 +516,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (23716) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (41868) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -524,7 +524,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (33664) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (13076) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -532,15 +532,15 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (30636) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (30440) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "wpt.xhr.send-data-es-object",
     "layer": "wpt",
     "category": "xhr",
-    "status": "out-of-scope",
-    "detail": "`hasOwnProperty` (prototype reflection) is unsupported | `Object.create` reflection is unsupported",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (1888) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -548,7 +548,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (20556) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (44592) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -556,7 +556,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (24744) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (43472) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -564,7 +564,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (20376) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (44224) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -580,7 +580,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "partial",
-    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (20896) panicked at src\\__ds_engine.rs:337:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (39176) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -612,7 +612,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (41656) panicked at src\\__ds_engine.rs:338:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (436) panicked at src\\__ds_engine.rs:542:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -620,7 +620,7 @@
     "layer": "wpt",
     "category": "xhr",
     "status": "unsupported",
-    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (28208) panicked at src\\__ds_engine.rs:337:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
+    "detail": "engine lacks built-in: ReferenceError: XMLHttpRequest is not defined\n\nthread 'main' (44244) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: XMLHttpRequest is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   }
 ]
