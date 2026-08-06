@@ -3061,6 +3061,16 @@ fn register_atomics_agent(ctx: &Ctx<'_>) -> rquickjs::Result<()> {
     let dollar = Object::new(ctx.clone())?;
     dollar.set("agent", agent)?;
     dollar.set("global", ctx.globals())?;
+    // $262.detachArrayBuffer — host hook the `$DETACHBUFFER` harness helper
+    // (detached-buffer fixtures) calls. rquickjs's ArrayBuffer::detach wraps
+    // JS_DetachArrayBuffer; a non-ArrayBuffer arg is a no-op, not a throw.
+    let detach = Function::new(ctx.clone(), |val: Value<'_>| -> rquickjs::Result<()> {
+        if let Some(mut ab) = rquickjs::ArrayBuffer::from_value(val) {
+            ab.detach();
+        }
+        Ok(())
+    })?;
+    dollar.set("detachArrayBuffer", detach)?;
     ctx.globals().set("$262", dollar)
 }
 "#;
