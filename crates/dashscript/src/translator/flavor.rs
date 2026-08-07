@@ -68,6 +68,15 @@ pub(in crate::translator) fn expr_flavor(expr: &Expression, ctx: &Ctx<'_>) -> Nu
         Expression::Identifier(id) => ctx.local_flavor_for(id),
         Expression::UnaryExpression(u) => unary_flavor(u.operator, &u.argument, ctx),
         Expression::BinaryExpression(b) => binary_flavor(b.operator, &b.left, &b.right, ctx),
+        // `.length` (string/array length) is always a non-negative integer
+        // well under 2^53, so a binding fed it stays `i64` — a loop counter
+        // initialized from `s.length` (`let i = s.length - 1`) then keeps its
+        // accumulator in `i64` instead of round-tripping through `f64` per op.
+        // Must stay in lockstep with the `as i64` emit in `member.rs` (an
+        // `expr_flavor` of `I64` whose emit produces `f64` is an E0308 drift).
+        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "length" => {
+            NumberFlavor::I64
+        }
         Expression::ParenthesizedExpression(p) => expr_flavor(&p.expression, ctx),
         _ => NumberFlavor::F64,
     }
@@ -208,6 +217,11 @@ fn structural_flavor(
             _ => structural_flavor(&b.left, names, allow_i64, force_f64)
                 .combine(structural_flavor(&b.right, names, allow_i64, force_f64)),
         },
+        Expression::StaticMemberExpression(sm) if sm.property.name.as_str() == "length" => {
+            // `.length` is a non-negative integer < 2^53 → `i64` (see
+            // `expr_flavor`). Keeps the `as i64` emit in `member.rs` in sync.
+            NumberFlavor::I64
+        }
         Expression::ParenthesizedExpression(p) => {
             structural_flavor(&p.expression, names, allow_i64, force_f64)
         }

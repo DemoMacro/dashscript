@@ -72,7 +72,7 @@ without correctness is worthless.
 | factorial           |   82.9 |  425.8 |  186.5 |  601.7 |   832.5 | 49950000000    | ✓   |
 | fib                 |   80.6 |  195.6 |  159.6 |  150.1 |   245.7 | 9227465        | ✓   |
 | int-add             |  675.8 | 1045.2 |  751.5 | 2386.2 |  4054.6 | 49999999906710 | ✗   |
-| levenshtein         |   77.6 |  129.5 |  123.2 | 1135.6 |  5073.0 | 600000         | ✓   |
+| levenshtein         |   59.9 |  129.1 |  122.9 | 1135.6 |  5073.0 | 600000         | ✓   |
 | loop-data-dependent | 1407.7 | 1484.1 | 1478.3 |    T/O |     T/O | 2.550796048282 | ✓   |
 | mandelbrot          |   42.1 |  131.0 |  131.1 |  147.4 |   215.1 | 8011148        | ✓   |
 | matrix-multiply     |   85.0 |  139.9 |  137.4 | 2085.7 |   620.3 | 41079519680    | ✓   |
@@ -85,8 +85,9 @@ without correctness is worthless.
 
 _All times wall-clock ms per process launch, median of 5 samples. Measured
 2026-07-31, Windows 11, ds 0.0.0 / node v26.5.0 / bun 1.3.6 / perry 0.5.1220 /
-ant 12.3; `levenshtein` and `loop-data-dependent` re-measured 2026-08-07 (7
-samples) after the bit-vector `i64` / multiplication-`f64` flavor changes.
+ant 12.3; `levenshtein` and `loop-data-dependent` re-measured 2026-08-07 (9
+samples) after the bit-vector `i64` / `.length` `i64` / multiplication-`f64`
+flavor changes.
 `results.json` holds the raw per-sample numbers. A runtime slower than
 `ds_median + 10s` per sample is killed and shown as `T/O`._
 
@@ -148,13 +149,16 @@ anything numeric or allocation-bound, and only approaches the pack on
   reaches ~2.4e18, past 2⁵³ where an exact `i64` product would diverge from the
   rounded ES `number` result. The `sum = sum*x[i&63] + …` recurrence stays a
   sequential hazard either way.
-- **`levenshtein`** — `ds` leads ~2× (78 vs node 130, vs bun 123). The Myers
-  bit-vector inner loop keeps its accumulators (`pv`/`mv`/`eq`) in `i64`: each
-  bitwise op yields a `ToInt32` result sign-extended to `i64`, so the bit
-  vectors no longer round-trip through `f64` per op. That halved the runtime
-  (162 ms → 78 ms) — LLVM does not fold the inner-loop `f64`↔`i32` cast chain
-  on its own. The values stay under 2³¹, so `i64` matches ES `number` exactly;
-  `*`, which can overshoot 2⁵³, stays `f64` (see `loop-data-dependent`).
+- **`levenshtein`** — `ds` leads ~2.2× (60 vs node 129, vs bun 123). The Myers
+  bit-vector inner loop keeps its accumulators (`pv`/`mv`/`eq`) and the string
+  lengths (`n`/`m` from `a.length`/`b.length`) in `i64`: each bitwise op yields
+  a `ToInt32` result sign-extended to `i64`, and `.length` is a non-negative
+  integer < 2⁵³, so the bit vectors and the score/loop counters no longer
+  round-trip through `f64`. That cut the runtime 162 ms → 78 ms (bit-vector
+  `i64`) → 60 ms (`.length` `i64`) — LLVM does not fold the inner-loop
+  `f64`↔`i32` cast chain on its own. The values stay under 2³¹, so `i64` matches
+  ES `number` exactly; `*`, which can overshoot 2⁵³, stays `f64` (see
+  `loop-data-dependent`).
 - **Array kernels (`array-read`, `array-write`, `nested-loops`, `object-create`,
   `array-ops`)** — `ds` leads 1.5–1.8× on reads and matches bun on writes:
   Rust's bounds-check elimination handles the sequential pattern, and

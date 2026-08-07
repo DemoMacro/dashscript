@@ -28,10 +28,10 @@ pub(super) fn chain_expr(elem: &oxc_ast::ast::ChainElement, ctx: &Ctx<'_>) -> Ex
             let field = bindings::snake(&sm.property.name);
             // `.length` on a Vec/String maps to Rust's `.len()` (a method, not a
             // field), mirroring the non-chain path; `len()` returns `usize` so
-            // cast to `f64` (TS `.length` is always a `number`).
+            // cast to `i64` (TS `.length` is an integer < 2^53 — see `flavor.rs`).
             if field == "length" {
                 let c = Ident::new("__c", Span::call_site());
-                return parse_quote!(#obj.as_ref().map(|#c| (#c.len() as f64)));
+                return parse_quote!(#obj.as_ref().map(|#c| (#c.len() as i64)));
             }
             if receiver_field_is_optional(&sm.object, &field, ctx) {
                 parse_quote!(#obj.as_ref().and_then(|__c| __c.#field.clone()))
@@ -217,16 +217,17 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     }
     // `m.index`/`m.input`/`m.length` on a `let m = s.match(/pat/)` result → the
     // `DsMatch` fields. Checked before the generic `.length` arm, which would
-    // try `Option<DsMatch>::len()` (no such method). `index`/`length` are ES
-    // numbers (cast to `f64`); `input` is the haystack string. (A bare
-    // `m.groups` — the whole groups object — is not yet handled; only the
-    // `.groups.name` access above.)
+    // try `Option<DsMatch>::len()` (no such method). `index` is an ES number
+    // (cast to `f64`); `length` is an integer < 2^53 (cast to `i64`, matching
+    // `flavor.rs`); `input` is the haystack string. (A bare `m.groups` — the
+    // whole groups object — is not yet handled; only the `.groups.name` access
+    // above.)
     if is_match_local(&sm.object, ctx) {
         let obj = translate_expr(&sm.object, ctx);
         match field_name {
             "index" => return parse_quote!(#obj.as_ref().unwrap().index as f64),
             "input" => return parse_quote!(#obj.as_ref().unwrap().input.clone()),
-            "length" => return parse_quote!(#obj.as_ref().unwrap().captures.len() as f64),
+            "length" => return parse_quote!(#obj.as_ref().unwrap().captures.len() as i64),
             _ => {}
         }
     }
@@ -440,8 +441,10 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
     let obj =
         option_unwrap_object(&sm.object, ctx).unwrap_or_else(|| translate_expr(&sm.object, ctx));
     // `.length` on a Vec/String maps to Rust's `.len()` (a method, not a field).
-    // TS `.length` is always a `number` → `f64`; `len()` returns `usize`, so cast.
-    // Index/repeat sites that need `usize` cast the whole expression again.
+    // TS `.length` is a non-negative integer < 2^53 → `i64` (see `flavor.rs`);
+    // `len()` returns `usize`, so cast. A binding fed `.length` then keeps the
+    // integer flavor, skipping the `f64` cast chain in tight loops. Index/repeat
+    // sites that need `usize` cast the whole expression again.
     if field_name == "length" {
         // `.length` on an optional Vec field (`parent.elements.length`) — the
         // field is `Option<Vec<..>>`, and `Option::len()` is private (nightly);
@@ -452,11 +455,11 @@ pub(super) fn member_expr(sm: &StaticMemberExpression, ctx: &Ctx<'_>) -> Expr {
             if static_member_is_optional_field(&inner.object, &inner_field, ctx) {
                 let inner_obj = translate_expr(&inner.object, ctx);
                 return parse_quote!(
-                    (#inner_obj.#inner_field.as_ref().map(|__c| __c.len() as f64).unwrap_or(0_f64))
+                    (#inner_obj.#inner_field.as_ref().map(|__c| __c.len() as i64).unwrap_or(0_i64))
                 );
             }
         }
-        return parse_quote!((#obj.len() as f64));
+        return parse_quote!((#obj.len() as i64));
     }
     let field = bindings::snake(field_name);
     parse_quote!(#obj.#field)

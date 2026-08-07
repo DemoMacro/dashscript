@@ -4,15 +4,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.15.5.5.5.2-1-2",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:13: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:5:13: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -20,15 +20,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.15.5.5.5.2-3-2",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:13: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nsrc\\main.rs:5:13: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -36,7 +36,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -44,7 +44,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -52,31 +52,31 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.15.5.5.5.2-3-6",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:13: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.15.5.5.5.2-3-7",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:13: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.15.5.5.5.2-3-8",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:13: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -84,15 +84,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.15.5.5.5.2-7-2",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:13: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -100,23 +100,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.15.5.5.5.2-7-4",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:13: error[E0277]: the type `str` cannot be indexed by `usize`: string indices are ranges of `usize`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.fromcharcode.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (39872) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -124,7 +124,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -132,7 +132,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -140,7 +140,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -148,7 +148,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -156,23 +156,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.fromcodepoint.arguments-is-empty",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:4:14: error[E0282]: type annotations needed\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.fromcodepoint.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (33024) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -180,7 +180,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -195,40 +195,40 @@
     "id": "test262.test.built-ins.string.fromcodepoint.to-number-conversions",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:4:27: error[E0605]: non-primitive cast: `Option<_>` as `u32`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:22:27: error[E0605]: non-primitive cast: `String` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:28:27: error[E0605]: non-primitive cast: `String` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:36:21: error[E0605]: non-primitive cast: `HashMap<String, {closure@src\\main.rs:37:50: 37:52}>` as `u32`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.is-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (45036) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.length",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (33032) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.numeric-properties",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (51296) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.proto-from-ctor-realm",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (23032) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -236,7 +236,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -244,7 +244,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -252,31 +252,31 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.at.length",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (52788) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.at.name",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (22372) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.at.prop-desc",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (52848) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -284,7 +284,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -292,7 +292,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -300,7 +300,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -308,7 +308,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -316,15 +316,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.charat.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (17852) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -332,15 +332,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.charat.pos-coerce-string",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:6:23: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -356,15 +356,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.charcodeat.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (33008) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -372,15 +372,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.charcodeat.pos-coerce-string",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:7:23: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -395,8 +395,8 @@
     "id": "test262.test.built-ins.string.prototype.charcodeat.s15.5.4.5_a2",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -404,7 +404,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -412,23 +412,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.codepointat.codepointat",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (23360) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.codepointat.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (51316) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -436,7 +436,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -444,7 +444,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -460,15 +460,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.codepointat.return-code-unit-coerced-position",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:6:30: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:37:30: error[E0308]: mismatched types: expected `f64`, found `String`\nsrc\\main.rs:99:30: error[E0308]: mismatched types: expected `f64`, found `bool`\nsrc\\main.rs:130:30: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:161:30: error[E0308]: mismatched types: expected `f64`, found `Option<_>`\nsrc\\main.rs:192:30: error[E0308]: mismatched types: expected `f64`, found `Vec<_>`",
     "note": ""
   },
   {
@@ -476,7 +476,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -516,7 +516,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -524,15 +524,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.concat.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (47996) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -540,31 +540,31 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.endswith.coerced-values-of-position",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:14:23: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:30:23: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:38:23: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:46:23: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:70:23: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.endswith.endswith",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (7608) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment v",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.endswith.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (15124) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -572,7 +572,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -580,7 +580,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -588,7 +588,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -596,7 +596,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -604,7 +604,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -612,7 +612,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -620,7 +620,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -660,7 +660,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -732,7 +732,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -740,31 +740,31 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.includes.coerced-values-of-position",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:14:23: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:30:23: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:38:23: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:46:23: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:78:23: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.includes.includes",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (24616) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.includes.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (51856) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -772,7 +772,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -780,7 +780,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -788,7 +788,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -796,7 +796,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -804,7 +804,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -812,7 +812,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -820,7 +820,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -860,7 +860,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -907,8 +907,8 @@
     "id": "test262.test.built-ins.string.prototype.includes.string.prototype.includes_lengthprop",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:4:31: error[E0609]: no field `includes` on type `String`: unknown field\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -932,7 +932,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -940,23 +940,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.indexof.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (32876) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:82:26: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:93:26: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:126:26: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:137:26: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:148:26: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:159:26: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object",
     "note": ""
   },
   {
@@ -964,7 +964,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -972,7 +972,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -980,15 +980,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.indexof.position-tointeger-wrapped-values",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:17:18: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:70:18: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:112:18: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:154:18: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:207:18: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:260:18: error[E0425]: cannot find value `symbol` in this scope: not found in this scope",
     "note": ""
   },
   {
@@ -996,7 +996,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1004,7 +1004,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1012,7 +1012,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1020,7 +1020,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1028,7 +1028,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1036,23 +1036,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.iswellformed.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (11992) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.iswellformed.prop-desc",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (40908) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -1060,7 +1060,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1068,7 +1068,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1076,23 +1076,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.iswellformed.to-string-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.lastindexof.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (31968) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -1108,7 +1108,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1116,15 +1116,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.localecompare.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (37620) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -1132,7 +1132,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1140,15 +1140,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -1156,39 +1156,39 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-on-bigint-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (7832) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-on-boolean-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (3488) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-on-number-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (15876) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.match.cstm-matcher-on-string-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (12384) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1196,7 +1196,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "engine error: SyntaxError: duplicate group name",
+    "detail": "runtime error: exit exit code: 101: SyntaxError: duplicate group name\n\nthread 'main' (4764) panicked at src\\__ds_engine.rs:541:17:\nSyntaxError: duplicate group name\nnote: run with `RUST_BACKTRACE=1` environment variable to display a bac",
     "note": ""
   },
   {
@@ -1204,23 +1204,23 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "engine error: SyntaxError: duplicate group name",
+    "detail": "runtime error: exit exit code: 101: SyntaxError: duplicate group name\n\nthread 'main' (50584) panicked at src\\__ds_engine.rs:541:17:\nSyntaxError: duplicate group name\nnote: run with `RUST_BACKTRACE=1` environment variable to display a ba",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.match.invoke-builtin-match",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | the `arguments` object is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.match.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (41180) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -1228,7 +1228,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Actual argument [null] shouldn't be primitive. Unicode property escapes with v flag",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (31828) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1236,39 +1236,39 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.cstm-matchall-on-bigint-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (46124) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.cstm-matchall-on-boolean-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (34340) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.cstm-matchall-on-number-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (52988) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.cstm-matchall-on-string-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (48024) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1276,7 +1276,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1284,23 +1284,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (50500) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.prop-desc",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (31336) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -1308,31 +1308,31 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.regexp-is-undefined-or-null-invokes-matchall",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.regexp-matchall-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.regexp-matchall-is-undefined-or-null",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -1340,7 +1340,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1348,7 +1348,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1356,31 +1356,31 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-has-no-matchall",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-matchall-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | the `arguments` object is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.regexp-prototype-matchall-throws",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -1388,7 +1388,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Actual [] and expected [𠮷, 𠮷, 𠮷, 0, 3, 6] should have the same contents. ",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (2016) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -1396,15 +1396,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.matchall.tostring-this-val",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -1412,23 +1412,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.normalize.normalize",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (32356) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.normalize.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (51212) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -1436,7 +1436,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1444,7 +1444,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1452,7 +1452,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1460,31 +1460,31 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.normalize.return-normalized-string",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:13: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:9:13: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:13:13: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:17:13: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:21:37: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:25:37: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.normalize.return-normalized-string-from-coerced-form",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:9:40: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:10:40: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:11:9: error[E0308]: mismatched types: expected `HashMap<String, {closure@main.rs:7:35}>`, found `HashMap<String, {closure@main.rs:12:35}>`\nsrc\\main.rs:14:40: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:15:40: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.normalize.return-normalized-string-using-default-parameter",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:40: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nsrc\\main.rs:6:40: error[E0599]: no method named `normalize` found for struct `String` in the current scope: method not found in `String`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1492,7 +1492,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1500,7 +1500,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1508,7 +1508,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1516,7 +1516,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1524,7 +1524,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1539,8 +1539,8 @@
     "id": "test262.test.built-ins.string.prototype.padend.fill-string-non-strings",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:8:36: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:19:35: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:30:35: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:41:36: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:52:38: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:63:46: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`",
     "note": ""
   },
   {
@@ -1555,8 +1555,8 @@
     "id": "test262.test.built-ins.string.prototype.padend.max-length-not-greater-than-string",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:6:26: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:16:26: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1564,23 +1564,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.padend.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (33796) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.padend.observable-operations",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:9:28: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:16:28: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:15:17: error[E0308]: mismatched types: expected closure, found a different closure\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, {closure@main.rs:8:17}>`\nsrc\\main.rs:22:20: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:27:23: error[E0308]: arguments to this function are incorrect",
     "note": ""
   },
   {
@@ -1588,7 +1588,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1596,7 +1596,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1604,7 +1604,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1619,8 +1619,8 @@
     "id": "test262.test.built-ins.string.prototype.padstart.fill-string-non-strings",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:8:31: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:19:30: error[E0599]: no method named `as_str` found for type `bool` in the current scope: method not found in `bool`\nsrc\\main.rs:30:30: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:41:31: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:52:33: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`\nsrc\\main.rs:63:41: error[E0599]: no method named `as_str` found for type `f64` in the current scope: method not found in `f64`",
     "note": ""
   },
   {
@@ -1635,8 +1635,8 @@
     "id": "test262.test.built-ins.string.prototype.padstart.max-length-not-greater-than-string",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:6:26: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:16:26: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -1644,31 +1644,31 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.padstart.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (48828) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.padstart.observable-operations",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:9:28: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:16:28: error[E0308]: mismatched types: expected `&str`, found `String`\nsrc\\main.rs:15:17: error[E0308]: mismatched types: expected closure, found a different closure\nsrc\\main.rs:5:9: error[E0308]: mismatched types: expected `f64`, found `HashMap<String, {closure@main.rs:8:17}>`\nsrc\\main.rs:22:20: error[E0308]: arguments to this function are incorrect\nsrc\\main.rs:27:23: error[E0308]: arguments to this function are incorrect",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.repeat.count-coerced-to-zero-returns-empty-string",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:8:49: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:9:49: error[E0605]: non-primitive cast: `Option<_>` as `usize`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:12:22: error[E0605]: non-primitive cast: `String` as `usize`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -1676,7 +1676,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1692,7 +1692,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1707,16 +1707,16 @@
     "id": "test262.test.built-ins.string.prototype.repeat.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (448) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment vari",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.repeat.repeat",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (15876) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -1732,7 +1732,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1740,7 +1740,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1748,7 +1748,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1756,7 +1756,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1764,7 +1764,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1772,7 +1772,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1780,7 +1780,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1788,15 +1788,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -1804,55 +1804,55 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-on-bigint-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (44724) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-on-boolean-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (43068) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-on-number-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (5400) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.cstm-replace-on-string-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (3028) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to d",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (45792) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.regexp-capture-by-index",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:14:53: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:18:53: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:22:54: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:26:54: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:34:53: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:38:53: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`",
     "note": ""
   },
   {
@@ -1860,23 +1860,23 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Unicode property escapes with v flag Expected SameValue(«\"𠮷a𠮷b𠮷\"», «\"XaXbX\"») to be true",
+    "detail": "Test262Error: Expected XaXbX but got 𠮷a𠮷b𠮷\n\nthread 'main' (38752) panicked at src\\__ds_engine.rs:541:17:\nTest262Error: Expected XaXbX but got 𠮷a𠮷b𠮷\nnote: run with `RUST_BACKTRACE=1` environment variab",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.replacevalue-evaluation-order",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:13:69: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, {closure@src\\main.rs:7:13: 7:15}>`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replace.replacevalue-evaluation-order-regexp-object",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:39: error[E0609]: no field `to_string` on type `Regex`: unknown field\nsrc\\main.rs:6:19: error[E0609]: no field `to_string` on type `Regex`: unknown field\nsrc\\main.rs:10:69: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nsrc\\main.rs:17:41: error[E0599]: no method named `as_str` found for struct `Regex` in the current scope: method not found in `Regex`\nerror: could not compile `probe` (bin \"probe\") due to 4 previous errors",
     "note": ""
   },
   {
@@ -1884,7 +1884,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1892,7 +1892,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1900,39 +1900,39 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.cstm-replaceall-on-bigint-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (23892) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.cstm-replaceall-on-boolean-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (21156) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.cstm-replaceall-on-number-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (24948) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.cstm-replaceall-on-string-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (31024) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
@@ -1972,7 +1972,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1988,7 +1988,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1996,23 +1996,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (37852) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.replaceall",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (50784) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -2020,31 +2020,31 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.replacevalue-call-each-match-position",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (52512) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.replacevalue-call-matching-empty",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (52932) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.replacevalue-call-skip-no-match",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:15:63: error[E0599]: no method named `as_str` found for fn item `fn() {replace_value}` in the current scope: method not found in `fn() {replace_value}`\nsrc\\main.rs:19:64: error[E0599]: no method named `as_str` found for fn item `fn() {replace_value}` in the current scope: method not found in `fn() {replace_value}`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -2052,7 +2052,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2060,7 +2060,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2068,7 +2068,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2083,8 +2083,8 @@
     "id": "test262.test.built-ins.string.prototype.replaceall.replacevalue-value-tostring",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:9:13: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:33:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:53:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:28:67: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:48:67: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`\nsrc\\main.rs:63:67: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<_, _>`",
     "note": ""
   },
   {
@@ -2108,15 +2108,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-flags-null-undefined-throws",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -2124,39 +2124,39 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-get-flags-abrupt",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-isregexp-abrupt",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-replacer-before-tostring",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-replacer-call",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -2164,7 +2164,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2172,31 +2172,31 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-replacer-method-abrupt",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-replacer-regexp-call",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:51:36: error[E0425]: cannot find value `re_str` in this scope: not found in this scope\nsrc\\main.rs:51:44: error[E0425]: cannot find value `flags` in this scope: not found in this scope\nsrc\\main.rs:54:13: error[E0425]: cannot find value `this_value` in this scope: not found in this scope\nsrc\\main.rs:56:13: error[E0425]: cannot find value `replace_value` in this scope: not found in this scope\nsrc\\main.rs:61:14: error[E0425]: cannot find value `this_value` in this scope: not found in this scope\nsrc\\main.rs:61:53: error[E0425]: cannot find value `re_str` in this scope: not found in this scope",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.searchvalue-replacer-regexp-call-fn",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (39992) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2204,7 +2204,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2212,7 +2212,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2220,7 +2220,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2228,15 +2228,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.replaceall.this-tostring",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:9:13: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:36:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:59:10: error[E0425]: cannot find value `symbol` in this scope: not found in this scope\nsrc\\main.rs:30:10: error[E0609]: no field `replace_all` on type `String`: unknown field\nsrc\\main.rs:53:10: error[E0609]: no field `replace_all` on type `String`: unknown field\nsrc\\main.rs:71:10: error[E0609]: no field `replace_all` on type `String`: unknown field",
     "note": ""
   },
   {
@@ -2244,15 +2244,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.s15.5.3.1_a3",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -2260,15 +2260,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.search.cstm-search-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -2276,63 +2276,63 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.search.cstm-search-on-bigint-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (52424) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.search.cstm-search-on-boolean-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (19584) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.search.cstm-search-on-number-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (14656) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to ",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.search.cstm-search-on-string-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: property is not configurable\n\nthread 'main' (632) panicked at src\\__ds_engine.rs:554:21:\nTypeError: property is not configurable\nnote: run with `RUST_BACKTRACE=1` environment variable to di",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.search.invoke-builtin-search",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | the `arguments` object is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.search.invoke-builtin-search-searcher-undef",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | the `arguments` object is unsupported | `prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.search.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (51976) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -2340,7 +2340,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Unicode property escapes with v flag Expected SameValue(«-1», «0») to be true",
+    "detail": "Test262Error: Expected 0 but got -1\n\nthread 'main' (20288) panicked at src\\__ds_engine.rs:541:17:\nTest262Error: Expected 0 but got -1\nnote: run with `RUST_BACKTRACE=1` environment variable to display ",
     "note": ""
   },
   {
@@ -2348,7 +2348,7 @@
     "layer": "test262",
     "category": "string",
     "status": "partial",
-    "detail": "Test262Error: Test262Error: Unicode property escapes with v flag Expected SameValue(«-1», «0») to be true",
+    "detail": "Test262Error: Expected 0 but got -1\n\nthread 'main' (21800) panicked at src\\__ds_engine.rs:541:17:\nTest262Error: Expected 0 but got -1\nnote: run with `RUST_BACKTRACE=1` environment variable to display ",
     "note": ""
   },
   {
@@ -2356,15 +2356,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.slice.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (45316) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -2372,7 +2372,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2380,7 +2380,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2388,7 +2388,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2396,7 +2396,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2404,7 +2404,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2412,7 +2412,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2420,7 +2420,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2428,15 +2428,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.argument-is-regexp-and-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -2444,7 +2444,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2452,7 +2452,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2460,7 +2460,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2468,7 +2468,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2476,7 +2476,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2484,7 +2484,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2492,7 +2492,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2500,7 +2500,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2508,7 +2508,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2516,7 +2516,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2524,7 +2524,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2532,7 +2532,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2540,7 +2540,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2548,7 +2548,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2556,7 +2556,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2564,7 +2564,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2572,7 +2572,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2580,7 +2580,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2588,7 +2588,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2596,7 +2596,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2604,7 +2604,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2612,7 +2612,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2620,7 +2620,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2628,7 +2628,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2636,7 +2636,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2644,71 +2644,71 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-1-0-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-1-1-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-1-100-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-1-2-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-1-boo-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-1-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-1-math-pow-2-32-1-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.call-split-1-void-0-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -2716,7 +2716,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2724,7 +2724,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2732,7 +2732,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2740,7 +2740,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2748,7 +2748,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2756,7 +2756,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2764,7 +2764,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2772,7 +2772,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2780,7 +2780,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2788,7 +2788,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2796,7 +2796,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2804,7 +2804,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2812,7 +2812,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2820,7 +2820,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2828,7 +2828,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2836,7 +2836,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2844,7 +2844,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2852,7 +2852,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2860,7 +2860,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2868,7 +2868,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2876,7 +2876,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2884,7 +2884,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2892,7 +2892,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2900,7 +2900,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2908,7 +2908,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2916,7 +2916,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2924,7 +2924,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2932,7 +2932,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2940,7 +2940,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2948,47 +2948,47 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.checking-by-using-eval",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`eval` is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.checking-if-deleting-the-string-prototype-split-length-property-fails",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.checking-if-enumerating-the-string-prototype-split-length-property-fails",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (20684) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.checking-if-varying-the-string-prototype-split-length-property-fails",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (47580) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.checking-string-prototype-split-length",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (35484) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -2996,7 +2996,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3004,15 +3004,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.cstm-split-invocation",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -3020,7 +3020,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3028,7 +3028,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3036,7 +3036,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3044,7 +3044,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3052,7 +3052,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3060,7 +3060,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3068,7 +3068,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3076,7 +3076,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3084,7 +3084,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3092,7 +3092,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3100,23 +3100,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.limit-touint32-error",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (40560) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -3124,7 +3124,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3132,7 +3132,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3140,15 +3140,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.separator-number-limit-math-pow-2-32-1-instance-is-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -3156,15 +3156,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.separator-override-tostring-limit-override-valueof-throws",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:24:13: error[E0425]: cannot find value `test262_error` in this scope: not found in this scope\nsrc\\main.rs:20:30: error[E0599]: no method named `as_str` found for struct `HashMap<K, V, S, A>` in the current scope: method not found in `HashMap<String, {closure@src\\main.rs:4:35: 4:37}>`\nsrc\\main.rs:35:44: error[E0277]: the trait bound `DsError: DsSameValue` is not satisfied: unsatisfied trait bound\nerror: could not compile `probe` (bin \"probe\") due to 3 previous errors",
     "note": ""
   },
   {
@@ -3172,7 +3172,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3180,15 +3180,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.separator-override-tostring-throws-limit-override-valueof-throws",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -3196,7 +3196,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3204,15 +3204,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.separator-regexp-limit-string-via-eval",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported | `eval` is unsupported",
     "note": ""
   },
   {
@@ -3220,39 +3220,39 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.separator-tostring-error",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.separator-undef",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:4:26: error[E0061]: this method takes 1 argument but 0 arguments were supplied\nsrc\\main.rs:6:46: error[E0599]: no method named `len` found for struct `std::str::Split<'a, P>` in the current scope\nsrc\\main.rs:7:44: error[E0608]: cannot index into a value of type `std::str::Split<'_, _>`\nsrc\\main.rs:9:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:13:46: error[E0599]: no method named `len` found for struct `std::str::Split<'a, P>` in the current scope\nsrc\\main.rs:14:44: error[E0608]: cannot index into a value of type `std::str::Split<'_, _>`",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.separator-undef-limit-custom",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:13:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:21:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:29:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:37:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:38:34: error[E0277]: cannot add `usize` to `f64`: no implementation for `f64 + usize`",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.separator-undef-limit-zero",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:12:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:19:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:26:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:36:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`\nsrc\\main.rs:46:21: error[E0599]: no method named `as_str` found for enum `Option<T>` in the current scope: method not found in `Option<_>`",
     "note": ""
   },
   {
@@ -3260,47 +3260,47 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.this-value-tostring-error",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.transferred-to-number-separator-override-tostring-returns-regexp",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.split.valueof-is-called-for-limit-argument",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:7:13: error[E0308]: mismatched types: expected closure, found a different closure\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.startswith.coerced-values-of-position",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:14:23: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:30:23: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:38:23: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nsrc\\main.rs:46:23: error[E0605]: non-primitive cast: `Option<_>` as `i64`: an `as` expression can be used to convert enum types to numeric types only if the enum type is unit-only or field-less\nsrc\\main.rs:70:23: error[E0605]: non-primitive cast: `String` as `i64`: an `as` expression can only be used to convert between primitive types or to coerce to a specific trait object\nerror: could not compile `probe` (bin \"probe\") due to 5 previous errors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.startswith.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (23140) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -3316,7 +3316,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3324,7 +3324,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3332,7 +3332,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3340,7 +3340,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3348,7 +3348,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3356,7 +3356,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3364,7 +3364,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3396,7 +3396,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3419,8 +3419,8 @@
     "id": "test262.test.built-ins.string.prototype.startswith.startswith",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (47048) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -3428,7 +3428,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3436,15 +3436,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.substring.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (10024) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -3452,7 +3452,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3460,7 +3460,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3468,23 +3468,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.symbol.iterator.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (3196) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment var",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.symbol.iterator.prop-desc",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (51680) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -3492,7 +3492,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3500,7 +3500,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3515,8 +3515,8 @@
     "id": "test262.test.built-ins.string.prototype.tolocalelowercase.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (48480) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -3548,15 +3548,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.tolocaleuppercase.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (40052) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -3580,7 +3580,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3595,8 +3595,8 @@
     "id": "test262.test.built-ins.string.prototype.tolowercase.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (20524) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -3628,7 +3628,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3636,7 +3636,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3644,7 +3644,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3652,23 +3652,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.tostring.non-generic-realm",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (29228) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.tostring.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (47048) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -3676,7 +3676,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3684,15 +3684,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.touppercase.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (52292) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -3716,23 +3716,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.towellformed.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (42016) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.towellformed.prop-desc",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: verifyProperty is not defined\n\nthread 'main' (51344) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: verifyProperty is not defined\nnote: run with `RUST_BACKTRACE=1` environment ",
     "note": ""
   },
   {
@@ -3740,7 +3740,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3748,7 +3748,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3756,15 +3756,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.towellformed.to-string-primitive",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping | `prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -3772,7 +3772,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3780,7 +3780,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3788,7 +3788,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3796,7 +3796,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3819,8 +3819,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-1-5",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:4:32: error[E0277]: `HashMap<_, _>` doesn't implement `std::fmt::Display`: `HashMap<_, _>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -3828,7 +3828,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -3852,7 +3852,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4075,8 +4075,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-34",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:4:11: error[E0277]: `Vec<f64>` doesn't implement `std::fmt::Display`: `Vec<f64>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4084,7 +4084,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4092,7 +4092,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4100,23 +4100,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-38",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:7:32: error[E0277]: `HashMap<String, {closure@src\\main.rs:4:35: 4:37}>` doesn't implement `std::fmt::Display`: `HashMap<String, {closure@src\\main.rs:4:35: 4:37}>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-39",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:7:32: error[E0277]: `HashMap<String, {closure@src\\main.rs:4:34: 4:36}>` doesn't implement `std::fmt::Display`: `HashMap<String, {closure@src\\main.rs:4:34: 4:36}>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4131,32 +4131,32 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-40",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:15:13: error[E0308]: mismatched types: expected closure, found a different closure\nsrc\\main.rs:22:32: error[E0277]: `HashMap<String, {closure@src\\main.rs:8:13: 8:15}>` doesn't implement `std::fmt::Display`: `HashMap<String, {closure@src\\main.rs:8:13: 8:15}>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-41",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:15:13: error[E0308]: mismatched types: expected closure, found a different closure\nsrc\\main.rs:22:32: error[E0277]: `HashMap<String, {closure@src\\main.rs:8:13: 8:15}>` doesn't implement `std::fmt::Display`: `HashMap<String, {closure@src\\main.rs:8:13: 8:15}>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-42",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (51860) panicked at src\\__ds_engine.rs:541:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-43",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:15:9: error[E0609]: no field `prototype` on type `{closure@src\\main.rs:14:19: 14:21}`: unknown field\nsrc\\main.rs:16:21: error[E0433]: cannot find type `Con` in this scope: use of undeclared type `Con`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors",
     "note": ""
   },
   {
@@ -4171,32 +4171,32 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-45",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:9: error[E0277]: `HashMap<_, _>` doesn't implement `std::fmt::Display`: `HashMap<_, _>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-46",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-47",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:4:32: error[E0277]: `HashMap<_, _>` doesn't implement `std::fmt::Display`: `HashMap<_, _>` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-49",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:5:32: error[E0277]: `Regex` doesn't implement `std::fmt::Display`: `Regex` cannot be formatted with the default formatter\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error",
     "note": ""
   },
   {
@@ -4219,8 +4219,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.15.5.4.20-2-51",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported",
     "note": ""
   },
   {
@@ -4779,8 +4779,8 @@
     "id": "test262.test.built-ins.string.prototype.trim.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (33692) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -4795,8 +4795,8 @@
     "id": "test262.test.built-ins.string.prototype.trimend.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (34112) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -4804,7 +4804,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4812,7 +4812,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4820,7 +4820,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4828,7 +4828,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4836,15 +4836,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-toprimitive-call-err",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -4852,15 +4852,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-toprimitive-meth-priority",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -4868,15 +4868,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-tostring-call-err",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -4884,15 +4884,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-tostring-meth-priority",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -4900,15 +4900,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-valueof-call-err",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -4916,15 +4916,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimend.this-value-object-valueof-meth-priority",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -4932,7 +4932,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4940,7 +4940,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4948,15 +4948,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (40864) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -4964,7 +4964,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4972,7 +4972,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4980,7 +4980,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4988,7 +4988,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -4996,15 +4996,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-toprimitive-call-err",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -5012,15 +5012,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-toprimitive-meth-priority",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -5028,15 +5028,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-tostring-call-err",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -5044,15 +5044,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-tostring-meth-priority",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -5060,15 +5060,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-valueof-call-err",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -5076,15 +5076,15 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.trimstart.this-value-object-valueof-meth-priority",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "object accessor properties (get/set) are unsupported",
     "note": ""
   },
   {
@@ -5092,7 +5092,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5100,7 +5100,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5108,7 +5108,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5116,23 +5116,23 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.valueof.non-generic-realm",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (14472) panicked at src\\__ds_engine.rs:542:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.prototype.valueof.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (40248) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment va",
     "note": ""
   },
   {
@@ -5140,7 +5140,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5148,231 +5148,231 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.nextkey-is-symbol-throws",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.not-a-constructor",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "engine lacks built-in: ReferenceError: isConstructor is not defined\n\nthread 'main' (7300) panicked at src\\__ds_engine.rs:541:17:\nReferenceError: isConstructor is not defined\nnote: run with `RUST_BACKTRACE=1` environment var",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-from-empty-array-length",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-negative-infinity",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-not-defined",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-undefined",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-zero-boolean",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-zero-nan",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-zero-null",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-zero-or-less-number",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported | `String.raw` (tagged template) is unsupported | `String.raw` (tagged template) is unsupported | `String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-empty-string-if-length-is-zero-or-less-string",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported | `String.raw` (tagged template) is unsupported | `String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-the-string-value",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.return-the-string-value-from-template",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:3:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:36: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.returns-abrupt-from-next-key",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported | `delete` has no DashScript mapping | `String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.returns-abrupt-from-next-key-tostring",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.returns-abrupt-from-substitution",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported | `String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.returns-abrupt-from-substitution-symbol",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported | `String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.special-characters",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:4:9: warning: unreachable expression: unreachable expression\nsrc\\main.rs:4:9: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nsrc\\main.rs:7:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:7:36: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 2 previous errors; 2 warnings emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.substitutions-are-appended-on-same-index",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported | `String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.substitutions-are-limited-to-template-raw-length",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.template-length-is-symbol-throws",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.template-length-throws",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.template-not-object-throws",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported | `String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.template-raw-not-object-throws",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported | `String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.template-raw-throws",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`String.raw` (tagged template) is unsupported",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.template-substitutions-are-appended-on-same-index",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:3:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:36: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.raw.zero-literal-segments",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "status": "partial",
+    "detail": "cargo build failed: src\\main.rs:3:36: warning: unreachable expression: unreachable expression\nsrc\\main.rs:3:36: error[E0277]: the trait bound `!: DsSameValue` is not satisfied: the trait `DsSameValue` is not implemented for `!`\nerror: could not compile `probe` (bin \"probe\") due to 1 previous error; 1 warning emitted",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.string.s15.5.5.1_a3",
     "layer": "test262",
     "category": "string",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -5380,7 +5380,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -5388,7 +5388,7 @@
     "layer": "test262",
     "category": "string",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   }
 ]

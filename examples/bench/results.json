@@ -174,9 +174,9 @@
       "bench": "levenshtein",
       "name": "levenshtein",
       "times": {
-        "ds": 77.5693,
-        "node": 129.4962,
-        "bun": 123.2235,
+        "ds": 59.86,
+        "node": 129.12,
+        "bun": 122.92,
         "perry": 1135.633,
         "ant": 5073.0377
       },

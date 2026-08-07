@@ -42,16 +42,17 @@ fn untyped_js_uses_literal_type_inference() {
 #[test]
 fn untyped_js_homogeneous_array_transpiles() {
     // `let xs = [1, 2, 3]` infers `Vec<f64>` (homogeneous numeric array), and
-    // `xs.length` lowers to `xs.len() as f64` (the array `length` builtin). Both
-    // routes work without a `number[]` annotation — the transpile-first path
-    // covers array literals and their builtins.
+    // `xs.length` lowers to `xs.len() as i64` (the array `length` builtin is a
+    // non-negative integer < 2^53 — see `flavor.rs`). Both routes work without
+    // a `number[]` annotation — the transpile-first path covers array literals
+    // and their builtins.
     let js = "export function count() { let xs = [1, 2, 3]; return xs.length; }";
     let rust = Translator::new()
         .translate_with_deps_as(js, FileRole::Module)
         .expect("a homogeneous-array .js module transpiles")
         .0;
     assert!(rust.contains("let xs: Vec<f64>"), "got: {rust}");
-    assert!(rust.contains("xs.len() as f64"), "got: {rust}");
+    assert!(rust.contains("xs.len() as i64"), "got: {rust}");
 }
 
 #[test]
