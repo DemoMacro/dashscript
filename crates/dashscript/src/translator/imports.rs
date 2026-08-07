@@ -270,7 +270,7 @@ pub(crate) fn module_ident(source: &str) -> Option<Ident> {
         if stem.is_empty() || stem == "." || stem == ".." {
             return None;
         }
-        Some(bindings::snake(stem))
+        Some(bindings::snake_module(stem))
     } else {
         Some(bare_module_ident(source))
     }

@@ -717,6 +717,16 @@ fn dep_mod_name(source: &str, module: &str, member: &Option<String>) -> String {
     }
 }
 
+/// Strip an `r#` raw-ident prefix from a module name for use as a *file* stem.
+/// A `.ts` file named after a Rust prelude macro (`stringify.ts`) lowers to the
+/// raw ident `r#stringify` so the `mod r#stringify;` declaration and
+/// `crate::r#stringify::*` paths parse — but the file Rust's module system
+/// looks up is `src/stringify.rs`. The `r#` is source-level escape syntax, not
+/// part of the path, so only the filename drops it; the `mod` decl keeps it.
+fn mod_file_stem(name: &str) -> &str {
+    name.strip_prefix("r#").unwrap_or(name)
+}
+
 /// Translate `src` and write `src/main.rs` (plus each imported local module as
 /// `src/<module>.rs`, declared with a leading `mod <module>;`) into
 /// `project_dir/src/`. The caller writes `Cargo.toml`. Shared by a single-
@@ -854,7 +864,9 @@ pub fn translate_sources(
         )?;
         let emit_name = dep_mod_name(&source, &module, &member);
         fs::write(
-            project_dir.join("src").join(format!("{emit_name}.rs")),
+            project_dir
+                .join("src")
+                .join(format!("{}.rs", mod_file_stem(&emit_name))),
             dep_rust,
         )?;
         mod_decls.push_str(&format!("mod {emit_name};\n"));
@@ -1078,7 +1090,9 @@ fn translate_one_with_mods(
             let spec = ds_resolve_specifier(&entry_spec, &imp.source);
             let dep_rust = translate_dep(&translator, &dep_path, kind, &spec, None, &mut deps)?;
             fs::write(
-                project_dir.join("src").join(format!("{}.rs", imp.module)),
+                project_dir
+                    .join("src")
+                    .join(format!("{}.rs", mod_file_stem(&imp.module))),
                 dep_rust,
             )?;
         }

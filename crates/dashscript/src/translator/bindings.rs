@@ -5,13 +5,12 @@ use proc_macro2::Span;
 use quote::format_ident;
 use syn::Ident;
 
-/// Convert a DashScript identifier to idiomatic Rust `snake_case`.
-///
-/// DashScript inherits TypeScript's `camelCase`; Rust warns on anything but
-/// `snake_case`. Converting at the binding boundary — applied to function,
-/// variable, parameter, and field names alike — keeps the generated code
-/// warning-free and consistent across definition, reference, and field access.
-pub fn snake(name: &str) -> Ident {
+/// The pure string part of identifier folding: `camelCase`/`kebab-case`/
+/// `PascalCase` → `snake_case`, `$`/sigil → `_`, a leading digit → `_` prefix,
+/// empty → `_`. It does *not* decide raw-ident escaping — that is the caller's
+/// rule ([`snake`] for a value name, [`snake_module`] for a module name), since
+/// a value binding and a module escape different name sets.
+fn snake_case_of(name: &str) -> String {
     let mut out = String::with_capacity(name.len() + 4);
     let chars: Vec<char> = name.chars().collect();
     for (i, &c) in chars.iter().enumerate() {
@@ -56,11 +55,40 @@ pub fn snake(name: &str) -> Ident {
     if out.is_empty() {
         out.push('_');
     }
-    // A `.ts` name that lands on a Rust keyword (`dyn`, `match`, `type`, …) or
-    // a prelude macro name (`format`, `vec`, `panic`, …) is emitted as a valid
-    // identifier so the generated code still parses — a bare `format` in value
-    // position is otherwise parsed as the `format!` macro.
+    out
+}
+
+/// Convert a DashScript *value* identifier to idiomatic Rust `snake_case`.
+///
+/// DashScript inherits TypeScript's `camelCase`; Rust warns on anything but
+/// `snake_case`. Converting at the binding boundary — applied to function,
+/// variable, parameter, and field names alike — keeps the generated code
+/// warning-free and consistent across definition, reference, and field access.
+/// A value name that lands on a Rust keyword (`type`) or prelude macro
+/// (`format`) becomes a raw ident: a bare `format` in value position would
+/// parse as the `format!` macro. A *module* name escapes a different (smaller)
+/// set — see [`snake_module`].
+pub fn snake(name: &str) -> Ident {
+    let out = snake_case_of(name);
     if is_rust_keyword(&out) || is_rust_prelude_macro(&out) {
+        keyword_ident(&out)
+    } else {
+        format_ident!("{}", out)
+    }
+}
+
+/// Convert a `.ts` file stem to a Rust *module* ident. A module name is not a
+/// value binding, so it escapes a smaller set than [`snake`]: a prelude-macro
+/// name (`stringify`, `format`) stays bare — `mod stringify;` is legal, because
+/// the module and the `stringify!` macro live in different parse contexts (a
+/// path `crate::stringify` never parses as a macro call). Only a strict Rust
+/// keyword needs `r#`: `mod type;` is a syntax error, but `mod r#type;` with
+/// `src/type.rs` resolves. The on-disk file is always the bare ident — `r#` is
+/// source-level escape syntax, not part of the path — so the caller writes
+/// `src/<bare-stem>.rs` (see `project::mod_file_stem`).
+pub fn snake_module(name: &str) -> Ident {
+    let out = snake_case_of(name);
+    if is_rust_keyword(&out) {
         keyword_ident(&out)
     } else {
         format_ident!("{}", out)
