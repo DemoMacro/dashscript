@@ -1761,6 +1761,11 @@ impl Translator {
                     .map(|name| syn::Item::Struct(registry.anon_structs[name].clone())),
             );
         }
+        // Fn-alias consts (`const g = f`, `f` a same-file const-arrow fn) lower
+        // to `use f as g;` items — a fn value alias renames the fn, no runtime
+        // binding (the fn is a static item, so no `OnceLock`). Collected once so
+        // a forward alias (alias before the fn in source order) resolves too.
+        let const_arrow_names = functions::const_arrow_fn_names(&program.body, &names);
         let mut exec_stmts: Vec<&oxc_ast::ast::Statement> = Vec::new();
         for s in &program.body {
             // A promoted const-expr `const` lowers to a crate-level `const`
@@ -1801,6 +1806,14 @@ impl Translator {
                     items.extend(ms_items);
                     continue;
                 }
+            }
+            // A fn alias (`const g = f`, `f` a same-file const-arrow fn) →
+            // `use f as g;` item — a declaration (a name rename), not an
+            // executable statement, so it never enters the implicit `fn main`
+            // (and never trips the module "may only declare" reject).
+            if let Some(alias_item) = functions::fn_alias_use_item(s, &const_arrow_names, &names) {
+                items.push(alias_item);
+                continue;
             }
             if functions::is_executable_top_level(s) {
                 exec_stmts.push(s);

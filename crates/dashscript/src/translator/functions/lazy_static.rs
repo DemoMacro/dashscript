@@ -335,6 +335,11 @@ fn cell_type(d: &VariableDeclarator, init: &Expression, registry: &TypeRegistry)
         }
     } else if let Expression::TSTypeAssertion(t) = init {
         types::translate_type(&t.type_annotation)
+    } else if let Expression::TSSatisfiesExpression(s) = init {
+        // `expr satisfies T`: the cell type is the satisfied type `T`; the init
+        // translates as the inner `expr` (a runtime no-op — see
+        // `translate_expr`). Matches the `is_typed_assertion` candidate above.
+        types::translate_type(&s.type_annotation)
     } else if let Expression::Identifier(id) = init {
         // An alias of an imported lazy static (`const x = m;`): the cell type
         // is the aliased accessor's cell type, from the cross-file export table.
@@ -748,9 +753,18 @@ fn object_literal_value_type(obj: &ObjectExpression) -> Option<Type> {
 /// type is the cell type, so a `const X = Object.fromEntries(…) as Record<…>`
 /// singleton gets a concrete `HashMap<…>` type from the assertion.
 fn is_typed_assertion(init: &Expression) -> bool {
+    // `as T`, `<T>expr`, and `satisfies T` all carry a type clue for a
+    // module-global binding: the cell type is `T` (the assertion's target), and
+    // the init translates as the inner expression (a TS assertion / `satisfies`
+    // is a runtime no-op — see `translate_expr`). `satisfies` is the TS 4.9+
+    // data-definition idiom (`const X = { … } as const satisfies T`), so a
+    // module-global registry/table singleton gets a concrete struct type from
+    // the satisfied interface without an explicit annotation.
     matches!(
         init,
-        Expression::TSAsExpression(_) | Expression::TSTypeAssertion(_)
+        Expression::TSAsExpression(_)
+            | Expression::TSTypeAssertion(_)
+            | Expression::TSSatisfiesExpression(_)
     )
 }
 
@@ -817,10 +831,15 @@ fn new_return_type(new: &NewExpression) -> Option<Type> {
     new_collection_return_type(new)
 }
 
-/// The collection type of a `new Set([literal array])` initializer, inferred
-/// without an annotation: `HashSet<T>` where `T` is the first scalar element's
-/// type (`["jpg", …]` → `HashSet<String>`). A non-Set `new`, a non-array arg,
-/// or a non-scalar first element yields `None`.
+/// The collection type of a collection-ctor initializer, inferred without an
+/// annotation: `new Set([literal])` / `new WeakSet([literal])` → `HashSet<T>`
+/// (T from the first scalar element, `["jpg", …]` → `HashSet<String>`), and
+/// `new Map<K, V>()` / `new WeakMap<K, V>()` → `HashMap<K, V>` (K, V from the
+/// type args). `WeakMap`/`WeakSet` use the same strong `HashMap`/`HashSet`
+/// backing (no GC-precise weak refs — a `WeakMap` keyed by `Uint8Array` is a
+/// `HashMap<Vec<u8>, V>`), matching the class-field and new-expr paths
+/// (`class::infer_ctor_type`, `expressions::new`). A non-collection `new`, a
+/// non-array arg (for Set), or a non-scalar first element yields `None`.
 ///
 /// A number element/key (`Set<number>`, `Set([1, 2])`, `Map<number, _>`) wraps
 /// in `DsF64Key` — `f64` lacks `Eq`/`Hash`, so the SameValueZero newtype is the
@@ -839,10 +858,12 @@ pub(in crate::translator) fn new_collection_return_type(new: &NewExpression) -> 
         }
     };
     match id.name.as_str() {
-        "Set" => {
-            // `new Set([literal])` → HashSet<T> (T from the first array element);
-            // `new Set<T>()` → HashSet<T> (T from the single type argument);
-            // bare `new Set()` → HashSet (element type inferred at each insert).
+        "Set" | "WeakSet" => {
+            // `new Set([literal])` / `new WeakSet([literal])` → HashSet<T> (T from
+            // the first array element); `new Set<T>()` → HashSet<T> (T from the
+            // single type argument); bare `new Set()` → HashSet (element type
+            // inferred at each insert). WeakSet shares the strong HashSet backing
+            // (no GC-precise weak refs), matching class.rs / expressions/new.rs.
             if let Some(elem) = set_array_elem_type(new) {
                 let elem = keywrap(elem);
                 return Some(parse_quote!(::std::collections::HashSet<#elem>));
@@ -855,9 +876,12 @@ pub(in crate::translator) fn new_collection_return_type(new: &NewExpression) -> 
                 None => Some(parse_quote!(::std::collections::HashSet)),
             }
         }
-        "Map" => match new_type_args(new) {
-            // `new Map<K, V>()` → HashMap<K, V> (K, V from the two type args);
-            // bare `new Map()` → HashMap (K, V inferred at each insert).
+        "Map" | "WeakMap" => match new_type_args(new) {
+            // `new Map<K, V>()` / `new WeakMap<K, V>()` → HashMap<K, V> (K, V from
+            // the two type args); bare `new Map()` → HashMap (K, V inferred at
+            // each insert). WeakMap shares the strong HashMap backing (no
+            // GC-precise weak refs — a WeakMap keyed by Uint8Array is a
+            // HashMap<Vec<u8>, V>), matching class.rs / expressions/new.rs.
             Some(args) if args.len() >= 2 => {
                 let mut iter = args.into_iter();
                 let key = keywrap(iter.next()?);

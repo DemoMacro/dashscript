@@ -398,6 +398,74 @@ fn is_const_arrow(stmt: &Statement) -> bool {
         )
 }
 
+/// The snake names of every const-arrow fn (`const f = () => …` / `export
+/// const f = () => …`) declared in `program_body` — the legal target of a
+/// fn-alias const (`const g = f`), which lowers to a `use f as g;` item (a fn
+/// value alias is a name rename, not a runtime binding — the fn is already a
+/// static item, so no `OnceLock` is needed). Collected once so a forward alias
+/// (an alias before the fn in source order) resolves too.
+pub(in crate::translator) fn const_arrow_fn_names(
+    program_body: &[Statement],
+    names: &NameTable<'_>,
+) -> std::collections::HashSet<String> {
+    program_body
+        .iter()
+        .filter_map(|s| {
+            let v = match s {
+                Statement::VariableDeclaration(v) => v,
+                Statement::ExportNamedDeclaration(e) => match &e.declaration {
+                    Some(Declaration::VariableDeclaration(v)) => v,
+                    _ => return None,
+                },
+                _ => return None,
+            };
+            let d = v.declarations.first()?;
+            if !matches!(d.init, Some(Expression::ArrowFunctionExpression(_))) {
+                return None;
+            }
+            Some(names.of_pattern(&d.id).to_string())
+        })
+        .collect()
+}
+
+/// A fn-alias const (`const g = f` / `export const g = f` where `f` is a
+/// same-file const-arrow fn) lowers to a `use f as g;` item — a fn value alias
+/// renames the fn rather than binding a runtime value (the fn is a static item,
+/// so no `OnceLock`). `pub use` when the alias is exported. `None` for any other
+/// shape (a non-identifier init, or an identifier that is not a const-arrow fn
+/// — a lazy-static alias goes through the lazy-static path instead).
+pub(in crate::translator) fn fn_alias_use_item(
+    stmt: &Statement,
+    const_arrow_names: &std::collections::HashSet<String>,
+    names: &NameTable<'_>,
+) -> Option<syn::Item> {
+    let (v, is_export) = match stmt {
+        Statement::VariableDeclaration(v) => (v, false),
+        Statement::ExportNamedDeclaration(e) => match &e.declaration {
+            Some(Declaration::VariableDeclaration(v)) => (v, true),
+            _ => return None,
+        },
+        _ => return None,
+    };
+    let d = v.declarations.first()?;
+    let BindingPattern::BindingIdentifier(_id) = &d.id else {
+        return None;
+    };
+    let Expression::Identifier(callee) = d.init.as_ref()? else {
+        return None;
+    };
+    let alias = names.of_pattern(&d.id);
+    let target = bindings::snake(&callee.name);
+    if alias == target || !const_arrow_names.contains(&target.to_string()) {
+        return None;
+    }
+    Some(if is_export {
+        parse_quote! { pub use #target as #alias; }
+    } else {
+        parse_quote! { use #target as #alias; }
+    })
+}
+
 /// Translate the inner declaration of an `export` (`export function` /
 /// `export class` / `export interface` / `export type`). Re-exports and
 /// unsupported kinds (enum) yield `[]`. A class yields its `struct` plus `impl`.
