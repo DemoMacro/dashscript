@@ -32,8 +32,8 @@ pub(in crate::translator) use escape::{
 };
 pub(in crate::translator) use lazy_static::{
     decl_name, escaped_lazy_static_names, escaped_mutable_static_names, lazy_static_candidate,
-    lazy_static_export_info, lazy_static_items, lazy_static_sym, mutable_static_candidate,
-    mutable_static_items, mutable_top_level_names,
+    lazy_static_export_info, lazy_static_items, lazy_static_sym, module_has_unhoistable_exec,
+    mutable_static_candidate, mutable_static_items, mutable_top_level_names,
 };
 
 use oxc_ast::ast::{
@@ -143,6 +143,21 @@ pub(crate) fn set_whole_module_degrade(on: bool) {
 /// [`WHOLE_MODULE_DEGRADE`].
 pub(in crate::translator) fn whole_module_degrade() -> bool {
     WHOLE_MODULE_DEGRADE.with(|c| c.get())
+}
+
+/// Scope guard that clears `WHOLE_MODULE_DEGRADE` on drop. A
+/// `translate_with_deps_as` call that sets it for a module's unhoistable
+/// top-level statements must not leak the flag to the next translate in the
+/// same thread — the conformance harness translates many fixtures on one
+/// thread, and a stale flag would rewrite an unrelated file's functions as
+/// engine calls. Only clears when *this* guard turned the flag on (the project
+/// emitter manages its own transitive set/reset).
+pub(in crate::translator) struct WholeModuleDegradeGuard;
+
+impl Drop for WholeModuleDegradeGuard {
+    fn drop(&mut self) {
+        set_whole_module_degrade(false);
+    }
 }
 
 /// Translate a top-level statement into a `syn::Item`, if mapped.

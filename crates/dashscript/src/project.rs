@@ -774,6 +774,17 @@ pub fn translate_sources(
     // before the entry translates, so the entry and each recursive dep lower
     // their `@scope/…` imports to `crate::mod` — not a bare `mod`, which Rust
     // 2018 path clarity rejects from a submodule. Cleared on translate end.
+    //
+    // Routing note (office-open migration phases A–D): `ds build` now routes
+    // any file inside a workspace member to workspace_build → translate_project,
+    // which turns cross-member specifiers into cargo path deps (independent
+    // crates). So this merge path is reached only for lone files / packages
+    // with no `.ts` entry — it carries no workspace context in the common case,
+    // and the member-prefix machinery below (dep_mod_name's member branch,
+    // CURRENT_MEMBER) is dormant on live builds. Retained for the
+    // translate_sources unit tests and the rare non-member file that imports
+    // one; a full removal was evaluated and deferred — dead-code hygiene that
+    // is not worth risking the 800+ test foundation.
     let workspace_deps =
         collect_workspace_deps(src, src_path.parent().unwrap_or_else(|| Path::new("")));
     crate::translator::imports::set_workspace_deps(workspace_deps);
@@ -2844,8 +2855,10 @@ mod tests {
         // Independent-crate model on the translate_project path: a bare import
         // of a sibling workspace member becomes a cargo path dep, not a merged
         // local module. translate_project records the dep and emits nothing for
-        // the member — its source lives in its own crate. (The translate_sources
-        // path still merges; that is a later phase.)
+        // the member — its source lives in its own crate. (translate_sources
+        // still merges cross-member when called directly, but `ds build` now
+        // routes workspace members here, so that path is dormant on live builds;
+        // its cleanup was deferred — see translate_sources's routing note.)
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
         let pkg_a = root.join("packages").join("a");

@@ -177,11 +177,22 @@ fn check_as_inner(source: &str, role: FileRole, include_degrades: bool) -> Vec<O
                 if promotable || lazy_static || mutable_static {
                     collect_unsupported(stmt, &mut diagnostics, &mut state);
                 } else {
-                    diagnostics.push(err(
-                        "a module file may only declare — top-level executable \
-                         statements need a bin entry (a module declares, it does not run)",
-                        stmt.span(),
-                    ));
+                    // Unhoistable top-level executable (a `for` loop filling a
+                    // Map at load time, a `let` holding a function value) →
+                    // whole-module degrade (degrade-over-reject; arch decision
+                    // point 8): the translator runs every top-level function
+                    // under the engine, and the module source carries these
+                    // statements. A conformance check (`include_degrades =
+                    // false`) drops this so the fixture proceeds through the
+                    // compile path; `ds lint` surfaces it as information.
+                    if state.include_degrades {
+                        diagnostics.push(err(
+                            "module top-level executable degrades to the engine — a \
+                             module declares, so this statement runs under the embedded \
+                             QuickJS rather than in a `fn main`",
+                            stmt.span(),
+                        ));
+                    }
                 }
             } else {
                 // Pure-TS execution semantics: executable statements (a `const`,

@@ -1007,20 +1007,30 @@ fn translate_with_deps_bin_entry_emits_main_for_declarations_only() {
 }
 
 #[test]
-fn translate_with_deps_module_rejects_top_level_executable() {
-    // Module role + a top-level executable statement (`console.log`) → Err: a
-    // module does not execute, and top-level statements have no entry to run in
-    // (a Node module only exports; it does not run top-level statements). Reject
-    // rather than silently drop.
-    let err = Translator::new()
+fn translate_with_deps_module_degrades_top_level_executable() {
+    // Module role + a top-level executable statement (`console.log`) →
+    // whole-module degrade (degrade-over-reject; arch decision point 8). A
+    // module declares, so a top-level statement has no `fn main` to run in, but
+    // degrading keeps the side effect: every top-level function routes to
+    // `call_fn` and the module source (carrying the `console.log`) is eval'd
+    // before each degraded invocation — the executable is not dropped.
+    let (rust, deps) = Translator::new()
         .translate_with_deps_as(
             "export function helper(): void {}\nconsole.log(1);",
             FileRole::Module,
         )
-        .expect_err("module with top-level executable should error");
+        .expect("module with top-level executable should degrade, not error");
     assert!(
-        err.contains("module file may only declare"),
-        "wrong error: {err}"
+        rust.contains("__ds_engine::call_fn(\"helper\""),
+        "top-level function should degrade to call_fn: {rust}"
+    );
+    assert!(
+        rust.contains("console.log(1)"),
+        "top-level executable should survive in the module JS: {rust}"
+    );
+    assert!(
+        deps.needs_engine(),
+        "degraded module should pull the engine dep: {deps:?}"
     );
 }
 

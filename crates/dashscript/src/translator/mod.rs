@@ -1541,6 +1541,27 @@ impl Translator {
         // flags these `unsupported` in `ds lint` — one source of truth for what
         // the engine covers. Default `ds build` output stays pure Rust; only a
         // program that actually uses such a construct pulls the `rquickjs` dep.
+        // A module file whose top-level executable statement cannot hoist (a
+        // `for` loop filling a `Map` at load time, a `let` holding a function
+        // value) has no Rust home — a module declares, it does not run. Degrade
+        // the whole module to the engine rather than rejecting
+        // (degrade-over-reject; arch decision point 8). This reuses the
+        // transitive whole-module-degrade path: every top-level function routes
+        // to `call_module_fn`, and the module source carries these top-level
+        // statements for the engine to run. The guard clears the thread-local
+        // on return so a later translate in the same thread is unaffected.
+        let module_exec_unhoistable = if matches!(role, FileRole::Module) {
+            let probe_reg = registry::build_registry(&program.body, &names);
+            let probe_mt = functions::mutable_top_level_names(&program.body, &names, &probe_reg);
+            functions::module_has_unhoistable_exec(&program.body, &names, &probe_mt)
+        } else {
+            false
+        };
+        let _degrade_guard =
+            (module_exec_unhoistable && !functions::whole_module_degrade()).then(|| {
+                functions::set_whole_module_degrade(true);
+                functions::WholeModuleDegradeGuard
+            });
         let sites = check::program_engine_sites(program);
         if sites.top_level_dynamic {
             // Whole-program `run`. The engine evaluates ECMAScript, so strip the
@@ -1789,6 +1810,16 @@ impl Translator {
         let const_arrow_names = functions::const_arrow_fn_names(&program.body, &names);
         let mut exec_stmts: Vec<&oxc_ast::ast::Statement> = Vec::new();
         for s in &program.body {
+            // whole_module_degrade: every value binding and executable runs
+            // under the engine (the module source carries them), so skip the
+            // static hoist paths — a `const M = new Map()` must not be emitted
+            // as a half-initialized OnceLock alongside the engine's filled map.
+            // Declarations (function/class/interface/type/import/export) still
+            // lower to items; their function bodies route to `call_module_fn`.
+            if functions::whole_module_degrade() && functions::is_executable_top_level(s) {
+                exec_stmts.push(s);
+                continue;
+            }
             // A promoted const-expr `const` lowers to a crate-level `const`
             // item here (escape promotion, A3) — NOT collected into `fn main`,
             // so a top-level function reading it resolves to the item, not a
@@ -1970,7 +2001,7 @@ impl Translator {
                 // no `fn main` to run in (a Node module only exports; it does
                 // not run top-level statements unless it is an entry) — reject,
                 // rather than silently dropping their side effects.
-                if !exec_stmts.is_empty() {
+                if !exec_stmts.is_empty() && !functions::whole_module_degrade() {
                     return Err(
                         "a module file may only declare (function / class / interface / \
                          type / import / export) — top-level executable statements have no \
@@ -1979,6 +2010,9 @@ impl Translator {
                             .into(),
                     );
                 }
+                // whole_module_degrade: the top-level executables (collected in
+                // `exec_stmts`) run under the engine via the module source, so
+                // they are not dropped — a degraded module keeps its side effects.
                 // declarations-only: a crate-internal module (src/<stem>.rs)
                 // with no `fn main`, brought in by the entry via `mod <stem>;`.
             }

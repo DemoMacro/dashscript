@@ -277,10 +277,11 @@ fn check_flags_string_raw() {
 }
 
 #[test]
-fn check_as_module_flags_top_level_executable() {
-    // Module role (arch decision point 8): a module only declares; a top-level
-    // executable statement (`console.log`) has no entry to run in → unsupported
-    // (rather than silently dropping its side effect).
+fn check_as_module_degrades_top_level_executable() {
+    // Module role + a top-level executable (`console.log`) → whole-module
+    // degrade (degrade-over-reject; arch decision point 8): a module declares,
+    // so this runs under the embedded engine. `check_as` (`include_degrades =
+    // true`) surfaces it as information; the compile path still lowers it.
     let diags = Translator::new().check_as(
         "export function f(): void {}\nconsole.log(1);",
         FileRole::Module,
@@ -288,8 +289,28 @@ fn check_as_module_flags_top_level_executable() {
     assert!(
         diags
             .iter()
-            .any(|d| d.message.contains("module file may only declare")),
-        "module top-level executable not flagged: {diags:?}"
+            .any(|d| d.message.contains("degrades to the engine")),
+        "module top-level executable should degrade: {diags:?}"
+    );
+}
+
+#[test]
+fn check_reject_only_module_top_level_executable_proceeds() {
+    // The conformance path (`check_reject_only`, `include_degrades = false`)
+    // drops the degrade diagnostic — a module with a top-level executable is
+    // not a translatability failure, so the fixture proceeds through the
+    // compile path (translate degrades the whole module). This is the
+    // degrade-over-reject invariant: nothing here is flagged unsupported.
+    let diags = Translator::new().check_reject_only(
+        "export function f(): void {}\nconsole.log(1);",
+        FileRole::Module,
+    );
+    assert!(
+        diags.iter().all(|d| {
+            !d.message.contains("degrades to the engine")
+                && !d.message.contains("module file may only declare")
+        }),
+        "module top-level executable must not be a reject-only failure: {diags:?}"
     );
 }
 

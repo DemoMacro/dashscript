@@ -29,20 +29,47 @@ use super::super::name_table::NameTable;
 use super::super::registry::TypeRegistry;
 use super::super::types;
 
-/// The body of a top-level `function` — a bare `function f() {}` or an `export
-/// function f() {}` (an `ExportNamedDeclaration` wrapping the declaration).
-/// `None` for any other statement. Shared by the mutation/escape passes so an
-/// `export function` rebinding a module-global is recognized the same as a bare
-/// one (B3-2).
+/// The body of a top-level `function` — a bare `function f() {}`, an `export
+/// function f() {}` (an `ExportNamedDeclaration` wrapping the declaration), or
+/// a const-arrow fn `const f = () => {}` (a `VariableDeclaration` whose sole
+/// initializer is an `ArrowFunctionExpression` — a fn item in DashScript, so its
+/// mutations/escapes of module-globals are scanned the same as a `function`'s).
+/// `None` for any other statement (a value binding, a type decl, …). Shared by
+/// the mutation/escape passes so an `export function`/const-arrow rebinding a
+/// module-global is recognized the same as a bare `function` (B3-2).
 fn function_body<'a>(stmt: &'a Statement<'a>) -> Option<&'a oxc_ast::ast::FunctionBody<'a>> {
     match stmt {
         Statement::FunctionDeclaration(f) => f.body.as_deref(),
+        Statement::VariableDeclaration(v) => arrow_fn_body(v),
         Statement::ExportNamedDeclaration(e) => match &e.declaration {
             Some(Declaration::FunctionDeclaration(f)) => f.body.as_deref(),
+            Some(Declaration::VariableDeclaration(v)) => arrow_fn_body(v),
             _ => None,
         },
         _ => None,
     }
+}
+
+/// The body of a top-level const-arrow fn (`const f = (…) => {…}`), or `None`
+/// for a non-arrow `const`/`let` (a value binding, not a fn body) or a
+/// multi-declarator declaration.
+fn arrow_fn_body<'a>(v: &'a VariableDeclaration<'a>) -> Option<&'a oxc_ast::ast::FunctionBody<'a>> {
+    let d = v.declarations.first()?;
+    let init = d.init.as_ref()?;
+    let Expression::ArrowFunctionExpression(a) = init else {
+        return None;
+    };
+    Some(a.body.as_ref())
+}
+
+/// Whether a Rust type is `Option<…>` (a nullable annotation already lowered by
+/// `translate_type`) — used by the delayed-binding path to avoid double-wrapping
+/// a non-nullable annotation's cell type in `Option<Option<T>>`.
+fn type_is_option(ty: &Type) -> bool {
+    matches!(
+        ty,
+        Type::Path(p) if p.path.segments.last().is_some_and(|s| s.ident == "Option")
+    )
 }
 
 /// The `VariableDeclaration` a top-level `const`/`let` carries — a bare
@@ -122,6 +149,7 @@ pub(in crate::translator) fn lazy_static_candidate(
         && !is_inferable_object(init)
         && !matches!(init, Expression::ArrayExpression(_))
         && !is_inferable_binary(init)
+        && !matches!(init, Expression::TemplateLiteral(_))
         && !is_typed_assertion(init)
         && !is_lazy_static_ref(init)
     {
@@ -388,6 +416,9 @@ fn infer_init_type(init: &Expression, registry: &TypeRegistry) -> Type {
             parse_quote!(::std::collections::HashMap<String, #val>)
         }
         Expression::BinaryExpression(_) => parse_quote!(String),
+        // A template literal (`` `…` ``, with or without `${…}` interpolation)
+        // always evaluates to a `String` at runtime (`format!`).
+        Expression::TemplateLiteral(_) => parse_quote!(String),
         Expression::ArrayExpression(arr) => infer_array_type(arr),
         _ => parse_quote!(regress::Regex),
     }
@@ -536,13 +567,20 @@ pub(in crate::translator) fn mutable_static_items(
         ];
         return Some((items, setter, false));
     }
-    // B3-2c delayed binding: `let x: T | undefined;` → `RefCell<Option<T>>`
-    // seeded `None`, set later via `set_x(Some(v))`. The annotation lowers to
-    // `Option<T>` (a nullable union), so the cell holds it directly and the get
-    // accessor returns the `Option`; a read wraps in `.expect(..)` for a call,
-    // `is_some()`/`is_none()` for truthiness (see the read rewrite).
+    // B3-2c delayed binding: `let x: T;` (no initializer) is undefined until
+    // set, so the cell holds `Option<T>` seeded `None`, set later via
+    // `set_x(Some(v))`. The get accessor returns the `Option`; a read wraps in
+    // `.expect(..)` for a call, `is_some()`/`is_none()` for truthiness (see the
+    // read rewrite). A nullable annotation (`T | undefined`) already lowers to
+    // `Option<T>` and is used directly; a non-nullable annotation (`BodyContext`)
+    // is wrapped so the cell is `RefCell<Option<T>>` either way.
     let ta = d.type_annotation.as_ref()?;
-    let ty = types::translate_type(&ta.type_annotation);
+    let raw = types::translate_type(&ta.type_annotation);
+    let ty: Type = if type_is_option(&raw) {
+        raw
+    } else {
+        parse_quote!(::core::option::Option<#raw>)
+    };
     let items = vec![
         parse_quote! {
             thread_local! {
@@ -810,6 +848,11 @@ fn binary_is_string_concat(bin: &BinaryExpression) -> bool {
 fn operand_is_str_literal(expr: &Expression) -> bool {
     match expr {
         Expression::StringLiteral(_) => true,
+        // A template literal (`` `…` ``) always evaluates to a string, so a `+`
+        // chain with one leaf is string concatenation just like a `StringLiteral`
+        // leaf — e.g. `` `tmpl` + arr.map().join() `` is a module-global
+        // `String` singleton (not a numeric `+`, which has no static type).
+        Expression::TemplateLiteral(_) => true,
         Expression::BinaryExpression(bin) if matches!(bin.operator, BinaryOperator::Addition) => {
             binary_is_string_concat(bin)
         }
@@ -826,6 +869,13 @@ fn new_return_type(new: &NewExpression) -> Option<Type> {
     if let Expression::Identifier(id) = &new.callee {
         if let Some(t) = builtins::encoding_ctor_type(id.name.as_str()) {
             return Some(t);
+        }
+        // A TypedArray ctor (`new Uint8Array([…])` → `Vec<u8>`, matching
+        // `expressions/new`'s emit) — its element type is fixed-width, so a
+        // module-global singleton lowers to `OnceLock<Vec<elem>>`.
+        if let Some(elem) = expressions::typed_array_elem_type(id.name.as_str()) {
+            let elem_ident = format_ident!("{}", elem);
+            return Some(parse_quote!(::std::vec::Vec<#elem_ident>));
         }
     }
     new_collection_return_type(new)
@@ -965,4 +1015,40 @@ impl<'a> VisitMut for Subst<'a> {
         }
         visit_mut::visit_type_mut(self, ty);
     }
+}
+
+/// Whether a module file has a top-level executable statement that cannot hoist
+/// to a crate item — not a promotable const-expr (`const N = 5` → crate `const`),
+/// a lazy static (`const M = new Map()` → OnceLock), a mutable static
+/// (`let x = 0` mutated → RefCell), or a fn alias (`const g = f` → `use`). A
+/// module declares, it does not run, so such a statement — a `for` loop filling
+/// a `Map` at load time, a `let` holding a function value — has no Rust home.
+/// The caller degrades the whole module to the engine rather than rejecting
+/// (degrade-over-reject; arch decision point 8). Mirrors the hoist decision in
+/// `Translator::translate_with_deps_as`'s exec-stmt collection so the two agree.
+pub(in crate::translator) fn module_has_unhoistable_exec(
+    program_body: &[Statement],
+    names: &NameTable<'_>,
+    mutable_top_level: &HashSet<String>,
+) -> bool {
+    let const_arrow_names = super::const_arrow_fn_names(program_body, names);
+    program_body.iter().any(|stmt| {
+        if !super::is_executable_top_level(stmt) {
+            return false;
+        }
+        if let Statement::VariableDeclaration(v) = stmt {
+            if super::escape::promotable_const_info(v, names, mutable_top_level).is_some() {
+                return false;
+            }
+        }
+        if lazy_static_candidate(stmt, mutable_top_level, names)
+            || mutable_static_candidate(stmt, mutable_top_level, names)
+        {
+            return false;
+        }
+        if super::fn_alias_use_item(stmt, &const_arrow_names, names).is_some() {
+            return false;
+        }
+        true
+    })
 }
