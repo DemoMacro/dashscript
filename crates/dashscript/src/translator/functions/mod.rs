@@ -513,6 +513,12 @@ fn translate_exported_declaration(
 /// ([`translate_exported_declaration`]) and the plain top-level path
 /// ([`translate_statement`]). Non-arrow initializers yield nothing (a const
 /// value is an executable statement, not an item).
+///
+/// Per-function engine degrade (B6d #312 extension): a const-arrow fn whose
+/// signature carries an unmappable type (`<T>(data, type): OutputByType[T]`)
+/// lowers to the same engine stub as a degraded `function` declaration. The
+/// TS source name (the const binding's `BindingIdentifier`) keys the dynamic-fn
+/// set, the same key `program_engine_sites` inserted under.
 fn const_arrow_fn_items(
     var: &VariableDeclaration,
     registry: &TypeRegistry,
@@ -523,9 +529,21 @@ fn const_arrow_fn_items(
         .filter_map(|d| match d.init.as_ref()? {
             Expression::ArrowFunctionExpression(arrow) => {
                 let name = names.of_pattern(&d.id);
-                Some(syn::Item::Fn(translate_const_arrow_to_fn(
-                    name, arrow, registry, names,
-                )))
+                // The const binding's TS name is the degrade key (the same
+                // string `program_engine_sites` inserted via the const binding's
+                // `BindingIdentifier`). A non-`BindingIdentifier` pattern (a
+                // destructured const arrow) is not in the dynamic-fn set, so it
+                // never degrades — matching `top_level_function`'s lifter.
+                let ts_name = match &d.id {
+                    BindingPattern::BindingIdentifier(id) => Some(id.name.as_str()),
+                    _ => None,
+                };
+                let item = if ts_name.is_some_and(is_dynamic_fn) {
+                    engine_arrow_fn_item(&name, ts_name.unwrap(), arrow, registry, names)
+                } else {
+                    translate_const_arrow_to_fn(name, arrow, registry, names)
+                };
+                Some(syn::Item::Fn(item))
             }
             _ => None,
         })
@@ -858,13 +876,68 @@ fn engine_fn_item(
     registry: &TypeRegistry,
     names: &NameTable<'_>,
 ) -> ItemFn {
+    engine_fn_item_from_sig(
+        name,
+        ts_name,
+        &func.params,
+        func.return_type.as_deref(),
+        func.r#async,
+        func.type_parameters.as_deref(),
+        registry,
+        names,
+    )
+}
+
+/// The const-arrow variant of [`engine_fn_item`]: same degraded stub, but the
+/// signature comes from an `ArrowFunctionExpression` (no `id`/`generator`; the
+/// const binding already named the function). Shared via
+/// [`engine_fn_item_from_sig`] so a const-arrow fn whose signature carries an
+/// unmappable type (`<T>(data, type): OutputByType[T]` — B6d #312) degrades
+/// the same way a `function` declaration does.
+fn engine_arrow_fn_item(
+    name: &Ident,
+    ts_name: &str,
+    arrow: &ArrowFunctionExpression,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> ItemFn {
+    engine_fn_item_from_sig(
+        name,
+        ts_name,
+        &arrow.params,
+        arrow.return_type.as_deref(),
+        arrow.r#async,
+        arrow.type_parameters.as_deref(),
+        registry,
+        names,
+    )
+}
+
+/// The shared core of [`engine_fn_item`] / [`engine_arrow_fn_item`]: emit a
+/// degraded Rust `fn` whose body marshals its arguments to `serde_json::Value`
+/// and dispatches to `__ds_engine::call_fn` / `call_module_fn`. A signature
+/// type the static translator cannot express becomes `serde_json::Value` (the
+/// marshal type), so the signature is concrete rather than `_`. Both
+/// [`Function`] and [`ArrowFunctionExpression`] expose the same field shape
+/// (`params` / `return_type` / `r#async` / `type_parameters`), so a `function`
+/// declaration and a const-arrow fn lower to the same stub shape.
+#[allow(clippy::too_many_arguments)]
+fn engine_fn_item_from_sig(
+    name: &Ident,
+    ts_name: &str,
+    params: &FormalParameters,
+    return_type: Option<&TSTypeAnnotation>,
+    is_async: bool,
+    type_parameters: Option<&oxc_ast::ast::TSTypeParameterDeclaration>,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> ItemFn {
     // Degraded signature: a param/return type the static translator cannot
     // express (unknown/indexed access/…) becomes `serde_json::Value` — the
     // marshal type — so the signature is concrete rather than `_`. An
     // expressible type maps normally, so a degraded function mixing the two
     // keeps the expressible params concrete.
-    let inputs: Vec<FnArg> = func
-        .params
+    let inputs: Vec<FnArg> = params
         .items
         .iter()
         .map(|fp| {
@@ -883,7 +956,7 @@ fn engine_fn_item(
             parse_quote!(#pname: #ty)
         })
         .collect();
-    let output: ReturnType = if func.r#async {
+    let output: ReturnType = if is_async {
         // An `async fn` degraded to QuickJS returns a JS `Promise`, which
         // cannot marshal across the serde boundary to Rust's `DsPromise<T>` (a
         // `Pin<Box<dyn Future>>` — not `DeserializeOwned`). The degraded stub
@@ -899,15 +972,12 @@ fn engine_fn_item(
         // degrade contradiction; the conformance entry `main` never does.)
         ReturnType::Default
     } else {
-        func.return_type
-            .as_deref()
-            .map_or(ReturnType::Default, |rt| {
-                let ty =
-                    types::translate_type_degraded_for_signature(&rt.type_annotation, registry);
-                parse_quote!(-> #ty)
-            })
+        return_type.map_or(ReturnType::Default, |rt| {
+            let ty = types::translate_type_degraded_for_signature(&rt.type_annotation, registry);
+            parse_quote!(-> #ty)
+        })
     };
-    let generics: Vec<Ident> = func.type_parameters.as_deref().map_or_else(Vec::new, |tp| {
+    let generics: Vec<Ident> = type_parameters.map_or_else(Vec::new, |tp| {
         tp.params
             .iter()
             .map(|p| bindings::type_ident(&p.name.name))
@@ -915,8 +985,7 @@ fn engine_fn_item(
     });
     // Marshal each argument to `serde_json::Value` (Serialize is derived on
     // every emitted struct/enum in per-function mode).
-    let args: Vec<Expr> = func
-        .params
+    let args: Vec<Expr> = params
         .items
         .iter()
         .map(|fp| {
@@ -958,7 +1027,7 @@ fn engine_fn_item(
     // — `call_fn` is synchronous), and `.await` yields `()`. Without the
     // keyword the stub is a sync `fn` returning `()`, and the injected
     // `.await` fails (`() is not a future`).
-    let async_kw: Option<proc_macro2::TokenStream> = func.r#async.then(|| quote!(async));
+    let async_kw: Option<proc_macro2::TokenStream> = is_async.then(|| quote!(async));
     if generics.is_empty() {
         parse_quote! {
             #async_kw fn #name(#(#inputs),*) #output #block

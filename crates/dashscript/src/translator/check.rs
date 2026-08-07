@@ -24,8 +24,9 @@ use std::collections::{HashMap, HashSet};
 
 use oxc_allocator::Allocator;
 use oxc_ast::ast::{
-    AssignmentTarget, BindingPattern, ChainElement, ChainExpression, Declaration, Expression,
-    ForStatementInit, Function, ObjectPropertyKind, Statement, UnaryOperator,
+    AssignmentTarget, BindingIdentifier, BindingPattern, ChainElement, ChainExpression,
+    Declaration, Expression, ForStatementInit, Function, ObjectPropertyKind, Statement,
+    UnaryOperator,
 };
 use oxc_diagnostics::OxcDiagnostic;
 use oxc_parser::Parser;
@@ -343,13 +344,72 @@ pub(super) struct EngineSites {
 /// (a non-function statement, an `export` of a class/variable/re-export). Used
 /// by the engine-site walk so an exported dynamic function degrades the same
 /// way a non-exported one does.
-pub(super) fn top_level_function<'a>(stmt: &'a Statement<'a>) -> Option<&'a Function<'a>> {
+///
+/// Also covers a const-arrow fn (`const f = <T>(x): ret => …` / `export const f
+/// = …`), which lowers to a `fn` item too. The const binding names the
+/// function (the arrow has no `id`), so [`TopLevelFn::Arrow`] carries that
+/// `BindingIdentifier`. This is the B6d #312 extension: a const-arrow fn whose
+/// signature carries an unmappable type (`unknown`/indexed access/…) degrades
+/// to the engine the same way a `function` declaration does.
+pub(super) enum TopLevelFn<'a> {
+    /// A `function f() {}` / `export function f() {}` — `f.id` carries the name.
+    Decl(&'a Function<'a>),
+    /// A `const f = () => …` / `export const f = () => …` — the const binding
+    /// names the function (the arrow has no `id`), so it is carried here.
+    Arrow(
+        &'a oxc_ast::ast::ArrowFunctionExpression<'a>,
+        &'a BindingIdentifier<'a>,
+    ),
+}
+
+impl<'a> TopLevelFn<'a> {
+    /// The TS source name — `f.id` for a declaration, the const binding name
+    /// for a const-arrow fn. `None` only for an anonymous `function` expression
+    /// (no top-level binding), which cannot be a degrade target.
+    pub(super) fn ts_name(&self) -> Option<&str> {
+        match self {
+            TopLevelFn::Decl(f) => f.id.as_ref().map(|id| id.name.as_str()),
+            TopLevelFn::Arrow(_, id) => Some(id.name.as_str()),
+        }
+    }
+}
+
+/// Lift a statement to a [`TopLevelFn`] — a `function f`, an `export function
+/// f`, or a const-arrow `const f = () => …` / `export const f = () => …`. The
+/// const-arrow case is the B6d #312 extension to per-function engine degrade.
+/// `None` for any other statement (a non-function declaration, an executable
+/// statement, an `export` of a class/variable/re-export that is not a const
+/// arrow).
+pub(super) fn top_level_function<'a>(stmt: &'a Statement<'a>) -> Option<TopLevelFn<'a>> {
     match stmt {
-        Statement::FunctionDeclaration(f) => Some(&**f),
+        Statement::FunctionDeclaration(f) => Some(TopLevelFn::Decl(f)),
         Statement::ExportNamedDeclaration(e) => match &e.declaration {
-            Some(Declaration::FunctionDeclaration(f)) => Some(&**f),
+            Some(Declaration::FunctionDeclaration(f)) => Some(TopLevelFn::Decl(f)),
+            Some(Declaration::VariableDeclaration(v)) => const_arrow_top_level(v),
             _ => None,
         },
+        Statement::VariableDeclaration(v) => const_arrow_top_level(v),
+        _ => None,
+    }
+}
+
+/// The shared const-arrow lifter for a `VariableDeclaration` (the body of
+/// `const f = () => …` and `export const f = () => …`). A single-declarator
+/// const arrow binds one `BindingIdentifier` to one `ArrowFunctionExpression`;
+/// anything else (a `let`, a multi-declarator, a non-arrow initializer, a
+/// destructured pattern) yields `None`.
+fn const_arrow_top_level<'a>(
+    v: &'a oxc_ast::ast::VariableDeclaration<'a>,
+) -> Option<TopLevelFn<'a>> {
+    if v.declarations.len() != 1 {
+        return None;
+    }
+    let d = &v.declarations[0];
+    let BindingPattern::BindingIdentifier(id) = &d.id else {
+        return None;
+    };
+    match d.init.as_ref()? {
+        Expression::ArrowFunctionExpression(arrow) => Some(TopLevelFn::Arrow(arrow, id)),
         _ => None,
     }
 }
@@ -385,19 +445,25 @@ pub(super) fn program_engine_sites(program: &oxc_ast::ast::Program) -> EngineSit
         // A function whose signature carries a type the static translator
         // cannot express (`unknown`/indexed access/…) degrades too — the `_`
         // would fail cargo check at the signature, not the body.
-        // `classify_function_signature` is the type-driven trigger; the body
-        // construct walk above is the AST-driven one.
+        // `classify_function_signature` / `classify_arrow_signature` is the
+        // type-driven trigger; the body construct walk above is the AST-driven
+        // one. The const-arrow case (B6d #312) is reached here through the
+        // `TopLevelFn::Arrow` variant — its name comes from the const binding.
         let sig_dynamic = match top_level_function(stmt) {
-            Some(f) => matches!(
+            Some(TopLevelFn::Decl(f)) => matches!(
                 classify::classify_function_signature(f),
+                Mapping::DegradeEngine(_)
+            ),
+            Some(TopLevelFn::Arrow(arrow, _)) => matches!(
+                classify::classify_arrow_signature(arrow),
                 Mapping::DegradeEngine(_)
             ),
             None => false,
         };
         if body_dynamic || sig_dynamic {
-            if let Some(f) = top_level_function(stmt) {
-                if let Some(id) = &f.id {
-                    sites.dynamic_fns.insert(id.name.as_str().to_string());
+            if let Some(tlf) = top_level_function(stmt) {
+                if let Some(name) = tlf.ts_name() {
+                    sites.dynamic_fns.insert(name.to_string());
                 }
             } else {
                 sites.top_level_dynamic = true;
@@ -469,8 +535,14 @@ fn collect_unsupported(stmt: &Statement, out: &mut Vec<OxcDiagnostic>, state: &m
     // `function` declaration in it. (`program_engine_sites` reads this walk's
     // diagnostic count to decide per-function degradation, so an exported
     // dynamic function must add a diagnostic the same way a bare one does.)
+    // The const-arrow case (`const f = () => …`) recurses its arrow body the
+    // same way (B6d #312 extension).
     if let Some(f) = top_level_function(stmt) {
-        if let Some(body) = &f.body {
+        let body: Option<&oxc_ast::ast::FunctionBody> = match f {
+            TopLevelFn::Decl(func) => func.body.as_deref(),
+            TopLevelFn::Arrow(arrow, _) => Some(arrow.body.as_ref()),
+        };
+        if let Some(body) = body {
             for s in &body.statements {
                 // A nested `function` declaration now lowers to a Rust nested
                 // fn item (see `translate_stmt`), so it is no longer flagged

@@ -196,8 +196,25 @@ where
                 ))),
             })
             .collect(),
+        // yarn classic object form: `{ "packages": ["packages/*", ...] }` —
+        // unwrap the inner list; yarn berry's extra keys are ignored. pnpm's
+        // separate `pnpm-workspace.yaml` and deno's singular `deno.json`
+        // `workspace` are not package.json fields, so they are read at the
+        // `discover_members` call site instead of here.
+        Some(serde_json::Value::Object(map)) => match map.get("packages") {
+            Some(serde_json::Value::Array(arr)) => arr
+                .iter()
+                .map(|v| match v {
+                    serde_json::Value::String(s) => Ok(s.clone()),
+                    other => Err(serde::de::Error::custom(format!(
+                        "workspaces.packages entries must be strings, got {other}"
+                    ))),
+                })
+                .collect(),
+            _ => Ok(Vec::new()),
+        },
         Some(other) => Err(serde::de::Error::custom(format!(
-            "workspaces must be a string or array, got {other}"
+            "workspaces must be a string, array, or {{packages:[]}}, got {other}"
         ))),
     }
 }
@@ -341,13 +358,15 @@ impl Default for Package {
     }
 }
 
-/// The `src/<stem>.rs` path for a `.ts` entry, flattening any directory
-/// prefix to a single `src/` level (MVP: a crate root, no sub-modules yet).
-/// The stem is the file name without extension — `main.ts`, `./main.ts`, and
-/// `src/main.ts` all map to `src/main.rs`.
+/// The `src/<stem>.rs` path for a source entry, mirroring `stem_of`
+/// (project.rs) so the `[lib]`/`[[bin]]` path matches the file the directory
+/// walk emits. A barrel `index.ts` flattens to its parent dir name
+/// (`src/index.ts` → `src/src.rs`); any other file keeps its own stem
+/// (`src/main.ts` → `src/main.rs`). Inputs are source paths (a tsconfig-
+/// discovered lib entry or a `bin` source), never dist artifacts — a dist
+/// `main` is build output, not a source entry, and never reaches here.
 fn src_to_rust_path(src_path: &str) -> String {
-    let stem = src_path.rsplit(['/', '\\']).next().unwrap_or(src_path);
-    let stem = stem.trim_end_matches(".ts");
+    let stem = crate::project::stem_of(std::path::Path::new(src_path));
     format!("src/{stem}.rs")
 }
 
@@ -361,12 +380,15 @@ impl Package {
         serde_json::from_str(json)
     }
 
-    /// The package name as a legal cargo `[package].name`. npm scoped names
-    /// (`@scope/name`) carry an `@` and `/` that cargo forbids, so the `@` is
-    /// dropped and `/` becomes `-` (cargo maps `-` to `_` for the crate ident).
+    /// The package name as a legal cargo `[package].name`, injective over npm's
+    /// charset and `ds_`-prefixed to separate npm-origin crates from
+    /// cargo-native crates (`cargo:serde` stays `serde`). npm scoped names
+    /// (`@scope/name`) carry `@`/`/` that cargo forbids; the escape is lossless
+    /// and the result doubles as the crate ident, path-dep key, and member cache
+    /// dir — see [`crate::translator::imports::npm_to_ds_ident`].
     #[must_use]
     pub fn cargo_name(&self) -> String {
-        self.name.trim_start_matches('@').replace('/', "-")
+        crate::translator::imports::npm_to_ds_ident(&self.name)
     }
 
     /// The `[package]` + `[dependencies]` body — the shared core emitted for a
@@ -492,6 +514,7 @@ impl Package {
         bins: &[(String, String)],
         lib: Option<&str>,
         inherited_deps: &std::collections::BTreeSet<String>,
+        path_deps: &[String],
     ) -> String {
         let mut out = String::from("[package]\n");
         out.push_str(&format!("name = {:?}\n", self.cargo_name()));
@@ -518,7 +541,7 @@ impl Package {
         }
 
         let cargo = &self.dashscript.cargo;
-        let deps: Vec<String> = cargo
+        let mut deps: Vec<String> = cargo
             .dependencies
             .iter()
             .map(|(name, spec)| {
@@ -529,6 +552,16 @@ impl Package {
                 }
             })
             .collect();
+        // Cross-workspace-member path dependencies: the translator records a
+        // bare specifier resolving to a sibling member crate (e.g.
+        // `@office-open/xml`) as a cargo path dep rather than merging that
+        // member's source into this crate. The stored crate ident is already
+        // the injective `ds_`-prefixed name (e.g. `ds_office_openSxml`) —
+        // identical to that member's `[package].name` and cache dir — so it
+        // serves verbatim as both the dep key and the `../<name>` path.
+        for crate_ident in path_deps {
+            deps.push(format!("{crate_ident} = {{ path = \"../{crate_ident}\" }}"));
+        }
         if !deps.is_empty() {
             out.push_str("\n[dependencies]\n");
             out.push_str(&deps.join("\n"));
@@ -927,7 +960,7 @@ mod tests {
         m.add_cargo_dependency("serde", CargoDepSpec::Version("1.0".to_string()));
         let inherited: std::collections::BTreeSet<String> =
             ["serde".to_string()].into_iter().collect();
-        let toml = m.to_member_toml(&[], None, &inherited);
+        let toml = m.to_member_toml(&[], None, &inherited, &[]);
         assert!(toml.contains("[package]"), "got:\n{toml}");
         assert!(toml.contains("version.workspace = true"), "got:\n{toml}");
         assert!(toml.contains("edition.workspace = true"), "got:\n{toml}");
@@ -950,8 +983,27 @@ mod tests {
         };
         m.add_cargo_dependency("local-only", CargoDepSpec::Version("0.1".to_string()));
         let inherited = std::collections::BTreeSet::new();
-        let toml = m.to_member_toml(&[], None, &inherited);
+        let toml = m.to_member_toml(&[], None, &inherited, &[]);
         assert!(toml.contains("local-only = \"0.1\""), "got:\n{toml}");
+    }
+
+    #[test]
+    fn to_member_toml_emits_member_path_deps() {
+        let m = Package {
+            name: "demo".to_string(),
+            ..Package::default()
+        };
+        let inherited = std::collections::BTreeSet::new();
+        // The translator records a cross-member bare specifier
+        // (`@office-open/xml`) as its injective ds_-prefixed crate ident, which
+        // is identical to that member's `[package].name` and cache dir, so it
+        // serves verbatim as both the dep key and the `../<name>` path.
+        let path_deps = vec!["ds_office_openSxml".to_string()];
+        let toml = m.to_member_toml(&[], None, &inherited, &path_deps);
+        assert!(
+            toml.contains("ds_office_openSxml = { path = \"../ds_office_openSxml\" }"),
+            "got:\n{toml}"
+        );
     }
 
     #[test]

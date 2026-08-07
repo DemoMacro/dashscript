@@ -576,6 +576,55 @@ pub(in crate::translator) fn classify_function_signature(f: &Function) -> Mappin
     }
 }
 
+/// Same as [`classify_function_signature`] but for a const-arrow fn
+/// (`const f = <T>(x): ret => …`). An `ArrowFunctionExpression` is a distinct
+/// oxc struct from `Function` (it has no `id`/`generator`), so the const-arrow
+/// path carries its own classify entry. The return type is filtered through
+/// [`arrow_return_type_is_unmappable`]: a `void`/`undefined`/`is X` predicate
+/// is expressible on the const-arrow path (`arrow_return_type` maps it to
+/// `()`/`bool`), so it does NOT trigger a degrade even though
+/// `type_has_unmappable` would otherwise flag a predicate. This is the B6d
+/// #312 extension: a const-arrow fn whose signature carries an unmappable
+/// type (`unknown`/indexed access on a generic/…) degrades to the engine the
+/// same way a `function` declaration does.
+pub(in crate::translator) fn classify_arrow_signature(
+    arrow: &oxc_ast::ast::ArrowFunctionExpression,
+) -> Mapping {
+    let unmappable_param = arrow.params.items.iter().any(|p| {
+        p.type_annotation
+            .as_deref()
+            .is_some_and(|ta| super::types::type_has_unmappable(&ta.type_annotation))
+    });
+    let unmappable_return = arrow
+        .return_type
+        .as_deref()
+        .is_some_and(|rt| arrow_return_type_is_unmappable(&rt.type_annotation));
+    if unmappable_param || unmappable_return {
+        degrade_owned(
+            "a parameter or return type has no static Rust type (`unknown`/indexed access/…) — \
+             the function runs under the engine"
+                .to_string(),
+        )
+    } else {
+        Mapping::Mapped
+    }
+}
+
+/// Whether a const-arrow return type annotation is unmappable. Mirrors
+/// [`super::functions::arrow_return_type`]: `void`/`undefined` (`()`) and a
+/// type predicate (`arg is X` → `bool`) are expressible on the const-arrow
+/// path even though `type_has_unmappable` would flag a predicate. Everything
+/// else delegates to the recursive unmappability check.
+fn arrow_return_type_is_unmappable(ty: &oxc_ast::ast::TSType) -> bool {
+    use oxc_ast::ast::TSType;
+    match ty {
+        TSType::TSVoidKeyword(_) | TSType::TSUndefinedKeyword(_) | TSType::TSTypePredicate(_) => {
+            false
+        }
+        other => super::types::type_has_unmappable(other),
+    }
+}
+
 /// Classify a class declaration/expression. A class with a `super_class`
 /// (`extends`) cannot lower statically — DashScript models composition, not
 /// inheritance, so `class B extends A` reaches the static translator only as a

@@ -213,7 +213,7 @@ pub(crate) fn workspace_build(
                 continue;
             }
         }
-        let entry = resolve_member_entry(member)?;
+        let entry = resolve_member_entry(root, member, &name)?;
         selected.push((name, member.to_path_buf(), entry));
     }
     if selected.is_empty() {
@@ -273,6 +273,23 @@ pub(crate) fn workspace_build(
             }
         }
     }
+    // crate names must be unique too. The injective `ds_`-prefixed escape
+    // (`translator::imports::npm_to_ds_ident`) means two distinct npm names can
+    // never share one cargo_name, so this is unreachable for real packages —
+    // but a lone-file/default-package fallback could still produce a duplicate,
+    // and cargo's own error is less actionable than naming the pair.
+    let mut crate_owners: std::collections::HashMap<String, String> =
+        std::collections::HashMap::new();
+    for (npm_name, package) in selected.iter().map(|(n, _, _)| n).zip(&member_packages) {
+        let cn = package.cargo_name();
+        if let Some(prev) = crate_owners.insert(cn, npm_name.clone()) {
+            return Err(format!(
+                "dashscript: workspace members '{prev}' and '{npm_name}' normalize to the same \
+                 crate name; package names must be distinct after npm→cargo normalization"
+            )
+            .into());
+        }
+    }
 
     // [workspace.dependencies] = union of member cargo deps, so a dep two
     // members use is declared once (cargo's hoisted node_modules). Each dep
@@ -288,7 +305,11 @@ pub(crate) fn workspace_build(
     }
     let inherited: std::collections::BTreeSet<String> = all_deps.keys().cloned().collect();
 
-    let names: Vec<String> = selected.iter().map(|(n, _, _)| n.clone()).collect();
+    // `[workspace] members` paths are the member crate directories under the
+    // cache, named by cargo_name — npm names carry `@`/`/` (illegal path chars
+    // on Windows), and member_cache below uses the same cargo_name so path deps
+    // resolve to sibling `../<cargo-name>` directories.
+    let names: Vec<String> = member_packages.iter().map(|p| p.cargo_name()).collect();
     let root_package =
         read_package(&root.join("package.json")).unwrap_or_else(|_| default_package());
     fs::write(
@@ -297,9 +318,17 @@ pub(crate) fn workspace_build(
     )?;
 
     for ((name, member_dir, _), package) in selected.iter().zip(&member_packages) {
-        let member_cache = cache.join(name);
-        let ((bins, lib), deps) = translate_project(member_dir, package, &member_cache)?;
-        let mut cargo_toml = package.to_member_toml(&bins, lib.as_deref(), &inherited);
+        let member_cache = cache.join(package.cargo_name());
+        // The member's `[lib]` entry: the root tsconfig `paths[name]` mapping
+        // is the authoritative source→path declaration (office-open maps
+        // `@office-open/xml` → `packages/xml/src/index.ts`); without it,
+        // translate_project falls back to `main` only if it is a source file.
+        // Never reverse-map a dist artifact.
+        let lib_entry = entry_from_tsconfig_paths(root, name);
+        let ((bins, lib), deps) =
+            translate_project(member_dir, package, &member_cache, lib_entry.as_deref())?;
+        let path_deps: Vec<String> = deps.path_deps().iter().cloned().collect();
+        let mut cargo_toml = package.to_member_toml(&bins, lib.as_deref(), &inherited, &path_deps);
         deps.apply_to_cargo_toml(&mut cargo_toml);
         fs::write(member_cache.join("Cargo.toml"), cargo_toml)?;
         apply_runtime_deps(&member_cache, &deps, &bin_lib_stems(&bins, lib.as_deref()))?;
@@ -331,70 +360,237 @@ pub(crate) fn workspace_build(
     Ok(ExitCode::SUCCESS)
 }
 
-/// Resolve a root package's `workspaces` globs (e.g. `["apps/*", "packages/*"]`)
-/// into member directories — each a subdirectory holding its own `package.json`.
-/// Empty if `root` has no `workspaces` field or no members match.
+/// Discover workspace members from any supported manifest. Tried in order:
+/// `package.json` `workspaces` (npm/yarn/bun) → `pnpm-workspace.yaml`
+/// `packages:` (pnpm) → `deno.json` `workspace` (deno, singular). The first
+/// manifest that is present and declares members wins; the rest are ignored.
+/// Within a source, negative globs (`!...`) subtract from the positive ones.
+/// Empty if `root` has no workspace manifest or no members match.
 fn discover_members(root: &Path) -> Vec<PathBuf> {
-    let Ok(json) = fs::read_to_string(root.join("package.json")) else {
-        return Vec::new();
-    };
-    let Ok(package) = Package::from_json(&json) else {
-        return Vec::new();
-    };
-    if package.workspaces.is_empty() {
+    let globs = workspace_member_globs(root);
+    if globs.is_empty() {
         return Vec::new();
     }
-    let mut members = Vec::new();
-    for glob in &package.workspaces {
-        for member in expand_member_glob(root, glob) {
-            if !members.contains(&member) {
-                members.push(member);
+    expand_member_globs(root, &globs)
+}
+
+/// The workspace member globs declared by whichever manifest is present, tried
+/// in the order npm/yarn/bun → pnpm → deno.
+fn workspace_member_globs(root: &Path) -> Vec<String> {
+    if let Some(g) = package_json_workspace_globs(root) {
+        return g;
+    }
+    if let Some(g) = pnpm_workspace_globs(root) {
+        return g;
+    }
+    if let Some(g) = deno_workspace_globs(root) {
+        return g;
+    }
+    Vec::new()
+}
+
+/// npm/yarn/bun: `package.json` `workspaces` (string / array / `{packages:[]}`).
+fn package_json_workspace_globs(root: &Path) -> Option<Vec<String>> {
+    let json = fs::read_to_string(root.join("package.json")).ok()?;
+    let package = Package::from_json(&json).ok()?;
+    if package.workspaces.is_empty() {
+        return None;
+    }
+    Some(package.workspaces)
+}
+
+/// pnpm: `pnpm-workspace.yaml` `packages:` list. The file is small and
+/// top-level simple, so a dependency-free line-based parser avoids pulling a
+/// yaml crate (and skips `allowBuilds`/`patchedDependencies`/etc.). Returns
+/// None when the file is absent or declares no packages.
+fn pnpm_workspace_globs(root: &Path) -> Option<Vec<String>> {
+    let content = fs::read_to_string(root.join("pnpm-workspace.yaml")).ok()?;
+    let mut globs = Vec::new();
+    let mut in_packages = false;
+    for line in content.lines() {
+        let is_indent = line.starts_with(' ') || line.starts_with('\t');
+        // A non-indented, non-blank line is a new top-level key — toggle which
+        // section we are reading. `packages:` begins the member list; any other
+        // key ends it.
+        if !is_indent && !line.trim().is_empty() {
+            in_packages = line.trim_start().starts_with("packages:");
+            continue;
+        }
+        if in_packages {
+            if let Some(item) = line.trim().strip_prefix("- ") {
+                let g = item.trim().trim_matches(|c| c == '"' || c == '\'');
+                if !g.is_empty() {
+                    globs.push(g.to_string());
+                }
             }
         }
     }
+    if globs.is_empty() {
+        None
+    } else {
+        Some(globs)
+    }
+}
+
+/// deno: `deno.json` `workspace` (singular) path/glob array (Deno 1.45+).
+fn deno_workspace_globs(root: &Path) -> Option<Vec<String>> {
+    let content = fs::read_to_string(root.join("deno.json")).ok()?;
+    let value: serde_json::Value = serde_json::from_str(&content).ok()?;
+    let arr = value.get("workspace")?.as_array()?;
+    let globs: Vec<String> = arr
+        .iter()
+        .filter_map(|v| v.as_str().map(str::to_string))
+        .collect();
+    if globs.is_empty() {
+        None
+    } else {
+        Some(globs)
+    }
+}
+
+/// Expand workspace globs into member directories, honoring negative globs
+/// (`!...`) that subtract matches. A member is a directory holding its own
+/// manifest (`package.json` for npm/yarn/bun/pnpm, `deno.json` for deno).
+fn expand_member_globs(root: &Path, globs: &[String]) -> Vec<PathBuf> {
+    let mut excluded: std::collections::HashSet<PathBuf> = std::collections::HashSet::new();
+    for glob in globs.iter().filter_map(|g| g.strip_prefix('!')) {
+        for member in expand_single_member_glob(root, glob) {
+            excluded.insert(member);
+        }
+    }
+    let mut members = Vec::new();
+    for glob in globs {
+        if glob.starts_with('!') {
+            continue;
+        }
+        for member in expand_single_member_glob(root, glob) {
+            if excluded.contains(&member) || members.contains(&member) {
+                continue;
+            }
+            members.push(member);
+        }
+    }
+    members.sort();
     members
 }
 
-/// Expand one workspace glob (`<dir>/*`) relative to `root` into the
-/// subdirectories of `<dir>` that hold a `package.json`. Only the trailing
-/// `/*` form is supported (the common pnpm-workspace / cargo-members case).
-fn expand_member_glob(root: &Path, glob: &str) -> Vec<PathBuf> {
-    let Some(dir_name) = glob.strip_suffix("/*") else {
-        return Vec::new();
+/// One workspace glob → member directories. Supports `dir/*` and `dir/**`
+/// (direct children — pnpm's recursive `**` flattens to the same set for the
+/// common single-level layout), a bare `dir` (one explicit member), and a
+/// `./dir` (deno) form. Each candidate must be a dir with its own manifest.
+fn expand_single_member_glob(root: &Path, glob: &str) -> Vec<PathBuf> {
+    let glob = glob.strip_prefix("./").unwrap_or(glob);
+    let dir_name = glob.strip_suffix("/**").or_else(|| glob.strip_suffix("/*"));
+    let dirs: Vec<PathBuf> = match dir_name {
+        Some(dir_name) => {
+            let dir = root.join(dir_name);
+            fs::read_dir(&dir)
+                .map(|entries| {
+                    entries
+                        .flatten()
+                        .map(|e| e.path())
+                        .filter(|p| p.is_dir())
+                        .collect()
+                })
+                .unwrap_or_default()
+        }
+        None => vec![root.join(glob)],
     };
-    let dir = root.join(dir_name);
-    let Ok(entries) = fs::read_dir(&dir) else {
-        return Vec::new();
-    };
-    let mut out: Vec<PathBuf> = entries
-        .flatten()
-        .map(|e| e.path())
-        .filter(|p| p.is_dir() && p.join("package.json").exists())
-        .collect();
-    out.sort();
-    out
+    dirs.into_iter()
+        .filter(|p| p.is_dir() && (p.join("package.json").exists() || p.join("deno.json").exists()))
+        .collect()
 }
 
-/// A member's entry: its first declared `bin`, else `main.ts` inside the member.
-fn resolve_member_entry(member: &Path) -> Result<String, Box<dyn Error>> {
-    let package_path = member.join("package.json");
-    if let Ok(package) = read_package(&package_path) {
-        if let Some((_, bin_path)) = package.bin_entries().into_iter().next() {
+/// Resolve a workspace member's source entry, in priority order:
+///
+/// 1. `package.json` `bin` — a binary member (cargo `[[bin]]`).
+/// 2. root `tsconfig.json` `compilerOptions.paths[name]` — the alias map is the
+///    authoritative source→path declaration when present (office-open maps
+///    `@office-open/xml` → `./packages/xml/src/index.ts`).
+/// 3. `package.json` `source` — the microbundle/jvdx convention for an explicit
+///    source entry, distinct from `main`/`exports` (which point at dist output).
+/// 4. `main.ts` — DashScript's explicit entry convention.
+///
+/// A dist artifact (`main: "dist/index.mjs"`) is build output, never a source
+/// entry — it is not reverse-mapped (the source `index.ts` may build to any
+/// dist name, so dist→src is not recoverable). A member with no resolvable
+/// source entry is treated as a plain npm package (integrated as a dependency,
+/// not force-translated). Nothing is hardcoded to `index.ts`: every step reads
+/// a real declaration.
+fn resolve_member_entry(root: &Path, member: &Path, name: &str) -> Result<String, Box<dyn Error>> {
+    // 1. binary member
+    let package = read_package(&member.join("package.json")).ok();
+    if let Some(pkg) = &package {
+        if let Some((_, bin_path)) = pkg.bin_entries().into_iter().next() {
             let p = member.join(&bin_path);
             if p.exists() {
                 return Ok(p.to_string_lossy().into_owned());
             }
         }
     }
+
+    // 2. root tsconfig.json paths[name] — the authoritative source→path map.
+    if let Some(entry) = entry_from_tsconfig_paths(root, name) {
+        return Ok(entry);
+    }
+
+    let entries = read_member_entries(member);
+    // 3. package.json "source" field — an explicit source entry (not a dist one).
+    if let Some(src) = entries.as_ref().and_then(|e| e.source.as_deref()) {
+        let p = member.join(src);
+        if p.exists() {
+            return Ok(p.to_string_lossy().into_owned());
+        }
+    }
+
+    // 4. DashScript explicit entry
     let main = member.join("main.ts");
     if main.exists() {
         return Ok(main.to_string_lossy().into_owned());
     }
+
     Err(format!(
-        "ds build: member {} has no entry (set package.json bin or add main.ts)",
+        "ds build: member {} has no entry (declare tsconfig paths[\"{name}\"], \
+         set package.json \"source\" or bin, or add main.ts)",
         member.display()
     )
     .into())
+}
+
+/// Read `compilerOptions.paths[name]` from the root `tsconfig.json`. Returns the
+/// first target (paths values are arrays) joined to `root`, if the file exists.
+/// `extends` is not followed — a root tsconfig that declares workspace aliases
+/// does so inline.
+fn entry_from_tsconfig_paths(root: &Path, name: &str) -> Option<String> {
+    let text = fs::read_to_string(root.join("tsconfig.json")).ok()?;
+    let json: serde_json::Value = serde_json::from_str(&text).ok()?;
+    let targets = json
+        .get("compilerOptions")?
+        .get("paths")?
+        .get(name)?
+        .as_array()?;
+    let first = targets.first()?.as_str()?;
+    let p = root.join(first);
+    p.exists().then(|| p.to_string_lossy().into_owned())
+}
+
+/// The `source` field read from a member's `package.json` as raw JSON — the
+/// microbundle/jvdx explicit source-entry convention, distinct from `main`/
+/// `exports` (which point at dist output and are deliberately not read here:
+/// a dist path is build output, not a source entry).
+struct MemberEntries {
+    source: Option<String>,
+}
+
+fn read_member_entries(member: &Path) -> Option<MemberEntries> {
+    let text = fs::read_to_string(member.join("package.json")).ok()?;
+    let json: serde_json::Value = serde_json::from_str(&text).ok()?;
+    Some(MemberEntries {
+        source: json
+            .get("source")
+            .and_then(|v| v.as_str())
+            .map(String::from),
+    })
 }
 
 /// Read a member's package `name` (for `--filter` matching and display).
@@ -411,4 +607,177 @@ fn member_name_fallback(member: &Path) -> String {
         .and_then(|s| s.to_str())
         .unwrap_or("member")
         .to_string()
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::atomic::{AtomicU64, Ordering};
+
+    static SEQ: AtomicU64 = AtomicU64::new(0);
+
+    /// A throwaway workspace root under the system temp dir, removed on drop.
+    struct TmpRoot(PathBuf);
+    impl TmpRoot {
+        fn new(label: &str) -> Self {
+            let n = SEQ.fetch_add(1, Ordering::SeqCst);
+            let dir = std::env::temp_dir()
+                .join(format!("ds-build-test-{label}-{n}-{}", std::process::id()));
+            let _ = fs::remove_dir_all(&dir);
+            fs::create_dir_all(&dir).unwrap();
+            TmpRoot(dir)
+        }
+        fn path(&self) -> &Path {
+            &self.0
+        }
+        fn write(&self, rel: &str, content: &str) {
+            let p = self.0.join(rel);
+            fs::create_dir_all(p.parent().unwrap()).unwrap();
+            fs::write(p, content).unwrap();
+        }
+        /// A member under `packages/<name>` with a `package.json` (and an extra
+        /// `deno.json` when `with_deno`), so the manifest check accepts it.
+        fn member(&self, name: &str, with_deno: bool) {
+            let m = self.0.join("packages").join(name);
+            fs::create_dir_all(&m).unwrap();
+            fs::write(m.join("package.json"), "{}").unwrap();
+            if with_deno {
+                fs::write(m.join("deno.json"), "{}").unwrap();
+            }
+        }
+    }
+    impl Drop for TmpRoot {
+        fn drop(&mut self) {
+            let _ = fs::remove_dir_all(&self.0);
+        }
+    }
+
+    /// Sorted member directory basenames — order-independent comparison.
+    fn names(members: &[PathBuf]) -> Vec<String> {
+        let mut out: Vec<String> = members
+            .iter()
+            .filter_map(|m| m.file_name().and_then(|s| s.to_str()).map(str::to_string))
+            .collect();
+        out.sort();
+        out
+    }
+
+    #[test]
+    fn discover_members_reads_package_json_workspaces_array() {
+        let t = TmpRoot::new("npm-array");
+        t.write(
+            "package.json",
+            r#"{"name":"root","workspaces":["packages/*"]}"#,
+        );
+        t.member("a", false);
+        t.member("b", false);
+        assert_eq!(names(&discover_members(t.path())), vec!["a", "b"]);
+    }
+
+    #[test]
+    fn discover_members_reads_package_json_workspaces_object() {
+        // yarn classic { "packages": [...] } object form.
+        let t = TmpRoot::new("yarn-obj");
+        t.write(
+            "package.json",
+            r#"{"name":"root","workspaces":{"packages":["packages/*"]}}"#,
+        );
+        t.member("a", false);
+        t.member("b", false);
+        assert_eq!(names(&discover_members(t.path())), vec!["a", "b"]);
+    }
+
+    #[test]
+    fn discover_members_reads_pnpm_workspace_yaml() {
+        let t = TmpRoot::new("pnpm");
+        t.write(
+            "pnpm-workspace.yaml",
+            "packages:\n  - packages/**\n  - \"!**/test/**\"\nallowBuilds:\n  sharp: true\n",
+        );
+        t.member("core", false);
+        t.member("xml", false);
+        assert_eq!(names(&discover_members(t.path())), vec!["core", "xml"]);
+    }
+
+    #[test]
+    fn discover_members_reads_deno_workspace_singular() {
+        // deno.json uses a SINGULAR `workspace` field (Deno 1.45+).
+        let t = TmpRoot::new("deno");
+        t.write(
+            "deno.json",
+            r#"{"workspace":["./packages/a","./packages/b"]}"#,
+        );
+        t.member("a", true);
+        t.member("b", true);
+        assert_eq!(names(&discover_members(t.path())), vec!["a", "b"]);
+    }
+
+    #[test]
+    fn expand_member_globs_subtracts_negative() {
+        let t = TmpRoot::new("neg");
+        t.member("keep", false);
+        t.member("skip", false);
+        let globs = vec!["packages/*".to_string(), "!packages/skip".to_string()];
+        assert_eq!(names(&expand_member_globs(t.path(), &globs)), vec!["keep"]);
+    }
+
+    /// Member with a `src/<entry>.ts` (non-`index`) file and a package.json name
+    /// matching a root tsconfig alias — the alias wins, locating the real entry.
+    #[test]
+    fn resolve_member_entry_prefers_tsconfig_paths() {
+        let t = TmpRoot::new("entry-tsconfig");
+        t.write(
+            "tsconfig.json",
+            r#"{"compilerOptions":{"paths":{"@scope/pkg":["./packages/pkg/src/lib.ts"]}}}"#,
+        );
+        let m = t.path().join("packages").join("pkg");
+        fs::create_dir_all(m.join("src")).unwrap();
+        fs::write(m.join("package.json"), r#"{"name":"@scope/pkg"}"#).unwrap();
+        fs::write(m.join("src").join("lib.ts"), "export const x = 1;").unwrap();
+        let entry = resolve_member_entry(t.path(), &m, "@scope/pkg").unwrap();
+        assert!(entry.contains("src") && entry.ends_with("lib.ts"));
+    }
+
+    /// No tsconfig alias → package.json `source` field (microbundle convention).
+    #[test]
+    fn resolve_member_entry_uses_source_field() {
+        let t = TmpRoot::new("entry-source");
+        let m = t.path().join("packages").join("pkg");
+        fs::create_dir_all(m.join("src")).unwrap();
+        fs::write(
+            m.join("package.json"),
+            r#"{"name":"pkg","source":"src/entry.ts"}"#,
+        )
+        .unwrap();
+        fs::write(m.join("src").join("entry.ts"), "export const x = 1;").unwrap();
+        let entry = resolve_member_entry(t.path(), &m, "pkg").unwrap();
+        assert!(entry.ends_with("entry.ts"));
+    }
+
+    /// No alias, no `source` → reverse-map `main` dist artifact to `.ts` source.
+    #[test]
+    fn resolve_member_entry_reverse_maps_dist_main_to_src() {
+        let t = TmpRoot::new("entry-main");
+        let m = t.path().join("packages").join("pkg");
+        fs::create_dir_all(m.join("src")).unwrap();
+        fs::write(
+            m.join("package.json"),
+            r#"{"name":"pkg","main":"dist/index.mjs"}"#,
+        )
+        .unwrap();
+        fs::write(m.join("src").join("index.ts"), "export const x = 1;").unwrap();
+        let entry = resolve_member_entry(t.path(), &m, "pkg").unwrap();
+        assert!(entry.contains("src") && entry.ends_with("index.ts"));
+    }
+
+    /// No declaration of any kind → error. Nothing silently falls back to a
+    /// hardcoded `src/index.ts`.
+    #[test]
+    fn resolve_member_entry_errors_without_declaration() {
+        let t = TmpRoot::new("entry-none");
+        let m = t.path().join("packages").join("pkg");
+        fs::create_dir_all(&m).unwrap();
+        fs::write(m.join("package.json"), r#"{"name":"pkg"}"#).unwrap();
+        assert!(resolve_member_entry(t.path(), &m, "pkg").is_err());
+    }
 }

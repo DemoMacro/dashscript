@@ -73,15 +73,17 @@ fn collect_skips_cargo_import() {
 #[test]
 fn bare_import_emits_use_for_npm_resolution() {
     // A bare specifier (`lodash`) is an npm import — the translator emits
-    // `use lodash::x;` and `check` passes. Resolution is the build pipeline's
-    // job (the third correctness layer); whether it lowers depends on the
-    // target. `ds build` resolves `lodash` under `node_modules/`: a `.ts`
-    // entry translates, a `.js` entry errors honestly.
+    // `use ds_lodash::x;` (the `ds_` prefix + injective escape separates
+    // npm-origin crates from cargo-native crates) and `check` passes.
+    // Resolution is the build pipeline's job (the third correctness layer);
+    // whether it lowers depends on the target. `ds build` resolves `lodash`
+    // under `node_modules/`: a `.ts` entry translates, a `.js` entry errors
+    // honestly.
     let rust = Translator::new()
         .translate("import { x } from \"lodash\";")
         .expect("should translate");
     assert!(
-        rust.contains("use lodash::x"),
+        rust.contains("use ds_lodash::x"),
         "bare import emitted no use: {rust}"
     );
     let diags = Translator::new().check("import { x } from \"lodash\";");
@@ -90,14 +92,15 @@ fn bare_import_emits_use_for_npm_resolution() {
 
 #[test]
 fn bare_import_normalizes_scope_and_hyphen() {
-    // `@scope/pkg-name` → `scope_pkg_name`: a valid Rust module ident (`@` and
-    // `-` are illegal in a `use` path). The leading `@` of a scoped package is
-    // dropped; hyphens and the scope separator fold to `_`.
+    // `@scope/pkg-name` → `ds_scopeSpkg_name`: a valid Rust module ident. The
+    // leading `@` is dropped; the scope separator `/` escapes to `S` and the
+    // hyphen to `_`, so the map is injective (distinct npm names never share
+    // one ident) and `ds_`-prefixed (never collides with a cargo-native crate).
     let rust = Translator::new()
         .translate("import { x } from \"@scope/pkg-name\";")
         .expect("should translate");
     assert!(
-        rust.contains("use scope_pkg_name::x"),
+        rust.contains("use ds_scopeSpkg_name::x"),
         "scope/hyphen not normalized: {rust}"
     );
 }
@@ -106,10 +109,12 @@ fn bare_import_normalizes_scope_and_hyphen() {
 fn collect_includes_bare_import() {
     // A bare specifier is assembled into a `mod` decl (resolved via
     // `node_modules`), the way a relative import is — unlike a `cargo:`
-    // import, which names a Rust crate and is excluded from assembly.
+    // import, which names a Rust crate and is excluded from assembly. Its
+    // module name is the injective `ds_`-prefixed ident (`my-pkg` →
+    // `ds_my_pkg`).
     let imports = Translator::new().imports("import { foo } from \"my-pkg\";");
     assert_eq!(imports.len(), 1);
-    assert_eq!(imports[0].module, "my_pkg");
+    assert_eq!(imports[0].module, "ds_my_pkg");
     assert_eq!(imports[0].source, "my-pkg");
 }
 
@@ -1135,12 +1140,38 @@ fn export_const_generic_arrow_keeps_type_params() {
 fn export_const_arrow_type_predicate_returns_bool() {
     // A type predicate (`arg is X`) is a TS type guard; its runtime shape is
     // `bool` (the narrowed type is a type-level fiction), so the fn returns
-    // `bool` regardless of the predicate's target.
+    // `bool` regardless of the predicate's target. A typed (`string`) param
+    // and a runtime-typeof-free body keep the signature statically expressible
+    // so the predicate-to-bool mapping is what this exercises (an `unknown`
+    // param or a `typeof` in the body would force a per-function engine
+    // degrade under the B6d #312 const-arrow rule).
     let rust = Translator::new()
-        .translate("export const isStr = (s: unknown): s is string => typeof s === \"string\";")
+        .translate("export const isStr = (s: string): s is string => s.length > 0;")
         .expect("should translate");
     assert!(rust.contains("pub fn is_str("), "no pub fn: {rust}");
     assert!(rust.contains("-> bool"), "predicate not bool: {rust}");
+}
+
+#[test]
+fn const_arrow_signature_with_unmappable_type_degrades() {
+    // B6d #312 extension: a const-arrow fn (`const f = <T>(x): T => …`) whose
+    // signature carries a type the static translator cannot express (an
+    // indexed access on a generic, `unknown`, …) degrades to the engine the
+    // same way a `function` declaration does. The unmappable param/return
+    // marshals as `serde_json::Value`, and the body runs under QuickJS via
+    // `call_fn`. Without this, the const-arrow would emit `_` for the
+    // untypable type and fail cargo check.
+    let rust = Translator::new()
+        .translate("export const f = (v: unknown): unknown => v;")
+        .expect("should translate");
+    assert!(
+        rust.contains("call_fn"),
+        "unmappable signature → engine stub:\n{rust}"
+    );
+    assert!(
+        rust.contains("pub fn f(v: ::serde_json::Value) -> ::serde_json::Value"),
+        "degraded signature marshals as Value:\n{rust}"
+    );
 }
 
 #[test]

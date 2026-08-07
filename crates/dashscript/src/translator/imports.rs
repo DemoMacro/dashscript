@@ -199,6 +199,51 @@ pub(crate) fn current_module_specifier() -> Option<String> {
     CURRENT_MODULE_SPECIFIER.with(|c| c.borrow().clone())
 }
 
+thread_local! {
+    /// Per-file emit-name overrides for relative import specifiers, set by
+    /// `project::translate_dep` around each dep's translate. A barrel
+    /// (`locking/index.ts`) and a same-stem definition file
+    /// (`locking/locking.ts`) both flatten to `src/locking.rs` if deduped by
+    /// specifier-derived mod name, so the defn is suffixed
+    /// (`locking__ds_defn.rs`) and the barrel's `pub use crate::locking::X`
+    /// (a self-reference otherwise) is rerouted to `crate::locking__ds_defn::X`.
+    /// The map key is the verbatim import source as it appears in the file
+    /// being translated (`./locking`), so [`mod_use_path`] can resolve it
+    /// without re-running module resolution; the value is the suffixed emit
+    /// name. The member-prefix logic in [`mod_use_path`] still applies on
+    /// top, so a defn reached inside a workspace member lowers to
+    /// `crate::<member>_locking__ds_defn`. Cleared when the dep translate
+    /// ends. Empty for a barrel-free package (no collisions), so single-file
+    /// and no-barrel translation is unaffected.
+    static EMIT_NAME_OVERRIDES: std::cell::RefCell<std::collections::HashMap<String, String>> =
+        std::cell::RefCell::new(std::collections::HashMap::new());
+}
+
+/// Set the per-file emit-name overrides for the next dep translate. See
+/// [`EMIT_NAME_OVERRIDES`].
+pub(crate) fn set_emit_name_overrides(map: std::collections::HashMap<String, String>) {
+    EMIT_NAME_OVERRIDES.with(|c| {
+        let mut m = c.borrow_mut();
+        m.clear();
+        m.extend(map);
+    });
+}
+
+/// Clear the overrides when a dep translate ends (success or error), so it
+/// does not leak into a later translate. See [`EMIT_NAME_OVERRIDES`].
+pub(crate) fn clear_emit_name_overrides() {
+    EMIT_NAME_OVERRIDES.with(|c| c.borrow_mut().clear());
+}
+
+/// The suffixed emit name for an import source, when the source resolves to
+/// a definition file that shares its stem with a barrel (the
+/// `locking/locking.ts` + `locking/index.ts` collision). `None` for sources
+/// that keep their specifier-derived name (the common case). See
+/// [`EMIT_NAME_OVERRIDES`].
+pub(crate) fn emit_name_override(source: &str) -> Option<String> {
+    EMIT_NAME_OVERRIDES.with(|c| c.borrow().get(source).cloned())
+}
+
 /// A `.ts` import of a local module: the Rust module name (`other`) and the
 /// original source string (`"./other"`).
 #[derive(Debug, Clone)]
@@ -293,15 +338,33 @@ pub(crate) fn is_local_module(source: &str) -> bool {
 /// module, bare `mod` for a `cargo:` crate or npm bare specifier.
 pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
     if is_local_module(source) {
-        // A relative import inside a workspace member is prefixed with the
-        // member so same-stem files in different members do not collide
-        // (a member's `./types` → `crate::member_crate_types`; the entry's own
-        // `./types` → `crate::types`). A bare workspace specifier already
-        // encodes its member (`@scope/member` → `crate::member_crate`),
-        // so only a relative source is prefixed.
+        // A barrel (`locking/index.ts`) and a same-stem defn (`locking/locking.ts`)
+        // both flatten to `src/locking.rs` if deduped by specifier, so project
+        // resolves the collision by suffixing the defn's emit name
+        // (`locking__ds_defn`). The barrel's `pub use crate::locking::X` would
+        // otherwise self-reference (mod locking = the barrel, which has no X),
+        // so a relative source whose resolution landed on a suffixed defn is
+        // rerouted to the defn's emit name. The override is keyed by the
+        // verbatim source as it appears in the file being translated, so it
+        // distinguishes `./locking` resolved-from-barrel (defn, override) from
+        // `./locking` resolved-from-drawingml (barrel, no override) — each
+        // importer carries its own override map.
+        // The emit-name map gives every local module its full crate-local name
+        // — a workspace member's `./serialize` is `office_open_xml_serialize`
+        // (member prefix already baked in), and a same-stem defn behind a barrel
+        // is `locking__ds_defn` (suffix baked in). An override carries that full
+        // name verbatim, so use it directly: re-applying `current_member` would
+        // double the prefix (`office_open_xml_office_open_xml_serialize`). Only
+        // a relative source with no override (its emit name == its bare stem,
+        // i.e. a core-internal import with no member) reaches the member-prefix
+        // fallback below.
         if source.starts_with('.') {
+            if let Some(name) = emit_name_override(source) {
+                let resolved = Ident::new(&name, mod_ident.span());
+                return parse_quote!(crate::#resolved);
+            }
             if let Some(member) = current_member() {
-                let prefixed = Ident::new(&format!("{member}_{mod_ident}"), mod_ident.span());
+                let prefixed = Ident::new(&format!("{member}_{}", mod_ident), mod_ident.span());
                 return parse_quote!(crate::#prefixed);
             }
         }
@@ -311,25 +374,58 @@ pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
     }
 }
 
-/// A bare npm specifier (`lodash`, `my-pkg`, `@scope/pkg/sub`) → one valid
-/// Rust module ident. Drop a leading `@` (scoped package) and map every
-/// non-`[A-Za-z0-9_]` character (path separators, hyphens, dots) to `_`, so
-/// `format_ident!` cannot panic on an exotic package name. `my-pkg/sub` →
-/// `my_pkg_sub`; the flattened name keeps distinct subpaths distinct in the
-/// common case.
+/// An npm package name → a DashScript crate ident that is **injective** over
+/// npm's package-name charset, so two distinct npm names never collapse to one
+/// Rust ident. A flat `-`/`_`/`.` → `_` map is lossy: `office-open-xml`,
+/// `office_open_xml`, and `@office-open/xml` would all become `office_open_xml`,
+/// colliding with one another and with a cargo-native crate of that name. The
+/// `ds_` prefix separates npm-origin crates from cargo-native crates
+/// (`cargo:serde` → `serde`, no prefix — see [`module_ident`]'s `cargo:` arm),
+/// so the npm and cargo ecosystems cannot shadow one another.
+///
+/// npm forbids uppercase letters in package names (registry rule), so uppercase
+/// escape markers are unforgeable by any legal name and the map is injective:
+///   - `@` (leading scope marker) — dropped
+///   - `[a-z0-9]` — as-is
+///   - `-` → `_`   (npm's common separator)
+///   - `_` → `U`   (legal but rare mid-name)
+///   - `.` → `D`   (legal but rare mid-name)
+///   - `/` → `S`   (scope→name separator)
+///   - any other char (uppercase in a legacy pkg, unicode, a non-leading `@`)
+///     → `X{6-hex}` — fixed-width, `X` unused elsewhere, so still injective.
+///
+/// `@office-open/xml` → `ds_office_openSxml`; `office-open-xml` →
+/// `ds_office_open_xml`; `@office_open/xml` → `ds_officeUopenSxml`;
+/// `@types/node` → `ds_typesSnode`. The result is used verbatim as the cargo
+/// `[package].name`, the path-dep key, the member cache dir, and the `use` path
+/// segment — they all agree because the name is already a legal ident (no `-`,
+/// so cargo does no `-`→`_` munging).
+pub(crate) fn npm_to_ds_ident(name: &str) -> String {
+    let stripped = name.trim_start_matches('@');
+    let mut out = String::with_capacity(stripped.len() + 4);
+    out.push_str("ds_");
+    for c in stripped.chars() {
+        match c {
+            '-' => out.push('_'),
+            '_' => out.push('U'),
+            '.' => out.push('D'),
+            '/' => out.push('S'),
+            c if c.is_ascii_lowercase() || c.is_ascii_digit() => out.push(c),
+            // Outside npm's legal charset: hex-escape so the map stays injective
+            // even for legacy uppercase names. `X` is unused by the rules above
+            // and the 6-digit field is fixed-width, so this cannot collide.
+            c => out.push_str(&format!("X{:06x}", u32::from(c))),
+        }
+    }
+    out
+}
+
+/// A bare npm specifier (`lodash`, `@scope/pkg`, `@scope/pkg/sub`) → one valid
+/// Rust module ident via [`npm_to_ds_ident`] (injective, `ds_`-prefixed). The
+/// result is the crate ident a `use` path names, and it matches the cargo
+/// `[package].name` / path-dep key / member cache dir exactly.
 fn bare_module_ident(source: &str) -> Ident {
-    let stripped = source.trim_start_matches('@');
-    let sanitized: String = stripped
-        .chars()
-        .map(|c| {
-            if c.is_ascii_alphanumeric() || c == '_' {
-                c
-            } else {
-                '_'
-            }
-        })
-        .collect();
-    bindings::crate_mod(&sanitized)
+    bindings::crate_mod(&npm_to_ds_ident(source))
 }
 
 /// The local binding of a named or default import — `import { foo }` and
@@ -399,7 +495,16 @@ pub(crate) fn named_use_tree(spec: &ImportDeclarationSpecifier) -> Option<syn::U
 pub(crate) fn export_use_tree(spec: &ExportSpecifier) -> syn::UseTree {
     let local = module_export_name_str(&spec.local);
     let exported = module_export_name_str(&spec.exported);
-    use_tree_from(&local, &exported)
+    // A re-exported lazy static's accessor fn is `snake(local)`, mirroring
+    // [`named_use_tree`]'s import-side guard — a barrel `export { MY_CONST }`
+    // lowers to `pub use crate::m::my_const`, not `::MY_CONST`. The import
+    // graph's lazy-static exports are set once before the entry translates, so
+    // the table is already complete when a barrel's re-export lowers.
+    if is_lazy_static_export(&bindings::snake(&local).to_string()) {
+        snake_use_tree(&local, &exported)
+    } else {
+        use_tree_from(&local, &exported)
+    }
 }
 
 /// The Rust alias ident for an `export * as <name>` namespace re-export — the
@@ -865,5 +970,45 @@ mod tests {
         clear_workspace_deps();
         // After clear, the specifier is no longer local.
         assert!(!is_local_module("@scope/b"));
+    }
+
+    #[test]
+    fn npm_to_ds_ident_is_injective_and_prefixed() {
+        // Documented examples.
+        assert_eq!(npm_to_ds_ident("@office-open/xml"), "ds_office_openSxml");
+        assert_eq!(npm_to_ds_ident("office-open-xml"), "ds_office_open_xml");
+        assert_eq!(npm_to_ds_ident("@office_open/xml"), "ds_officeUopenSxml");
+        assert_eq!(npm_to_ds_ident("@types/node"), "ds_typesSnode");
+        assert_eq!(npm_to_ds_ident("lodash"), "ds_lodash");
+
+        // The flat-map failure mode: distinct npm names that a naive
+        // `-`/`_`/`.` → `_` map would collapse to one ident must stay distinct.
+        let mut seen = std::collections::HashSet::new();
+        for ident in [
+            npm_to_ds_ident("office-open-xml"),
+            npm_to_ds_ident("office_open_xml"),
+            npm_to_ds_ident("@office-open/xml"),
+            npm_to_ds_ident("office.open.xml"),
+        ] {
+            assert!(
+                seen.insert(ident.clone()),
+                "collision: {ident} produced by two distinct npm names"
+            );
+        }
+
+        // Always a legal Rust ident: `ds_` prefix guarantees it never starts
+        // with a digit, every char is `[a-z0-9_UDSX]`.
+        for nasty in ["@x", "a.b/c-d_e", "1", "@scope/a@b"] {
+            let ident = npm_to_ds_ident(nasty);
+            assert!(
+                ident.starts_with("ds_"),
+                "{nasty:?} -> {ident:?} lost the prefix"
+            );
+        }
+
+        // A legacy uppercase name (npm forbids these today) still maps
+        // injectively via the hex fallback and never collides with its
+        // lowercase peer.
+        assert_ne!(npm_to_ds_ident("jQuery"), npm_to_ds_ident("jquery"));
     }
 }

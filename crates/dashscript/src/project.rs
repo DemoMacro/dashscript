@@ -691,8 +691,15 @@ fn workspace_member_crate(dir: &Path, source: &str) -> Option<String> {
     if source.starts_with('.') || source.starts_with("cargo:") {
         return None;
     }
+    // A bare specifier may carry a sub-path into the member crate
+    // (`@office-open/core/smartart`); the cargo dep is the member crate
+    // (`office-open-core`), not a phantom crate per sub-path. `module_ident`
+    // would sanitize the whole specifier (`office_open_core_smartart`), so feed
+    // it only the package root and let the translator's use path carry the
+    // sub-path as a crate-internal module (`office_open_core::smartart`).
+    let (pkg_root, _subpath) = split_package_spec(source)?;
     resolve_workspace_dep(dir, source)
-        .and_then(|_| crate::translator::imports::module_ident(source))
+        .and_then(|_| crate::translator::imports::module_ident(&pkg_root))
         .map(|i| i.to_string())
 }
 
@@ -809,6 +816,28 @@ pub fn translate_sources(
         .map_err(|e| format!("translate {}: {e}", src_path.display()))?;
 
     let base = src_path.parent().unwrap_or_else(|| Path::new(""));
+    // Pre-walk the import graph to assign each reachable file a canonical emit
+    // name *before* any dep translates. A barrel (`locking/index.ts`) and a
+    // same-stem definition file (`locking/locking.ts`) both flatten to
+    // `src/locking.rs` if deduped by the specifier-derived mod name
+    // (`dep_mod_name("./locking", …) == "locking"` for both, since the
+    // specifier carries no resolution context). Deduping by canonical file
+    // path instead keeps both files in the worklist, and the colliding defn is
+    // suffixed (`locking__ds_defn`) so the barrel keeps the bare name (its
+    // re-exports of *other* modules — `export * from "./connection"` — must
+    // stay reachable as `crate::data_model::*`). The barrel's self re-export
+    // (`pub use crate::locking::X` where X lives in the defn) is rerouted to
+    // `crate::locking__ds_defn::X` via per-file emit-name overrides set around
+    // each dep translate. Flatten collisions (`chart/types.ts`,
+    // `descriptor/types.ts`, `patch/types.ts` all flatten to `types.rs`) are
+    // resolved the same way: the first to claim a name keeps it, later
+    // arrivals take the suffix. See [`compute_emit_name_map`].
+    let entry_spec = src_path
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or("")
+        .to_string();
+    let emit_name_map = compute_emit_name_map(&translator, src, base)?;
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
     let mut mod_decls = String::new();
     // The inline `__DsUnion…` enums the entry already emits at the crate root
@@ -824,7 +853,8 @@ pub fn translate_sources(
     let mut extra_enum_text = String::new();
     // Worklist of `(module, source_spec, base_dir, specifier, member)` — each
     // popped dep is translated once, then its own imports extend the worklist.
-    // A cycle (a.ts ↔ b.ts) terminates: `seen` dedupes by the dep's mod name.
+    // A cycle (a.ts ↔ b.ts) terminates: `seen` dedupes by the dep's canonical
+    // file path (so a barrel + defn pair, distinct files, both translate).
     // `specifier` is the dep's DsResolver specifier (bare verbatim, relative
     // joined onto the importer's), so a degraded `.js` registers under the key
     // the runtime resolver finds it under. `member` is the workspace member the
@@ -833,11 +863,6 @@ pub fn translate_sources(
     // filename and `mod` decl use [`dep_mod_name`] so a relative import inside a
     // member carries the member prefix and does not collide with a same-stem
     // file in another package. The entry's own specifier is its file stem.
-    let entry_spec = src_path
-        .file_stem()
-        .and_then(|s| s.to_str())
-        .unwrap_or("")
-        .to_string();
     let mut worklist: std::collections::VecDeque<(
         String,
         String,
@@ -847,13 +872,34 @@ pub fn translate_sources(
     )> = std::collections::VecDeque::new();
     for imp in translator.imports(src) {
         let member = workspace_member_crate(base, &imp.source);
-        if seen.insert(dep_mod_name(&imp.source, &imp.module, &member)) {
-            let spec = ds_resolve_specifier(&entry_spec, &imp.source);
+        let spec = ds_resolve_specifier(&entry_spec, &imp.source);
+        let canon = canon_key(
+            base,
+            &imp.source,
+            &dep_mod_name(&imp.source, &imp.module, &member),
+        )?;
+        if seen.insert(canon) {
             worklist.push_back((imp.module, imp.source, base.to_path_buf(), spec, member));
         }
     }
     while let Some((module, source, dir, spec, member)) = worklist.pop_front() {
         let (dep_path, kind) = resolve_local_module(&dir, &source)?;
+        let canon = canon_string(&dep_path);
+        // Per-file emit-name overrides: each of this dep's import specifiers,
+        // resolved to its canonical path, looks up the emit name that file
+        // will be emitted under. A specifier that lands on a suffixed defn
+        // (`./locking` → `locking__ds_defn`) is rerouted in the translator's
+        // `mod_use_path` so the barrel's self re-export points at the defn,
+        // not itself.
+        let override_map = collect_emit_overrides(&translator, &dep_path, &emit_name_map);
+        crate::translator::imports::set_emit_name_overrides(override_map);
+        struct OverrideGuard;
+        impl Drop for OverrideGuard {
+            fn drop(&mut self) {
+                crate::translator::imports::clear_emit_name_overrides();
+            }
+        }
+        let _override_guard = OverrideGuard;
         let dep_rust = translate_dep(
             &translator,
             &dep_path,
@@ -862,7 +908,14 @@ pub fn translate_sources(
             member.clone(),
             &mut deps,
         )?;
-        let emit_name = dep_mod_name(&source, &module, &member);
+        // The emit name this dep's `mod` decl and filename take. Collisions
+        // (barrel + defn, or three same-stem `types.ts` files flattening)
+        // resolve via the pre-walked map; the common no-collision case keeps
+        // the specifier-derived name.
+        let emit_name = emit_name_map
+            .get(&canon)
+            .cloned()
+            .unwrap_or_else(|| dep_mod_name(&source, &module, &member));
         fs::write(
             project_dir
                 .join("src")
@@ -881,8 +934,13 @@ pub fn translate_sources(
         let dep_base = dep_path.parent().unwrap_or_else(|| Path::new(""));
         for imp in translator.imports(&dep_src) {
             let child_member = workspace_member_crate(dep_base, &imp.source).or(member.clone());
-            if seen.insert(dep_mod_name(&imp.source, &imp.module, &child_member)) {
-                let child_spec = ds_resolve_specifier(&spec, &imp.source);
+            let child_spec = ds_resolve_specifier(&spec, &imp.source);
+            let canon = canon_key(
+                dep_base,
+                &imp.source,
+                &dep_mod_name(&imp.source, &imp.module, &child_member),
+            )?;
+            if seen.insert(canon) {
                 worklist.push_back((
                     imp.module,
                     imp.source,
@@ -901,6 +959,164 @@ pub fn translate_sources(
     };
     fs::write(project_dir.join("src").join("main.rs"), main)?;
     Ok(deps)
+}
+
+/// The canonical-path string for a resolved dep file. Used as the dedup key
+/// in [`translate_sources`]'s worklist so a barrel (`locking/index.ts`) and a
+/// same-stem definition file (`locking/locking.ts`) — two distinct files that
+/// both flatten to `src/locking.rs` under the old specifier-derived key —
+/// each get translated once. Two genuinely identical paths (a true import
+/// cycle `a.ts ↔ b.ts`) still collapse, preserving the cycle-termination
+/// guarantee. `fs::canonicalize` normalizes `..`, symlinks (a workspace-member
+/// `node_modules/@scope/core` symlink resolves to the package's `src/`), and
+/// case; resolution failures fall back to the raw lossy string.
+fn canon_string(path: &Path) -> String {
+    fs::canonicalize(path)
+        .map(|p| p.to_string_lossy().into_owned())
+        .unwrap_or_else(|_| path.to_string_lossy().into_owned())
+}
+
+/// The canonical dedup key for an import specifier. Resolves the specifier
+/// against `base` (the importer's directory), then returns [`canon_string`]
+/// of the result. A specifier that fails to resolve (a bare npm specifier
+/// with no file to canonicalize, or a not-yet-installed dep) falls back to
+/// the specifier-derived `mod_name` so dedup still terminates — the same
+/// fallback the worklist takes when the dep is later popped and
+/// [`resolve_local_module`] surfaces a real error.
+fn canon_key(base: &Path, source: &str, mod_name: &str) -> Result<String, Box<dyn Error>> {
+    match resolve_local_module(base, source) {
+        Ok((path, _)) => Ok(canon_string(&path)),
+        Err(_) => Ok(mod_name.to_string()),
+    }
+}
+
+/// Walk the import graph reachable from `src` and assign each transitively
+/// imported file a canonical emit name. The first file to claim a
+/// `dep_mod_name`-derived emit name (in worklist discovery order: the entry's
+/// direct imports first, then their transitive deps) keeps it; a later file
+/// that would collide (a barrel + same-stem defn pair, or three same-stem
+/// `types.ts` files in different directories flattening to `types.rs`) takes
+/// the same name with `__ds_defn`, `__ds_defn_2`, … appended. Workspace-member
+/// prefixing is preserved: two same-stem files in different members already
+/// get distinct base names (`member_a_types` vs `member_b_types`), so the
+/// collision detector never conflates them. Returns the map keyed by
+/// [`canon_string`] of each reachable file's path.
+fn compute_emit_name_map(
+    translator: &Translator,
+    src: &str,
+    base: &Path,
+) -> Result<std::collections::HashMap<String, String>, Box<dyn Error>> {
+    use std::collections::{HashMap, HashSet, VecDeque};
+    // BFS the import graph in the same discovery order as
+    // [`translate_sources`]'s worklist, collecting `(canon_path, base_name)`
+    // pairs. The worklist stores `(source_raw, importer_dir, member)`: the
+    // raw import specifier (`./locking`) plus the importer's directory, so
+    // the child resolves against the importer the way the main worklist does.
+    // The member propagates so cross-package same-stem files stay distinct.
+    let mut ordered: Vec<(String, String)> = Vec::new();
+    let mut visited: HashSet<String> = HashSet::new();
+    let mut queue: VecDeque<(String, PathBuf, Option<String>)> = VecDeque::new();
+    for imp in translator.imports(src) {
+        let member = workspace_member_crate(base, &imp.source);
+        let base_name = dep_mod_name(&imp.source, &imp.module, &member);
+        let canon = canon_key(base, &imp.source, &base_name)?;
+        if visited.insert(canon.clone()) {
+            ordered.push((canon.clone(), base_name));
+            queue.push_back((imp.source, base.to_path_buf(), member));
+        }
+    }
+    while let Some((source_raw, importer_dir, member)) = queue.pop_front() {
+        // Resolve the raw specifier against the importer's directory to find
+        // the dep file (same path [`translate_sources`]'s worklist takes).
+        let Ok((dep_path, kind)) = resolve_local_module(&importer_dir, &source_raw) else {
+            continue;
+        };
+        // Only `.ts`/`.js` deps emit a file and participate in filename
+        // collisions; a `.d.ts`-only dep contributes types inline.
+        if !matches!(kind, DepKind::Ts | DepKind::Js) {
+            continue;
+        }
+        let dep_base = dep_path.parent().unwrap_or_else(|| Path::new(""));
+        let dep_src = fs::read_to_string(&dep_path)
+            .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
+        for imp in translator.imports(&dep_src) {
+            let child_member = workspace_member_crate(dep_base, &imp.source).or(member.clone());
+            let child_base = dep_mod_name(&imp.source, &imp.module, &child_member);
+            let child_canon = canon_key(dep_base, &imp.source, &child_base)?;
+            if visited.insert(child_canon.clone()) {
+                ordered.push((child_canon.clone(), child_base));
+                queue.push_back((imp.source, dep_base.to_path_buf(), child_member));
+            }
+        }
+    }
+    // Assign names greedily in discovery order. The first claimant of a base
+    // name keeps it; subsequent colliders get `__ds_defn`, `__ds_defn_2`, …
+    let mut map: HashMap<String, String> = HashMap::new();
+    let mut used: HashSet<String> = HashSet::new();
+    for (canon, base_name) in ordered {
+        if map.contains_key(&canon) {
+            continue;
+        }
+        let final_name = if used.insert(base_name.clone()) {
+            base_name
+        } else {
+            let mut idx = 1;
+            loop {
+                let suffix = if idx == 1 {
+                    "__ds_defn".to_string()
+                } else {
+                    format!("__ds_defn_{idx}")
+                };
+                let candidate = format!("{base_name}{suffix}");
+                if used.insert(candidate.clone()) {
+                    break candidate;
+                }
+                idx += 1;
+            }
+        };
+        map.insert(canon, final_name);
+    }
+    Ok(map)
+}
+
+/// Build the per-file emit-name override map for the translator. For each
+/// import/re-export specifier in `dep_path`'s source, resolve it to its
+/// canonical path and look up the emit name [`compute_emit_name_map`]
+/// assigned. Specifiers that land on a suffixed defn (a name not equal to the
+/// specifier-derived mod name) become overrides; specifiers that keep their
+/// bare name are omitted (the translator's default path is correct). The map
+/// is keyed by the verbatim specifier as it appears in the source, so
+/// [`mod_use_path`] can match without re-running resolution.
+fn collect_emit_overrides(
+    translator: &Translator,
+    dep_path: &Path,
+    emit_name_map: &std::collections::HashMap<String, String>,
+) -> std::collections::HashMap<String, String> {
+    let mut out = std::collections::HashMap::new();
+    let Ok(dep_src) = fs::read_to_string(dep_path) else {
+        return out;
+    };
+    let dep_base = dep_path.parent().unwrap_or_else(|| Path::new(""));
+    for imp in translator.imports(&dep_src) {
+        if !imp.source.starts_with('.') {
+            continue;
+        }
+        let Ok((path, _)) = resolve_local_module(dep_base, &imp.source) else {
+            continue;
+        };
+        let canon = canon_string(&path);
+        let Some(emit_name) = emit_name_map.get(&canon) else {
+            continue;
+        };
+        // Only override when the emit name diverges from the specifier-derived
+        // mod name — i.e. the resolved file was suffixed. A barrel importing
+        // another barrel (no collision) keeps its bare name and needs no
+        // override.
+        if emit_name != &imp.module {
+            out.insert(imp.source, emit_name.clone());
+        }
+    }
+    out
 }
 
 /// Probe whether any file reachable from `src` (itself + its recursive imports)
@@ -1076,6 +1292,15 @@ fn translate_one_with_mods(
         if !seen.insert(imp.module.clone()) {
             continue;
         }
+        // A bare specifier resolving to a sibling workspace member is an
+        // independent crate (cargo path dep), not a local module: record the
+        // dep and skip the `mod` decl + emit. The translator already lowered
+        // the import to a bare-crate `use` (`office_open_xml::X`); a local mod
+        // would shadow that crate and re-merge the member's source.
+        if let Some(crate_ident) = workspace_member_crate(base, &imp.source) {
+            deps.add_path_dep(&crate_ident);
+            continue;
+        }
         mod_decls.push_str(&format!("mod {};\n", imp.module));
         // A relative `.ts` dep is scanned + translated by `walk_ts`; everything
         // else (a bare npm import, or a relative `.js`/`.d.ts` dep `walk_ts`
@@ -1127,6 +1352,7 @@ pub fn translate_project(
     root: &Path,
     package: &Package,
     project_dir: &Path,
+    lib_entry: Option<&str>,
 ) -> Result<(ProjectTargets, RuntimeDeps), Box<dyn Error>> {
     let src_dir = project_dir.join("src");
     fs::create_dir_all(&src_dir)?;
@@ -1135,8 +1361,24 @@ pub fn translate_project(
     clean_src_dir(&src_dir)?;
 
     let bins = package.bin_entries();
-    // package.json `main` → the crate's `[lib]` target (shared code bins `use`).
-    let lib = package.main.clone();
+    // The crate's `[lib]` target. `lib_entry` is the caller-discovered source
+    // entry — for a workspace member, the root `tsconfig.json` `paths[name]`
+    // mapping (the authoritative source→path declaration, e.g. office-open's
+    // `@office-open/xml` → `packages/xml/src/index.ts`); without it, fall back
+    // to `package.json` `main` only when it points at a real source file
+    // (`.ts`/`.tsx`/`.js`/`.jsx`/`.mjs`/`.cjs`). A dist artifact
+    // (`dist/index.mjs`) is build output, not a source entry — it is never
+    // reverse-mapped (the source `index.ts` may build to any dist name).
+    // `None` → no `[lib]` target (a bin-only crate).
+    let lib = lib_entry.map(String::from).or_else(|| {
+        package.main.as_ref().and_then(|p| {
+            let is_source = matches!(
+                root.join(p).extension().and_then(|e| e.to_str()),
+                Some("ts" | "tsx" | "js" | "jsx" | "mjs" | "cjs")
+            );
+            is_source.then(|| p.clone())
+        })
+    });
     // File role (arch decision point 8): a bin/lib entry collects top-level
     // executable statements into `fn main`; every other file (an imported
     // module) only declares, never executes — the `Module` role errors on its
@@ -1387,7 +1629,10 @@ pub fn emit_cargo_project(
                     .is_some_and(|e| e.to_str() == Some("ts"))
             });
             if has_ts_entry {
-                let ((bins, lib), deps) = translate_project(&root, &package, project_dir)?;
+                // `lib_entry = None`: translate_project falls back to `main`
+                // when it is a source file (has_ts_entry guarantees a `.ts`
+                // entry); a lone-file build has no tsconfig `paths` mapping.
+                let ((bins, lib), deps) = translate_project(&root, &package, project_dir, None)?;
                 let mut cargo_toml = package.to_cargo_toml_with_bins(&bins, lib.as_deref());
                 deps.apply_to_cargo_toml(&mut cargo_toml);
                 fs::write(project_dir.join("Cargo.toml"), cargo_toml)?;
@@ -1783,7 +2028,28 @@ fn walk_ts(dir: &Path, out: &mut Vec<PathBuf>) {
                 }
             }
             walk_ts(&path, out);
-        } else if path.extension().and_then(|e| e.to_str()) == Some("ts") {
+        } else if let Some(ext) = path.extension().and_then(|e| e.to_str()) {
+            // JS and TS are both first-class source — oxc parses either, and the
+            // translator lowers a `.js` as JS-flavored TypeScript (untyped params
+            // default to `f64`, literal types infer). `.mjs`/`.cjs` carry only
+            // module-system intent (ESM/CJS), not new syntax; `.jsx`/`.tsx` add
+            // JSX (not yet lowered, but collected so a mixed project still sees
+            // every source file). Test/benchmark co-files (`.spec`/`.test`/
+            // `.bench`) exercise the crate, they are not part of it — including
+            // them pulls top-level assertions or a timing harness into a module
+            // file, which has no entry to run them.
+            if !matches!(ext, "ts" | "tsx" | "js" | "jsx" | "mjs" | "cjs") {
+                continue;
+            }
+            let is_test = path
+                .file_stem()
+                .and_then(|s| s.to_str())
+                .is_some_and(|stem| {
+                    stem.ends_with(".spec") || stem.ends_with(".test") || stem.ends_with(".bench")
+                });
+            if is_test {
+                continue;
+            }
             out.push(path);
         }
     }
@@ -1982,7 +2248,7 @@ mod tests {
         write(root, "b.ts", "function main() { console.log(2); }");
 
         let out = tmp.path().join("out");
-        let ((bins, lib), _deps) = translate_project(root, &package_at(root), &out).unwrap();
+        let ((bins, lib), _deps) = translate_project(root, &package_at(root), &out, None).unwrap();
         let names: Vec<&str> = bins.iter().map(|(n, _)| n.as_str()).collect();
         assert!(names.contains(&"a"), "bins: {bins:?}");
         assert!(names.contains(&"b"), "bins: {bins:?}");
@@ -2008,7 +2274,7 @@ mod tests {
         write(&root.join("sub"), "dup.ts", "function other() {}");
 
         let out = tmp.path().join("out");
-        let err = translate_project(root, &package_at(root), &out).unwrap_err();
+        let err = translate_project(root, &package_at(root), &out, None).unwrap_err();
         let msg = err.to_string();
         assert!(msg.contains("name collision"), "got: {msg}");
         assert!(msg.contains("dup"), "got: {msg}");
@@ -2033,7 +2299,7 @@ mod tests {
         write(root, "b.ts", "export function x() {}\nfunction main() {}");
 
         let out = tmp.path().join("out");
-        let err = translate_project(root, &package_at(root), &out).unwrap_err();
+        let err = translate_project(root, &package_at(root), &out, None).unwrap_err();
         let msg = err.to_string();
         assert!(msg.contains("bin 'a' imports bin 'b'"), "got: {msg}");
     }
@@ -2574,6 +2840,153 @@ mod tests {
     }
 
     #[test]
+    fn translate_project_skips_cross_member_emit_and_records_path_dep() {
+        // Independent-crate model on the translate_project path: a bare import
+        // of a sibling workspace member becomes a cargo path dep, not a merged
+        // local module. translate_project records the dep and emits nothing for
+        // the member — its source lives in its own crate. (The translate_sources
+        // path still merges; that is a later phase.)
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg_a = root.join("packages").join("a");
+        let pkg_b = root.join("packages").join("b");
+        fs::create_dir_all(pkg_a.join("src")).unwrap();
+        fs::create_dir_all(pkg_b.join("src")).unwrap();
+        write(
+            &pkg_a,
+            "package.json",
+            r#"{ "name": "@scope/a", "main": "src/index.ts" }"#,
+        );
+        write(&pkg_b, "package.json", r#"{ "name": "@scope/b" }"#);
+        write(
+            &pkg_a.join("src"),
+            "index.ts",
+            "import { Y } from \"@scope/b\";\nexport const Z = Y;",
+        );
+        write(
+            &pkg_b.join("src"),
+            "index.ts",
+            "export const Y: number = 1;",
+        );
+        let scope_nm = root.join("node_modules").join("@scope");
+        fs::create_dir_all(&scope_nm).unwrap();
+        if make_symlink(&pkg_b, &scope_nm.join("b")).is_err() {
+            eprintln!(
+                "translate_project_skips_cross_member_emit_and_records_path_dep: \
+                 skipped (no symlink privilege)"
+            );
+            return;
+        }
+        let out = tmp.path().join("out");
+        let package = read_package(&pkg_a.join("package.json")).unwrap();
+        let (_targets, deps) = translate_project(&pkg_a, &package, &out, None).expect("translate");
+        let dir = out.join("src");
+        assert!(
+            !dir.join("scope_b.rs").exists(),
+            "cross-member must not emit into this crate; src has: {:?}",
+            fs::read_dir(&dir)
+                .unwrap()
+                .map(|e| e.unwrap().file_name().to_string_lossy().into_owned())
+                .collect::<Vec<_>>()
+        );
+        assert!(
+            deps.path_deps().contains("scope_b"),
+            "path_deps should record the member crate: {:?}",
+            deps.path_deps()
+        );
+    }
+
+    #[test]
+    fn translate_project_subpath_import_records_member_crate_not_subpath() {
+        // A sub-path bare specifier (`@scope/b/sub`) is one cargo dep on the
+        // member crate `scope_b` — the sub-path is a module inside that crate,
+        // not a separate crate. Without splitting the package root off the
+        // specifier, `module_ident` would sanitize the whole string and the
+        // path dep would name a phantom `scope_b_sub` crate that does not exist.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        let pkg_a = root.join("packages").join("a");
+        let pkg_b = root.join("packages").join("b");
+        fs::create_dir_all(pkg_a.join("src")).unwrap();
+        fs::create_dir_all(pkg_b.join("src").join("sub")).unwrap();
+        write(
+            &pkg_a,
+            "package.json",
+            r#"{ "name": "@scope/a", "main": "src/index.ts" }"#,
+        );
+        write(&pkg_b, "package.json", r#"{ "name": "@scope/b" }"#);
+        write(
+            &pkg_a.join("src"),
+            "index.ts",
+            "import { Y } from \"@scope/b/sub\";\nexport const Z = Y;",
+        );
+        write(
+            &pkg_b.join("src").join("sub"),
+            "index.ts",
+            "export const Y: number = 1;",
+        );
+        let scope_nm = root.join("node_modules").join("@scope");
+        fs::create_dir_all(&scope_nm).unwrap();
+        if make_symlink(&pkg_b, &scope_nm.join("b")).is_err() {
+            eprintln!(
+                "translate_project_subpath_import_records_member_crate_not_subpath: \
+                 skipped (no symlink privilege)"
+            );
+            return;
+        }
+        let out = tmp.path().join("out");
+        let package = read_package(&pkg_a.join("package.json")).unwrap();
+        let (_targets, deps) = translate_project(&pkg_a, &package, &out, None).expect("translate");
+        assert!(
+            deps.path_deps().contains("scope_b"),
+            "sub-path import must record the member crate: {:?}",
+            deps.path_deps()
+        );
+        assert!(
+            !deps.path_deps().contains("scope_b_sub"),
+            "sub-path must not synthesize a phantom crate: {:?}",
+            deps.path_deps()
+        );
+    }
+
+    #[test]
+    fn walk_ts_skips_co_located_test_files() {
+        // `.spec.ts`/`.test.ts` are co-located tests — they exercise the crate,
+        // not part of it. walk_ts must skip them so a package's own test
+        // assertions (top-level executable statements) don't land in a module
+        // file, which has no entry to run them.
+        let tmp = tempfile::tempdir().unwrap();
+        let src = tmp.path().join("src");
+        fs::create_dir_all(&src).unwrap();
+        write(&src, "escape.ts", "export function f() {}");
+        write(&src, "escape.spec.ts", "assert(true);");
+        write(&src, "escape.test.ts", "assert(true);");
+        write(&src, "escape.bench.ts", "bench(() => 1);");
+        let mut out = Vec::new();
+        walk_ts(&src, &mut out);
+        let names: Vec<String> = out
+            .iter()
+            .map(|p| p.file_name().unwrap().to_string_lossy().into_owned())
+            .collect();
+        assert!(
+            names.contains(&"escape.ts".to_string()),
+            "source kept: {names:?}"
+        );
+        assert!(
+            !names.iter().any(|n| n.contains(".spec")),
+            "spec skipped: {names:?}"
+        );
+        assert!(
+            !names.iter().any(|n| n.contains(".test")),
+            "test skipped: {names:?}"
+        );
+        assert!(
+            !names.iter().any(|n| n.contains(".bench")),
+            "bench skipped: {names:?}"
+        );
+    }
+
+    #[test]
     fn resolve_workspace_dep_ignores_pnpm_store() {
         // A pnpm-store package is also a symlink, but its target is under
         // `node_modules/.pnpm/` — it must NOT be treated as a local source
@@ -2741,7 +3154,7 @@ mod tests {
         );
         write(&root.join("foo"), "index.ts", "export function foo() {}");
         let out = tmp.path().join("out");
-        translate_project(root, &package_at(root), &out).unwrap();
+        translate_project(root, &package_at(root), &out, None).unwrap();
         assert!(
             out.join("src").join("foo.rs").exists(),
             "barrel src/foo.rs missing"
@@ -2779,7 +3192,7 @@ mod tests {
             "import { a } from \"./a\";\nexport function b() { a(); }",
         );
         let out = tmp.path().join("out");
-        let err = translate_project(root, &package_at(root), &out).unwrap_err();
+        let err = translate_project(root, &package_at(root), &out, None).unwrap_err();
         let msg = err.to_string();
         assert!(msg.contains("circular import"), "got: {msg}");
         assert!(msg.contains("a.ts"), "got: {msg}");
@@ -2808,7 +3221,7 @@ mod tests {
         );
         write(root, "util.ts", "export function helper(): void {}");
         let out = tmp.path().join("out");
-        translate_project(root, &package_at(root), &out).unwrap();
+        translate_project(root, &package_at(root), &out, None).unwrap();
         let main_rs = fs::read_to_string(out.join("src").join("main.rs")).unwrap();
         let util_rs = fs::read_to_string(out.join("src").join("util.rs")).unwrap();
         assert!(

@@ -804,6 +804,12 @@ pub struct RuntimeDeps {
     /// (e.g. `@scope/pkg`'s `b.js`, only `export const`/`class`) still
     /// resolves at runtime.
     js_module_sources: Vec<(String, String)>,
+    /// Workspace-member crates this module imports via a bare specifier (e.g.
+    /// `@office-open/xml` → `office_open_xml`). In the independent-crate model
+    /// these become cargo path dependencies, not merged local modules. Kept out
+    /// of the `RuntimeDep` enum so the table-driven `RuntimeDep::ALL` loop
+    /// (helpers/cargo) is unaffected.
+    path_deps: BTreeSet<String>,
 }
 
 impl RuntimeDeps {
@@ -821,6 +827,20 @@ impl RuntimeDeps {
     /// Add `dep` to this set in place.
     pub fn insert(&mut self, dep: RuntimeDep) {
         self.deps.insert(dep);
+    }
+
+    /// Record a workspace-member crate imported via a bare specifier — it
+    /// becomes a cargo path dependency, not a merged local module. `crate_ident`
+    /// is the Rust crate ident (`office_open_xml`, the use-path segment); the
+    /// caller converts it to the cargo dep key (`office-open-xml`).
+    pub fn add_path_dep(&mut self, crate_ident: &str) {
+        self.path_deps.insert(crate_ident.to_string());
+    }
+
+    /// The workspace-member crates this project imports — for cargo path-dep
+    /// emission in `to_member_toml`.
+    pub fn path_deps(&self) -> &BTreeSet<String> {
+        &self.path_deps
     }
 
     /// Record a degraded module's source under its build-time DsResolver
@@ -880,6 +900,7 @@ impl RuntimeDeps {
                 self.js_module_sources.push((spec.clone(), src.clone()));
             }
         }
+        self.path_deps.extend(other.path_deps.iter().cloned());
     }
 
     /// The `__ds` helper module source — assembled from whichever helper slices
@@ -1558,9 +1579,9 @@ impl Translator {
         // function's body runs in the engine, which resolves the import itself.
         if functions::whole_module_degrade() {
             for stmt in &program.body {
-                if let Some(f) = check::top_level_function(stmt) {
-                    if let Some(id) = &f.id {
-                        dynamic_fns.insert(id.name.as_str().to_string());
+                if let Some(tlf) = check::top_level_function(stmt) {
+                    if let Some(name) = tlf.ts_name() {
+                        dynamic_fns.insert(name.to_string());
                     }
                 }
             }
