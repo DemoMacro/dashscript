@@ -100,6 +100,15 @@ pub(in crate::translator) fn str_method_arg(arg: &Argument, ctx: &Ctx<'_>) -> Ex
         let lit = syn::LitStr::new(s.value.as_str(), Span::call_site());
         return parse_quote!(#lit);
     }
+    // A `arr[i]` needle lowers through `computed_member_borrow` so the element
+    // is read by reference (`arr[i].as_str()`), skipping the defensive `.clone()`
+    // `computed_member` adds for an owned read — `.as_str()` only borrows, so the
+    // element is never moved. Saves an allocation per hit on a `Vec<String>`
+    // needle (e.g. `s.indexOf(patterns[p], …)`).
+    if let Argument::ComputedMemberExpression(cm) = arg {
+        let e = super::expressions::computed_member_borrow(cm, ctx);
+        return parse_quote!(#e.as_str());
+    }
     let e = translate_argument(arg, ctx);
     parse_quote!(#e.as_str())
 }

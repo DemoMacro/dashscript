@@ -1,5 +1,5 @@
 {
-  "samples": 7,
+  "samples": 11,
   "runtimes": ["ds", "node", "bun", "perry", "ant"],
   "results": [
     {
@@ -366,9 +366,9 @@
       "bench": "string-ops",
       "name": "string-ops",
       "times": {
-        "ds": 165.4216,
-        "node": 159.7413,
-        "bun": 166.0298,
+        "ds": 83.3985,
+        "node": 177.2755,
+        "bun": 181.5927,
         "perry": 236.1368,
         "ant": 839.7113
       },

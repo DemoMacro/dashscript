@@ -29,11 +29,11 @@ pub(in crate::translator) use array::{array_owned_expr, array_slice_expr};
 pub(in crate::translator) use assignment::assignment_expr;
 pub(in crate::translator) use literals::{bool_expr, string_expr};
 pub(in crate::translator) use member::{
-    hashmap_uses_f64_key, hashset_uses_f64_key, is_abort_controller_receiver,
-    is_abort_signal_receiver, is_blob_local, is_event_target_local, is_form_data_local,
-    is_hashmap_local, is_hashset_local, is_headers_local, is_request_local, is_text_decoder_local,
-    is_url_local, is_url_search_params_local, is_vec_u8_local, option_unwrap_object,
-    temporal_type_of_local,
+    computed_member_borrow, hashmap_uses_f64_key, hashset_uses_f64_key,
+    is_abort_controller_receiver, is_abort_signal_receiver, is_blob_local, is_event_target_local,
+    is_form_data_local, is_hashmap_local, is_hashset_local, is_headers_local, is_request_local,
+    is_text_decoder_local, is_url_local, is_url_search_params_local, is_vec_u8_local,
+    option_unwrap_object, temporal_type_of_local,
 };
 pub(in crate::translator) use unary::typeof_operand_is_runtime;
 

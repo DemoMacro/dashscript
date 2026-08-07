@@ -81,13 +81,13 @@ without correctness is worthless.
 | object-create       |  162.1 |  252.6 |  193.2 | 1262.8 |  8917.3 | 1499998500000  | ✓   |
 | primes              |   41.8 |  179.1 |  121.8 |  312.1 |   375.4 | 78498          | ✓   |
 | str-concat          |   27.4 |  119.2 |  104.2 |  127.6 |    75.6 | 100000         | ✓   |
-| string-ops          |  165.4 |  159.7 |  166.0 |  236.1 |   839.7 | 129991         | ✓   |
+| string-ops          |   83.4 |  177.3 |  181.6 |  236.1 |   839.7 | 129991         | ✓   |
 
 _All times wall-clock ms per process launch, median of 5 samples. Measured
 2026-07-31, Windows 11, ds 0.0.0 / node v26.5.0 / bun 1.3.6 / perry 0.5.1220 /
 ant 12.3; `levenshtein` and `loop-data-dependent` re-measured 2026-08-07 (9
 samples) after the bit-vector `i64` / `.length` `i64` / multiplication-`f64`
-flavor changes.
+flavor changes; `string-ops` re-measured 2026-08-07 (11 samples).
 `results.json` holds the raw per-sample numbers. A runtime slower than
 `ds_median + 10s` per sample is killed and shown as `T/O`._
 
@@ -170,6 +170,6 @@ anything numeric or allocation-bound, and only approaches the pack on
   correctly.
 - **`str-concat`** — `ds` leads (22 vs node 116). `s = s + "x"` lowers to Rust
   `String + &str`, whose growth is amortized-O(1) doubling.
-- **`string-ops`** — the three runtimes are within ~10 ms (152–161): the
-  workload is dominated by `slice` reallocation and `indexOf` scanning, where
-  V8/JSC and Rust are all allocator-bound.
+- **`string-ops`** — `ds` leads ~2.1× (83 vs node 177, vs bun 182). The workload
+  is dominated by `slice` reallocation, where V8/JSC and Rust are all
+  allocator-bound.

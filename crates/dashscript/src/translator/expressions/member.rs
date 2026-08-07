@@ -492,6 +492,23 @@ pub(in crate::translator) fn option_unwrap_object(e: &Expression, ctx: &Ctx<'_>)
 /// `.get` (typed: the key is assumed present, so `unwrap` panics if absent —
 /// matching the non-optional type).
 pub(super) fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> Expr {
+    computed_member_impl(cm, ctx, false)
+}
+
+/// Like `computed_member`, but the plain-`Vec`-index arm skips the defensive
+/// `.clone()`. For a borrow context where the caller reads the element by
+/// reference (`.as_str()` via `str_method_arg`, e.g. `s.indexOf(patterns[p])`),
+/// the element is never moved, so the clone is pure waste — one allocation per
+/// hit on a `Vec<String>` needle. The hashmap/match/string-specialized arms are
+/// unchanged (they already return by reference or a fresh owned value).
+pub(in crate::translator) fn computed_member_borrow(
+    cm: &ComputedMemberExpression,
+    ctx: &Ctx<'_>,
+) -> Expr {
+    computed_member_impl(cm, ctx, true)
+}
+
+fn computed_member_impl(cm: &ComputedMemberExpression, ctx: &Ctx<'_>, borrow: bool) -> Expr {
     let obj = translate_expr(&cm.object, ctx);
     if is_hashmap_local(&cm.object, ctx) {
         let key = index_key(&cm.expression, ctx);
@@ -522,7 +539,12 @@ pub(super) fn computed_member(cm: &ComputedMemberExpression, ctx: &Ctx<'_>) -> E
     // `let x = arr[i]` moves the element out of `arr`; if `arr` is read again
     // later (use count > 1) and the element is not `Copy`, clone it so those
     // reads still see a value. A scalar element copies on index — no clone.
-    if index_needs_clone(&cm.object, ctx) {
+    // The `borrow` path skips the clone: the caller reads the element by
+    // reference (`.as_str()`/`.len()` via `computed_member_borrow`), so nothing
+    // is moved and later reads of `arr` stay safe without it.
+    if borrow {
+        indexed
+    } else if index_needs_clone(&cm.object, ctx) {
         parse_quote!(#indexed.clone())
     } else {
         indexed
