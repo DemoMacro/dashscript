@@ -72,8 +72,8 @@ without correctness is worthless.
 | factorial           |   82.9 |  425.8 |  186.5 |  601.7 |   832.5 | 49950000000    | ✓   |
 | fib                 |   80.6 |  195.6 |  159.6 |  150.1 |   245.7 | 9227465        | ✓   |
 | int-add             |  675.8 | 1045.2 |  751.5 | 2386.2 |  4054.6 | 49999999906710 | ✗   |
-| levenshtein         |  161.9 |  148.4 |  124.5 | 1126.4 |  5073.0 | 600000         | ✓   |
-| loop-data-dependent | 1393.4 | 1475.7 | 1468.5 |    T/O |     T/O | 2.550796048282 | ✓   |
+| levenshtein         |   77.6 |  129.5 |  123.2 | 1135.6 |  5073.0 | 600000         | ✓   |
+| loop-data-dependent | 1407.7 | 1484.1 | 1478.3 |    T/O |     T/O | 2.550796048282 | ✓   |
 | mandelbrot          |   42.1 |  131.0 |  131.1 |  147.4 |   215.1 | 8011148        | ✓   |
 | matrix-multiply     |   85.0 |  139.9 |  137.4 | 2085.7 |   620.3 | 41079519680    | ✓   |
 | method-calls        |   36.2 |  120.9 |  120.1 | 2826.1 |   844.5 | 10000000       | ✓   |
@@ -85,7 +85,9 @@ without correctness is worthless.
 
 _All times wall-clock ms per process launch, median of 5 samples. Measured
 2026-07-31, Windows 11, ds 0.0.0 / node v26.5.0 / bun 1.3.6 / perry 0.5.1220 /
-ant 12.3. `results.json` holds the raw per-sample numbers. A runtime slower than
+ant 12.3; `levenshtein` and `loop-data-dependent` re-measured 2026-08-07 (7
+samples) after the bit-vector `i64` / multiplication-`f64` flavor changes.
+`results.json` holds the raw per-sample numbers. A runtime slower than
 `ds_median + 10s` per sample is killed and shown as `T/O`._
 
 _The single `✗` is **`int-add`**, and it is perry's deviation, not
@@ -138,17 +140,21 @@ anything numeric or allocation-bound, and only approaches the pack on
   group after number-flavor inference (Phase 1) promoted its counter and
   accumulator to `i64` — `sum += i % 1000` is now pure integer arithmetic (no
   `f64` modulo); the sum stays under 2⁵³, so `i64` matches ES `f64` exactly.
-- **`loop-data-dependent`** — `ds` now leads (1383 vs node 1478, vs bun 1464).
-  The earlier gap was the bitwise **index** `x[i & 63]` round-tripping through
-  `f64` (`(__a & __b) as f64 … as usize`): the `f64` intermediate both cost a
-  conversion per access and, worse, hid the `& 63` range from LLVM so the `Vec`
-  bounds check could not be elided (V8 elides it). Emitting the masked result
-  straight to `usize` restored the elision. The `sum = sum*x[i&63] + …`
-  recurrence is not the bottleneck — it is a sequential hazard either way.
-- **`levenshtein`** — `ds` now matches node (153 vs 152). The Myers bit-vector
-  inner loop is dominated by the `as i64 as i32` cast chain each bitwise op
-  emits (JS `ToInt32` wrap), which a future Phase 2 may shorten by promoting
-  the bit vectors to `i64`.
+- **`loop-data-dependent`** — `ds` leads (1408 vs node 1484, vs bun 1478). The
+  bitwise **index** `x[i & 63]` emits its masked result straight to `usize`
+  (not via `f64`), which both saves a conversion per access and keeps the
+  `& 63` range visible to LLVM so the `Vec` bounds check is elided (V8 elides
+  it too). The LCG seed multiplies as `f64`, not `i64`: `seed * 1103515245`
+  reaches ~2.4e18, past 2⁵³ where an exact `i64` product would diverge from the
+  rounded ES `number` result. The `sum = sum*x[i&63] + …` recurrence stays a
+  sequential hazard either way.
+- **`levenshtein`** — `ds` leads ~2× (78 vs node 130, vs bun 123). The Myers
+  bit-vector inner loop keeps its accumulators (`pv`/`mv`/`eq`) in `i64`: each
+  bitwise op yields a `ToInt32` result sign-extended to `i64`, so the bit
+  vectors no longer round-trip through `f64` per op. That halved the runtime
+  (162 ms → 78 ms) — LLVM does not fold the inner-loop `f64`↔`i32` cast chain
+  on its own. The values stay under 2³¹, so `i64` matches ES `number` exactly;
+  `*`, which can overshoot 2⁵³, stays `f64` (see `loop-data-dependent`).
 - **Array kernels (`array-read`, `array-write`, `nested-loops`, `object-create`,
   `array-ops`)** — `ds` leads 1.5–1.8× on reads and matches bun on writes:
   Rust's bounds-check elimination handles the sequential pattern, and

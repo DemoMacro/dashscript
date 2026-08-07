@@ -234,15 +234,29 @@ for (const bench of benches) {
 }
 
 // Merge with any existing results.json: a single-bench run (`node run.mjs fib`)
-// updates only that row instead of discarding the others. Benches run this
-// pass replace same-named rows; un-run benches keep their prior data. The
-// `runtimes` header is the union of runtimes seen across both runs.
+// updates only that row instead of discarding the others. Within a row, the
+// merge is per-runtime — a pass updates only the runtimes it ran, preserving
+// prior times for runtimes not re-run (e.g. `ant` when ANT_BIN is unset this
+// session), so a partial rerun never silently drops a column. The `runtimes`
+// header is the union of runtimes seen across both runs.
 const resultsPath = join(ROOT, "results.json");
 const existing = existsSync(resultsPath)
   ? JSON.parse(readFileSync(resultsPath, "utf8"))
   : { samples: SAMPLES, runtimes: [], results: [] };
 const byName = new Map(existing.results.map((r) => [r.bench, r]));
-for (const r of results) byName.set(r.bench, r);
+for (const r of results) {
+  const ex = byName.get(r.bench);
+  if (ex) {
+    ex.times = { ...ex.times, ...r.times };
+    ex.checksums = { ...ex.checksums, ...r.checksums };
+    if (r.error) ex.error = { ...ex.error, ...r.error };
+    if (r.timedOut) ex.timedOut = { ...ex.timedOut, ...r.timedOut };
+    const vals = Object.values(ex.checksums);
+    ex.consistent = vals.length > 0 && vals.every((v) => v === vals[0]);
+  } else {
+    byName.set(r.bench, r);
+  }
+}
 const runtimes = [...new Set([...(existing.runtimes ?? []), ...RUNTIMES.map((r) => r.name)])];
 writeFileSync(
   resultsPath,

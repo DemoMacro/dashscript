@@ -1,5 +1,5 @@
 {
-  "samples": 5,
+  "samples": 7,
   "runtimes": ["ds", "node", "bun", "perry", "ant"],
   "results": [
     {
@@ -174,10 +174,10 @@
       "bench": "levenshtein",
       "name": "levenshtein",
       "times": {
-        "ds": 161.8767,
-        "node": 148.4136,
-        "bun": 124.5342,
-        "perry": 1126.387,
+        "ds": 77.5693,
+        "node": 129.4962,
+        "bun": 123.2235,
+        "perry": 1135.633,
         "ant": 5073.0377
       },
       "checksums": {
@@ -195,9 +195,9 @@
       "bench": "loop-data-dependent",
       "name": "loop-data-dependent",
       "times": {
-        "ds": 1393.4415,
-        "node": 1475.6673,
-        "bun": 1468.502,
+        "ds": 1407.6561,
+        "node": 1484.0967,
+        "bun": 1478.3196,
         "perry": null,
         "ant": null
       },
@@ -206,7 +206,9 @@
         "node": "2.5507960482823666",
         "bun": "2.5507960482823666"
       },
-      "error": {},
+      "error": {
+        "ds": "build: Command failed: ds build"
+      },
       "timedOut": {
         "perry": true,
         "ant": true
