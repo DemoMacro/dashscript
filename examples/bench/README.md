@@ -62,33 +62,30 @@ without correctness is worthless.
 
 <!-- Updated by `node run.mjs` — re-run to refresh. Lower wall-clock median is better. -->
 
-| bench               |     ds |   node |    bun |  perry |     ant | checksum       |     |
-| ------------------- | -----: | -----: | -----: | -----: | ------: | -------------- | --- |
-| array-ops           |   86.8 |  159.6 |  158.0 | 2146.1 |  2087.1 | 5000000000     | ✓   |
-| array-read          |  447.5 |  646.9 |  699.2 | 3133.9 | 15900.6 | 499999500000   | ✓   |
-| array-write         |  503.6 |  713.6 |  696.2 | 3498.6 | 26031.6 | 999999         | ✓   |
-| binary-trees        |   29.9 |  122.7 |  127.9 |  132.9 |   501.0 | 1500001500000  | ✓   |
-| closure             |   62.3 |  274.3 |  146.9 |  261.9 |   280.5 | 25000000000000 | ✓   |
-| factorial           |   82.9 |  425.8 |  186.5 |  601.7 |   832.5 | 49950000000    | ✓   |
-| fib                 |   80.6 |  195.6 |  159.6 |  150.1 |   245.7 | 9227465        | ✓   |
-| int-add             |  675.8 | 1045.2 |  751.5 | 2386.2 |  4054.6 | 49999999906710 | ✗   |
-| levenshtein         |   59.9 |  129.1 |  122.9 | 1135.6 |  5073.0 | 600000         | ✓   |
-| loop-data-dependent | 1407.7 | 1484.1 | 1478.3 |    T/O |     T/O | 2.550796048282 | ✓   |
-| mandelbrot          |   42.1 |  131.0 |  131.1 |  147.4 |   215.1 | 8011148        | ✓   |
-| matrix-multiply     |   85.0 |  139.9 |  137.4 | 2085.7 |   620.3 | 41079519680    | ✓   |
-| method-calls        |   36.2 |  120.9 |  120.1 | 2826.1 |   844.5 | 10000000       | ✓   |
-| nested-loops        |  463.6 |  683.0 |  727.8 | 7373.2 | 16677.3 | 499999500000   | ✓   |
-| object-create       |  162.1 |  252.6 |  193.2 | 1262.8 |  8917.3 | 1499998500000  | ✓   |
-| primes              |   41.8 |  179.1 |  121.8 |  312.1 |   375.4 | 78498          | ✓   |
-| str-concat          |   27.4 |  119.2 |  104.2 |  127.6 |    75.6 | 100000         | ✓   |
-| string-ops          |   83.4 |  177.3 |  181.6 |  236.1 |   839.7 | 129991         | ✓   |
+| bench               |     ds |   node |    bun |  perry |    ant | checksum       |     |
+| ------------------- | -----: | -----: | -----: | -----: | -----: | -------------- | --- |
+| array-ops           |   80.3 |  143.9 |  132.2 | 1923.4 | 1899.2 | 5000000000     | ✓   |
+| array-read          |  324.1 |  567.9 |  674.7 | 2848.6 |    T/O | 499999500000   | ✓   |
+| array-write         |  329.8 |  613.9 |  652.5 | 3223.4 |    T/O | 999999         | ✓   |
+| binary-trees        |   23.5 |  100.3 |   90.4 |  119.1 |  486.3 | 1500001500000  | ✓   |
+| closure             |   53.4 |  246.8 |  117.7 |  216.0 |  252.2 | 25000000000000 | ✓   |
+| factorial           |   66.1 |  380.3 |  155.5 |  546.6 |  762.5 | 49950000000    | ✓   |
+| fib                 |   56.7 |  155.2 |  119.4 |  123.0 |  222.3 | 9227465        | ✓   |
+| int-add             |  622.8 |  946.1 |  676.3 | 2217.4 | 3770.4 | 49999999906710 | ✗   |
+| levenshtein         |   54.8 |  106.5 |   90.0 | 1023.7 | 4333.1 | 600000         | ✓   |
+| loop-data-dependent | 1297.0 | 1334.4 | 1331.2 |    T/O |    T/O | 2.550796048282 | ✓   |
+| mandelbrot          |   36.4 |  112.0 |   96.4 |  131.9 |  201.4 | 8011148        | ✓   |
+| matrix-multiply     |   56.7 |  114.6 |  108.6 | 1762.9 |  547.4 | 41079519680    | ✓   |
+| method-calls        |   29.4 |   99.7 |   89.8 | 2688.9 |  801.5 | 10000000       | ✓   |
+| nested-loops        |  431.4 |  597.4 |  740.9 | 9112.2 |    T/O | 499999500000   | ✓   |
+| object-create       |  146.5 |  220.1 |  173.1 | 1150.3 | 9288.5 | 1499998500000  | ✓   |
+| primes              |   24.3 |  114.1 |   90.8 |  290.2 |  344.2 | 78498          | ✓   |
+| str-concat          |   21.0 |   95.3 |   78.2 |  112.6 |   66.4 | 100000         | ✓   |
+| string-ops          |   65.4 |  132.8 |  134.7 |  206.5 |  734.6 | 129991         | ✓   |
 
-_All times wall-clock ms per process launch, median of 5 samples. Measured
-2026-07-31, Windows 11, ds 0.0.0 / node v26.5.0 / bun 1.3.6 / perry 0.5.1220 /
-ant 12.3; `levenshtein` and `loop-data-dependent` re-measured 2026-08-07 (9
-samples) after the bit-vector `i64` / `.length` `i64` / multiplication-`f64`
-flavor changes; `string-ops` and `array-ops` re-measured 2026-08-07 (11
-samples).
+_All times wall-clock ms per process launch, median of 7 samples. Measured
+2026-08-07 (clean machine, no background load), Windows 11, ds 0.0.0 /
+node v26.5.0 / bun 1.3.6 / perry 0.5.1220 / ant 12.3.
 `results.json` holds the raw per-sample numbers. A runtime slower than
 `ds_median + 10s` per sample is killed and shown as `T/O`._
 
@@ -106,10 +103,10 @@ ES `number` is `f64` — `499999999500000000`.)_
 _`perry` and `ant` on `loop-data-dependent` are `T/O`: perry's optimizer cannot
 fold the f64 recurrence, and ant's interpreter cannot finish 1e7 dependent
 iterations within the `ds_median + 10s` ceiling. `ant` is also slow on the
-allocator-heavy kernels (`array-write` 26 s, `nested-loops` 17 s, `object-create`
-9 s) — interpreter dispatch and GC dominate there; it is uncompetitive on
-anything numeric or allocation-bound, and only approaches the pack on
-`str-concat` (76 ms, second to `ds`)._
+allocator-heavy kernels (`array-read` / `array-write` / `nested-loops` `T/O`,
+`object-create` 9 s) — interpreter dispatch and GC dominate there; it is
+uncompetitive on anything numeric or allocation-bound, and only approaches the
+pack on `str-concat` (66 ms, second to `ds`)._
 
 ## Benches
 
@@ -137,12 +134,12 @@ anything numeric or allocation-bound, and only approaches the pack on
 ## Interpretation
 
 - **Numeric / allocation-free (`fib`, `factorial`, `mandelbrot`,
-  `method-calls`, `primes`, `binary-trees`, `closure`)** — `ds` leads 2.4–4.4×:
+  `method-calls`, `primes`, `binary-trees`, `closure`)** — `ds` leads 2.1–3.8×:
   zero-overhead native code, no JIT warmup, no boxing. `factorial` joins this
   group after number-flavor inference (Phase 1) promoted its counter and
   accumulator to `i64` — `sum += i % 1000` is now pure integer arithmetic (no
   `f64` modulo); the sum stays under 2⁵³, so `i64` matches ES `f64` exactly.
-- **`loop-data-dependent`** — `ds` leads (1408 vs node 1484, vs bun 1478). The
+- **`loop-data-dependent`** — `ds` leads (1297 vs node 1334, vs bun 1331). The
   bitwise **index** `x[i & 63]` emits its masked result straight to `usize`
   (not via `f64`), which both saves a conversion per access and keeps the
   `& 63` range visible to LLVM so the `Vec` bounds check is elided (V8 elides
@@ -150,7 +147,7 @@ anything numeric or allocation-bound, and only approaches the pack on
   reaches ~2.4e18, past 2⁵³ where an exact `i64` product would diverge from the
   rounded ES `number` result. The `sum = sum*x[i&63] + …` recurrence stays a
   sequential hazard either way.
-- **`levenshtein`** — `ds` leads ~2.2× (60 vs node 129, vs bun 123). The Myers
+- **`levenshtein`** — `ds` leads ~1.6× (55 vs node 107, vs bun 90). The Myers
   bit-vector inner loop keeps its accumulators (`pv`/`mv`/`eq`) and the string
   lengths (`n`/`m` from `a.length`/`b.length`) in `i64`: each bitwise op yields
   a `ToInt32` result sign-extended to `i64`, and `.length` is a non-negative
@@ -161,16 +158,16 @@ anything numeric or allocation-bound, and only approaches the pack on
   ES `number` exactly; `*`, which can overshoot 2⁵³, stays `f64` (see
   `loop-data-dependent`).
 - **Array kernels (`array-read`, `array-write`, `nested-loops`, `object-create`,
-  `array-ops`)** — `ds` leads 1.5–1.8× on reads and matches bun on writes:
-  Rust's bounds-check elimination handles the sequential pattern, and
-  `__ds::array_set` is `#[inline]`, so the optimizer folds the ES auto-grow
-  path.
-- **`matrix-multiply`** — `ds` leads (72 vs node 149). The kernel writes its
+  `array-ops`)** — `ds` leads 1.2–2× across reads and writes:
+  Rust's bounds-check elimination handles the sequential pattern, and the
+  indexed-assignment fast path (`__ds::array_set_index` for integer indices,
+  `#[inline]`) lets the optimizer fold the ES auto-grow path.
+- **`matrix-multiply`** — `ds` leads (57 vs node 115). The kernel writes its
   result through a `&mut Vec` reference parameter (`matmul(a, b, &mut c)`), so
   the caller sees the mutation with no clone — ES reference semantics lowered
   correctly.
-- **`str-concat`** — `ds` leads (22 vs node 116). `s = s + "x"` lowers to Rust
+- **`str-concat`** — `ds` leads (21 vs node 95). `s = s + "x"` lowers to Rust
   `String + &str`, whose growth is amortized-O(1) doubling.
-- **`string-ops`** — `ds` leads ~2.1× (83 vs node 177, vs bun 182). The workload
+- **`string-ops`** — `ds` leads ~2× (65 vs node 133, vs bun 135). The workload
   is dominated by `slice` reallocation, where V8/JSC and Rust are all
   allocator-bound.

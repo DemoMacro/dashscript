@@ -1,16 +1,17 @@
 {
-  "samples": 11,
-  "runtimes": ["ds", "node", "bun", "perry", "ant"],
+  "samples": 7,
+  "runtimes": ["ds", "node", "bun", "perry", "ant", "scriptc"],
   "results": [
     {
       "bench": "array-ops",
       "name": "array-ops",
       "times": {
-        "ds": 86.8005,
-        "node": 159.6252,
-        "bun": 158.0308,
-        "perry": 2146.1407,
-        "ant": 2087.1041
+        "ds": 80.3245,
+        "node": 143.9357,
+        "bun": 132.154,
+        "perry": 1923.3804,
+        "ant": 1899.1551,
+        "scriptc": null
       },
       "checksums": {
         "ds": "5000000000",
@@ -19,7 +20,9 @@
         "perry": "5000000000",
         "ant": "5000000000"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o array-ops-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -27,11 +30,12 @@
       "bench": "array-read",
       "name": "array-read",
       "times": {
-        "ds": 447.5048,
-        "node": 646.8984,
-        "bun": 699.2042,
-        "perry": 3133.8997,
-        "ant": 15900.6423
+        "ds": 324.0558,
+        "node": 567.8656,
+        "bun": 674.7486,
+        "perry": 2848.6055,
+        "ant": null,
+        "scriptc": null
       },
       "checksums": {
         "ds": "499999500000",
@@ -40,19 +44,24 @@
         "perry": "499999500000",
         "ant": "499999500000"
       },
-      "error": {},
-      "timedOut": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o array-read-scriptc.exe"
+      },
+      "timedOut": {
+        "ant": true
+      },
       "consistent": true
     },
     {
       "bench": "array-write",
       "name": "array-write",
       "times": {
-        "ds": 503.5513,
-        "node": 713.5976,
-        "bun": 696.2148,
-        "perry": 3498.6288,
-        "ant": 26031.6025
+        "ds": 329.7909,
+        "node": 613.8862,
+        "bun": 652.4587,
+        "perry": 3223.4075,
+        "ant": null,
+        "scriptc": null
       },
       "checksums": {
         "ds": "999999",
@@ -61,19 +70,24 @@
         "perry": "999999",
         "ant": "999999"
       },
-      "error": {},
-      "timedOut": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o array-write-scriptc.exe"
+      },
+      "timedOut": {
+        "ant": true
+      },
       "consistent": true
     },
     {
       "bench": "binary-trees",
       "name": "binary-trees",
       "times": {
-        "ds": 29.8595,
-        "node": 122.7227,
-        "bun": 127.9249,
-        "perry": 132.9014,
-        "ant": 501.0472
+        "ds": 23.53,
+        "node": 100.2529,
+        "bun": 90.3728,
+        "perry": 119.0866,
+        "ant": 486.2505,
+        "scriptc": null
       },
       "checksums": {
         "ds": "1500001500000",
@@ -82,7 +96,9 @@
         "perry": "1500001500000",
         "ant": "1500001500000"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o binary-trees-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -90,11 +106,12 @@
       "bench": "closure",
       "name": "closure",
       "times": {
-        "ds": 62.2539,
-        "node": 274.3397,
-        "bun": 146.9184,
-        "perry": 261.9054,
-        "ant": 280.5438
+        "ds": 53.4018,
+        "node": 246.841,
+        "bun": 117.6804,
+        "perry": 215.9896,
+        "ant": 252.1993,
+        "scriptc": null
       },
       "checksums": {
         "ds": "2500000000000000",
@@ -103,7 +120,9 @@
         "perry": "2500000000000000",
         "ant": "2500000000000000"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o closure-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -111,11 +130,12 @@
       "bench": "factorial",
       "name": "factorial",
       "times": {
-        "ds": 82.9,
-        "node": 425.8455,
-        "bun": 186.4808,
-        "perry": 601.6554,
-        "ant": 832.5309
+        "ds": 66.1155,
+        "node": 380.2997,
+        "bun": 155.4922,
+        "perry": 546.564,
+        "ant": 762.4579,
+        "scriptc": null
       },
       "checksums": {
         "ds": "49950000000",
@@ -124,7 +144,9 @@
         "perry": "49950000000",
         "ant": "49950000000"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o factorial-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -132,11 +154,12 @@
       "bench": "fib",
       "name": "fib",
       "times": {
-        "ds": 80.6499,
-        "node": 195.61,
-        "bun": 159.6294,
-        "perry": 150.0953,
-        "ant": 245.7218
+        "ds": 56.7078,
+        "node": 155.1903,
+        "bun": 119.4132,
+        "perry": 123.0111,
+        "ant": 222.2845,
+        "scriptc": null
       },
       "checksums": {
         "ds": "9227465",
@@ -145,7 +168,9 @@
         "perry": "9227465",
         "ant": "9227465"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o fib-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -153,11 +178,12 @@
       "bench": "int-add",
       "name": "int-add",
       "times": {
-        "ds": 675.8154,
-        "node": 1045.1848,
-        "bun": 751.5223,
-        "perry": 2386.2263,
-        "ant": 4054.5547
+        "ds": 622.789,
+        "node": 946.1285,
+        "bun": 676.25,
+        "perry": 2217.3983,
+        "ant": 3770.4143,
+        "scriptc": null
       },
       "checksums": {
         "ds": "499999999067109000",
@@ -166,7 +192,9 @@
         "perry": "499999999067108992",
         "ant": "499999999067109000"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o int-add-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": false
     },
@@ -174,11 +202,12 @@
       "bench": "levenshtein",
       "name": "levenshtein",
       "times": {
-        "ds": 59.86,
-        "node": 129.12,
-        "bun": 122.92,
-        "perry": 1135.633,
-        "ant": 5073.0377
+        "ds": 54.8483,
+        "node": 106.5026,
+        "bun": 89.9545,
+        "perry": 1023.7092,
+        "ant": 4333.1002,
+        "scriptc": null
       },
       "checksums": {
         "ds": "600000",
@@ -187,7 +216,9 @@
         "perry": "600000",
         "ant": "600000"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o levenshtein-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -195,11 +226,12 @@
       "bench": "loop-data-dependent",
       "name": "loop-data-dependent",
       "times": {
-        "ds": 1407.6561,
-        "node": 1484.0967,
-        "bun": 1478.3196,
+        "ds": 1296.9989,
+        "node": 1334.3714,
+        "bun": 1331.1964,
         "perry": null,
-        "ant": null
+        "ant": null,
+        "scriptc": null
       },
       "checksums": {
         "ds": "2.5507960482823666",
@@ -207,7 +239,8 @@
         "bun": "2.5507960482823666"
       },
       "error": {
-        "ds": "build: Command failed: ds build"
+        "ds": "build: Command failed: ds build",
+        "scriptc": "build: Command failed: scriptc build main.ts -o loop-data-dependent-scriptc.exe"
       },
       "timedOut": {
         "perry": true,
@@ -219,11 +252,12 @@
       "bench": "mandelbrot",
       "name": "mandelbrot",
       "times": {
-        "ds": 42.062,
-        "node": 131.0162,
-        "bun": 131.0761,
-        "perry": 147.4239,
-        "ant": 215.1447
+        "ds": 36.4005,
+        "node": 111.9748,
+        "bun": 96.3592,
+        "perry": 131.8935,
+        "ant": 201.4296,
+        "scriptc": null
       },
       "checksums": {
         "ds": "8011148",
@@ -232,7 +266,9 @@
         "perry": "8011148",
         "ant": "8011148"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o mandelbrot-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -240,11 +276,12 @@
       "bench": "matrix-multiply",
       "name": "matrix-multiply",
       "times": {
-        "ds": 85.0454,
-        "node": 139.9359,
-        "bun": 137.4028,
-        "perry": 2085.7175,
-        "ant": 620.3102
+        "ds": 56.7206,
+        "node": 114.5979,
+        "bun": 108.6156,
+        "perry": 1762.9119,
+        "ant": 547.3842,
+        "scriptc": null
       },
       "checksums": {
         "ds": "41079519680",
@@ -253,7 +290,9 @@
         "perry": "41079519680",
         "ant": "41079519680"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o matrix-multiply-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -261,11 +300,12 @@
       "bench": "method-calls",
       "name": "method-calls",
       "times": {
-        "ds": 36.2312,
-        "node": 120.9039,
-        "bun": 120.0618,
-        "perry": 2826.0751,
-        "ant": 844.4597
+        "ds": 29.4156,
+        "node": 99.6534,
+        "bun": 89.8384,
+        "perry": 2688.8519,
+        "ant": 801.4559,
+        "scriptc": null
       },
       "checksums": {
         "ds": "10000000",
@@ -274,7 +314,9 @@
         "perry": "10000000",
         "ant": "10000000"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o method-calls-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -282,11 +324,12 @@
       "bench": "nested-loops",
       "name": "nested-loops",
       "times": {
-        "ds": 463.6412,
-        "node": 682.9658,
-        "bun": 727.7882,
-        "perry": 7373.2315,
-        "ant": 16677.2581
+        "ds": 431.4362,
+        "node": 597.3716,
+        "bun": 740.9338,
+        "perry": 9112.1594,
+        "ant": null,
+        "scriptc": null
       },
       "checksums": {
         "ds": "499999500000",
@@ -295,19 +338,24 @@
         "perry": "499999500000",
         "ant": "499999500000"
       },
-      "error": {},
-      "timedOut": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o nested-loops-scriptc.exe"
+      },
+      "timedOut": {
+        "ant": true
+      },
       "consistent": true
     },
     {
       "bench": "object-create",
       "name": "object-create",
       "times": {
-        "ds": 162.0616,
-        "node": 252.6465,
-        "bun": 193.1974,
-        "perry": 1262.8158,
-        "ant": 8917.3452
+        "ds": 146.5109,
+        "node": 220.1458,
+        "bun": 173.0919,
+        "perry": 1150.2944,
+        "ant": 9288.4616,
+        "scriptc": null
       },
       "checksums": {
         "ds": "1499998500000",
@@ -316,7 +364,9 @@
         "perry": "1499998500000",
         "ant": "1499998500000"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o object-create-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -324,11 +374,12 @@
       "bench": "primes",
       "name": "primes",
       "times": {
-        "ds": 41.7815,
-        "node": 179.0796,
-        "bun": 121.8219,
-        "perry": 312.121,
-        "ant": 375.3963
+        "ds": 24.3112,
+        "node": 114.1236,
+        "bun": 90.7873,
+        "perry": 290.2102,
+        "ant": 344.2264,
+        "scriptc": null
       },
       "checksums": {
         "ds": "78498",
@@ -337,7 +388,9 @@
         "perry": "78498",
         "ant": "78498"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o primes-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -345,11 +398,12 @@
       "bench": "str-concat",
       "name": "str-concat",
       "times": {
-        "ds": 27.4423,
-        "node": 119.2302,
-        "bun": 104.1882,
-        "perry": 127.5528,
-        "ant": 75.6214
+        "ds": 21.0256,
+        "node": 95.3104,
+        "bun": 78.1736,
+        "perry": 112.6042,
+        "ant": 66.3842,
+        "scriptc": null
       },
       "checksums": {
         "ds": "100000",
@@ -358,7 +412,9 @@
         "perry": "100000",
         "ant": "100000"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o str-concat-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     },
@@ -366,11 +422,12 @@
       "bench": "string-ops",
       "name": "string-ops",
       "times": {
-        "ds": 83.3985,
-        "node": 177.2755,
-        "bun": 181.5927,
-        "perry": 236.1368,
-        "ant": 839.7113
+        "ds": 65.4176,
+        "node": 132.8356,
+        "bun": 134.6893,
+        "perry": 206.5355,
+        "ant": 734.5886,
+        "scriptc": null
       },
       "checksums": {
         "ds": "129991",
@@ -379,7 +436,9 @@
         "perry": "129991",
         "ant": "129991"
       },
-      "error": {},
+      "error": {
+        "scriptc": "build: Command failed: scriptc build main.ts -o string-ops-scriptc.exe"
+      },
       "timedOut": {},
       "consistent": true
     }
