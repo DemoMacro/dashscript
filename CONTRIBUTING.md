@@ -2,7 +2,7 @@
 
 Thanks for contributing! This guide covers the **workflow** for contributing and the **coding standards** that keep DashScript consistent.
 
-> DashScript compiles a TypeScript-flavored language (`.ts`) to native binaries via Rust: a Rust core (reusing oxc for parse/lint/format) plus a thin TypeScript CLI/npm surface.
+> DashScript compiles **JavaScript/TypeScript** to **Rust** (native today; `wasm`/`napi` planned) — static-first, with graceful degradation to an embedded QuickJS engine for what the static translator cannot lower. The full architecture, design decisions, and roadmap live in [CLAUDE.md](./CLAUDE.md); this file covers the **workflow** and **coding standards** for contributing.
 
 ## Development Setup
 
@@ -44,7 +44,7 @@ After install, opening any `.ts` file gives native TS syntax highlight, completi
 1. **Fork & clone** — fork on GitHub, clone your fork, add `upstream` (`git remote add upstream https://github.com/DemoMacro/dashscript.git`).
 2. **Branch** — branch off `main` (`feat/...`, `fix/...`, `docs/...`, …).
 3. **Code** — follow the standards below; match existing style.
-4. **Verify** — `vp check` passes; `pnpm build` succeeds for the changed package; `cargo test` + `cargo clippy` pass for the core crate.
+4. **Verify** — `pnpm check` passes (TS lint/format/typecheck via `vp check` + `cargo clippy` on the core crate); `cargo test --lib` passes for the core crate; `pnpm build` succeeds for the changed package.
 5. **Commit** — use [conventional commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `refactor:`, `perf:`, `test:`, `build:`, `ci:`, `chore:`, `revert:`. Keep commit messages free of generator/AI attribution.
 6. **Push & PR** — push to your fork and open a PR against `upstream/main`.
 
@@ -78,9 +78,9 @@ packages/dashscript/ the single npm package: bin `ds` + editor types
 - ESM (`"type": "module"`), `strict` mode, no implicit `any`.
 - `vp check` (Oxlint + Oxfmt) is the source of truth for TS style.
 
-### DashScript source (`.ts`)
+### DashScript source (`.ts`/`.js`)
 
-TypeScript-flavored surface. The mapping table is still growing — when adding `.ts` fixtures, follow TS conventions and keep samples minimal. Do not invent syntax the translator cannot yet map.
+JavaScript/TypeScript surface — `.ts` (typed) by default, with `.js`/`.mjs`/`.cjs` (untyped) parsed by oxc into the same AST. The static translator maps the ESM surface (`import`/`export`); a CommonJS module (`require`/`module.exports`) degrades to the embedded QuickJS engine. The mapping table is still growing — when adding `.ts` fixtures, follow TS conventions and keep samples minimal. Do not invent syntax the translator cannot yet map.
 
 **Execution model — pure-TS semantics.** A `.ts` file runs like a Node script: top-level declarations become Rust items that do **not** execute; top-level executable statements run in source order, collected into an implicit `fn main` the translator emits (empty for a declarations-only file). `function main` is an ordinary declaration, renamed `__ds_main` to avoid colliding with the cargo entry — call it explicitly to run it. A top-level binding referenced from a `function` is hoisted to a module-global item (no rewrite needed). Full rules in `CLAUDE.md` §Design Decisions.
 
@@ -88,7 +88,7 @@ TypeScript-flavored surface. The mapping table is still growing — when adding 
 
 - Put Rust crate deps under **`dashscript.cargo.dependencies`** with bare crate names (`"serde": "1.0"` or `{ "version": "1.0", "features": [...] }`) — the same name `ds add cargo:<crate>` records (the `cargo:` prefix is optional). npm `dependencies` stay JS deps (→ `node_modules`) and never reach Cargo.toml.
 - Set `dashscript.target` to the output shape (`bin` default — native binary; `rust` — translated crate; `wasm`/`napi` planned); `--target` overrides it on `ds build`.
-- Declare executables under `bin` (package.json `bin` → cargo `[[bin]]`): a project is **one crate** — the whole directory's `.ts` files translate into `src/<stem>.rs`, and only the `bin`/`main` entries become cargo targets. `main` → `[lib]`; `dashscript.cargo.devDependencies` → `[dev-dependencies]`. A workspace root's shared metadata/deps inherit via `[workspace.package]`/`[workspace.dependencies]` (member `field.workspace = true`).
+- Declare executables under `bin` (package.json `bin` → cargo `[[bin]]`): a project is **one crate** — the whole directory's `.ts`/`.js` files translate into `src/<stem>.rs`, and only the `bin`/`main` entries become cargo targets. `main` → `[lib]`; `dashscript.cargo.devDependencies` → `[dev-dependencies]`. A workspace root's shared metadata/deps inherit via `[workspace.package]`/`[workspace.dependencies]` (member `field.workspace = true`).
 - The package must round-trip cleanly: every `dashscript.cargo` dependency maps to one `Cargo.toml` entry (version reqs pass through to Cargo today).
 
 ## Conformance / Support Matrix
@@ -153,9 +153,9 @@ Rule of thumb: **a new front-end construct must be mappable end-to-end** — a `
 
 ## Pull Request Checklist
 
-- [ ] `vp check` passes
+- [ ] `pnpm check` passes (vp check + cargo clippy)
 - [ ] `pnpm build` succeeds for the changed package
-- [ ] `cargo test` + `cargo clippy` pass for the core crate
+- [ ] `cargo test --lib` passes for the core crate
 - [ ] Any new AST mapping has a `.ts` fixture whose emitted Rust (`ds build --target rust`) passes `cargo check`
 - [ ] Naming & patterns follow the standards above
 - [ ] Changes are minimal and focused — match existing style

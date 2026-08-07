@@ -22,7 +22,7 @@
   "scripts": {
     "dev": "pnpm --filter \"./packages/**\" -r dev",
     "build": "pnpm --filter \"./packages/**\" -r build",
-    "check": "vp check --fix",
+    "check": "vp check --fix && cargo clippy --manifest-path crates/dashscript/Cargo.toml --all-targets -- -D warnings",
     "test": "vp test run",
     "bench": "vp test bench",
     "version": "pnpm --filter \"./packages/**\" -r exec basis version",

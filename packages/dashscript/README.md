@@ -4,7 +4,7 @@
 ![npm downloads](https://img.shields.io/npm/dw/dashscript)
 ![npm license](https://img.shields.io/npm/l/dashscript)
 
-> **TypeScript ergonomics, Rust performance, compiled to native.** A typed, TypeScript-flavored language (`.ts`) that compiles to native binaries via idiomatic Rust — one package providing the `ds` CLI, the translation core, and editor types.
+> **JavaScript/TypeScript ergonomics, Rust performance, native + wasm + napi outputs.** DashScript compiles **JavaScript/TypeScript** to idiomatic **Rust** (a native binary today; WebAssembly and napi targets share the mapping table), static-first with graceful degradation to an embedded QuickJS engine — one package providing the `ds` CLI, the translation core, and editor types.
 
 ## Features
 

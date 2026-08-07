@@ -37,7 +37,7 @@ ds build declarations.ts    # → dist/declarations (native binary)
 
 ## Scope
 
-These cover the TypeScript subset that maps to idiomatic Rust today. Two gaps
+These cover the JavaScript/TypeScript surface that maps to idiomatic Rust today. Two gaps
 are called out in the source rather than papered over:
 
 - **`&mut self` method calls** — a `&mut self` method translates correctly, but

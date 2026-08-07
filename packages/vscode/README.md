@@ -1,6 +1,6 @@
 # DashScript
 
-Language support for [DashScript](https://github.com/DemoMacro/dashscript) (`.ts`) — TypeScript ergonomics, Rust performance, compiled to native.
+Language support for [DashScript](https://github.com/DemoMacro/dashscript) (`.ts`/`.js`) — JavaScript/TypeScript ergonomics, Rust performance, native + wasm + napi outputs.
 
 This extension is a thin bridge over VS Code's built-in TypeScript server. It adds only what the native TS server cannot provide: crate-level go-to-definition and translatability diagnostics from the shared `ds lsp`, plus the `@dashscript/typescript-plugin` for `cargo:` import handling. Syntax highlighting, completions, hover, signature help, document symbols, find references, and rename all come from VS Code's native TypeScript — nothing is duplicated.
 
