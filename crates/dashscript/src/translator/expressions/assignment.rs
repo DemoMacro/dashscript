@@ -39,6 +39,11 @@ enum AssignTarget {
         /// `Vec<T>`, and an ES `bytes[i] = n` writes a `number`; a `Vec<f64>`
         /// array keeps the `f64` store (`false`).
         elem_is_u8: bool,
+        /// The index is a known integer (`i64`-flavor: loop counter, literal,
+        /// arithmetic), so it lowers as `usize` through `array_set_index`,
+        /// skipping `array_set`'s f64 defenses (is_finite / < 0 / fract). An
+        /// `f64`-flavor index keeps the full ES defenses via `array_set`.
+        idx_is_usize: bool,
     },
 }
 
@@ -175,6 +180,7 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
             idx,
             is_ref,
             elem_is_u8,
+            idx_is_usize,
         }) => match a.operator {
             // `xs[i] = v` → `__ds::array_set(&mut xs, i, v)` (ES auto-grow). A
             // bare `xs[i as usize] = v` would panic on a Rust `Vec` when `i` is
@@ -202,15 +208,23 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
                 // borrow a direct `arr[i] = arr[j]` gets.) A reference-parameter
                 // target (`c: &mut Vec`) drops the `&mut` — `array_set(c, …)`
                 // auto-reborrows the binding.
+                // An `i64`-flavor index takes the `array_set_index` fast path
+                // (a `usize` index that skips `array_set`'s f64 defenses); an
+                // `f64`-flavor index keeps the full ES defenses.
+                let set_fn = if idx_is_usize {
+                    quote::format_ident!("array_set_index")
+                } else {
+                    quote::format_ident!("array_set")
+                };
                 if is_ref {
                     parse_quote!({
                         let __ds_v = #val;
-                        crate::__ds::array_set(#obj, #idx, __ds_v);
+                        crate::__ds::#set_fn(#obj, #idx, __ds_v);
                     })
                 } else {
                     parse_quote!({
                         let __ds_v = #val;
-                        crate::__ds::array_set(&mut #obj, #idx, __ds_v);
+                        crate::__ds::#set_fn(&mut #obj, #idx, __ds_v);
                     })
                 }
             }
@@ -415,13 +429,17 @@ fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<As
             // of range; ES grows the array instead). The `__ds::array_set` token
             // in the output flags `needs_array_helper`.
             let obj = translate_expr(&cm.object, ctx);
-            // `__ds::array_set` takes the index as `f64` (an ES array index is a
-            // `number`); a flavor-promoted `i64` loop counter is site-cast here.
-            let idx = super::translate_number_to(
-                &cm.expression,
-                super::super::flavor::NumberFlavor::F64,
-                ctx,
-            );
+            // An `i64`-flavor index (loop counter, literal, integer arithmetic)
+            // lowers as `usize` through `array_set_index`, skipping
+            // `array_set`'s f64 defenses; an `f64`-flavor index stays `f64`.
+            let idx_is_usize =
+                super::super::flavor::expr_flavor(&cm.expression, ctx) == NumberFlavor::I64;
+            let idx = if idx_is_usize {
+                let e = super::translate_number_to(&cm.expression, NumberFlavor::I64, ctx);
+                parse_quote!(#e as usize)
+            } else {
+                super::translate_number_to(&cm.expression, NumberFlavor::F64, ctx)
+            };
             let is_ref = is_ref_param_target(&cm.object, ctx);
             let elem_is_u8 = u8_elem_target(&cm.object, ctx);
             Some(AssignTarget::ArraySet {
@@ -429,6 +447,7 @@ fn assignment_target_kind(target: &AssignmentTarget, ctx: &Ctx<'_>) -> Option<As
                 idx,
                 is_ref,
                 elem_is_u8,
+                idx_is_usize,
             })
         }
         _ => None,

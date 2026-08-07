@@ -64,7 +64,7 @@ without correctness is worthless.
 
 | bench               |     ds |   node |    bun |  perry |     ant | checksum       |     |
 | ------------------- | -----: | -----: | -----: | -----: | ------: | -------------- | --- |
-| array-ops           |  122.9 |  177.6 |  164.9 | 2146.1 |  2087.1 | 5000000000     | ✓   |
+| array-ops           |   86.8 |  159.6 |  158.0 | 2146.1 |  2087.1 | 5000000000     | ✓   |
 | array-read          |  447.5 |  646.9 |  699.2 | 3133.9 | 15900.6 | 499999500000   | ✓   |
 | array-write         |  503.6 |  713.6 |  696.2 | 3498.6 | 26031.6 | 999999         | ✓   |
 | binary-trees        |   29.9 |  122.7 |  127.9 |  132.9 |   501.0 | 1500001500000  | ✓   |
@@ -87,7 +87,8 @@ _All times wall-clock ms per process launch, median of 5 samples. Measured
 2026-07-31, Windows 11, ds 0.0.0 / node v26.5.0 / bun 1.3.6 / perry 0.5.1220 /
 ant 12.3; `levenshtein` and `loop-data-dependent` re-measured 2026-08-07 (9
 samples) after the bit-vector `i64` / `.length` `i64` / multiplication-`f64`
-flavor changes; `string-ops` re-measured 2026-08-07 (11 samples).
+flavor changes; `string-ops` and `array-ops` re-measured 2026-08-07 (11
+samples).
 `results.json` holds the raw per-sample numbers. A runtime slower than
 `ds_median + 10s` per sample is killed and shown as `T/O`._
 

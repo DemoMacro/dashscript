@@ -205,15 +205,16 @@ fn translates_array_reduce_without_seed_to_reduce() {
 
 #[test]
 fn translates_array_index_assign_to_array_set() {
-    // `xs[i] = v` lowers to `__ds::array_set` (ES `Array` auto-grow), not a
-    // bare `xs[i as usize] = v` (which would panic on a Rust `Vec` when `i` is
-    // out of range). The RHS is bound to a temp first so `arr[i] = arr[j]`
-    // cannot collide with the `&mut` borrow `array_set` takes. The call flags
+    // `xs[i] = v` lowers to `__ds::array_set_index` for an integer index (ES
+    // `Array` auto-grow, skipping `array_set`'s f64 defenses), not a bare
+    // `xs[i as usize] = v` (which would panic on a Rust `Vec` when `i` is out
+    // of range). The RHS is bound to a temp first so `arr[i] = arr[j]` cannot
+    // collide with the `&mut` borrow the store takes. The call flags
     // `needs_array_helper`.
     let src = "function f(): void { let xs: number[] = [1, 2, 3]; xs[0] = 9; }";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
-        rust.contains("__ds::array_set(&mut xs, 0_f64, __ds_v)"),
+        rust.contains("__ds::array_set_index(&mut xs, 0_i64 as usize, __ds_v)"),
         "got:\n{rust}"
     );
     assert!(
@@ -235,8 +236,8 @@ fn array_set_to_uint8_array_narrows_value_to_u8() {
         "Uint8Array index assign narrows the value to u8: {rust}"
     );
     assert!(
-        rust.contains("array_set(&mut x,"),
-        "still routes through array_set: {rust}"
+        rust.contains("array_set_index(&mut x,"),
+        "still routes through array_set_index: {rust}"
     );
 }
 

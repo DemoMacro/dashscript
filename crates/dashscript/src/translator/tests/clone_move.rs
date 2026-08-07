@@ -202,9 +202,9 @@ fn ref_param_array_set_reborrows_without_mut_prefix() {
     // `array_set(c, …)` (no leading `&mut`), since `c` is already a `&mut Vec`.
     let src = "function f(c: number[]): void { c[0] = 1; }";
     let rust = Translator::new().translate(src).expect("should translate");
-    assert!(rust.contains("array_set(c,"), "got:\n{rust}");
+    assert!(rust.contains("array_set_index(c,"), "got:\n{rust}");
     assert!(
-        !rust.contains("array_set(&mut c,"),
+        !rust.contains("array_set_index(&mut c,"),
         "a ref-param target reborrows, got:\n{rust}"
     );
 }

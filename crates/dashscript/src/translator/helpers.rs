@@ -127,6 +127,32 @@ pub fn array_set<T: Default + Clone>(arr: &mut Vec<T>, i: f64, v: T) {
         arr[idx] = v;
     }
 }
+/// ES indexed assignment with a known-integer index — the `xs[i] = v` fast
+/// path where `i` is a loop counter, literal, or integer arithmetic (an
+/// `i64`-flavor expression the translator lowered via `as usize`). The index
+/// already being `usize`, the f64 defenses of `array_set` (is_finite / < 0 /
+/// fract) are skipped; ES auto-grow (i >= len grows the Vec) and the 2^32-1
+/// property-set guard are preserved. A negative `i64` index wraps to a huge
+/// `usize` (>= 2^32-1) under `as usize`, so the u32 guard drops the store —
+/// matching ES, where `arr[-1] = v` is a no-op property set.
+#[inline]
+pub fn array_set_index<T: Default + Clone>(arr: &mut Vec<T>, i: usize, v: T) {
+    if i >= u32::MAX as usize {
+        return;
+    }
+    if i < arr.len() {
+        arr[i] = v;
+    } else if i == arr.len() {
+        arr.push(v);
+    } else {
+        const SPARSE_GAP_CAP: usize = 1 << 20;
+        if i - arr.len() > SPARSE_GAP_CAP {
+            return;
+        }
+        arr.resize(i + 1, T::default());
+        arr[i] = v;
+    }
+}
 ";
 
 /// WHATWG Encoding API helpers — `__ds::TextEncoder`/`__ds::TextDecoder`, a
