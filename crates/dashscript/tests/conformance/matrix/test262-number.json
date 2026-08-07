@@ -4,7 +4,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -12,7 +12,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -20,7 +20,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -28,15 +28,15 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.epsilon",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -44,7 +44,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -52,7 +52,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -84,7 +84,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -92,7 +92,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -132,7 +132,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -140,7 +140,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -156,7 +156,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -172,7 +172,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -196,7 +196,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -227,24 +227,24 @@
     "id": "test262.test.built-ins.number.max_safe_integer",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.max_value.s15.7.3.2_a2",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.max_value.s15.7.3.2_a3",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -252,7 +252,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -267,24 +267,24 @@
     "id": "test262.test.built-ins.number.min_safe_integer",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.min_value.s15.7.3.3_a2",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.min_value.s15.7.3.3_a3",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -292,7 +292,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -307,8 +307,8 @@
     "id": "test262.test.built-ins.number.nan",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -323,8 +323,8 @@
     "id": "test262.test.built-ins.number.negative_infinity.s15.7.3.5_a2",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -339,8 +339,8 @@
     "id": "test262.test.built-ins.number.parsefloat",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -348,15 +348,15 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.parseint",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -364,7 +364,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -379,8 +379,8 @@
     "id": "test262.test.built-ins.number.positive_infinity.s15.7.3.6_a2",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -395,8 +395,8 @@
     "id": "test262.test.built-ins.number.proto-from-ctor-realm",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "partial",
+    "detail": "runtime error: exit exit code: 101: TypeError: not a function\n\nthread 'main' (10712) panicked at src\\__ds_engine.rs:482:17:\nTypeError: not a function\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
     "note": ""
   },
   {
@@ -404,31 +404,31 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.constructor",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "the `arguments` object is unsupported | `delete` has no DashScript mapping | the `arguments` object is unsupported | `delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a2_t1",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.3.1_a2_t2",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`prototype` mutation is unsupported",
     "note": ""
   },
   {
@@ -436,15 +436,15 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.s15.7.4_a1",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -452,7 +452,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -460,7 +460,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -468,7 +468,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -476,7 +476,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -484,7 +484,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -492,7 +492,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -500,7 +500,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -508,7 +508,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -516,7 +516,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -524,7 +524,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -532,7 +532,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -548,7 +548,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -556,15 +556,15 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.prototype.toexponential.return-values",
     "layer": "test262",
     "category": "number",
-    "status": "partial",
-    "detail": "Test262Error: \nthread 'main' (41304) panicked at src\\__ds.rs:115:9:\nTest262Error: Expected SameValue(«\"2e+1\"», «\"3e+1\"») to be true\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\n",
+    "status": "supported",
+    "detail": "",
     "note": ""
   },
   {
@@ -572,7 +572,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -588,7 +588,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -596,7 +596,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
@@ -604,7 +604,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
@@ -620,7 +620,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -636,7 +636,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -644,7 +644,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -652,7 +652,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -660,7 +660,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -668,7 +668,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -676,7 +676,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -684,7 +684,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -692,7 +692,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -700,7 +700,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -708,7 +708,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -716,7 +716,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -724,7 +724,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -732,7 +732,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -740,7 +740,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -748,7 +748,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -756,7 +756,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -772,7 +772,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -780,7 +780,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -796,7 +796,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -812,7 +812,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -820,7 +820,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
@@ -828,7 +828,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -844,7 +844,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1156,7 +1156,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
@@ -1164,7 +1164,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1172,7 +1172,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1180,7 +1180,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1188,7 +1188,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1196,7 +1196,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1204,7 +1204,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1212,7 +1212,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1220,7 +1220,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1228,7 +1228,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1236,7 +1236,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1244,7 +1244,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1252,7 +1252,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1260,7 +1260,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1268,7 +1268,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1276,7 +1276,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1284,7 +1284,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1292,7 +1292,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1300,7 +1300,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1308,7 +1308,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1316,7 +1316,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1324,7 +1324,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1332,7 +1332,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1340,7 +1340,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1348,7 +1348,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1356,7 +1356,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1364,7 +1364,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1372,7 +1372,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1380,7 +1380,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1388,7 +1388,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1396,7 +1396,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1404,7 +1404,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1412,7 +1412,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1420,7 +1420,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1428,7 +1428,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1436,7 +1436,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1444,7 +1444,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1452,7 +1452,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1460,7 +1460,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1468,7 +1468,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1476,7 +1476,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1484,7 +1484,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1492,7 +1492,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1500,7 +1500,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1508,7 +1508,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1516,7 +1516,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1524,7 +1524,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1532,7 +1532,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1540,7 +1540,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1548,7 +1548,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1556,7 +1556,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1564,7 +1564,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1572,7 +1572,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1580,7 +1580,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1588,7 +1588,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1596,7 +1596,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1604,7 +1604,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1612,15 +1612,15 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
     "id": "test262.test.built-ins.number.s15.7.2.1_a4",
     "layer": "test262",
     "category": "number",
-    "status": "supported",
-    "detail": "via rquickjs engine",
+    "status": "unsupported",
+    "detail": "`delete` has no DashScript mapping",
     "note": ""
   },
   {
@@ -1628,7 +1628,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1636,7 +1636,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1644,7 +1644,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1652,7 +1652,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1660,7 +1660,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1668,7 +1668,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1676,7 +1676,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1684,7 +1684,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1692,7 +1692,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1700,7 +1700,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1708,7 +1708,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1716,7 +1716,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1724,7 +1724,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1732,7 +1732,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1740,7 +1740,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1748,7 +1748,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1756,7 +1756,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -1764,7 +1764,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
@@ -1996,7 +1996,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2004,7 +2004,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2020,7 +2020,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2044,7 +2044,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2060,7 +2060,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
@@ -2092,7 +2092,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "engine fallback after static build failure",
+    "detail": "",
     "note": ""
   },
   {
@@ -2132,7 +2132,7 @@
     "layer": "test262",
     "category": "number",
     "status": "supported",
-    "detail": "via rquickjs engine",
+    "detail": "",
     "note": ""
   },
   {
