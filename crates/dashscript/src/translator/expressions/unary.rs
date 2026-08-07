@@ -48,15 +48,17 @@ pub(super) fn unary_expr(un: &UnaryExpression, ctx: &Ctx<'_>) -> Expr {
                 })
             }
         }
-        // `~a` → `!ToInt32(a) as f64` (TS `~` is 32-bit bitwise NOT). The
-        // operand casts via `bitwise_operand` (f64 → i64 → i32 for the JS
-        // `ToInt32` wrap; i64 skips the hop); bound to a local so `as` never
-        // binds into a compound operand.
+        // `~a` → `!ToInt32(a)` sign-extended to `i64` (a `ToInt32` result is a
+        // signed i32, exact in i64), so a binding fed `~a` keeps `i64` flavor
+        // instead of round-tripping through `f64`. The operand casts via
+        // `bitwise_operand` (f64 → i64 → i32 for the JS `ToInt32` wrap; i64
+        // skips the hop); bound to a local so `as` never binds into a compound
+        // operand.
         UnaryOperator::BitwiseNot => {
             let a = super::bitwise_operand(&un.argument, ctx, true);
             parse_quote!({
                 let __a = #a;
-                (!__a) as f64
+                (!__a) as i64
             })
         }
         // `typeof x` is a compile-time type query (DashScript is statically

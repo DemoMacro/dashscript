@@ -6,10 +6,11 @@ use oxc_ast::ast::{
 };
 use oxc_syntax::operator::{AssignmentOperator, BinaryOperator, UpdateOperator};
 use quote::quote;
-use syn::{parse_quote, Expr, Ident};
+use syn::{parse_quote, Expr, Ident, Type};
 
 use super::super::bindings;
 use super::super::context::Ctx;
+use super::super::flavor::NumberFlavor;
 use super::logical::assign_truthy;
 use super::member::{is_hashmap_local, static_member_is_optional_field};
 use super::{array_elem_expr, ident_expr, is_url_local, is_vec_u8, translate_expr};
@@ -64,10 +65,19 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
     let right = translate_expr(&a.right, ctx);
     // Arithmetic (and plain `=`) compound assignments must match the target's
     // flavor — an `i64` counter `= 5_f64` is a type error. A literal re-emits
-    // at the target flavor; any other expression casts. Bitwise and logical
-    // arms keep `right` (they lower to `f64`/`Option`).
+    // at the target flavor; any other expression casts. Bitwise compound arms
+    // sign-extend the 32-bit result to the target's flavor (`bitwise_result_ty`);
+    // logical arms keep `right` (they lower to `Option`).
     let target_flavor = assign_target_flavor(&a.left, ctx);
     let num_right = super::translate_number_to(&a.right, target_flavor, ctx);
+    // A bitwise compound (`&=`/`|=`/…) yields a 32-bit result; sign-extend to
+    // the target's flavor so an `i64` bit-vector counter stays `i64` (a
+    // `ToInt32` result is a signed i32, exact in i64) instead of round-tripping
+    // through `f64`. See `flavor::binary_flavor`.
+    let bitwise_result_ty: Type = match target_flavor {
+        NumberFlavor::I64 => parse_quote!(i64),
+        NumberFlavor::F64 => parse_quote!(f64),
+    };
     match assignment_target_kind(&a.left, ctx) {
         Some(AssignTarget::Plain(target)) => {
             let tokens = match a.operator {
@@ -116,28 +126,29 @@ pub(in crate::translator) fn assignment_expr(a: &AssignmentExpression, ctx: &Ctx
                 AssignmentOperator::Remainder => quote!(#target %= #num_right),
                 AssignmentOperator::Exponential => quote!(#target = #target.powf(#num_right)),
                 // Bitwise compound reads & writes the target, so it must be a
-                // simple identifier lvalue; the result is cast back to `f64`.
-                // Each operand is parenthesized before `as i64` so the cast
-                // never binds into a compound right-hand side, and the `i64`
-                // hop matches JS `ToInt32`/`ToUint32` wrap (not Rust's
-                // saturating `f64 as i32`) — see `binary::bitwise_expr`.
+                // simple identifier lvalue; the 32-bit result is sign-extended
+                // to the target's flavor (`bitwise_result_ty`). Each operand is
+                // parenthesized before `as i64` so the cast never binds into a
+                // compound right-hand side, and the `i64` hop matches JS
+                // `ToInt32`/`ToUint32` wrap (not Rust's saturating `f64 as
+                // i32`) — see `binary::bitwise_expr`.
                 AssignmentOperator::BitwiseAnd => {
-                    quote!(#target = (((#target) as i64) as i32 & ((#right) as i64) as i32) as f64)
+                    quote!(#target = (((#target) as i64) as i32 & ((#right) as i64) as i32) as #bitwise_result_ty)
                 }
                 AssignmentOperator::BitwiseOR => {
-                    quote!(#target = (((#target) as i64) as i32 | ((#right) as i64) as i32) as f64)
+                    quote!(#target = (((#target) as i64) as i32 | ((#right) as i64) as i32) as #bitwise_result_ty)
                 }
                 AssignmentOperator::BitwiseXOR => {
-                    quote!(#target = (((#target) as i64) as i32 ^ ((#right) as i64) as i32) as f64)
+                    quote!(#target = (((#target) as i64) as i32 ^ ((#right) as i64) as i32) as #bitwise_result_ty)
                 }
                 AssignmentOperator::ShiftLeft => {
-                    quote!(#target = (((#target) as i64) as i32).wrapping_shl(((#right) as i64) as u32) as f64)
+                    quote!(#target = (((#target) as i64) as i32).wrapping_shl(((#right) as i64) as u32) as #bitwise_result_ty)
                 }
                 AssignmentOperator::ShiftRight => {
-                    quote!(#target = (((#target) as i64) as i32).wrapping_shr(((#right) as i64) as u32) as f64)
+                    quote!(#target = (((#target) as i64) as i32).wrapping_shr(((#right) as i64) as u32) as #bitwise_result_ty)
                 }
                 AssignmentOperator::ShiftRightZeroFill => {
-                    quote!(#target = (((#target) as i64) as u32).wrapping_shr(((#right) as i64) as u32) as f64)
+                    quote!(#target = (((#target) as i64) as u32).wrapping_shr(((#right) as i64) as u32) as #bitwise_result_ty)
                 }
                 // `x ??= y` on an Option<T>: assign Some(y) when x is None.
                 AssignmentOperator::LogicalNullish => {

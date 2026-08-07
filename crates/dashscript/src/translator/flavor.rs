@@ -82,17 +82,32 @@ fn binary_flavor(
     ctx: &Ctx<'_>,
 ) -> NumberFlavor {
     match op {
-        // ES division and `**` are always floating-point.
-        BinaryOperator::Division | BinaryOperator::Exponential => NumberFlavor::F64,
-        // Bitwise ops emit through `bitwise_expr`, which casts the result back
-        // to `f64` (a `.ts` `number`) — so the expression's flavor is `F64`,
-        // matching the emit. (Phase 2 may promote operands to `i64`.)
+        // ES division, `**`, and `*` are always floating-point. `*` joins them
+        // because its intermediate can exceed 2^53 even when both operands are
+        // small integers — a 31-bit LCG seed times 1103515245 is ~2.4e18,
+        // exact in `i64` but rounded as an ES `number` (IEEE-754 double). A
+        // binding fed such a product must stay `f64` to match ES, or the
+        // loop-data-dependent bench diverges. Addition / subtraction / remainder
+        // keep the integral combine: their intermediates stay under 2^53 for
+        // the loop counters and small accumulators flavor inference targets, so
+        // `i64` stays sound for them (and keeps the levenshtein / factorial
+        // speedups — neither multiplies into the >2^53 range).
+        BinaryOperator::Division | BinaryOperator::Exponential | BinaryOperator::Multiplication => {
+            NumberFlavor::F64
+        }
+        // Bitwise ops apply ES `ToInt32`/`ToUint32` (mod-2³² wrap) and yield a
+        // 32-bit result, which `bitwise_expr` sign-extends into `i64`. A
+        // binding fed a bitwise result is therefore `i64` — a ToInt32 result
+        // is a signed i32, exact in i64 — so a bit-vector loop keeps its
+        // accumulators in `i64` instead of round-tripping through `f64` per
+        // op. `bitwise_operand` still routes any `f64` operand through the
+        // load-bearing `i64` hop for the wrap semantics.
         BinaryOperator::BitwiseAnd
         | BinaryOperator::BitwiseOR
         | BinaryOperator::BitwiseXOR
         | BinaryOperator::ShiftLeft
         | BinaryOperator::ShiftRight
-        | BinaryOperator::ShiftRightZeroFill => NumberFlavor::F64,
+        | BinaryOperator::ShiftRightZeroFill => NumberFlavor::I64,
         // Arithmetic propagates: integer iff both operands integral.
         _ => expr_flavor(left, ctx).combine(expr_flavor(right, ctx)),
     }
@@ -100,8 +115,9 @@ fn binary_flavor(
 
 fn unary_flavor(op: UnaryOperator, arg: &Expression, ctx: &Ctx<'_>) -> NumberFlavor {
     match op {
-        // `~x` emits through the bitwise path, which casts back to `f64`.
-        UnaryOperator::BitwiseNot => NumberFlavor::F64,
+        // `~x` yields a 32-bit result sign-extended to `i64` (see
+        // `binary_flavor`); a binding fed `~x` is `i64`.
+        UnaryOperator::BitwiseNot => NumberFlavor::I64,
         UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus => {
             // `-0` (negation of literal 0) must stay f64: `Object.is(-0, 0)` is
             // false in ES, and an i64 would erase the sign.
@@ -163,9 +179,9 @@ fn structural_flavor(
             _ => NumberFlavor::F64,
         },
         Expression::UnaryExpression(u) => match u.operator {
-            // `~x` emits via `bitwise_expr` which casts back to `f64`; keep
-            // the binding `f64` to match (Phase 2 may promote the operand).
-            UnaryOperator::BitwiseNot => NumberFlavor::F64,
+            // `~x` yields a 32-bit result sign-extended to `i64` (see
+            // `binary_flavor`); a binding fed `~x` is `i64`.
+            UnaryOperator::BitwiseNot => NumberFlavor::I64,
             UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus => {
                 if let Expression::NumericLiteral(n) = &u.argument {
                     if u.operator == UnaryOperator::UnaryNegation && n.value == 0.0 {
@@ -178,15 +194,17 @@ fn structural_flavor(
             _ => NumberFlavor::F64,
         },
         Expression::BinaryExpression(b) => match b.operator {
-            BinaryOperator::Division | BinaryOperator::Exponential => NumberFlavor::F64,
-            // Bitwise ops emit via `bitwise_expr` which casts back to `f64`
-            // (Phase 2 may promote); keep the binding `f64` to match the emit.
+            BinaryOperator::Division
+            | BinaryOperator::Exponential
+            | BinaryOperator::Multiplication => NumberFlavor::F64,
+            // Bitwise ops yield a 32-bit result sign-extended to `i64` (see
+            // `binary_flavor`); a binding fed a bitwise result is `i64`.
             BinaryOperator::BitwiseAnd
             | BinaryOperator::BitwiseOR
             | BinaryOperator::BitwiseXOR
             | BinaryOperator::ShiftLeft
             | BinaryOperator::ShiftRight
-            | BinaryOperator::ShiftRightZeroFill => NumberFlavor::F64,
+            | BinaryOperator::ShiftRightZeroFill => NumberFlavor::I64,
             _ => structural_flavor(&b.left, names, allow_i64, force_f64)
                 .combine(structural_flavor(&b.right, names, allow_i64, force_f64)),
         },
@@ -347,16 +365,15 @@ fn walk_expr(
                         | AssignmentOperator::Remainder => {
                             record(sym, &asg.right, names, force_f64, allow_i64);
                         }
-                        // Bitwise compound emits via `bitwise_expr` which casts
-                        // back to `f64`; force the target `f64` so the result
-                        // matches (Phase 2 may promote the operand to `i64`).
+                        // Bitwise compound yields a 32-bit result sign-extended
+                        // to `i64` (see `binary_flavor`); the target is `i64`.
                         AssignmentOperator::BitwiseAnd
                         | AssignmentOperator::BitwiseOR
                         | AssignmentOperator::BitwiseXOR
                         | AssignmentOperator::ShiftLeft
                         | AssignmentOperator::ShiftRight
                         | AssignmentOperator::ShiftRightZeroFill => {
-                            force_f64.insert(sym);
+                            allow_i64.insert(sym);
                         }
                         // `/=` and `**=` always produce a double.
                         AssignmentOperator::Division | AssignmentOperator::Exponential => {

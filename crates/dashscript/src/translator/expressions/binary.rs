@@ -131,7 +131,16 @@ pub(super) fn binary_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Expr {
     // ES arithmetic is infectious-f64 (one double operand → whole op `f64`);
     // `/` is always floating-point. Comparison ops match operands the same
     // way. `**`, string `+`, and bitwise already returned above.
-    let combine = if matches!(bin.operator, BinaryOperator::Division) {
+    // `*` joins `/` as always-`f64`: a product's intermediate can exceed 2^53
+    // even for small integer operands (see `flavor::binary_flavor`), so the
+    // operands emit at `f64` to match ES `number` arithmetic rather than the
+    // exact `i64` product. `+`/`-`/`%` keep the integral combine — their
+    // intermediates stay under 2^53 for the counters/small accumulators flavor
+    // inference targets.
+    let combine = if matches!(
+        bin.operator,
+        BinaryOperator::Division | BinaryOperator::Multiplication
+    ) {
         NumberFlavor::F64
     } else {
         expr_flavor(&bin.left, ctx).combine(expr_flavor(&bin.right, ctx))
@@ -240,13 +249,16 @@ pub(super) fn bitwise_expr_to(
     })
 }
 
-/// The number-context bitwise emitter — the masked result rounds back to `f64`
-/// (a `.ts` `number`). Index sites use [`bitwise_expr_to`] with `usize` to skip
-/// that hop (see `member::index_expr`), which both saves a conversion per
-/// access and keeps the `& mask` range visible to LLVM so the `Vec` bounds
-/// check can be elided.
+/// The number-context bitwise emitter — the masked result sign-extends into
+/// `i64` (a `ToInt32` result is a signed i32, exact in `i64`), so a binding fed
+/// a bitwise result keeps its `i64` flavor instead of round-tripping through
+/// `f64` per op. A consumer that needs an ES `number` (`f64`) coerces through
+/// [`super::translate_number_to`] at its own site. Index sites use
+/// [`bitwise_expr_to`] with `usize` to skip that hop (see `member::index_expr`),
+/// which both saves a conversion per access and keeps the `& mask` range
+/// visible to LLVM so the `Vec` bounds check can be elided.
 fn bitwise_expr(bin: &BinaryExpression, ctx: &Ctx<'_>) -> Option<Expr> {
-    bitwise_expr_to(bin, ctx, parse_quote!(f64))
+    bitwise_expr_to(bin, ctx, parse_quote!(i64))
 }
 
 /// `x instanceof T` emit — a compile-time `true`/`false` literal. Mirrors

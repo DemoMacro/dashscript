@@ -1275,13 +1275,22 @@ pub(in crate::translator) fn is_number_expr(e: &Expression, ctx: &Ctx<'_>) -> bo
         Expression::UnaryExpression(u) => {
             matches!(
                 u.operator,
-                UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus
+                UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus | UnaryOperator::BitwiseNot
             ) && is_number_expr(&u.argument, ctx)
         }
         Expression::BinaryExpression(b) => {
-            is_arith_operator(&b.operator)
-                && is_number_expr(&b.left, ctx)
-                && is_number_expr(&b.right, ctx)
+            if is_bitwise_operator(&b.operator) {
+                // A bitwise/shift op yields an ES `number` regardless of its
+                // operands — `ToInt32` coerces anything `ToNumber` can map —
+                // so a binding fed a bitwise result is a number expression
+                // even when an operand isn't itself a tracked number (e.g. an
+                // array element `peq[c]`).
+                true
+            } else {
+                is_arith_operator(&b.operator)
+                    && is_number_expr(&b.left, ctx)
+                    && is_number_expr(&b.right, ctx)
+            }
         }
         Expression::Identifier(id) => match id.name.as_str() {
             "NaN" | "Infinity" => true,
@@ -1313,13 +1322,19 @@ pub(in crate::translator) fn is_number_arg(arg: &Argument, ctx: &Ctx<'_>) -> boo
         Argument::UnaryExpression(u) => {
             matches!(
                 u.operator,
-                UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus
+                UnaryOperator::UnaryNegation | UnaryOperator::UnaryPlus | UnaryOperator::BitwiseNot
             ) && is_number_expr(&u.argument, ctx)
         }
         Argument::BinaryExpression(b) => {
-            is_arith_operator(&b.operator)
-                && is_number_expr(&b.left, ctx)
-                && is_number_expr(&b.right, ctx)
+            if is_bitwise_operator(&b.operator) {
+                // A bitwise/shift result is always an ES `number` (see
+                // [`is_number_expr`] — `ToInt32` coerces any operand).
+                true
+            } else {
+                is_arith_operator(&b.operator)
+                    && is_number_expr(&b.left, ctx)
+                    && is_number_expr(&b.right, ctx)
+            }
         }
         Argument::Identifier(id) => match id.name.as_str() {
             "NaN" | "Infinity" => true,
@@ -1370,6 +1385,25 @@ fn is_arith_operator(op: &oxc_syntax::operator::BinaryOperator) -> bool {
             | BinaryOperator::Division
             | BinaryOperator::Remainder
             | BinaryOperator::Exponential
+    )
+}
+
+/// Whether a binary operator is a bitwise/shift op. Like
+/// [`is_arith_operator`], its result is an ES `number` (a 32-bit value
+/// sign-extended to `i64` per `flavor::binary_flavor`), so a bitwise
+/// expression counts as a number expression at flavor-coordination sites
+/// (return/let/array boundaries) — without this, `return a & b` into a
+/// `number`-typed function emits a bare `i64` and fails E0308.
+fn is_bitwise_operator(op: &oxc_syntax::operator::BinaryOperator) -> bool {
+    use oxc_syntax::operator::BinaryOperator;
+    matches!(
+        op,
+        BinaryOperator::BitwiseAnd
+            | BinaryOperator::BitwiseOR
+            | BinaryOperator::BitwiseXOR
+            | BinaryOperator::ShiftLeft
+            | BinaryOperator::ShiftRight
+            | BinaryOperator::ShiftRightZeroFill
     )
 }
 
