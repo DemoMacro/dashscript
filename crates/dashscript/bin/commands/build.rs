@@ -78,6 +78,18 @@ pub(crate) fn build(
         Some(f) => f.to_string(),
         None => resolve_entry()?,
     };
+    // `ds build <file>` from inside a workspace member is equivalent to
+    // `--filter <that member>`: route to workspace_build so cross-member imports
+    // resolve as path deps, not a merged single crate. Absolutize with cwd (not
+    // canonicalize — Windows `\\?\` leaks into cargo output) so the ancestor
+    // walk is stable regardless of where `ds` was invoked. A lone file with no
+    // enclosing workspace falls through to the single-package path.
+    let abs = std::env::current_dir()
+        .map(|cwd| cwd.join(&file))
+        .unwrap_or_else(|_| PathBuf::from(&file));
+    if let Some((root, filter)) = workspace_member_for_entry(&abs) {
+        return workspace_build(&root, Some(&filter), target_override);
+    }
     build_at(&file, target_override, Path::new("dist"))
 }
 
@@ -181,6 +193,31 @@ fn copy_release_bin(cache: &Path, bin_name: &str, dest_root: &Path) -> Result<()
 /// `workspace` member-glob list that resolves to at least one member.
 pub(crate) fn is_workspace_root(dir: &Path) -> bool {
     !discover_members(dir).is_empty()
+}
+
+/// If `entry` (an absolute path) lives inside a workspace member, return the
+/// workspace root and the `--filter` value that selects that member (package
+/// name, else the directory name). Walks up from the entry's parent; the first
+/// ancestor that is a workspace root and whose member list contains the entry
+/// wins. Returns `None` for a lone file with no enclosing workspace — the
+/// caller falls back to the single-package build path.
+fn workspace_member_for_entry(entry: &Path) -> Option<(PathBuf, String)> {
+    let mut dir = entry.parent()?;
+    loop {
+        if is_workspace_root(dir) {
+            for member in discover_members(dir) {
+                if entry.starts_with(&member) {
+                    let dir_name = member_name_fallback(&member);
+                    let name = package_name_of(&member).unwrap_or(dir_name);
+                    return Some((dir.to_path_buf(), name));
+                }
+            }
+            // Under the root but not under any member (e.g. a root-level
+            // script): not a member entry — fall through to single-package.
+            return None;
+        }
+        dir = dir.parent()?;
+    }
 }
 
 /// Build the workspace at `root` — every member, or just the one named by
@@ -754,9 +791,13 @@ mod tests {
         assert!(entry.ends_with("entry.ts"));
     }
 
-    /// No alias, no `source` → reverse-map `main` dist artifact to `.ts` source.
+    /// A `main` pointing at a dist artifact (`dist/...`) is build output, not a
+    /// source entry — it is deliberately NOT reverse-mapped (the source may
+    /// build to any dist name, so dist→src is not recoverable). With no
+    /// `source`/`bin`/tsconfig path/`main.ts`, the member has no resolvable
+    /// entry → error. Guards the "no reverse-map" invariant.
     #[test]
-    fn resolve_member_entry_reverse_maps_dist_main_to_src() {
+    fn resolve_member_entry_does_not_reverse_map_dist_main() {
         let t = TmpRoot::new("entry-main");
         let m = t.path().join("packages").join("pkg");
         fs::create_dir_all(m.join("src")).unwrap();
@@ -766,8 +807,9 @@ mod tests {
         )
         .unwrap();
         fs::write(m.join("src").join("index.ts"), "export const x = 1;").unwrap();
-        let entry = resolve_member_entry(t.path(), &m, "pkg").unwrap();
-        assert!(entry.contains("src") && entry.ends_with("index.ts"));
+        // src/index.ts exists but is unreachable: the dist `main` is not
+        // reverse-mapped, and nothing else declares an entry.
+        assert!(resolve_member_entry(t.path(), &m, "pkg").is_err());
     }
 
     /// No declaration of any kind → error. Nothing silently falls back to a
@@ -779,5 +821,61 @@ mod tests {
         fs::create_dir_all(&m).unwrap();
         fs::write(m.join("package.json"), r#"{"name":"pkg"}"#).unwrap();
         assert!(resolve_member_entry(t.path(), &m, "pkg").is_err());
+    }
+
+    /// `ds build packages/core/src/index.ts` routes to the workspace member that
+    /// owns the file — equivalent to `--filter <package name>`.
+    #[test]
+    fn workspace_member_for_entry_routes_by_package_name() {
+        let t = TmpRoot::new("route-pkg");
+        t.write(
+            "package.json",
+            r#"{"name":"root","workspaces":["packages/*"]}"#,
+        );
+        let core = t.path().join("packages").join("core");
+        fs::create_dir_all(core.join("src")).unwrap();
+        fs::write(core.join("package.json"), r#"{"name":"@scope/core"}"#).unwrap();
+        fs::write(core.join("src").join("index.ts"), "export const x = 1;").unwrap();
+
+        let entry = core.join("src").join("index.ts");
+        let (root, filter) = workspace_member_for_entry(&entry).expect("member entry should route");
+        assert_eq!(root, t.path().to_path_buf());
+        assert_eq!(filter, "@scope/core");
+    }
+
+    /// A member whose package.json has no `name` falls back to its directory
+    /// name (the same value `--filter` would accept).
+    #[test]
+    fn workspace_member_for_entry_falls_back_to_dir_name() {
+        let t = TmpRoot::new("route-dir");
+        t.write(
+            "package.json",
+            r#"{"name":"root","workspaces":["packages/*"]}"#,
+        );
+        let xml = t.path().join("packages").join("xml");
+        fs::create_dir_all(xml.join("src")).unwrap();
+        // {} — no name field; dir_name is the only selector.
+        fs::write(xml.join("package.json"), "{}").unwrap();
+        fs::write(xml.join("src").join("index.ts"), "export const x = 1;").unwrap();
+
+        let entry = xml.join("src").join("index.ts");
+        let (root, filter) = workspace_member_for_entry(&entry).expect("member entry should route");
+        assert_eq!(root, t.path().to_path_buf());
+        assert_eq!(filter, "xml");
+    }
+
+    /// A file under the workspace root but NOT under any member (e.g. a
+    /// root-level script) is a lone file → None → single-package build path.
+    #[test]
+    fn workspace_member_for_entry_root_level_file_is_none() {
+        let t = TmpRoot::new("route-lone");
+        t.write(
+            "package.json",
+            r#"{"name":"root","workspaces":["packages/*"]}"#,
+        );
+        t.member("a", false);
+        t.write("script.ts", "console.log(1);");
+        let entry = t.path().join("script.ts");
+        assert!(workspace_member_for_entry(&entry).is_none());
     }
 }
