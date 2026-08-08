@@ -359,7 +359,14 @@ pub(crate) fn rel_emit_path(file: &Path, root: &Path) -> String {
     if s.ends_with("/index") {
         s.truncate(s.len() - "/index".len());
     }
-    s
+    // TS filenames use kebab-case (`chart-collection.ts`); a Rust module name
+    // forbids `-`, so each path segment maps `-`→`_`. The emit filename, the
+    // synthesized `mod` declaration, and the `use` path all derive from this
+    // rel-path, so converting here keeps the three in agreement.
+    s.split('/')
+        .map(|seg| seg.replace('-', "_"))
+        .collect::<Vec<_>>()
+        .join("/")
 }
 
 /// Whether `file` is a subdirectory barrel — an `index.ts` whose module is the
