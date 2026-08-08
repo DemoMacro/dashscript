@@ -359,9 +359,14 @@ pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
         // i.e. a core-internal import with no member) reaches the member-prefix
         // fallback below.
         if source.starts_with('.') {
-            if let Some(name) = emit_name_override(source) {
-                let resolved = Ident::new(&name, mod_ident.span());
-                return parse_quote!(crate::#resolved);
+            if let Some(path) = emit_name_override(source) {
+                // The override carries the target's full crate-local path — a
+                // single segment for a flat/merge emit (`locking__ds_defn`) or
+                // multiple for a member-crate tree emit
+                // (`drawingml::locking::locking__ds_defn`). Parse the whole
+                // `crate::<path>` so multi-segment paths resolve.
+                return syn::parse_str(&format!("crate::{path}"))
+                    .unwrap_or_else(|_| parse_quote!(crate::#mod_ident));
             }
             if let Some(member) = current_member() {
                 let prefixed = Ident::new(&format!("{member}_{}", mod_ident), mod_ident.span());

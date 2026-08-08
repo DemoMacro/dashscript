@@ -1256,17 +1256,22 @@ fn record_workspace_dep(source: &str, base: &Path, deps: &mut std::collections::
     }
 }
 
-/// Translate one `.ts` file to `src/<stem>.rs`, prefixing `mod <module>;` for
-/// each of its imports (deduped). A relative import's file is translated
-/// separately by [`translate_project`]'s directory walk (it sits in the project
-/// tree); a bare (npm) import lives under `node_modules/` — which the walk
-/// skips — so it is resolved and translated here alongside the entry.
+/// Translate one `.ts` file to an [`EmitFile`] (its translated body, no `mod`
+/// declarations — those are synthesized by [`emit_tree`] from the path tree),
+/// plus the flat emit files for any non-walk-TS deps it pulls in (a relative
+/// `.js`/`.d.ts`, or a bare npm import the walk skips). A relative `.ts` dep is
+/// scanned + translated separately by [`translate_project`]'s directory walk and
+/// reaches this file through the per-importer emit-path overrides
+/// ([`crate::translator::imports::set_emit_name_overrides`]); a bare specifier
+/// resolving to a workspace member is recorded as a cargo path dep, not emitted.
 fn translate_one_with_mods(
+    translator: &Translator,
     ds: &Path,
-    project_dir: &Path,
+    root: &Path,
     role: FileRole,
-) -> Result<RuntimeDeps, Box<dyn Error>> {
-    let translator = Translator::new();
+    is_root_entry: bool,
+    deps: &mut RuntimeDeps,
+) -> Result<(EmitFile, Vec<EmitFile>), Box<dyn Error>> {
     let src = fs::read_to_string(ds).map_err(|e| format!("cannot read {}: {e}", ds.display()))?;
     let base = ds.parent().unwrap_or_else(|| Path::new(""));
     // The file's DsResolver specifier is its stem; a degraded `.js` it imports
@@ -1294,11 +1299,17 @@ fn translate_one_with_mods(
         }
     }
     let _degrade_guard = DegradeGuard;
-    let (rust, mut deps) = translator
+    let (rust, file_deps) = translator
         .translate_with_deps_as(&src, role)
         .map_err(|e| format!("translate {}: {e}", ds.display()))?;
+    deps.merge(&file_deps);
+    // Flat emit files for non-walk-TS deps (a relative `.js`/`.d.ts`, or a bare
+    // npm import `walk_ts` skips). A relative `.ts` dep is emitted by the walk
+    // and reaches this file via `emit_tree`'s module tree. Each flat dep lands
+    // at the crate root (`src/<module>.rs`), declared by the root entry's
+    // top-level `mod` list.
+    let mut flat_deps: Vec<EmitFile> = Vec::new();
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
-    let mut mod_decls = String::new();
     for imp in translator.imports(&src) {
         if !seen.insert(imp.module.clone()) {
             continue;
@@ -1312,37 +1323,33 @@ fn translate_one_with_mods(
             deps.add_path_dep(&crate_ident);
             continue;
         }
-        mod_decls.push_str(&format!("mod {};\n", imp.module));
-        // A relative `.ts` dep is scanned + translated by `walk_ts`; everything
-        // else (a bare npm import, or a relative `.js`/`.d.ts` dep `walk_ts`
-        // skips) is translated here so its `mod` decl resolves. An unresolved
-        // import is left for `walk_ts` or cargo to surface.
         let (dep_path, kind) = match resolve_local_module(base, &imp.source) {
             Ok(v) => v,
             Err(_) => continue,
         };
+        // A relative `.ts` dep is scanned + translated by `walk_ts`; everything
+        // else (a relative `.js`/`.d.ts`, or a bare npm import the walk skips)
+        // is translated here so it lands in the emit set.
         let scanned_by_walk = imp.source.starts_with('.') && matches!(kind, DepKind::Ts);
-        if !scanned_by_walk {
-            let spec = ds_resolve_specifier(&entry_spec, &imp.source);
-            let dep_rust = translate_dep(&translator, &dep_path, kind, &spec, None, &mut deps)?;
-            fs::write(
-                project_dir
-                    .join("src")
-                    .join(format!("{}.rs", mod_file_stem(&imp.module))),
-                dep_rust,
-            )?;
+        if scanned_by_walk {
+            continue;
         }
+        let spec = ds_resolve_specifier(&entry_spec, &imp.source);
+        let dep_rust = translate_dep(translator, &dep_path, kind, &spec, None, deps)?;
+        flat_deps.push(EmitFile {
+            rel_path: imp.module.clone(),
+            content: dep_rust,
+            is_barrel: false,
+            is_root_entry: false,
+        });
     }
-    let body = if mod_decls.is_empty() {
-        rust
-    } else {
-        format!("{mod_decls}\n{rust}")
+    let main = EmitFile {
+        rel_path: rel_emit_path(ds, root),
+        content: rust,
+        is_barrel: is_barrel_index(ds, root),
+        is_root_entry,
     };
-    fs::write(
-        project_dir.join("src").join(format!("{}.rs", stem_of(ds))),
-        body,
-    )?;
-    Ok(deps)
+    Ok((main, flat_deps))
 }
 
 /// A project's resolved targets for `Cargo.toml`: the `(bin_name, ds_path)`
@@ -1350,15 +1357,15 @@ fn translate_one_with_mods(
 type ProjectTargets = (Vec<(String, String)>, Option<String>);
 
 /// Translate every `.ts` under a package root into one multi-target crate at
-/// `project_dir/src/`: each file becomes `src/<stem>.rs` (prefixed with its
-/// `mod` declarations), and the package's `bin`/`lib` entries become the
-/// crate's `[[bin]]`/`[lib]` targets. Returns the resolved targets for
-/// `Cargo.toml` emission.
+/// `project_dir/src/`, preserving the source directory tree: each file becomes
+/// `src/<rel_path>.rs` (a subdirectory barrel at `src/<dir>/mod.rs`), each
+/// interior directory gets a `mod.rs` declaring its children, and the package's
+/// `bin`/`lib` entries become the crate's `[[bin]]`/`[lib]` targets. Returns
+/// the resolved targets for `Cargo.toml` emission.
 ///
-/// Two project-level guards: a stem collision (two files flatten to the same
-/// `src/<stem>.rs` — nested directories are not yet modeled as sub-modules),
-/// and a bin importing another bin (cargo forbids it; shared code must go
-/// through `[lib]`).
+/// Two project-level guards: a bin importing another bin (cargo forbids it;
+/// shared code must go through `[lib]`), and a circular import (Rust forbids
+/// circular modules).
 pub fn translate_project(
     root: &Path,
     package: &Package,
@@ -1438,29 +1445,52 @@ pub fn translate_project(
     }
     let _serde_guard = SerdeGuard;
 
-    let mut seen_stems: std::collections::HashMap<String, PathBuf> =
-        std::collections::HashMap::new();
+    // Phase A: resolve each walk-TS file to its emit rel-path, preserving the
+    // source directory tree (an `__ds_defn` suffix breaks the one collision a
+    // tree cannot — a file whose stem equals its barrel directory's name).
+    let resolved = resolve_emit_paths(&files, root);
+    let emit_rel: std::collections::HashMap<String, (String, bool)> = resolved
+        .iter()
+        .map(|(f, rel, barrel)| (canon_string(f), (rel.clone(), *barrel)))
+        .collect();
+    // Phase B: translate each file (no `mod` declarations — `emit_tree`
+    // synthesizes those from the path tree), collecting emit files and the
+    // per-importer path overrides that route nested imports to `crate::<tree>`.
+    let translator = Translator::new();
     let mut deps = RuntimeDeps::default();
+    let mut emit_files: Vec<EmitFile> = Vec::new();
     for ds in &files {
-        let stem = stem_of(ds);
-        if let Some(prev) = seen_stems.insert(stem.clone(), ds.clone()) {
-            return Err(format!(
-                "dashscript: name collision — stem '{stem}' appears in both {} and {}; \
-                 rename one (nested directories are not yet modeled as modules)",
-                prev.display(),
-                ds.display()
-            )
-            .into());
-        }
         let canon = ds.canonicalize().unwrap_or_else(|_| ds.clone());
-        let role = if entry_paths.contains(&canon) {
+        let is_root_entry = entry_paths.contains(&canon);
+        let role = if is_root_entry {
             FileRole::BinEntry
         } else {
             FileRole::Module
         };
-        let file_deps = translate_one_with_mods(ds, project_dir, role)?;
-        deps.merge(&file_deps);
+        // Per-importer emit-path overrides: each relative import of this file,
+        // resolved to its target, maps to the target's crate-local path so the
+        // translator emits `crate::<rel_path>` use paths. `./locking` resolves
+        // to the barrel from a sibling directory but to the defn from inside it
+        // — the per-file map carries that distinction.
+        let overrides = collect_member_overrides(&translator, ds, &emit_rel);
+        crate::translator::imports::set_emit_name_overrides(overrides);
+        struct OverrideGuard;
+        impl Drop for OverrideGuard {
+            fn drop(&mut self) {
+                crate::translator::imports::clear_emit_name_overrides();
+            }
+        }
+        let _override_guard = OverrideGuard;
+        let (main, flat) =
+            translate_one_with_mods(&translator, ds, root, role, is_root_entry, &mut deps)?;
+        emit_files.push(main);
+        emit_files.extend(flat);
     }
+    // A flat dep (a relative `.js`/`.d.ts` reached via `translate_dep`) may
+    // duplicate a walk-TS file's rel-path — keep the first occurrence.
+    let mut seen_rel: std::collections::HashSet<String> = std::collections::HashSet::new();
+    emit_files.retain(|f| seen_rel.insert(f.rel_path.clone()));
+    emit_tree(&src_dir, &emit_files)?;
 
     detect_bin_imports_bin(root, &bins)?;
     detect_circular_imports(&files)?;
@@ -1596,19 +1626,63 @@ fn detect_bin_imports_bin(root: &Path, bins: &[(String, String)]) -> Result<(), 
     Ok(())
 }
 
-/// Remove every `.rs` under `src/` so a prior translation (a renamed bin, or a
-/// lone-file `main.rs` left after switching to project mode) cannot leave an
-/// orphan module cargo would try to compile.
+/// Remove every `.rs` under `src/` (recursing subdirectories) so a prior
+/// translation — now that member-crate emit preserves the source directory
+/// tree — cannot leave an orphan module cargo would try to compile. Empty
+/// directories are removed too; `emit_tree` recreates the ones it needs.
 fn clean_src_dir(src: &Path) -> std::io::Result<()> {
-    if let Ok(entries) = fs::read_dir(src) {
-        for entry in entries.flatten() {
-            let path = entry.path();
-            if path.extension().and_then(|e| e.to_str()) == Some("rs") {
-                let _ = fs::remove_file(&path);
+    fn clean(dir: &Path) {
+        if let Ok(entries) = fs::read_dir(dir) {
+            for entry in entries.flatten() {
+                let path = entry.path();
+                if path.is_dir() {
+                    clean(&path);
+                    let _ = fs::remove_dir(&path);
+                } else if path.extension().and_then(|e| e.to_str()) == Some("rs") {
+                    let _ = fs::remove_file(&path);
+                }
             }
         }
     }
+    clean(src);
     Ok(())
+}
+
+/// Build the per-importer emit-path override map for one file: each relative
+/// import resolved to its target, mapped to the target's crate-local path (the
+/// emit rel-path with `/` → `::`). The translator's [`mod_use_path`] reads this
+/// so a nested import emits `crate::drawingml::locking::…` rather than the flat
+/// `crate::locking`. `./locking` resolves to the barrel from a sibling directory
+/// but to the defn from inside it — the per-file map carries that distinction.
+/// Imports whose target is not in the emit set (a bare npm specifier, an
+/// unresolved import, or a `.d.ts`) are omitted, taking the default path.
+fn collect_member_overrides(
+    translator: &Translator,
+    ds: &Path,
+    emit_rel: &std::collections::HashMap<String, (String, bool)>,
+) -> std::collections::HashMap<String, String> {
+    let mut out = std::collections::HashMap::new();
+    let Ok(src) = fs::read_to_string(ds) else {
+        return out;
+    };
+    let base = ds.parent().unwrap_or_else(|| Path::new(""));
+    for imp in translator.imports(&src) {
+        if !imp.source.starts_with('.') {
+            continue;
+        }
+        let Ok((target, kind)) = resolve_local_module(base, &imp.source) else {
+            continue;
+        };
+        if !matches!(kind, DepKind::Ts | DepKind::Js) {
+            continue;
+        }
+        let canon = canon_string(&target);
+        let Some((rel, _)) = emit_rel.get(&canon) else {
+            continue;
+        };
+        out.insert(imp.source, rel.replace('/', "::"));
+    }
+    out
 }
 
 /// Translate a `.ts` entry into a buildable Cargo project at `project_dir`.
@@ -2109,6 +2183,177 @@ pub fn stem_of(path: &Path) -> String {
         .to_string()
 }
 
+/// The crate-local emit path for a translated source file under member-crate
+/// tree emit: the file's path relative to `root` with its extension dropped, a
+/// leading `src/` stripped (source lives under `src/`, but the crate's own
+/// `src/` is the emit root), and a trailing `/index` dropped for a subdirectory
+/// barrel (`chart/index.ts` → `chart`, emitted at `src/chart/mod.rs`). A root
+/// `index.ts` keeps `index` — it is the entry, not a barrel. Backslashes
+/// (Windows) normalize to `/` so segments split uniformly.
+fn rel_emit_path(file: &Path, root: &Path) -> String {
+    let rel = file.strip_prefix(root).unwrap_or(file);
+    let mut s = rel.with_extension("").to_string_lossy().replace('\\', "/");
+    if let Some(rest) = s.strip_prefix("src/") {
+        s = rest.to_string();
+    }
+    if s.ends_with("/index") {
+        s.truncate(s.len() - "/index".len());
+    }
+    s
+}
+
+/// Whether `file` is a subdirectory barrel — an `index.ts` whose module is the
+/// parent directory (`drawingml/locking/index.ts` → `crate::…::locking`),
+/// emitted at `src/{dir}/mod.rs`. A root `index.ts` (directly under `root` or
+/// `root/src`) is the package entry, not a barrel — it keeps its own file.
+fn is_barrel_index(file: &Path, root: &Path) -> bool {
+    if file.file_name().and_then(|n| n.to_str()) != Some("index.ts") {
+        return false;
+    }
+    let parent = file.parent().unwrap_or(Path::new(""));
+    parent != root && parent != root.join("src")
+}
+
+/// Split `path` into `(parent, last_segment)` at its final `/`. `None` when
+/// `path` has no `/` (a top-level segment).
+fn split_last_seg(path: &str) -> Option<(String, String)> {
+    let idx = path.rfind('/')?;
+    Some((path[..idx].to_string(), path[idx + 1..].to_string()))
+}
+
+/// Resolve each walk-TS file to its effective emit rel-path. The source
+/// directory tree is preserved (`drawingml/color/solid-fill.ts` →
+/// `drawingml/color/solid_fill`); the only collision a tree cannot disambiguate
+/// is a file whose stem equals its directory's name when that directory also
+/// has a barrel (`drawingml/locking/locking.ts` + `drawingml/locking/index.ts`
+/// would both occupy `src/drawingml/locking/` — a `.rs` file beside a `mod.rs`
+/// Rust refuses, E0761), so the file takes an `__ds_defn` suffix. Returns
+/// `(file, effective_rel_path, is_barrel)` per input file, in input order.
+fn resolve_emit_paths(files: &[PathBuf], root: &Path) -> Vec<(PathBuf, String, bool)> {
+    let mut entries: Vec<(PathBuf, String, bool)> = files
+        .iter()
+        .map(|f| (f.clone(), rel_emit_path(f, root), is_barrel_index(f, root)))
+        .collect();
+    let barrel_dirs: std::collections::HashSet<String> = entries
+        .iter()
+        .filter(|(_, _, b)| *b)
+        .map(|(_, r, _)| r.clone())
+        .collect();
+    for (_, rel, barrel) in entries.iter_mut() {
+        if *barrel {
+            continue;
+        }
+        // A file `dir/stem` collides with `dir`'s barrel when `stem` equals the
+        // directory's own name (the barrel's mod.rs is `dir/mod.rs`; the file
+        // would be `dir/<dirname>.rs`, which Rust cannot place beside it).
+        if let Some((dir, stem)) = split_last_seg(rel) {
+            if barrel_dirs.contains(&dir) && split_last_seg(&dir).is_some_and(|(_, d)| d == stem) {
+                *rel = format!("{dir}/{stem}__ds_defn");
+            }
+        }
+    }
+    entries
+}
+
+/// A translated file's emit target under member-crate tree emit.
+struct EmitFile {
+    /// Effective crate-local path (`drawingml/locking/locking__ds_defn`, or
+    /// `drawingml/locking` for a barrel).
+    rel_path: String,
+    /// Translated Rust source (no directory `mod` declarations — those are
+    /// synthesized by [`emit_tree`] from the path tree).
+    content: String,
+    /// A subdirectory barrel, emitted at `src/{rel_path}/mod.rs`.
+    is_barrel: bool,
+    /// The crate-root entry (a `bin`/`lib` target). It is not declared as a
+    /// child of itself, but it carries the top-level `mod` declarations
+    /// (`children[""]`) so the crate root assembles the module tree.
+    is_root_entry: bool,
+}
+
+/// Write translated files preserving the source directory tree. Each file lands
+/// at `src/{rel_path}.rs` (a barrel at `src/{rel_path}/mod.rs`). Every interior
+/// directory gets a `mod.rs` declaring its direct children — a barrel's
+/// `mod.rs` is its translated body with the child declarations prepended; a
+/// barrel-less intermediate directory gets a synthesized `mod.rs` of `mod
+/// <child>;` lines. Children are derived from the emit set itself (every file's
+/// path contributes its segments), so the Rust module tree is complete
+/// regardless of how the source imports across directory levels.
+fn emit_tree(src_dir: &Path, files: &[EmitFile]) -> Result<(), Box<dyn Error>> {
+    use std::collections::{BTreeMap, BTreeSet};
+    let barrel_dirs: std::collections::HashSet<&str> = files
+        .iter()
+        .filter(|f| f.is_barrel)
+        .map(|f| f.rel_path.as_str())
+        .collect();
+    // dir (rel path; "" = crate root) → direct child mod idents. A root entry
+    // contributes nothing (it is the crate root, not a child); every other
+    // file's path segments register each level's child (file or subdirectory).
+    let mut children: BTreeMap<String, BTreeSet<String>> = BTreeMap::new();
+    for f in files {
+        if f.is_root_entry {
+            continue;
+        }
+        let segs: Vec<&str> = f.rel_path.split('/').collect();
+        for i in 0..segs.len() {
+            let dir = if i == 0 {
+                String::new()
+            } else {
+                segs[..i].join("/")
+            };
+            children.entry(dir).or_default().insert(segs[i].to_string());
+        }
+    }
+    let decls_for = |dir: &str| -> String {
+        children
+            .get(dir)
+            .map(|kids| kids.iter().map(|c| format!("mod {c};\n")).collect())
+            .unwrap_or_default()
+    };
+    // Write each translated file. A barrel prepends its directory's children;
+    // the root entry prepends the top-level children; an ordinary file prepends
+    // nothing (its siblings are declared by the parent mod.rs).
+    for f in files {
+        let decls = if f.is_barrel {
+            decls_for(&f.rel_path)
+        } else if f.is_root_entry {
+            decls_for("")
+        } else {
+            String::new()
+        };
+        let body = if decls.is_empty() {
+            f.content.clone()
+        } else {
+            format!("{decls}\n{}", f.content)
+        };
+        let path = if f.is_barrel {
+            src_dir.join(format!("{}/mod.rs", f.rel_path))
+        } else {
+            src_dir.join(format!("{}.rs", f.rel_path))
+        };
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent)?;
+        }
+        fs::write(&path, body)?;
+    }
+    // Synthesize a mod.rs for each barrel-less interior directory.
+    for dir in children.keys() {
+        if dir.is_empty() || barrel_dirs.contains(dir.as_str()) {
+            continue;
+        }
+        let decls = decls_for(dir);
+        if decls.is_empty() {
+            continue;
+        }
+        let path = src_dir.join(format!("{dir}/mod.rs"));
+        if let Some(parent) = path.parent() {
+            fs::create_dir_all(parent)?;
+        }
+        fs::write(&path, decls)?;
+    }
+    Ok(())
+}
+
 /// The build output name: the `package.json` `name` if present, else the
 /// project directory name, else the file stem — never the bare stem when a
 /// project exists, so two entry files don't clobber `dist/<name>`.
@@ -2270,9 +2515,10 @@ mod tests {
     }
 
     #[test]
-    fn translate_project_detects_stem_collision() {
-        // MVP flattens every .ts to src/<stem>.rs; two files with the same stem
-        // would clobber each other, so the translation refuses.
+    fn translate_project_preserves_nested_same_stem() {
+        // The source directory tree is preserved, so two files sharing a stem in
+        // different directories no longer collide: dup.ts → src/dup.rs and
+        // sub/dup.ts → src/sub/dup.rs (with src/sub/mod.rs declaring it).
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
         fs::create_dir_all(root.join("sub")).unwrap();
@@ -2286,10 +2532,19 @@ mod tests {
         write(&root.join("sub"), "dup.ts", "function other() {}");
 
         let out = tmp.path().join("out");
-        let err = translate_project(root, &package_at(root), &out, None).unwrap_err();
-        let msg = err.to_string();
-        assert!(msg.contains("name collision"), "got: {msg}");
-        assert!(msg.contains("dup"), "got: {msg}");
+        translate_project(root, &package_at(root), &out, None).unwrap();
+        assert!(
+            out.join("src").join("dup.rs").exists(),
+            "src/dup.rs missing"
+        );
+        assert!(
+            out.join("src").join("sub").join("dup.rs").exists(),
+            "src/sub/dup.rs missing"
+        );
+        assert!(
+            out.join("src").join("sub").join("mod.rs").exists(),
+            "src/sub/mod.rs missing"
+        );
     }
 
     #[test]
@@ -3151,8 +3406,9 @@ mod tests {
 
     #[test]
     fn translate_project_emits_barrel_module() {
-        // entry imports "./foo" → foo/index.ts → src/foo.rs (project mode),
-        // so `mod foo;` resolves. The barrel must not emit src/index.rs.
+        // entry imports "./foo" → foo/index.ts → src/foo/mod.rs (a subdirectory
+        // barrel becomes the directory's mod), so `mod foo;` resolves. The barrel
+        // must not emit src/index.rs.
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
         fs::create_dir_all(root.join("foo")).unwrap();
@@ -3170,8 +3426,8 @@ mod tests {
         let out = tmp.path().join("out");
         translate_project(root, &package_at(root), &out, None).unwrap();
         assert!(
-            out.join("src").join("foo.rs").exists(),
-            "barrel src/foo.rs missing"
+            out.join("src").join("foo").join("mod.rs").exists(),
+            "barrel src/foo/mod.rs missing"
         );
         assert!(
             !out.join("src").join("index.rs").exists(),
@@ -3245,6 +3501,42 @@ mod tests {
         assert!(
             !util_rs.contains("fn main"),
             "module file should not have fn main: {util_rs}"
+        );
+    }
+
+    #[test]
+    fn translate_project_nested_import_uses_tree_path() {
+        // The source tree is preserved, so a relative import across a directory
+        // resolves to `crate::<dir>::<mod>` (not the flat `crate::<mod>`):
+        // `./sub/util` → `crate::sub::util`, with `src/sub/mod.rs` declaring it.
+        let tmp = tempfile::tempdir().unwrap();
+        let root = tmp.path();
+        fs::create_dir_all(root.join("sub")).unwrap();
+        write(
+            root,
+            "package.json",
+            r#"{ "name": "app", "bin": "main.ts" }"#,
+        );
+        write(
+            root,
+            "main.ts",
+            "import { helper } from \"./sub/util\";\nfunction main() { helper(); }",
+        );
+        write(&root.join("sub"), "util.ts", "export function helper() {}");
+        let out = tmp.path().join("out");
+        translate_project(root, &package_at(root), &out, None).unwrap();
+        let main_rs = fs::read_to_string(out.join("src").join("main.rs")).unwrap();
+        assert!(
+            main_rs.contains("crate::sub::util"),
+            "nested import should resolve to crate::sub::util, got: {main_rs}"
+        );
+        assert!(
+            out.join("src").join("sub").join("util.rs").exists(),
+            "src/sub/util.rs missing"
+        );
+        assert!(
+            out.join("src").join("sub").join("mod.rs").exists(),
+            "src/sub/mod.rs missing"
         );
     }
 }
