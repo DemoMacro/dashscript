@@ -474,22 +474,23 @@ fn reference_type(r: &TSTypeReference) -> Type {
         }
     }
     // An ES TypedArray name → `Vec<elem>` (`Int8Array`→`Vec<i8>`, …,
-    // `Float64Array`→`Vec<f64>`); `ArrayBuffer` → `Vec<u8>` (a raw byte buffer,
-    // no element type). A `sha1(): Uint8Array` return or a `bytesToHex(buf:
-    // Uint8Array)` param thus marshals as a Rust vec of the element type,
-    // matching the constructor (`new Int32Array(n)` → `Vec<i32>`).
-    if name == "ArrayBuffer" {
+    // `Float64Array`→`Vec<f64>`); `ArrayBuffer` / Node `Buffer` → `Vec<u8>` (a
+    // raw byte buffer, no element type). A `sha1(): Uint8Array` return or a
+    // `bytesToHex(buf: Uint8Array)` param thus marshals as a Rust vec of the
+    // element type, matching the constructor (`new Int32Array(n)` → `Vec<i32>`).
+    if matches!(name, "ArrayBuffer" | "Buffer") {
         return parse_quote!(Vec<u8>);
     }
     if let Some(elem) = super::expressions::typed_array_elem_type(name) {
         let ty = format_ident!("{}", elem);
         return parse_quote!(Vec<#ty>);
     }
-    // `Record<K, V>` / `Map<K, V>` → `HashMap<K, V>` — the TS record and the ES
-    // `Map` both lower to a Rust `HashMap`. (A `Map`'s insertion order is not
-    // preserved — an `IndexMap` would — but DashScript targets std collections
-    // today; an ordered map is a later dep.)
-    if matches!(name, "Record" | "Map") {
+    // `Record<K, V>` / `Map<K, V>` / `ReadonlyMap<K, V>` → `HashMap<K, V>` — the
+    // TS record and the ES `Map` both lower to a Rust `HashMap`. (`ReadonlyMap`
+    // is the readonly TS lib alias of `Map` — same runtime shape.) A `Map`'s
+    // insertion order is not preserved (an `IndexMap` would), but DashScript
+    // targets std collections today; an ordered map is a later dep.
+    if matches!(name, "Record" | "Map" | "ReadonlyMap") {
         if let Some(args) = r.type_arguments.as_ref() {
             let ps = &args.params;
             if ps.len() == 2 {
@@ -504,10 +505,11 @@ fn reference_type(r: &TSTypeReference) -> Type {
             }
         }
     }
-    // `Set<T>` → `HashSet<T>` (the ES `Set`). A `number` element (`f64`) wraps
-    // in `DsF64Key` — f64 lacks Eq/Hash, so `Set<number>` is a
+    // `Set<T>` / `ReadonlySet<T>` → `HashSet<T>` (the ES `Set`; `ReadonlySet` is
+    // the readonly TS lib alias — same runtime shape). A `number` element (`f64`)
+    // wraps in `DsF64Key` — f64 lacks Eq/Hash, so `Set<number>` is a
     // `HashSet<DsF64Key>` keyed by SameValueZero.
-    if name == "Set" {
+    if matches!(name, "Set" | "ReadonlySet") {
         if let Some(inner) = r.type_arguments.as_ref().and_then(|a| a.params.first()) {
             let inner_ty = translate_type(inner);
             if is_f64_type(&inner_ty) {
