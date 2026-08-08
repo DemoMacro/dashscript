@@ -5722,19 +5722,21 @@ use rquickjs::{
 };
 use std::sync::Mutex;
 
-/// Build-time-resolved `.js` module table: ESM specifier → inlined source. The
-/// translator reads each degraded `.js` module's source at build time and
-/// emits a `register_js_module(specifier, source)` call, so the `Loader`'s
-/// `source_of` is a table lookup — the emitted crate is self-contained (no
-/// runtime `.js` files), and node_modules resolution already happened at build
-/// time, so the engine never walks the filesystem to resolve an `import`.
+/// Runtime-registered `.js` module table (specifier → source), a secondary
+/// source for `source_of`. The build path no longer populates this — every
+/// degraded module's source is embedded once in the build-time
+/// `__DS_MODULE_SOURCES` array, and stubs only forward via `call_module_fn`
+/// (never re-inlining the source). Kept for tests and any caller registering
+/// a source the build-time table did not capture. The emitted crate stays
+/// self-contained (no runtime `.js` files); node_modules resolution already
+/// happened at build time, so the engine never walks the filesystem.
 static JS_MODULES: Mutex<Vec<(String, String)>> = Mutex::new(Vec::new());
 
-/// Register a degraded `.js` module's source so the engine's `Loader` can find
-/// it. The translator emits one call per `.js` module that degrades to the
-/// engine, inlining the source at build time. Idempotent — a stub `fn`
-/// re-registers on every call, so a module imported through several stubs
-/// registers once.
+/// Register a degraded `.js` module's source at runtime (idempotent). The
+/// build path no longer calls this — production stubs forward via
+/// `call_module_fn` and the source lives once in `__DS_MODULE_SOURCES`. Kept
+/// for tests (`tests/conformance.rs`) and manual registration of a source the
+/// build-time table did not capture.
 pub fn register_js_module(specifier: &str, source: &str) {
     let mut v = JS_MODULES.lock().expect("JS_MODULES lock");
     if !v.iter().any(|(s, _)| s == specifier) {
@@ -5742,10 +5744,10 @@ pub fn register_js_module(specifier: &str, source: &str) {
     }
 }
 
-/// Read a module's source: the runtime `JS_MODULES` table first (a stub's
+/// Read a module's source: the runtime `JS_MODULES` table first (a manual
 /// `register_js_module` call), then the build-time `__DS_MODULE_SOURCES`
-/// table — so a module with no `export function` (no stub emitted, never
-/// registered at runtime) still resolves.
+/// table — the latter is the source of truth for degraded modules, so one
+/// with no `export function` (no stub emitted) still resolves.
 fn source_of(name: &str) -> rquickjs::Result<String> {
     if let Some(source) = JS_MODULES
         .lock()

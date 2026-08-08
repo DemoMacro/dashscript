@@ -330,23 +330,34 @@ fn degrade_js_module(
     register_js_module_graph(translator, js_path, js_src, import_specifier, deps);
     let specifier = import_specifier;
     let path_lit = format!("{specifier:?}");
-    // Inline the `.js` source at build time as a Rust string literal so the
-    // emitted crate is self-contained — the engine's `Loader` reads it from the
-    // `JS_MODULES` table (or the build-time `__DS_MODULE_SOURCES` table) at
-    // runtime, never from the filesystem.
-    let js_source_lit = format!("{js_src:?}");
+    // The `.js` source was registered above (transitive graph) and is embedded
+    // in the build-time `__DS_MODULE_SOURCES` table; the engine's `Loader`
+    // reads it via `source_of` at runtime. A stub must NOT re-inline the source
+    // — doing so once per exported function copies the whole module N times (a
+    // 1.8 MB stub for a 20-export module) and rustc chokes parsing the literal.
+    // One copy, in the build-time table, is the source of truth.
     // Index the sibling `.d.ts`'s declared signatures by name+arity so each
     // stub can specialize when its whole signature is marshal-safe.
     let sigs = dts_src
         .map(|s| translator.dts_fn_signatures(s))
         .unwrap_or_default();
+    let export_fns = translator.js_export_fns(js_src);
+    if export_fns.is_empty() {
+        // No `export function` (e.g. the module only has `export class extends`
+        // or `export const`): there is nothing for a Rust stub to forward to.
+        // The module's source is still registered above and embedded in
+        // `__DS_MODULE_SOURCES`, so the engine's `Loader` resolves it when
+        // another degraded module imports it — but no `.rs` stub is emitted, so
+        // the caller skips writing the file and its `mod` declaration.
+        return Ok(String::new());
+    }
     let mut out = String::from(
         "//! Degraded to the embedded QuickJS engine: a class `extends` here has \
          no static lowering. Each exported function forwards to the engine; when \
          its `.d.ts` signature is fully marshal-safe the stub keeps that concrete \
          type so a static call site stays type-correct.\n\n",
     );
-    for (name, nparams) in translator.js_export_fns(js_src) {
+    for (name, nparams) in export_fns {
         let fn_lit = format!("{name:?}");
         // Find the matching `.d.ts` signature and specialize only when every
         // param and the return type is marshal-safe (and the arity matches).
@@ -384,7 +395,6 @@ fn degrade_js_module(
                     .join(", ");
                 format!(
                     "pub fn {name}({params}) -> {ret_str} {{\n    \
-                     crate::__ds::engine::register_js_module({path_lit}, {js_source_lit});\n    \
                      let __ds_ret = crate::__ds::engine::call_module_fn({path_lit}, {fn_lit}, \
                      &[{args}]);\n    \
                      serde_json::from_value(__ds_ret).expect(\"unmarshal {name} return\")\n}}\n\n",
@@ -403,7 +413,6 @@ fn degrade_js_module(
                     .join(", ");
                 format!(
                     "pub fn {name}({params}) -> serde_json::Value {{\n    \
-                     crate::__ds::engine::register_js_module({path_lit}, {js_source_lit});\n    \
                      crate::__ds::engine::call_module_fn({path_lit}, {fn_lit}, &[{args}])\n}}\n\n",
                 )
             }
@@ -941,21 +950,26 @@ pub fn translate_sources(
         // synthesizes the mod.rs chain). Workspace members are path deps,
         // already skipped above.
         let is_local = source.starts_with('.');
-        if is_local {
-            let app_dir = project_dir.join("src").join("app");
-            fs::create_dir_all(&app_dir)?;
-            fs::write(
-                app_dir.join(format!("{}.rs", mod_file_stem(&emit_name))),
-                dep_rust,
-            )?;
-            app_mods.push_str(&format!("pub mod {emit_name};\n"));
-        } else {
-            tp_files.push(EmitFile {
-                rel_path: format!("third_party/{emit_name}"),
-                content: dep_rust,
-                is_barrel: false,
-                is_root_entry: false,
-            });
+        // A degraded module with no `export function` yields an empty body;
+        // its source is still registered in `__DS_MODULE_SOURCES`, but no
+        // `.rs` stub or `mod` declaration is emitted for it.
+        if !dep_rust.is_empty() {
+            if is_local {
+                let app_dir = project_dir.join("src").join("app");
+                fs::create_dir_all(&app_dir)?;
+                fs::write(
+                    app_dir.join(format!("{}.rs", mod_file_stem(&emit_name))),
+                    dep_rust,
+                )?;
+                app_mods.push_str(&format!("pub mod {emit_name};\n"));
+            } else {
+                tp_files.push(EmitFile {
+                    rel_path: format!("third_party/{emit_name}"),
+                    content: dep_rust,
+                    is_barrel: false,
+                    is_root_entry: false,
+                });
+            }
         }
         let dep_src = fs::read_to_string(&dep_path)
             .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
@@ -1377,15 +1391,20 @@ fn translate_one_with_mods(
         }
         let spec = ds_resolve_specifier(&entry_spec, &imp.source);
         let dep_rust = translate_dep(translator, &dep_path, kind, &spec, None, deps)?;
-        flat_deps.push(EmitFile {
-            rel_path: format!(
-                "third_party/{}",
-                crate::translator::imports::npm_third_party_module_path(&imp.source)
-            ),
-            content: dep_rust,
-            is_barrel: false,
-            is_root_entry: false,
-        });
+        // A degraded module with no `export function` yields an empty body;
+        // its source is still registered in `__DS_MODULE_SOURCES`, so skip
+        // emitting an empty `.rs` stub and its `mod` declaration.
+        if !dep_rust.is_empty() {
+            flat_deps.push(EmitFile {
+                rel_path: format!(
+                    "third_party/{}",
+                    crate::translator::imports::npm_third_party_module_path(&imp.source)
+                ),
+                content: dep_rust,
+                is_barrel: false,
+                is_root_entry: false,
+            });
+        }
     }
     let base_rel = rel_emit_path(ds, root);
     let main = EmitFile {
@@ -2878,12 +2897,21 @@ mod tests {
         }
         assert!(stub.contains("pub fn f"), "stub fn emitted: {stub}");
         assert!(
-            stub.contains("register_js_module"),
-            "stub registers its module: {stub}"
+            !stub.contains("register_js_module"),
+            "stub does not re-inline source (single copy in __DS_MODULE_SOURCES): {stub}"
         );
         assert!(
             out.join("src").join("__ds").join("engine.rs").exists(),
             "__ds::engine helper emitted"
+        );
+        let engine = fs::read_to_string(out.join("src").join("__ds").join("engine.rs")).unwrap();
+        assert!(
+            engine.contains("__DS_MODULE_SOURCES"),
+            "build-time source table emitted: {engine}"
+        );
+        assert!(
+            engine.contains("class A extends B"),
+            "dep source embedded once in the build-time table: {engine}"
         );
         let cargo = fs::read_to_string(out.join("Cargo.toml")).unwrap();
         assert!(
