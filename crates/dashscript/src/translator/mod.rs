@@ -1229,10 +1229,11 @@ impl Translator {
             deps.insert(RuntimeDep::Truthy);
             // A type defined here may be stringified (`__ds::display`) by a
             // cross-module caller too — the same case as `DsTruthy` above.
-            // Forcing `Display` ships the per-type `DsDisplay` impl in this
-            // file (the trait lives in this crate's `__ds.rs`); pure-std, no
-            // cargo dep, so at worst an unused impl on a type no caller
-            // stringifies.
+            // Forcing `Display` ships the per-type `DsDisplay` impl here.
+            // `Display` transitively pulls `RyuJs` (`RuntimeDeps::insert`
+            // closes the dependency): the `DsDisplay for f64` impl calls
+            // `number_to_string`, defined in the `RyuJs` slice and backed by
+            // the `ryu-js` crate — so this also links `ryu-js`.
             deps.insert(RuntimeDep::Display);
         }
         // If `__ds::truthy` is used, every user struct/enum in this file needs a

@@ -42,13 +42,23 @@ impl RuntimeDeps {
 
     /// Add `dep` (builder-style: returns `self` moved).
     pub fn with(mut self, dep: RuntimeDep) -> Self {
-        self.deps.insert(dep);
+        self.insert(dep);
         self
     }
 
-    /// Add `dep` to this set in place.
+    /// Add `dep` to this set in place, pulling any dep it transitively
+    /// requires. `Display` is one such case: the `DsDisplay for f64` impl (in
+    /// `DISPLAY_HELPER`) calls `number_to_string`, which the `RyuJs` helper
+    /// slice defines and the `ryu-js` crate backs — so anything that can
+    /// stringify an `f64` (the `Display` marker) must also pull `RyuJs`, or
+    /// that call is undefined (E0425). A `has_user_type` file forces `Display`,
+    /// so this closure reaches files that stringify a number only through a
+    /// cross-module caller (no direct `number_to_string` use of their own).
     pub fn insert(&mut self, dep: RuntimeDep) {
         self.deps.insert(dep);
+        if dep == RuntimeDep::Display {
+            self.deps.insert(RuntimeDep::RyuJs);
+        }
     }
 
     /// Record a workspace-member crate imported via a bare specifier — it
