@@ -46,13 +46,29 @@ pub(in crate::translator) fn global_function(
                     // `String(<number>)` is ES NumberToString — route through the
                     // helper (coerced to `f64` so a flavor-promoted `i64` arg
                     // compiles); other values use `format!` (Rust `Display`
-                    // already matches ES for string/bool).
+                    // already matches ES for string/bool). A nullable value
+                    // (`Option<T>`, e.g. a `string | null` parameter) has no
+                    // `Display`, and its `None` is ES `undefined` — map the inner
+                    // value through `Display` and fall back to "undefined".
                     if is_number_arg(a, ctx) {
                         let e = translate_number_to(a.as_expression()?, NumberFlavor::F64, ctx);
                         parse_quote!(crate::__ds::number_to_string(#e))
                     } else {
                         let e = translate_argument(a, ctx);
-                        parse_quote!(::std::format!("{}", #e))
+                        let is_option_local = matches!(
+                            a.as_expression(),
+                            Some(Expression::Identifier(id))
+                                if ctx.is_option(&bindings::snake(&id.name).to_string())
+                        );
+                        if is_option_local {
+                            parse_quote!(
+                                #e.as_ref()
+                                    .map(|__v| ::std::format!("{}", __v))
+                                    .unwrap_or_else(|| "undefined".to_string())
+                            )
+                        } else {
+                            parse_quote!(::std::format!("{}", #e))
+                        }
                     }
                 }
             }
