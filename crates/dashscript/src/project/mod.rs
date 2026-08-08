@@ -446,6 +446,7 @@ fn translate_one_with_mods(
     root: &Path,
     role: FileRole,
     is_root_entry: bool,
+    emit_rel: &std::collections::HashMap<String, (String, bool)>,
     deps: &mut RuntimeDeps,
 ) -> Result<(EmitFile, Vec<EmitFile>), Box<dyn Error>> {
     let src = fs::read_to_string(ds).map_err(|e| format!("cannot read {}: {e}", ds.display()))?;
@@ -527,18 +528,34 @@ fn translate_one_with_mods(
             });
         }
     }
-    let base_rel = rel_emit_path(ds, root);
-    let main = EmitFile {
-        // Root entry stays at the src/ root; a non-entry local file goes under
-        // app/, matching the emit_rel map resolve_emit_paths built.
-        rel_path: if is_root_entry {
-            base_rel
-        } else {
-            format!("app/{base_rel}")
+    // Emit the file under its resolved rel-path — the same path
+    // `collect_member_overrides` routes imports to — so a definition file
+    // sharing its stem with a barrel (`locking/locking.ts` beside
+    // `locking/index.ts`) lands at `locking__ds_defn.rs`, the suffix the
+    // barrel's re-export points at. `resolve_emit_paths` already folds the
+    // `app/` prefix in for non-root files, so this supersedes the per-file
+    // `rel_emit_path` + `app/` join. The fallback covers a file the resolver
+    // did not see (defensive — the walk enumerates every emitted file).
+    let main = match emit_rel.get(&canon_string(ds)) {
+        Some((rel, barrel)) => EmitFile {
+            rel_path: rel.clone(),
+            content: rust,
+            is_barrel: *barrel,
+            is_root_entry,
         },
-        content: rust,
-        is_barrel: is_barrel_index(ds, root),
-        is_root_entry,
+        None => {
+            let base_rel = rel_emit_path(ds, root);
+            EmitFile {
+                rel_path: if is_root_entry {
+                    base_rel
+                } else {
+                    format!("app/{base_rel}")
+                },
+                content: rust,
+                is_barrel: is_barrel_index(ds, root),
+                is_root_entry,
+            }
+        }
     };
     Ok((main, flat_deps))
 }
@@ -814,8 +831,15 @@ pub fn translate_project(
             }
         }
         let _override_guard = OverrideGuard;
-        let (main, flat) =
-            translate_one_with_mods(&translator, ds, root, role, is_root_entry, &mut deps)?;
+        let (main, flat) = translate_one_with_mods(
+            &translator,
+            ds,
+            root,
+            role,
+            is_root_entry,
+            &emit_rel,
+            &mut deps,
+        )?;
         emit_files.push(main);
         emit_files.extend(flat);
     }
