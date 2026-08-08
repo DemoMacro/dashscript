@@ -358,15 +358,20 @@ impl Default for Package {
     }
 }
 
-/// The `src/<stem>.rs` path for a source entry, mirroring `stem_of`
-/// (project.rs) so the `[lib]`/`[[bin]]` path matches the file the directory
-/// walk emits. A barrel `index.ts` flattens to its parent dir name
-/// (`src/index.ts` → `src/src.rs`); any other file keeps its own stem
-/// (`src/main.ts` → `src/main.rs`). Inputs are source paths (a tsconfig-
-/// discovered lib entry or a `bin` source), never dist artifacts — a dist
-/// `main` is build output, not a source entry, and never reaches here.
+/// The `src/<stem>.rs` path for a source entry, matching the file the
+/// directory walk emits (`rel_emit_path`): an entry is always a crate-root
+/// file, so its own stem is the emit path (`src/index.ts` → `src/index.rs`,
+/// `src/main.ts` → `src/main.rs`). A subdirectory barrel (`foo/index.ts`) is
+/// never an entry, so `stem_of`'s parent-dir flatten does not apply — using
+/// it would write a phantom `src/src.rs` for a `src/index.ts` lib entry.
+/// Inputs are source paths (a tsconfig-discovered lib entry or a `bin`
+/// source), never dist artifacts — a dist `main` is build output, not a
+/// source entry, and never reaches here.
 fn src_to_rust_path(src_path: &str) -> String {
-    let stem = crate::project::stem_of(std::path::Path::new(src_path));
+    let stem = std::path::Path::new(src_path)
+        .file_stem()
+        .and_then(|s| s.to_str())
+        .unwrap_or("dash");
     format!("src/{stem}.rs")
 }
 

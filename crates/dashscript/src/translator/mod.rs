@@ -1248,8 +1248,18 @@ use helpers::*;
 fn engine_js_source<'a>(
     program: &mut oxc_ast::ast::Program<'a>,
     allocator: &'a oxc_allocator::Allocator,
-    scoping: oxc_semantic::Scoping,
+    _scoping: oxc_semantic::Scoping,
 ) -> String {
+    // oxc_transformer's TypeScript pass lowers `enum`/`namespace`/`import =`
+    // by reading enum member values from the semantic graph, so it needs a
+    // Scoping built with `with_enum_eval(true)`. The caller's scoping is built
+    // for the name table (no enum eval), so rebuild here for the engine's JS.
+    let scoping = SemanticBuilder::new()
+        .with_enum_eval(true)
+        .with_build_nodes(true)
+        .build(&*program)
+        .semantic
+        .into_scoping();
     let transformer = oxc_transformer::Transformer::new(
         allocator,
         std::path::Path::new(""),

@@ -246,13 +246,26 @@ pub(crate) fn workspace_build(
     for member in &members {
         let dir_name = member_name_fallback(member);
         let name = package_name_of(member).unwrap_or_else(|| dir_name.clone());
-        if let Some(want) = filter {
-            if name != want && dir_name != want {
-                continue;
+        let is_target = filter
+            .as_ref()
+            .is_some_and(|want| name == *want || dir_name == *want);
+        if filter.is_some() && !is_target {
+            continue;
+        }
+        match resolve_member_entry(root, member, &name) {
+            Ok(entry) => selected.push((name, member.to_path_buf(), entry)),
+            Err(e) => {
+                // A workspace-wide build (no --filter) skips a member with no
+                // resolvable source entry — an aggregator package (one that
+                // re-exports members but ships no translatable src) is not
+                // force-translated. A --filter naming such a member still
+                // fails: the user asked for it explicitly.
+                if filter.is_some() {
+                    return Err(e);
+                }
+                eprintln!("ds: skip {name} (no source entry)");
             }
         }
-        let entry = resolve_member_entry(root, member, &name)?;
-        selected.push((name, member.to_path_buf(), entry));
     }
     if selected.is_empty() {
         return Err(format!(

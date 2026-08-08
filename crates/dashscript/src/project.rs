@@ -1426,6 +1426,68 @@ fn translate_one_with_mods(
 /// pairs for `[[bin]]`, plus the `[lib]` entry path.
 type ProjectTargets = (Vec<(String, String)>, Option<String>);
 
+/// Resolve a `bin`/`lib` entry string to a canonical absolute path. An entry
+/// may be relative to the package `root` (a `package.json` `bin`/`main` field)
+/// or to the workspace root: a `tsconfig.json` `paths` value is resolved
+/// relative to the tsconfig file itself when no `baseUrl` is set (per the
+/// TSConfig spec), and the caller passes that value verbatim, so it is
+/// relative to the workspace root, not this member `root`. Try `root.join`
+/// first (the bin/main case); if that is not a file, resolve `p` against the
+/// process cwd (the workspace root when `ds build` runs there). Both this and
+/// `walk_ts` output canonicalize to absolute paths, so the root-entry and
+/// import-closure comparisons stay symmetric.
+fn resolve_entry_canon(root: &Path, p: &str) -> Option<PathBuf> {
+    let joined = root.join(p);
+    if joined.is_file() {
+        joined.canonicalize().ok()
+    } else {
+        Path::new(p).canonicalize().ok().filter(|c| c.is_file())
+    }
+}
+
+/// The transitive import closure reachable from the `bin`/`lib` entry files.
+/// A package's published source is its entries plus everything they import;
+/// files outside the closure — demos, build configs, scripts that `import
+/// "@scope/pkg"` to showcase the *published* API — are consumers or tooling,
+/// not crate members, so they are not compiled (mirroring Node's `dist/`,
+/// the compiled entry closure). Compiling them would pull a self-reference
+/// (`@scope/pkg` resolving to this crate) into a cargo self-dep, and lift
+/// non-ident stems (`1-basic.ts`) into illegal `mod` names. Each entry's
+/// imports resolve through the tsconfig-aware resolver, so relative imports
+/// and tsconfig `paths` aliases (`@parts/*` → `./src/parts/*`) extend the
+/// closure, while a bare workspace-member specifier resolves to a sibling
+/// crate's source and adds no local file.
+fn entry_import_closure(
+    files: &[PathBuf],
+    entries: &std::collections::HashSet<PathBuf>,
+) -> std::collections::HashSet<PathBuf> {
+    let local: std::collections::HashSet<PathBuf> = files
+        .iter()
+        .map(|f| f.canonicalize().unwrap_or_else(|_| f.clone()))
+        .collect();
+    let probe = Translator::new();
+    let mut reachable: std::collections::HashSet<PathBuf> = std::collections::HashSet::new();
+    let mut worklist: std::collections::VecDeque<PathBuf> = entries.iter().cloned().collect();
+    while let Some(p) = worklist.pop_front() {
+        if !reachable.insert(p.clone()) {
+            continue;
+        }
+        let Ok(src) = fs::read_to_string(&p) else {
+            continue;
+        };
+        let base = p.parent().unwrap_or_else(|| Path::new(""));
+        for imp in probe.imports(&src) {
+            if let Ok((dep, _)) = resolve_local_module(base, &imp.source) {
+                let dep = dep.canonicalize().unwrap_or(dep);
+                if local.contains(&dep) && !reachable.contains(&dep) {
+                    worklist.push_back(dep);
+                }
+            }
+        }
+    }
+    reachable
+}
+
 /// Translate every `.ts` under a package root into one multi-target crate at
 /// `project_dir/src/`, preserving the source directory tree: each file becomes
 /// `src/<rel_path>.rs` (a subdirectory barrel at `src/<dir>/mod.rs`), each
@@ -1478,19 +1540,25 @@ pub fn translate_project(
     // instead of silently dropping an entry whose canonicalization failed.
     let entry_paths: std::collections::HashSet<PathBuf> = bins
         .iter()
-        .map(|(_, p)| {
-            let full = root.join(p);
-            full.canonicalize().unwrap_or(full)
-        })
-        .chain(lib.as_ref().map(|p| {
-            let full = root.join(p);
-            full.canonicalize().unwrap_or(full)
-        }))
+        .map(|(_, p)| resolve_entry_canon(root, p))
+        .chain(lib.as_ref().map(|p| resolve_entry_canon(root, p)))
+        .flatten()
         .collect();
 
     let mut files = Vec::new();
     walk_ts(root, &mut files);
     files.sort();
+    // Keep only files reachable from a `bin`/`lib` entry — the package's
+    // published source. Orphans outside the closure (demos, build configs,
+    // showcase scripts) are consumers/tooling, not crate members. Skipped
+    // when there is no entry (a bin/lib-less project compiles everything).
+    if !entry_paths.is_empty() {
+        let reachable = entry_import_closure(&files, &entry_paths);
+        files.retain(|f| {
+            let c = f.canonicalize().unwrap_or_else(|_| f.clone());
+            reachable.contains(&c)
+        });
+    }
 
     // Probe whether any file degrades to the engine. A degraded function
     // marshals its arguments as `serde_json::Value`, which needs
@@ -1561,10 +1629,42 @@ pub fn translate_project(
     // duplicate a walk-TS file's rel-path — keep the first occurrence.
     let mut seen_rel: std::collections::HashSet<String> = std::collections::HashSet::new();
     emit_files.retain(|f| seen_rel.insert(f.rel_path.clone()));
+    // Collect every file's inline union-enum definitions and prepend them to
+    // the crate-root entry. A barrel entry re-exports only; the union types
+    // live in the modules it pulls in, which reference `crate::__DsUnion…` but
+    // emit no definition. Without this the crate root lacks the union
+    // definitions every module names (`translate_sources` does the equivalent
+    // at its lone-file crate root — `ds build` collects across entry + deps).
+    let mut emitted_union_enums: std::collections::HashSet<String> =
+        std::collections::HashSet::new();
+    let mut extra_union_enums = String::new();
+    for ds in &files {
+        let Ok(src) = fs::read_to_string(ds) else {
+            continue;
+        };
+        for (name, text) in translator.union_enum_items(&src) {
+            if emitted_union_enums.insert(name) {
+                extra_union_enums.push_str(&text);
+                extra_union_enums.push('\n');
+            }
+        }
+    }
+    if !extra_union_enums.is_empty() {
+        if let Some(entry) = emit_files.iter_mut().find(|f| f.is_root_entry) {
+            entry.content = format!("{extra_union_enums}{}", entry.content);
+        }
+    }
     emit_tree(&src_dir, &emit_files)?;
 
     detect_bin_imports_bin(root, &bins)?;
-    detect_circular_imports(&files)?;
+    // Rust forbids `mod`-declaration cycles but permits `use` cycles between
+    // sibling modules. DashScript emits a flat tree of `mod` declarations
+    // (never cyclic) and lowers imports to `use`, so a TS import cycle becomes
+    // a use-cycle cargo accepts. Surface it as a warning rather than rejecting
+    // — cargo reports any real error (e.g. a cyclic static initializer).
+    if let Err(e) = detect_circular_imports(&files) {
+        eprintln!("warning: {e}");
+    }
     Ok(((bins, lib), deps))
 }
 
@@ -1587,6 +1687,11 @@ fn detect_circular_imports(files: &[PathBuf]) -> Result<(), Box<dyn Error>> {
         let base = f.parent().unwrap_or_else(|| Path::new(""));
         let key = f.canonicalize().unwrap_or_else(|_| f.clone());
         for imp in Translator::new().imports(&src) {
+            // `import type` is erased at compile time — no Rust `use`, so no
+            // runtime module dependency and no cycle edge.
+            if imp.is_type_only {
+                continue;
+            }
             if let Ok((dep, _)) = resolve_local_module(base, &imp.source) {
                 let dep = dep.canonicalize().unwrap_or(dep);
                 if known.contains(&dep) {
@@ -1811,12 +1916,20 @@ pub fn emit_cargo_project(
 /// (`mod __ds;`) at each crate root so every translated file reaches it as
 /// `crate::__ds::…`.
 pub fn bin_lib_stems(bins: &[(String, String)], lib: Option<&str>) -> Vec<String> {
-    let mut stems: Vec<String> = bins
-        .iter()
-        .map(|(_, ds_path)| stem_of(Path::new(ds_path)))
-        .collect();
+    // An entry is a crate-root file, so its own stem is the emit path —
+    // matching `src_to_rust_path` and `rel_emit_path` (a `src/index.ts` lib
+    // entry emits at `src/index.rs`, not the barrel-flattened `src/src.rs`
+    // `stem_of` would produce for a subdirectory barrel).
+    let stem = |p: &str| {
+        Path::new(p)
+            .file_stem()
+            .and_then(|s| s.to_str())
+            .unwrap_or("dash")
+            .to_string()
+    };
+    let mut stems: Vec<String> = bins.iter().map(|(_, ds_path)| stem(ds_path)).collect();
     if let Some(lib_path) = lib {
-        stems.push(stem_of(Path::new(lib_path)));
+        stems.push(stem(lib_path));
     }
     stems
 }
@@ -2638,9 +2751,13 @@ mod tests {
             "package.json",
             r#"{ "name": "app", "bin": "main.ts" }"#,
         );
-        write(root, "main.ts", "function main() {}");
-        write(root, "dup.ts", "function helper() {}");
-        write(&root.join("sub"), "dup.ts", "function other() {}");
+        write(
+            root,
+            "main.ts",
+            "import { helper } from \"./dup\";\nimport { other } from \"./sub/dup\";\nfunction main() { helper(); other(); }",
+        );
+        write(root, "dup.ts", "export function helper() {}");
+        write(&root.join("sub"), "dup.ts", "export function other() {}");
 
         let out = tmp.path().join("out");
         translate_project(root, &package_at(root), &out, None).unwrap();
@@ -3591,11 +3708,18 @@ mod tests {
             "import { a } from \"./a\";\nexport function b() { a(); }",
         );
         let out = tmp.path().join("out");
-        let err = translate_project(root, &package_at(root), &out, None).unwrap_err();
-        let msg = err.to_string();
-        assert!(msg.contains("circular import"), "got: {msg}");
-        assert!(msg.contains("a.ts"), "got: {msg}");
-        assert!(msg.contains("b.ts"), "got: {msg}");
+        // A TS import cycle lowers to a `use`-cycle cargo accepts, so the guard
+        // reports it as a warning (stderr) and emit proceeds — both files still
+        // land. Asserting an error would lock in the old reject behavior.
+        translate_project(root, &package_at(root), &out, None).unwrap();
+        assert!(
+            out.join("src").join("app").join("a.rs").exists(),
+            "a.rs missing"
+        );
+        assert!(
+            out.join("src").join("app").join("b.rs").exists(),
+            "b.rs missing"
+        );
     }
 
     #[test]

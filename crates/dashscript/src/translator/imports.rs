@@ -252,6 +252,11 @@ pub struct ImportRef {
     pub module: String,
     /// The verbatim import source (`"./other"`).
     pub source: String,
+    /// `import type` is erased at compile time (no Rust `use`), so it is no
+    /// runtime module dependency — emit still records the dep (the type may be
+    /// used in a value position like a function signature, so the module must
+    /// still be on the crate), but cycle detection ignores it.
+    pub is_type_only: bool,
 }
 
 /// The local modules a `.ts` file imports, in source order. Used by `ds build`
@@ -271,13 +276,15 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
             // bare specifier (`lodash`) resolves to `node_modules/<pkg>` — both
             // are assembled into `mod` decls. A `cargo:` import names a Rust
             // crate (no assembled module), so it is excluded.
-            let src: &str = match stmt {
-                Statement::ImportDeclaration(imp) => &imp.source.value,
-                Statement::ExportAllDeclaration(exp) => &exp.source.value,
+            let (src, is_type_only): (&str, bool) = match stmt {
+                Statement::ImportDeclaration(imp) => {
+                    (&imp.source.value, !imp.import_kind.is_value())
+                }
+                Statement::ExportAllDeclaration(exp) => (&exp.source.value, false),
                 Statement::ExportNamedDeclaration(exp) => {
                     // `export { x } from "./m"` (a re-export) carries a source;
                     // a local `export { x }` does not — only the former is a dep.
-                    &exp.source.as_ref()?.value
+                    (&exp.source.as_ref()?.value, false)
                 }
                 _ => return None,
             };
@@ -288,6 +295,7 @@ pub(crate) fn collect_imports(source: &str) -> Vec<ImportRef> {
             Some(ImportRef {
                 module,
                 source: src.to_string(),
+                is_type_only,
             })
         })
         .collect()
