@@ -1,4 +1,4 @@
-//! Emitted `__ds`/`__ds_engine` runtime helper sources — the `const &str`
+//! Emitted `__ds`/`__ds::engine` runtime helper sources — the `const &str`
 //! slices concatenated into the generated `src/__ds.rs` (and the engine
 //! module). Each slice maps to a [`super::RuntimeDep`]; [`super::RuntimeDeps`]
 //! concatenates whichever a translation flagged (see `helper_module` /
@@ -2789,7 +2789,7 @@ impl ::std::default::Default for DsAbortController {
 /// Engine-path Web API builtins for the WHATWG Encoding API — the Javy split:
 /// JS shims (`new TextEncoder()`, `.encode()`, `new TextDecoder(…)`, `.decode()`)
 /// over native `Function::new` closures that delegate to `crate::__ds::Text*`
-/// (the SAME Rust impls the static path lowers to). Emitted into `__ds_engine.rs`
+/// (the SAME Rust impls the static path lowers to). Emitted into `__ds/engine.rs`
 /// only when `RuntimeDep::Engine` ∧ `RuntimeDep::Encoding` are both active, and
 /// called from `wire_web_apis` (whose body
 /// [`engine_helper_module`](Translator::engine_helper_module) stamps). Returning
@@ -5675,8 +5675,9 @@ pub fn ds_replace(haystack: &str, needle: &str, repl: &str) -> String {
 }
 "##;
 
-/// The DashScript compat engine module, written to `src/__ds_engine.rs` and
-/// declared `mod __ds_engine;` at the crate root when a translated file uses ES
+/// The DashScript compat engine module, written to `src/__ds/engine.rs` (a
+/// submodule of the `__ds` runtime dir, declared `pub mod engine;` inside
+/// `__ds/mod.rs`) when a translated file uses ES
 /// dynamic reflection the static translator cannot lower. Two entry points
 /// share one thread-local QuickJS `Runtime` (`rquickjs`):
 /// - `run(source)` — eval a self-contained source (the conformance oracle path;

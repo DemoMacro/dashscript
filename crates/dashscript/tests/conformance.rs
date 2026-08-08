@@ -13,7 +13,7 @@
 //!   and the verdict is **assert-driven** — no Node oracle. The static path
 //!   (`Translator::check` → `cargo build` → run the probe). A degrading fixture
 //!   (`needs_engine`) takes the same compile path: the emitted binary embeds a
-//!   `__ds_engine` QuickJS that runs the body with the test262 assert family
+//!   `__ds::engine` QuickJS that runs the body with the test262 assert family
 //!   registered as a production builtin (Javy register pattern). Verdict:
 //!   exit 0 = every assert held = `supported`, a thrown `Test262Error` =
 //!   `partial`, a `ReferenceError` (a host global DashScript does not ship) /
@@ -1648,17 +1648,17 @@ fn wpt_queue_microtask_runs_before_timer() {
 
 /// Once-per-run check that a degrading fixture's emit assembles into a
 /// building cargo project: a reflection `.ts` source → `translate_with_deps`
-/// (flips `needs_engine`) → `write_project` (injects `__ds_engine` +
+/// (flips `needs_engine`) → `write_project` (injects `__ds::engine` +
 /// `wire_web_apis` + the `rquickjs` dep) → `cargo check`. Every degrading
 /// fixture now takes this same compile path (the binary's embedded QuickJS
 /// runs the body); this smoke test verifies the emit once, ahead of the
 /// per-fixture runs. Fails loudly if the engine Rust template, the
-/// `__ds_engine` module, or the dep wiring regresses.
+/// `__ds::engine` module, or the dep wiring regresses.
 #[test]
 fn engine_path_compiles_to_valid_rust_project() {
     // Top-level reflection → whole-program `run` path. The emitted crate is a
-    // single `fn main { __ds_engine::run(js) }`; cargo check confirms it (and
-    // the embedded `__ds_engine` helper) compile against rquickjs + serde_json.
+    // single `fn main { __ds::engine::run(js) }`; cargo check confirms it (and
+    // the embedded `__ds::engine` helper) compile against rquickjs + serde_json.
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
     let target_dir = tmp.path().join("target");
@@ -1689,7 +1689,7 @@ fn per_function_path_compiles_to_valid_rust_project() {
     // function keeps its Rust signature but its body is `call_fn`, the struct
     // argument derives `Serialize`/`Deserialize`, and a `__DS_MODULE_JS` const
     // carries the stripped JS. cargo check confirms the whole emitted crate
-    // compiles (the marshal boundary + the `__ds_engine` helper).
+    // compiles (the marshal boundary + the `__ds::engine` helper).
     let tmp = TempDir::new().expect("tempdir");
     let project = tmp.path().join("probe");
     let target_dir = tmp.path().join("target");
@@ -1748,7 +1748,7 @@ enc();
         "TextEncoder use should pull Encoding dep, got: {:?}",
         deps
     );
-    // `register_text_encoding` lives in the emitted `__ds_engine.rs` (the
+    // `register_text_encoding` lives in the emitted `__ds/engine.rs` (the
     // engine helper module write_project drops beside `main.rs`), not the main
     // `rust` body — assert against the module directly, then let cargo check
     // prove the whole stamped module compiles against rquickjs + encoding_rs.
@@ -1775,7 +1775,7 @@ enc();
 fn atomics_engine_module_with_async_drain_compiles() {
     // waitAsync drain guard: `run` was rewritten to add a microtask drain +
     // `$DONE`/`__ds_async_error` (so async atomics fixtures complete under the
-    // embedded QuickJS). `run` lives in the emitted `__ds_engine.rs`, so a lib
+    // embedded QuickJS). `run` lives in the emitted `__ds/engine.rs`, so a lib
     // build never type-checks it — this test forces Engine + Atomics deps
     // active (Object.defineProperty → Engine, `$262.agent` → Atomics), emits
     // the stamped engine module beside `main.rs`, and cargo-checks the probe.
@@ -1833,7 +1833,7 @@ fn engine_loads_multi_file_js_module_graph() {
     let a_js = "import { double } from \"./b.js\";\nexport function f(x) { return double(x) + 1; }\nexport function bytes() { return new Uint8Array([1, 2, 3]); }\n";
     let b_js = "export function double(x) { return x * 2; }\n";
     // Pull the engine dep set (needs_engine) so write_project emits
-    // __ds_engine.rs + the rquickjs cargo line, without translating any .ts.
+    // __ds/engine.rs + the rquickjs cargo line, without translating any .ts.
     let (_, deps) = Translator::new()
         .translate_with_deps(
             "function r(){Object.defineProperty({},\"x\",{value:1});}\nconsole.log(r());",
@@ -1841,7 +1841,7 @@ fn engine_loads_multi_file_js_module_graph() {
         .expect("translate probe for engine deps");
     assert!(deps.needs_engine(), "probe must pull the engine dep set");
     let main = format!(
-        "fn main() {{\n    __ds_engine::register_js_module(\"a.js\", {a:?});\n    __ds_engine::register_js_module(\"b.js\", {b:?});\n    let r = __ds_engine::call_module_fn(\"a.js\", \"f\", &[serde_json::json!(3)]);\n    println!(\"f={{}}\", r);\n    let bytes = __ds_engine::call_module_fn(\"a.js\", \"bytes\", &[]);\n    println!(\"bytes={{}}\", bytes);\n}}\n",
+        "fn main() {{\n    __ds::engine::register_js_module(\"a.js\", {a:?});\n    __ds::engine::register_js_module(\"b.js\", {b:?});\n    let r = __ds::engine::call_module_fn(\"a.js\", \"f\", &[serde_json::json!(3)]);\n    println!(\"f={{}}\", r);\n    let bytes = __ds::engine::call_module_fn(\"a.js\", \"bytes\", &[]);\n    println!(\"bytes={{}}\", bytes);\n}}\n",
         a = a_js,
         b = b_js,
     );
@@ -2002,28 +2002,29 @@ fn write_project(project: &Path, rust: &str, deps: &RuntimeDeps) {
     // The translator always emits an implicit `fn main` (pure-TS execution
     // semantics: top-level executable statements collect into it; a file with
     // only declarations yields an empty `fn main {}`). The engine path emits
-    // its own `fn main { __ds_engine::run(src) }`. Either way, no synthesis.
+    // its own `fn main { __ds::engine::run(src) }`. Either way, no synthesis.
     let mut body = rust.to_string();
     let mut cargo_toml = MANIFEST.to_string();
     // A fixture that routes an `f64` through ES NumberToString emits a
     // `crate::__ds::number_to_string` call; the probe crate then needs the
     // `__ds` helper module (declared `mod __ds;` at its root) and the `ryu_js`
     // dependency — the same assembly `ds build` performs for a real project.
-    if let Some(helper) = deps.helper_module() {
-        let _ = fs::write(project.join("src").join("__ds.rs"), helper);
+    // Runtime helpers live under `src/__ds/` (mirroring `apply_runtime_deps`):
+    // `mod.rs` holds the base helper, `engine.rs` is the compat module declared
+    // as `pub mod engine;` inside it. The crate root gets a single `mod __ds;`.
+    let helper = deps.helper_module();
+    let engine = deps.engine_helper_module();
+    if helper.is_some() || engine.is_some() {
+        let runtime_dir = project.join("src").join("__ds");
+        let _ = fs::create_dir_all(&runtime_dir);
+        let mut mod_src = helper.unwrap_or_default();
+        if let Some(engine_src) = engine {
+            mod_src.push_str("\npub mod engine;\n");
+            let _ = fs::write(runtime_dir.join("engine.rs"), engine_src);
+        }
+        let _ = fs::write(runtime_dir.join("mod.rs"), mod_src);
         if !body.contains("mod __ds;") {
             body = format!("mod __ds;\n{body}");
-        }
-    }
-    // Engine compat: a `.ts` source using ES reflection lowers to a single
-    // `__ds_engine::run(src)` call; the probe crate then needs the engine
-    // helper module (declared `mod __ds_engine;`) — the same assembly `ds
-    // build` performs for a real project. `rquickjs` itself lands in
-    // Cargo.toml via `apply_to_cargo_toml` below (gated on `needs_engine`).
-    if let Some(engine) = deps.engine_helper_module() {
-        let _ = fs::write(project.join("src").join("__ds_engine.rs"), engine);
-        if !body.contains("mod __ds_engine;") {
-            body = format!("mod __ds_engine;\n{body}");
         }
     }
     // Dep injection is independent of the `__ds` helper module: `serde_json`
@@ -2318,7 +2319,7 @@ fn rewrap_async_main(fixture: &str) -> String {
 /// `(status, detail)`. Every fixture — static or degrading (`needs_engine`) —
 /// takes the same path: `Translator::check` (translatability) → `cargo check`
 /// → build + run the probe. A degrading fixture's emitted binary embeds a
-/// `__ds_engine` QuickJS that runs the body with the test262 assert family
+/// `__ds::engine` QuickJS that runs the body with the test262 assert family
 /// registered as a production builtin (Javy register pattern); a static
 /// fixture runs plain Rust. Verdict: exit 0 → `supported`, a panicked
 /// `Test262Error` → `partial`, a `ReferenceError` (a host global not shipped)
@@ -2343,7 +2344,7 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
         }
     };
     // A degrading fixture (`needs_engine`) takes the SAME compile path as a
-    // static one below: `write_project` emits `__ds_engine` + `wire_web_apis`
+    // static one below: `write_project` emits `__ds::engine` + `wire_web_apis`
     // + the Javy-pattern `register_*` builtins, and the probe's embedded
     // QuickJS runs the degraded body with the test262 assert family + any Web
     // APIs the static path pulled in, registered as production builtins. No
@@ -2385,7 +2386,7 @@ fn run_test262(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static
 
 fn run_wpt(raw: &RawFeature, project: &Path, target_dir: &Path) -> (&'static str, String) {
     // WinterTC fixtures take the same compile path as test262: `check` →
-    // `write_project` (emit `__ds_engine` + `wire_web_apis` + the Javy-pattern
+    // `write_project` (emit `__ds::engine` + `wire_web_apis` + the Javy-pattern
     // `register_*` builtins) → `cargo build` → run the probe. The probe's
     // embedded QuickJS runs the degraded body with the WPT testharness assert
     // family + any Web APIs registered as production builtins; a thrown

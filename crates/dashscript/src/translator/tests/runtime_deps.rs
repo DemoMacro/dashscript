@@ -858,14 +858,14 @@ fn engine_helper_module_stamps_web_api_builtins() {
     let enc_only = RuntimeDeps::empty().with(RuntimeDep::Encoding);
     assert!(
         enc_only.engine_helper_module().is_none(),
-        "Encoding without Engine emits no __ds_engine module"
+        "Encoding without Engine emits no __ds::engine module"
     );
     let both = RuntimeDeps::empty()
         .with(RuntimeDep::Engine)
         .with(RuntimeDep::Encoding);
     let src = both
         .engine_helper_module()
-        .expect("Engine + Encoding emits __ds_engine module");
+        .expect("Engine + Encoding emits __ds::engine module");
     // The placeholder is replaced with the register call (not left empty)…
     assert!(
         src.contains("register_text_encoding(ctx)?;"),
@@ -895,7 +895,7 @@ fn engine_helper_module_omits_web_api_builtins_without_their_dep() {
     let engine_only = RuntimeDeps::empty().with(RuntimeDep::Engine);
     let src = engine_only
         .engine_helper_module()
-        .expect("Engine alone emits __ds_engine module");
+        .expect("Engine alone emits __ds::engine module");
     assert!(
         !src.contains("register_text_encoding"),
         "no Encoding dep → no text-encoding builtin, got:\n{src}"
@@ -919,7 +919,7 @@ fn engine_helper_module_stamps_perf_and_base64_builtins() {
         .with(RuntimeDep::Base64);
     let src = both
         .engine_helper_module()
-        .expect("Engine + HrTime + Base64 emits __ds_engine module");
+        .expect("Engine + HrTime + Base64 emits __ds::engine module");
     assert!(
         src.contains("register_perf_now(ctx)?;") && src.contains("register_base64(ctx)?;"),
         "wire_web_apis stamps the perf + base64 register calls, got:\n{src}"
@@ -948,7 +948,7 @@ fn engine_helper_module_stamps_crypto_builtin() {
         .with(RuntimeDep::Crypto);
     let src = both
         .engine_helper_module()
-        .expect("Engine + Crypto emits __ds_engine module");
+        .expect("Engine + Crypto emits __ds::engine module");
     assert!(
         src.contains("register_crypto(ctx)?;"),
         "wire_web_apis stamps the crypto register call, got:\n{src}"
@@ -978,7 +978,7 @@ fn engine_helper_module_stamps_assert_builtin() {
         .with(RuntimeDep::Assert);
     let src = both
         .engine_helper_module()
-        .expect("Engine + Assert emits __ds_engine module");
+        .expect("Engine + Assert emits __ds::engine module");
     assert!(
         src.contains("register_assert(ctx)?;"),
         "wire_web_apis stamps the assert register call, got:\n{src}"
@@ -1006,7 +1006,7 @@ fn engine_helper_module_stamps_wpt_assert_builtin() {
         .with(RuntimeDep::WptAssert);
     let src = both
         .engine_helper_module()
-        .expect("Engine + WptAssert emits __ds_engine module");
+        .expect("Engine + WptAssert emits __ds::engine module");
     assert!(
         src.contains("register_wpt_assert(ctx)?;"),
         "wire_web_apis stamps the wpt-assert register call, got:\n{src}"
@@ -1070,8 +1070,8 @@ fn dynamic_reflection_routes_through_engine() {
         "defineProperty should flip needs_engine, got deps: {deps:?}"
     );
     assert!(
-        rust.contains("__ds_engine::run"),
-        "engine fixture should lower to __ds_engine::run, got:\n{rust}"
+        rust.contains("__ds::engine::run"),
+        "engine fixture should lower to __ds::engine::run, got:\n{rust}"
     );
     assert!(
         !deps.needs_ryu_js(),
@@ -1083,7 +1083,7 @@ fn dynamic_reflection_routes_through_engine() {
 fn per_function_reflection_keeps_signature_swaps_body() {
     // A reflection construct inside a top-level `function` degrades only that
     // function: its Rust signature stays (`fn reflect(...) -> String`) but its
-    // body becomes a `__ds_engine::call_fn` invocation. Every emitted
+    // body becomes a `__ds::engine::call_fn` invocation. Every emitted
     // struct/enum derives `Serialize`/`Deserialize` (the marshal boundary), and
     // a `__DS_MODULE_JS` const carries the file's stripped JS.
     let src = "interface Box { v: number }\nfunction reflect(b: Box): string {\n  Object.defineProperty(b, \"k\", { value: 1 });\n  return \"done\";\n}\nconst x: Box = { v: 2 };\nconsole.log(reflect(x));\n";
@@ -1095,7 +1095,7 @@ fn per_function_reflection_keeps_signature_swaps_body() {
         "per-function engine dep, got: {deps:?}"
     );
     assert!(
-        rust.contains("__ds_engine::call_fn"),
+        rust.contains("__ds::engine::call_fn"),
         "degraded function body should call_fn, got:\n{rust}"
     );
     assert!(
@@ -1131,7 +1131,7 @@ fn per_function_reflection_variants_degrade() {
             "reflection should need engine, src: {src}, deps: {deps:?}"
         );
         assert!(
-            rust.contains("__ds_engine::call_fn"),
+            rust.contains("__ds::engine::call_fn"),
             "reflection in a function should degrade to call_fn, src: {src}, got:\n{rust}"
         );
         assert!(
@@ -1150,7 +1150,7 @@ fn plain_source_stays_on_static_rust_path() {
         .expect("translate_with_deps");
     assert!(!deps.needs_engine(), "plain source pulls no engine");
     assert!(
-        !rust.contains("__ds_engine::run"),
+        !rust.contains("__ds::engine::run"),
         "plain source must not lower to engine, got:\n{rust}"
     );
 }

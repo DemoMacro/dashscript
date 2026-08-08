@@ -337,7 +337,7 @@ fn check_escape(
 
 /// Per-function engine degradation sites: which top-level functions contain a
 /// construct the static translator cannot lower (their bodies will run under
-/// QuickJS via `__ds_engine::call_fn`), and whether any dynamic construct sits
+/// QuickJS via `__ds::engine::call_fn`), and whether any dynamic construct sits
 /// at top level — outside any function — which still needs the whole-program
 /// `run` path (there is no function boundary to rewrite).
 #[derive(Default)]

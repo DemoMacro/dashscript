@@ -1021,7 +1021,7 @@ fn translate_with_deps_module_degrades_top_level_executable() {
         )
         .expect("module with top-level executable should degrade, not error");
     assert!(
-        rust.contains("__ds_engine::call_fn(\"helper\""),
+        rust.contains("__ds::engine::call_fn(\"helper\""),
         "top-level function should degrade to call_fn: {rust}"
     );
     assert!(

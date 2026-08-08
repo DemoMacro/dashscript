@@ -57,7 +57,7 @@ thread_local! {
     /// construct (per-function engine degradation sites). Set once by
     /// `Translator::translate_with_deps_as` before any statement is translated;
     /// `translate_function` reads it to swap such a function's body for a
-    /// `__ds_engine::call_fn` invocation that keeps the Rust signature.
+    /// `__ds::engine::call_fn` invocation that keeps the Rust signature.
     static DYNAMIC_FNS: RefCell<HashSet<String>> = RefCell::new(HashSet::new());
     /// True when the project has at least one engine-degradation site in any
     /// file. A degraded function marshals its arguments as `serde_json::Value`,
@@ -673,7 +673,7 @@ fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTabl
         .map_or_else(|| format_ident!("__ds_main"), |id| names.of_binding(id));
     // Per-function engine degradation: a function whose body contains a
     // construct the static translator cannot lower keeps its Rust signature but
-    // runs under QuickJS via `__ds_engine::call_fn`. The dynamic-fn set is set
+    // runs under QuickJS via `__ds::engine::call_fn`. The dynamic-fn set is set
     // once per translate, so a function matched here skips body translation.
     if let Some(id) = &func.id {
         if is_dynamic_fn(id.name.as_str()) {
@@ -877,7 +877,7 @@ fn nested_fn_closure(
 }
 
 /// A per-function engine degradation site: keep the Rust signature (params,
-/// return type, generics) but replace the body with a `__ds_engine::call_fn`
+/// return type, generics) but replace the body with a `__ds::engine::call_fn`
 /// invocation. Each argument is marshaled to `serde_json::Value` (every emitted
 /// struct/enum derives `Serialize`/`Deserialize` in this mode), and a non-unit
 /// return is marshaled back. `__DS_MODULE_JS` is the whole module's
@@ -930,7 +930,7 @@ fn engine_arrow_fn_item(
 
 /// The shared core of [`engine_fn_item`] / [`engine_arrow_fn_item`]: emit a
 /// degraded Rust `fn` whose body marshals its arguments to `serde_json::Value`
-/// and dispatches to `__ds_engine::call_fn` / `call_module_fn`. A signature
+/// and dispatches to `__ds::engine::call_fn` / `call_module_fn`. A signature
 /// type the static translator cannot express becomes `serde_json::Value` (the
 /// marshal type), so the signature is concrete rather than `_`. Both
 /// [`Function`] and [`ArrowFunctionExpression`] expose the same field shape
@@ -977,7 +977,7 @@ fn engine_fn_item_from_sig(
         // `Pin<Box<dyn Future>>` — not `DeserializeOwned`). The degraded stub
         // keeps the `async` keyword (see below) so the entry's injected
         // `__ds_main().await` resolves, but drops the JS return type: the stub
-        // is an `async fn` wrapping a sync `__ds_engine::call_fn`, returning
+        // is an `async fn` wrapping a sync `__ds::engine::call_fn`, returning
         // `impl Future<Output = ()>`; the JS Promise the body returns resolves
         // inside QuickJS's event loop during that sync `call_fn`, unreachable
         // (and unneeded) from Rust. The static [`fn_output`] path unwraps
@@ -1018,9 +1018,9 @@ fn engine_fn_item_from_sig(
         let spec = crate::translator::imports::current_module_specifier()
             .unwrap_or_else(|| "__ds_entry".to_string());
         let spec_lit = syn::LitStr::new(&spec, proc_macro2::Span::call_site());
-        parse_quote!(crate::__ds_engine::call_module_fn(#spec_lit, #ts_lit, &__ds_args))
+        parse_quote!(crate::__ds::engine::call_module_fn(#spec_lit, #ts_lit, &__ds_args))
     } else {
-        parse_quote!(crate::__ds_engine::call_fn(#ts_lit, __DS_MODULE_JS, &__ds_args))
+        parse_quote!(crate::__ds::engine::call_fn(#ts_lit, __DS_MODULE_JS, &__ds_args))
     };
     // A unit/void return discards the engine's `Value`; a typed return
     // deserializes it back to the signature's Rust type.

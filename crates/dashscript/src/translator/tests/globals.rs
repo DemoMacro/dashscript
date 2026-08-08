@@ -330,7 +330,7 @@ fn translates_navigator_user_agent_to_literal() {
         "navigator.userAgent → UA literal, got:\n{rust}"
     );
     assert!(
-        !rust.contains("__ds_engine"),
+        !rust.contains("__ds::engine"),
         "navigator.userAgent stays static (no engine degradation), got:\n{rust}"
     );
 }
@@ -373,7 +373,7 @@ fn translates_report_error_to_event_dispatch() {
         "reportError → __ds::ds_report_error, got:\n{rust}"
     );
     assert!(
-        !rust.contains("__ds_engine"),
+        !rust.contains("__ds::engine"),
         "reportError stays static (no engine degradation), got:\n{rust}"
     );
 }

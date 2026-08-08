@@ -52,7 +52,7 @@ pub enum RuntimeDep {
     /// ES dynamic reflection (`Object.defineProperty`/`getOwnPropertyDescriptor`/
     /// `create`/`getPrototypeOf`, accessor properties, …) the static translator
     /// cannot lower; the whole program runs under an embedded QuickJS engine
-    /// via `__ds_engine` (the `rquickjs` crate). A gated compat fallback — the
+    /// via `__ds::engine` (the `rquickjs` crate). A gated compat fallback — the
     /// body is never lowered, so it carries no text marker.
     Engine,
     /// tc39 test262 `$262.agent` API — the bottom-layer agent surface
@@ -483,7 +483,7 @@ impl RuntimeDep {
             // `__ds::sum_precise_exact` — the Math.sumPrecise finite path.
             RuntimeDep::SumPrecise => Some("__ds::sum_precise"),
             RuntimeDep::Engine => None,
-            // `$262.agent` is engine-only — the body degrades to `__ds_engine`
+            // `$262.agent` is engine-only — the body degrades to `__ds::engine`
             // (like `Engine`), so no static text marker.
             RuntimeDep::Atomics => None,
         }
@@ -799,7 +799,7 @@ pub struct RuntimeDeps {
     deps: BTreeSet<RuntimeDep>,
     /// Build-time-resolved degraded module sources: (DsResolver specifier,
     /// source). Emitted as a `static __DS_MODULE_SOURCES` table in
-    /// `__ds_engine.rs` so `source_of` reaches every degraded module without a
+    /// `__ds/engine.rs` so `source_of` reaches every degraded module without a
     /// `register_js_module` stub call — a module with no `export function`
     /// (e.g. `@scope/pkg`'s `b.js`, only `export const`/`class`) still
     /// resolves at runtime.
@@ -957,7 +957,7 @@ impl RuntimeDeps {
         any.then_some(src)
     }
 
-    /// The `__ds_engine` compat module source — runs a `.ts` source under an
+    /// The `__ds::engine` compat module source — runs a `.ts` source under an
     /// embedded QuickJS engine — when this dep set flags `Engine`. `None`
     /// otherwise, so the caller writes nothing and pulls no engine dependency.
     /// The build-time module source table (`__DS_MODULE_SOURCES`) is appended
@@ -991,6 +991,18 @@ impl RuntimeDeps {
             }
             src = src.replace("/* __DS_WIRE_WEB_APIS_BODY__ */", &wire_body);
             src.push_str(&builtin_fns);
+            // engine.rs lives at src/__ds/engine.rs — a child of the `__ds`
+            // runtime module — so its builtins (which delegate to
+            // `crate::__ds::X` static impls) need the parent module in scope.
+            // Only when a builtin is present, so an engine-only crate (no Web
+            // API builtins) gets no unused import.
+            if !builtin_fns.is_empty() {
+                src = src.replacen(
+                    "use rquickjs::context::EvalOptions;",
+                    "use crate::__ds;\nuse rquickjs::context::EvalOptions;",
+                    1,
+                );
+            }
             src
         })
     }
@@ -1534,7 +1546,7 @@ impl Translator {
         //     boundary to rewrite, so the whole program runs under the engine
         //     (`run(js_source)`) — the conformance-oracle path;
         //   * a construct inside a top-level `function` degrades only that
-        //     function: its body becomes `__ds_engine::call_fn("name", …)`,
+        //     function: its body becomes `__ds::engine::call_fn("name", …)`,
         //     keeping the Rust signature, while every other function stays
         //     native Rust. The rest of the file is lowered normally.
         // `program_engine_sites` is the same `collect_unsupported` walk that
@@ -1572,7 +1584,7 @@ impl Translator {
             let src_lit = syn::LitStr::new(&js_source, proc_macro2::Span::call_site());
             let main_item: syn::Item = syn::parse_quote! {
                 fn main() {
-                    crate::__ds_engine::run(#src_lit);
+                    crate::__ds::engine::run(#src_lit);
                 }
             };
             let rust = prettyplease::unparse(&syn::File {
@@ -1612,7 +1624,7 @@ impl Translator {
         // empty. The conformance harness translates many fixtures in one
         // thread; without a reset, a fixture that degrades its `main` leaves a
         // stale set that rewrites the next fixture's `main` as an engine call,
-        // emitting `__ds_engine` references while `needs_engine` stays false.
+        // emitting `__ds::engine` references while `needs_engine` stays false.
         functions::set_dynamic_fns(dynamic_fns);
         // B6-5b: a per-function-degraded module whose annotation-stripped JS
         // still carries ESM `import`/`export` cannot run under `call_fn`'s
@@ -2035,7 +2047,7 @@ impl Translator {
             } else {
                 let js_lit = syn::LitStr::new(&module_js, proc_macro2::Span::call_site());
                 items.push(syn::parse_quote! {
-                    /// The whole module's annotation-stripped JS — `__ds_engine::call_fn`
+                    /// The whole module's annotation-stripped JS — `__ds::engine::call_fn`
                     /// evals this before each degraded-function invocation so the
                     /// function's helper dependencies are in scope.
                     const __DS_MODULE_JS: &str = #js_lit;
@@ -2312,7 +2324,7 @@ impl Translator {
     /// rather than reporting a static-only partial. Returns `None` only when
     /// oxc reports parse diagnostics (invalid source); a valid program always
     /// yields JS, mirroring the exact bytes `translate_with_deps` embeds in
-    /// `__ds_engine::run`. Whether a fixture routes to the engine at all is
+    /// `__ds::engine::run`. Whether a fixture routes to the engine at all is
     /// decided by `RuntimeDeps::needs_engine`, not here.
     #[must_use]
     pub fn engine_source(&self, source: &str) -> Option<String> {

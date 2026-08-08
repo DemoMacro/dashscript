@@ -3,7 +3,7 @@
 //! ESM + `.d.ts`, and QuickJS supports `import`/`export` natively
 //! (`JS_EVAL_TYPE_MODULE`), so an ESM entry — `export function add(...)` — is
 //! eval'd as a module and its named export read directly. This is the shape
-//! `__ds_engine::call` will lower ESM `.js` packages to.
+//! `__ds::engine::call` will lower ESM `.js` packages to.
 
 #[test]
 fn esm_module_evaluates_and_exports_callable() {

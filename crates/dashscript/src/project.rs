@@ -25,7 +25,7 @@ fn is_npm_js(dep_path: &Path) -> bool {
 }
 
 /// Build-time mirror of the engine's runtime `DsResolver` join
-/// (`__ds_engine.rs`): a bare specifier stays as-is (already a resolved
+/// (`__ds/engine.rs`): a bare specifier stays as-is (already a resolved
 /// `node_modules` package path); a relative specifier joins onto the base
 /// module's directory. The result is the key a degraded module is registered
 /// under, so the runtime resolver — which applies the identical join — finds
@@ -306,10 +306,10 @@ fn register_js_module_graph(
 
 /// Lower a `.js`/`.mjs`/`.cjs` module that degrades wholesale to the engine —
 /// it declares a class `extends` the static translator cannot lower. Flag the
-/// engine runtime dep (so `__ds_engine.rs` is emitted), register this module
+/// engine runtime dep (so `__ds/engine.rs` is emitted), register this module
 /// and its whole transitive import graph under their DsResolver specifiers
 /// ([`register_js_module_graph`]), and emit one stub `fn` per
-/// `export function`: each forwards to `__ds_engine::call_module_fn`. When a
+/// `export function`: each forwards to `__ds::engine::call_module_fn`. When a
 /// sibling `.d.ts` carries the function's signature and every param/return type
 /// is marshal-safe, the stub specializes to those concrete types (marshaling
 /// via `serde_json::{to,from}_value`) so a static call site stays type-correct;
@@ -384,8 +384,8 @@ fn degrade_js_module(
                     .join(", ");
                 format!(
                     "pub fn {name}({params}) -> {ret_str} {{\n    \
-                     crate::__ds_engine::register_js_module({path_lit}, {js_source_lit});\n    \
-                     let __ds_ret = crate::__ds_engine::call_module_fn({path_lit}, {fn_lit}, \
+                     crate::__ds::engine::register_js_module({path_lit}, {js_source_lit});\n    \
+                     let __ds_ret = crate::__ds::engine::call_module_fn({path_lit}, {fn_lit}, \
                      &[{args}]);\n    \
                      serde_json::from_value(__ds_ret).expect(\"unmarshal {name} return\")\n}}\n\n",
                 )
@@ -403,8 +403,8 @@ fn degrade_js_module(
                     .join(", ");
                 format!(
                     "pub fn {name}({params}) -> serde_json::Value {{\n    \
-                     crate::__ds_engine::register_js_module({path_lit}, {js_source_lit});\n    \
-                     crate::__ds_engine::call_module_fn({path_lit}, {fn_lit}, &[{args}])\n}}\n\n",
+                     crate::__ds::engine::register_js_module({path_lit}, {js_source_lit});\n    \
+                     crate::__ds::engine::call_module_fn({path_lit}, {fn_lit}, &[{args}])\n}}\n\n",
                 )
             }
         };
@@ -1676,45 +1676,46 @@ pub fn bin_lib_stems(bins: &[(String, String)], lib: Option<&str>) -> Vec<String
     stems
 }
 
-/// Write the runtime helper modules and declare them at each crate root, when
-/// the translated sources reference them: `__ds` (`ryu_js`) and `__ds_engine`
-/// (the `rquickjs` compat engine). A no-op when no runtime dep is set.
+/// Write the DashScript runtime module under `src/__ds/` and declare it at each
+/// crate root, when the translated sources reference it. Both runtime parts
+/// live under one `__ds/` directory — keeping a crate's `src/` split by code
+/// origin (runtime in `__ds/`, local code at the `src/` root, third-party deps
+/// in `third_party/`):
+/// - `__ds/mod.rs` — static helper items (`number_to_string`, `array_set`,
+///   `DsError`, …) a lowering reaches as `crate::__ds::X`.
+/// - `__ds/engine.rs` — the `rquickjs` compat engine, only when a fixture
+///   degrades; its entry points are `crate::__ds::engine::{run, call_fn,
+///   call_module_fn}`. A no-op when no runtime dep is set.
 pub fn apply_runtime_deps(
     project_dir: &Path,
     deps: &RuntimeDeps,
     root_stems: &[String],
 ) -> Result<(), Box<dyn Error>> {
-    if let Some(helper) = deps.helper_module() {
-        inject_helper_module(project_dir, "__ds", &helper, root_stems)?;
+    let helper = deps.helper_module();
+    let engine = deps.engine_helper_module();
+    if helper.is_none() && engine.is_none() {
+        return Ok(());
     }
-    if let Some(engine) = deps.engine_helper_module() {
-        inject_helper_module(project_dir, "__ds_engine", &engine, root_stems)?;
+    let runtime_dir = project_dir.join("src").join("__ds");
+    fs::create_dir_all(&runtime_dir)?;
+    // `__ds/mod.rs` holds the static helpers; the engine is its child module,
+    // declared only when present (an engine-only crate has no static helpers).
+    let mut mod_src = helper.unwrap_or_default();
+    if let Some(engine_src) = engine {
+        mod_src.push_str("\npub mod engine;\n");
+        fs::write(runtime_dir.join("engine.rs"), engine_src)?;
     }
-    Ok(())
-}
-
-/// Write a helper module (`__ds.rs` / `__ds_engine.rs`) to `src/` and prepend
-/// `mod <name>;` to each crate root that may reference it. A root already
-/// declaring the module is left untouched. Both helpers are addressed as
-/// `crate::<name>::…`, so every crate root that lowered a call needing one must
-/// declare it.
-fn inject_helper_module(
-    project_dir: &Path,
-    mod_name: &str,
-    source: &str,
-    root_stems: &[String],
-) -> Result<(), Box<dyn Error>> {
-    fs::write(
-        project_dir.join("src").join(format!("{mod_name}.rs")),
-        source,
-    )?;
-    let decl = format!("mod {mod_name};");
+    fs::write(runtime_dir.join("mod.rs"), mod_src)?;
+    // Declare `mod __ds;` once at each crate root (a root already declaring it
+    // is left untouched). Both the static items (`crate::__ds::X`) and the
+    // engine (`crate::__ds::engine::X`) reach through this one declaration.
+    let decl = "mod __ds;";
     for stem in root_stems {
         let path = project_dir.join("src").join(format!("{stem}.rs"));
         let Ok(body) = fs::read_to_string(&path) else {
             continue;
         };
-        if body.contains(&decl) {
+        if body.contains(decl) {
             continue;
         }
         fs::write(&path, format!("{decl}\n{body}"))?;
@@ -2487,7 +2488,7 @@ mod tests {
     #[test]
     fn emit_cargo_project_degrades_js_dep_with_class_extends() {
         // End-to-end: an entry importing a `.js` dep with a class `extends`
-        // emits engine-forwarding stubs for that dep and the `__ds_engine`
+        // emits engine-forwarding stubs for that dep and the `__ds::engine`
         // helper module (the stubs call into it), flagged via the engine
         // runtime dep on the emitted Cargo.toml.
         let tmp = tempfile::tempdir().unwrap();
@@ -2516,7 +2517,7 @@ mod tests {
             let p = entry.unwrap().path();
             if p.extension().and_then(|e| e.to_str()) == Some("rs") {
                 let body = fs::read_to_string(&p).unwrap();
-                if body.contains("crate::__ds_engine::call_module_fn") {
+                if body.contains("crate::__ds::engine::call_module_fn") {
                     stub = body;
                 }
             }
@@ -2527,8 +2528,8 @@ mod tests {
             "stub registers its module: {stub}"
         );
         assert!(
-            out.join("src").join("__ds_engine.rs").exists(),
-            "__ds_engine helper emitted"
+            out.join("src").join("__ds").join("engine.rs").exists(),
+            "__ds::engine helper emitted"
         );
         let cargo = fs::read_to_string(out.join("Cargo.toml")).unwrap();
         assert!(
@@ -2576,7 +2577,7 @@ mod tests {
             let p = entry.unwrap().path();
             if p.extension().and_then(|e| e.to_str()) == Some("rs") {
                 let body = fs::read_to_string(&p).unwrap();
-                if body.contains("crate::__ds_engine::call_module_fn") {
+                if body.contains("crate::__ds::engine::call_module_fn") {
                     stub = body;
                 }
             }
@@ -2628,7 +2629,7 @@ mod tests {
             let p = entry.unwrap().path();
             if p.extension().and_then(|e| e.to_str()) == Some("rs") {
                 let body = fs::read_to_string(&p).unwrap();
-                if body.contains("crate::__ds_engine::call_module_fn") {
+                if body.contains("crate::__ds::engine::call_module_fn") {
                     stub = body;
                 }
             }

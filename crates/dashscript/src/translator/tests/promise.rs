@@ -127,7 +127,7 @@ fn async_fn_degrade_stub_drops_promise_return() {
     // An `async fn` degraded to QuickJS returns a JS `Promise`, which cannot
     // marshal across the serde boundary to Rust's `DsPromise<T>` (a
     // `Pin<Box<dyn Future>>` — not `DeserializeOwned`). The degraded stub is a
-    // sync `fn` calling `__ds_engine::call_fn`; it drops the return (the JS
+    // sync `fn` calling `__ds::engine::call_fn`; it drops the return (the JS
     // Promise resolves inside QuickJS's event loop). Guards against the stub
     // emitting `-> DsPromise<T>` + `from_value::<DsPromise<T>>` (E0277), which
     // the conformance WPT layer hit on every `promise_test` fixture rewrapped

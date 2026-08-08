@@ -9,7 +9,7 @@
 //! - **引擎冷启动**: 每次 op 新建 `Runtime` + 注入 242KB polyfill + 1 次 eval —— 模拟
 //!   conformance harness 每 fixture 一个 ctx 的最坏情况。
 //! - **引擎稳态**: 1 次注入 + N 次 eval (共享 thread_local ctx) —— 模拟生产降级
-//!   `__ds_engine` 的持久 runtime。
+//!   `__ds::engine` 的持久 runtime。
 
 use rquickjs::{context::EvalOptions, Context, Ctx, Runtime};
 use std::time::Instant;
@@ -62,7 +62,7 @@ const WORK_JS: &str =
     "(() => { const d = Temporal.PlainDate.from('2024-03-15'); return d.year + d.month + d.day; })()";
 
 /// 预编译函数体 (eval 一次定义到 globalThis), 之后仅 eval 调用 —— 模拟生产降级
-/// `__ds_engine.call_fn(name, args)` (函数已编译, 主循环不 re-parse 函数体)。
+/// `__ds::engine.call_fn(name, args)` (函数已编译, 主循环不 re-parse 函数体)。
 const DEFINE_WORK_JS: &str =
     "globalThis.__ds_work = () => { const d = Temporal.PlainDate.from('2024-03-15'); return d.year + d.month + d.day; };";
 const CALL_WORK_JS: &str = "__ds_work()";

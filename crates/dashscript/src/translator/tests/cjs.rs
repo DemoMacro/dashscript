@@ -12,7 +12,7 @@ fn commonjs_wrapper_loads_export_and_calls() {
     let runtime = Runtime::new().expect("rquickjs Runtime");
     let ctx = Context::full(&runtime).expect("rquickjs Context");
     // Wrap a CommonJS package and call its export in one sloppy-mode eval —
-    // the shape `__ds_engine::call` will lower to. `require` is a throwing
+    // the shape `__ds::engine::call` will lower to. `require` is a throwing
     // stub here (zero-dep probe); a real `require` is a separate concern.
     let program = r#"
         var __ds_module = { exports: {} };

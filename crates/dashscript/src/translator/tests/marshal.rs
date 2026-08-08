@@ -1,8 +1,8 @@
 //! Empirical probe: `serde_json::Value` <-> rquickjs `Value` marshal and the
 //! `call_fn` shape — eval a function body, call it with marshaled args, marshal
-//! the return. Establishes the rquickjs 0.12 API truth for `__ds_engine::call_fn`
+//! the return. Establishes the rquickjs 0.12 API truth for `__ds::engine::call_fn`
 //! (B6b). The marshal/transcode logic proven here is ported verbatim into the
-//! emitted `__ds_engine.rs` helper module.
+//! emitted `__ds/engine.rs` helper module.
 
 use rquickjs::{Array, Context, Ctx, FromJs, IntoJs, Object, Runtime, Type, Value};
 
