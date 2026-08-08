@@ -31,7 +31,7 @@ thread_local! {
 }
 
 /// Record the import graph's workspace-member specifiers (set once before the
-/// entry translates), so [`is_local_module`] routes them to `crate::mod`. See
+/// entry translates), so [`mod_use_path`] routes them to `crate::<mod>`. See
 /// [`WORKSPACE_DEPS`].
 pub(crate) fn set_workspace_deps(deps: std::collections::HashSet<String>) {
     WORKSPACE_DEPS.with(|c| {
@@ -321,61 +321,40 @@ pub(crate) fn module_ident(source: &str) -> Option<Ident> {
     }
 }
 
-/// Whether an import source resolves to a module *inside this crate*. Two
-/// families do: a relative `./m` import (the file's own `mod m;`), and a bare
-/// workspace-member specifier (`@scope/core`) that `ds build` translated into a
-/// `mod` of this crate (recorded in [`WORKSPACE_DEPS`]). Both lower to
-/// `crate::m::…` so the `use` resolves from a sibling module too: under Rust
-/// 2018 path clarity a bare `use m::x` resolves at the crate root but not from
-/// a submodule, so `crate::m::x` is the form that works everywhere. A `cargo:`
-/// source or a registry npm specifier names something outside this crate (an
-/// extern crate / `node_modules`), so it stays a bare `use m::x`.
-pub(crate) fn is_local_module(source: &str) -> bool {
-    source.starts_with('.') || WORKSPACE_DEPS.with(|c| c.borrow().contains(source))
-}
-
-/// The `use` path for an import/export source: `crate::mod` for a local
-/// module, bare `mod` for a `cargo:` crate or npm bare specifier.
+/// The `use` path for an import/export source, split by code origin: a local
+/// relative import → `crate::app::<mod>`; a workspace-member bare specifier →
+/// `crate::<mod>` (cargo path dep); a `cargo:` crate → bare `<mod>` (extern
+/// prelude); a bare npm specifier → `crate::third_party::<mod>`.
 pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
-    if is_local_module(source) {
-        // A barrel (`locking/index.ts`) and a same-stem defn (`locking/locking.ts`)
-        // both flatten to `src/locking.rs` if deduped by specifier, so project
-        // resolves the collision by suffixing the defn's emit name
-        // (`locking__ds_defn`). The barrel's `pub use crate::locking::X` would
-        // otherwise self-reference (mod locking = the barrel, which has no X),
-        // so a relative source whose resolution landed on a suffixed defn is
-        // rerouted to the defn's emit name. The override is keyed by the
-        // verbatim source as it appears in the file being translated, so it
-        // distinguishes `./locking` resolved-from-barrel (defn, override) from
-        // `./locking` resolved-from-drawingml (barrel, no override) — each
-        // importer carries its own override map.
-        // The emit-name map gives every local module its full crate-local name
-        // — a workspace member's `./serialize` is `office_open_xml_serialize`
-        // (member prefix already baked in), and a same-stem defn behind a barrel
-        // is `locking__ds_defn` (suffix baked in). An override carries that full
-        // name verbatim, so use it directly: re-applying `current_member` would
-        // double the prefix (`office_open_xml_office_open_xml_serialize`). Only
-        // a relative source with no override (its emit name == its bare stem,
-        // i.e. a core-internal import with no member) reaches the member-prefix
-        // fallback below.
-        if source.starts_with('.') {
-            if let Some(path) = emit_name_override(source) {
-                // The override carries the target's full crate-local path — a
-                // single segment for a flat/merge emit (`locking__ds_defn`) or
-                // multiple for a member-crate tree emit
-                // (`drawingml::locking::locking__ds_defn`). Parse the whole
-                // `crate::<path>` so multi-segment paths resolve.
-                return syn::parse_str(&format!("crate::{path}"))
-                    .unwrap_or_else(|_| parse_quote!(crate::#mod_ident));
-            }
-            if let Some(member) = current_member() {
-                let prefixed = Ident::new(&format!("{member}_{}", mod_ident), mod_ident.span());
-                return parse_quote!(crate::#prefixed);
-            }
+    if source.starts_with('.') {
+        // Local relative import → rooted under `app/`. The override carries
+        // the target's full crate-local path (with `app::` baked in by
+        // collect_member_overrides / collect_emit_overrides), so a suffixed
+        // defn behind a barrel reroutes correctly and a multi-segment tree path
+        // resolves — used verbatim to avoid doubling a member prefix. The
+        // member branch (translate_sources merge model) and the fallback both
+        // root under `app/` too.
+        if let Some(path) = emit_name_override(source) {
+            return syn::parse_str(&format!("crate::{path}"))
+                .unwrap_or_else(|_| parse_quote!(crate::app::#mod_ident));
         }
+        if let Some(member) = current_member() {
+            let prefixed = Ident::new(&format!("{member}_{}", mod_ident), mod_ident.span());
+            return parse_quote!(crate::app::#prefixed);
+        }
+        parse_quote!(crate::app::#mod_ident)
+    } else if WORKSPACE_DEPS.with(|c| c.borrow().contains(source)) {
+        // A bare specifier resolving to a sibling workspace member is an
+        // independent crate (cargo path dep) — reached as `crate::<ident>`.
         parse_quote!(crate::#mod_ident)
-    } else {
+    } else if source.starts_with("cargo:") {
+        // An extern crate (`cargo:serde`) — bare use via the extern prelude.
         parse_quote!(#mod_ident)
+    } else {
+        // A bare npm specifier (`ds_fflate`) is transpiled into the crate under
+        // `third_party/` — reached as `crate::third_party::<ident>` (the 2018
+        // path root prefix is implicit).
+        parse_quote!(third_party::#mod_ident)
     }
 }
 
@@ -962,10 +941,9 @@ mod tests {
         let mut deps = std::collections::HashSet::new();
         deps.insert("@scope/b".to_string());
         set_workspace_deps(deps);
-        // A recorded workspace member lowers to a local crate module
-        // (crate::…); an unrecorded bare specifier stays a registry extern.
-        assert!(is_local_module("@scope/b"));
-        assert!(!is_local_module("@scope/reg"));
+        // A recorded workspace member is a cargo path dep, reached as
+        // crate::<ident>; an unrecorded bare specifier is a transpiled npm dep
+        // under third_party/.
         let ident = bare_module_ident("@scope/b");
         let path = mod_use_path("@scope/b", &ident);
         assert_eq!(
@@ -973,8 +951,13 @@ mod tests {
             "crate"
         );
         clear_workspace_deps();
-        // After clear, the specifier is no longer local.
-        assert!(!is_local_module("@scope/b"));
+        // After clear, the specifier is no longer a workspace dep — it routes
+        // as a bare npm dep under third_party/.
+        let path = mod_use_path("@scope/b", &ident);
+        assert_eq!(
+            path.segments.first().expect("segments").ident.to_string(),
+            "third_party"
+        );
     }
 
     #[test]

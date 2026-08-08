@@ -30,7 +30,7 @@ fn import_emits_use() {
     let rust = Translator::new()
         .translate("import { foo } from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("use crate::other::foo"), "got: {rust}");
+    assert!(rust.contains("use crate::app::other::foo"), "got: {rust}");
 }
 
 #[test]
@@ -38,7 +38,10 @@ fn import_groups_multiple_names() {
     let rust = Translator::new()
         .translate("import { foo, bar } from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("use crate::other::{foo, bar}"), "got: {rust}");
+    assert!(
+        rust.contains("use crate::app::other::{foo, bar}"),
+        "got: {rust}"
+    );
 }
 
 #[test]
@@ -83,7 +86,7 @@ fn bare_import_emits_use_for_npm_resolution() {
         .translate("import { x } from \"lodash\";")
         .expect("should translate");
     assert!(
-        rust.contains("use ds_lodash::x"),
+        rust.contains("use third_party::ds_lodash::x"),
         "bare import emitted no use: {rust}"
     );
     let diags = Translator::new().check("import { x } from \"lodash\";");
@@ -100,7 +103,7 @@ fn bare_import_normalizes_scope_and_hyphen() {
         .translate("import { x } from \"@scope/pkg-name\";")
         .expect("should translate");
     assert!(
-        rust.contains("use ds_scopeSpkg_name::x"),
+        rust.contains("use third_party::ds_scopeSpkg_name::x"),
         "scope/hyphen not normalized: {rust}"
     );
 }
@@ -134,7 +137,7 @@ fn import_keeps_type_name_pascalcase() {
         .translate("import { add, Point } from \"./other\";")
         .expect("should translate");
     assert!(
-        rust.contains("use crate::other::{add, Point}"),
+        rust.contains("use crate::app::other::{add, Point}"),
         "got: {rust}"
     );
 }
@@ -166,7 +169,7 @@ fn import_type_emits_type_use() {
     let rust = Translator::new()
         .translate("import type { Point } from \"./geom\";")
         .expect("should translate");
-    assert!(rust.contains("use crate::geom::Point"), "got: {rust}");
+    assert!(rust.contains("use crate::app::geom::Point"), "got: {rust}");
 }
 
 #[test]
@@ -177,7 +180,7 @@ fn import_namespace_emits_use_alias() {
     let rust = Translator::new()
         .translate("import * as ns from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("use crate::other as ns"), "got: {rust}");
+    assert!(rust.contains("use crate::app::other as ns"), "got: {rust}");
 }
 
 #[test]
@@ -242,7 +245,10 @@ fn export_named_from_emits_pub_use() {
     let rust = Translator::new()
         .translate("export { foo } from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("pub use crate::other::foo"), "got: {rust}");
+    assert!(
+        rust.contains("pub use crate::app::other::foo"),
+        "got: {rust}"
+    );
 }
 
 #[test]
@@ -252,7 +258,7 @@ fn export_named_from_groups_multiple() {
         .translate("export { foo, bar } from \"./other\";")
         .expect("should translate");
     assert!(
-        rust.contains("pub use crate::other::{foo, bar}"),
+        rust.contains("pub use crate::app::other::{foo, bar}"),
         "got: {rust}"
     );
 }
@@ -273,7 +279,7 @@ fn export_all_emits_pub_glob() {
     let rust = Translator::new()
         .translate("export * from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("pub use crate::other::*"), "got: {rust}");
+    assert!(rust.contains("pub use crate::app::other::*"), "got: {rust}");
 }
 
 #[test]
@@ -283,7 +289,10 @@ fn export_all_as_namespace_emits_alias() {
     let rust = Translator::new()
         .translate("export * as ns from \"./other\";")
         .expect("should translate");
-    assert!(rust.contains("pub use crate::other as ns"), "got: {rust}");
+    assert!(
+        rust.contains("pub use crate::app::other as ns"),
+        "got: {rust}"
+    );
 }
 
 #[test]
@@ -812,7 +821,7 @@ fn collect_lazy_static_exports_maps_accessor_to_cell_type() {
 fn imported_lazy_static_uses_accessor_name_and_hashmap_get() {
     // With the cross-file lazy-static export table published (the way
     // `project::translate_sources` publishes it before a package translate), a
-    // consumer's `import { M }` lowers to `use crate::a::m` — the accessor fn,
+    // consumer's `import { M }` lowers to `use crate::app::a::m` — the accessor fn,
     // snake-folded, not the type-cased `M` — a reference emits the accessor
     // call, and a `HashMap` index lowers to `.get(…)`. Without the table the
     // use path was `M` (unresolved), the reference a bare `m`, and the index a
@@ -829,7 +838,7 @@ fn imported_lazy_static_uses_accessor_name_and_hashmap_get() {
     crate::translator::imports::clear_lazy_static_exports();
     let rust = result.expect("should translate").0;
     assert!(
-        rust.contains("use crate::a::m;"),
+        rust.contains("use crate::app::a::m;"),
         "use path not the accessor name: {rust}"
     );
     assert!(
@@ -860,7 +869,7 @@ fn file_local_lazy_static_alias_indexes_via_get() {
     crate::translator::imports::clear_lazy_static_exports();
     let rust = result.expect("should translate").0;
     assert!(
-        rust.contains("use crate::a::m;"),
+        rust.contains("use crate::app::a::m;"),
         "use path not the accessor name: {rust}"
     );
     assert!(

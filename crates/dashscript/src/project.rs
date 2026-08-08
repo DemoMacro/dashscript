@@ -850,7 +850,11 @@ pub fn translate_sources(
         .to_string();
     let emit_name_map = compute_emit_name_map(&translator, src, base)?;
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
-    let mut mod_decls = String::new();
+    // Per-tier `mod` decls: local relative deps under app/, bare npm deps
+    // under third_party/. Each tier gets a synthesized mod.rs; the entry's
+    // crate root declares `mod app;` / `mod third_party;`.
+    let mut app_mods = String::new();
+    let mut third_party_mods = String::new();
     // The inline `__DsUnion…` enums the entry already emits at the crate root
     // (it lowers as `BinEntry`). A dependency may name a union the entry never
     // uses directly — its module references `crate::__DsUnion…`, but no
@@ -927,13 +931,22 @@ pub fn translate_sources(
             .get(&canon)
             .cloned()
             .unwrap_or_else(|| dep_mod_name(&source, &module, &member));
+        // Local relative deps go under app/, bare npm deps under third_party/
+        // (workspace members are path deps, already skipped above).
+        let is_local = source.starts_with('.');
+        let dir = project_dir
+            .join("src")
+            .join(if is_local { "app" } else { "third_party" });
+        fs::create_dir_all(&dir)?;
         fs::write(
-            project_dir
-                .join("src")
-                .join(format!("{}.rs", mod_file_stem(&emit_name))),
+            dir.join(format!("{}.rs", mod_file_stem(&emit_name))),
             dep_rust,
         )?;
-        mod_decls.push_str(&format!("mod {emit_name};\n"));
+        if is_local {
+            app_mods.push_str(&format!("mod {emit_name};\n"));
+        } else {
+            third_party_mods.push_str(&format!("mod {emit_name};\n"));
+        }
         let dep_src = fs::read_to_string(&dep_path)
             .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
         for (name, text) in translator.union_enum_items(&dep_src) {
@@ -963,10 +976,25 @@ pub fn translate_sources(
         }
     }
 
-    let main = if mod_decls.is_empty() && extra_enum_text.is_empty() {
+    // Each tier's deps are declared in a synthesized mod.rs; the entry's crate
+    // root declares the tiers it uses (plus any hoisted union enums).
+    let mut root_decls = String::new();
+    if !app_mods.is_empty() {
+        let app_dir = project_dir.join("src").join("app");
+        fs::create_dir_all(&app_dir)?;
+        fs::write(app_dir.join("mod.rs"), &app_mods)?;
+        root_decls.push_str("mod app;\n");
+    }
+    if !third_party_mods.is_empty() {
+        let tp_dir = project_dir.join("src").join("third_party");
+        fs::create_dir_all(&tp_dir)?;
+        fs::write(tp_dir.join("mod.rs"), &third_party_mods)?;
+        root_decls.push_str("mod third_party;\n");
+    }
+    let main = if root_decls.is_empty() && extra_enum_text.is_empty() {
         rust
     } else {
-        format!("{extra_enum_text}{mod_decls}\n{rust}")
+        format!("{extra_enum_text}{root_decls}\n{rust}")
     };
     fs::write(project_dir.join("src").join("main.rs"), main)?;
     Ok(deps)
@@ -1124,7 +1152,9 @@ fn collect_emit_overrides(
         // another barrel (no collision) keeps its bare name and needs no
         // override.
         if emit_name != &imp.module {
-            out.insert(imp.source, emit_name.clone());
+            // Local deps live under app/, so the override path carries the
+            // app:: prefix mod_use_path expects.
+            out.insert(imp.source, format!("app::{emit_name}"));
         }
     }
     out
@@ -1337,14 +1367,21 @@ fn translate_one_with_mods(
         let spec = ds_resolve_specifier(&entry_spec, &imp.source);
         let dep_rust = translate_dep(translator, &dep_path, kind, &spec, None, deps)?;
         flat_deps.push(EmitFile {
-            rel_path: imp.module.clone(),
+            rel_path: format!("third_party/{}", imp.module),
             content: dep_rust,
             is_barrel: false,
             is_root_entry: false,
         });
     }
+    let base_rel = rel_emit_path(ds, root);
     let main = EmitFile {
-        rel_path: rel_emit_path(ds, root),
+        // Root entry stays at the src/ root; a non-entry local file goes under
+        // app/, matching the emit_rel map resolve_emit_paths built.
+        rel_path: if is_root_entry {
+            base_rel
+        } else {
+            format!("app/{base_rel}")
+        },
         content: rust,
         is_barrel: is_barrel_index(ds, root),
         is_root_entry,
@@ -1446,9 +1483,10 @@ pub fn translate_project(
     let _serde_guard = SerdeGuard;
 
     // Phase A: resolve each walk-TS file to its emit rel-path, preserving the
-    // source directory tree (an `__ds_defn` suffix breaks the one collision a
-    // tree cannot — a file whose stem equals its barrel directory's name).
-    let resolved = resolve_emit_paths(&files, root);
+    // source directory tree under app/ (an `__ds_defn` suffix breaks the one
+    // collision a tree cannot — a file whose stem equals its barrel directory's
+    // name). Root entries stay at the src/ root.
+    let resolved = resolve_emit_paths(&files, root, &entry_paths);
     let emit_rel: std::collections::HashMap<String, (String, bool)> = resolved
         .iter()
         .map(|(f, rel, barrel)| (canon_string(f), (rel.clone(), *barrel)))
@@ -1753,7 +1791,7 @@ pub fn bin_lib_stems(bins: &[(String, String)], lib: Option<&str>) -> Vec<String
 /// Write the DashScript runtime module under `src/__ds/` and declare it at each
 /// crate root, when the translated sources reference it. Both runtime parts
 /// live under one `__ds/` directory — keeping a crate's `src/` split by code
-/// origin (runtime in `__ds/`, local code at the `src/` root, third-party deps
+/// origin (runtime in `__ds/`, local code in `app/`, third-party deps
 /// in `third_party/`):
 /// - `__ds/mod.rs` — static helper items (`number_to_string`, `array_set`,
 ///   `DsError`, …) a lowering reaches as `crate::__ds::X`.
@@ -2223,23 +2261,42 @@ fn split_last_seg(path: &str) -> Option<(String, String)> {
 
 /// Resolve each walk-TS file to its effective emit rel-path. The source
 /// directory tree is preserved (`drawingml/color/solid-fill.ts` →
-/// `drawingml/color/solid_fill`); the only collision a tree cannot disambiguate
-/// is a file whose stem equals its directory's name when that directory also
-/// has a barrel (`drawingml/locking/locking.ts` + `drawingml/locking/index.ts`
-/// would both occupy `src/drawingml/locking/` — a `.rs` file beside a `mod.rs`
-/// Rust refuses, E0761), so the file takes an `__ds_defn` suffix. Returns
-/// `(file, effective_rel_path, is_barrel)` per input file, in input order.
-fn resolve_emit_paths(files: &[PathBuf], root: &Path) -> Vec<(PathBuf, String, bool)> {
-    let mut entries: Vec<(PathBuf, String, bool)> = files
+/// `app/drawingml/color/solid_fill`); the only collision a tree cannot
+/// disambiguate is a file whose stem equals its directory's name when that
+/// directory also has a barrel (`drawingml/locking/locking.ts` +
+/// `drawingml/locking/index.ts` would both occupy `src/app/drawingml/locking/`
+/// — a `.rs` file beside a `mod.rs` Rust refuses, E0761), so the file takes an
+/// `__ds_defn` suffix. Local non-entry code is rooted under `app/` (three-way
+/// `src/` isolation: runtime `__ds/`, third-party deps `third_party/`, local
+/// code `app/`); a `bin`/`lib` root entry stays at the `src/` root — its
+/// `[[bin]]`/`[lib]` path and `apply_runtime_deps`'s `mod __ds;` injection both
+/// assume `src/{stem}.rs`. Returns `(file, effective_rel_path, is_barrel)` per
+/// input file, in input order.
+fn resolve_emit_paths(
+    files: &[PathBuf],
+    root: &Path,
+    root_entries: &std::collections::HashSet<PathBuf>,
+) -> Vec<(PathBuf, String, bool)> {
+    let mut out: Vec<(PathBuf, String, bool)> = files
         .iter()
-        .map(|f| (f.clone(), rel_emit_path(f, root), is_barrel_index(f, root)))
+        .map(|f| {
+            let mut rel = rel_emit_path(f, root);
+            // Root entry stays at the src/ root; every other local file goes
+            // under app/. Canonicalize with the same fallback as the entry-set
+            // builder so a canonicalize failure stays symmetric on both sides.
+            let canon = f.canonicalize().unwrap_or_else(|_| f.clone());
+            if !root_entries.contains(&canon) {
+                rel = format!("app/{rel}");
+            }
+            (f.clone(), rel, is_barrel_index(f, root))
+        })
         .collect();
-    let barrel_dirs: std::collections::HashSet<String> = entries
+    let barrel_dirs: std::collections::HashSet<String> = out
         .iter()
         .filter(|(_, _, b)| *b)
         .map(|(_, r, _)| r.clone())
         .collect();
-    for (_, rel, barrel) in entries.iter_mut() {
+    for (_, rel, barrel) in out.iter_mut() {
         if *barrel {
             continue;
         }
@@ -2252,7 +2309,7 @@ fn resolve_emit_paths(files: &[PathBuf], root: &Path) -> Vec<(PathBuf, String, b
             }
         }
     }
-    entries
+    out
 }
 
 /// A translated file's emit target under member-crate tree emit.
@@ -2468,6 +2525,24 @@ mod tests {
         read_package(&root.join("package.json")).unwrap()
     }
 
+    /// Recursively collect every `*.rs` file under `dir`. The emit-tree layout
+    /// (`app/`, `third_party/`, `__ds/`, synthesized `mod.rs`) puts dep
+    /// artifacts in subdirectories, so tests that scan `src/` for a marker
+    /// must walk the whole tree, not just the top level.
+    fn collect_rust_files(dir: &Path, out: &mut Vec<PathBuf>) {
+        let Ok(entries) = fs::read_dir(dir) else {
+            return;
+        };
+        for entry in entries.flatten() {
+            let p = entry.path();
+            if p.is_dir() {
+                collect_rust_files(&p, out);
+            } else if p.extension().and_then(|e| e.to_str()) == Some("rs") {
+                out.push(p);
+            }
+        }
+    }
+
     /// Create a directory symlink, cross-platform. Used by the workspace-dep
     /// tests to model a pnpm/npm `node_modules/<pkg>` entry pointing at a
     /// sibling package. Returns an error where symlinks are unsupported or
@@ -2517,8 +2592,8 @@ mod tests {
     #[test]
     fn translate_project_preserves_nested_same_stem() {
         // The source directory tree is preserved, so two files sharing a stem in
-        // different directories no longer collide: dup.ts → src/dup.rs and
-        // sub/dup.ts → src/sub/dup.rs (with src/sub/mod.rs declaring it).
+        // different directories no longer collide: dup.ts → src/app/dup.rs and
+        // sub/dup.ts → src/app/sub/dup.rs (with src/app/sub/mod.rs declaring it).
         let tmp = tempfile::tempdir().unwrap();
         let root = tmp.path();
         fs::create_dir_all(root.join("sub")).unwrap();
@@ -2534,16 +2609,24 @@ mod tests {
         let out = tmp.path().join("out");
         translate_project(root, &package_at(root), &out, None).unwrap();
         assert!(
-            out.join("src").join("dup.rs").exists(),
-            "src/dup.rs missing"
+            out.join("src").join("app").join("dup.rs").exists(),
+            "src/app/dup.rs missing"
         );
         assert!(
-            out.join("src").join("sub").join("dup.rs").exists(),
-            "src/sub/dup.rs missing"
+            out.join("src")
+                .join("app")
+                .join("sub")
+                .join("dup.rs")
+                .exists(),
+            "src/app/sub/dup.rs missing"
         );
         assert!(
-            out.join("src").join("sub").join("mod.rs").exists(),
-            "src/sub/mod.rs missing"
+            out.join("src")
+                .join("app")
+                .join("sub")
+                .join("mod.rs")
+                .exists(),
+            "src/app/sub/mod.rs missing"
         );
     }
 
@@ -2767,14 +2850,13 @@ mod tests {
         let main_path = root.join("main.ts");
         let src = fs::read_to_string(&main_path).unwrap();
         emit_cargo_project(&src, &main_path, &out).unwrap();
+        let mut files = Vec::new();
+        collect_rust_files(&out.join("src"), &mut files);
         let mut stub = String::new();
-        for entry in fs::read_dir(out.join("src")).unwrap() {
-            let p = entry.unwrap().path();
-            if p.extension().and_then(|e| e.to_str()) == Some("rs") {
-                let body = fs::read_to_string(&p).unwrap();
-                if body.contains("crate::__ds::engine::call_module_fn") {
-                    stub = body;
-                }
+        for p in files {
+            let body = fs::read_to_string(&p).unwrap();
+            if body.contains("crate::__ds::engine::call_module_fn") {
+                stub = body;
             }
         }
         assert!(stub.contains("pub fn f"), "stub fn emitted: {stub}");
@@ -2827,14 +2909,13 @@ mod tests {
         let main_path = root.join("main.ts");
         let src = fs::read_to_string(&main_path).unwrap();
         emit_cargo_project(&src, &main_path, &out).unwrap();
+        let mut files = Vec::new();
+        collect_rust_files(&out.join("src"), &mut files);
         let mut stub = String::new();
-        for entry in fs::read_dir(out.join("src")).unwrap() {
-            let p = entry.unwrap().path();
-            if p.extension().and_then(|e| e.to_str()) == Some("rs") {
-                let body = fs::read_to_string(&p).unwrap();
-                if body.contains("crate::__ds::engine::call_module_fn") {
-                    stub = body;
-                }
+        for p in files {
+            let body = fs::read_to_string(&p).unwrap();
+            if body.contains("crate::__ds::engine::call_module_fn") {
+                stub = body;
             }
         }
         assert!(stub.contains("pub fn bytesToHex"), "stub emitted: {stub}");
@@ -2879,14 +2960,13 @@ mod tests {
         let main_path = root.join("main.ts");
         let src = fs::read_to_string(&main_path).unwrap();
         emit_cargo_project(&src, &main_path, &out).unwrap();
+        let mut files = Vec::new();
+        collect_rust_files(&out.join("src"), &mut files);
         let mut stub = String::new();
-        for entry in fs::read_dir(out.join("src")).unwrap() {
-            let p = entry.unwrap().path();
-            if p.extension().and_then(|e| e.to_str()) == Some("rs") {
-                let body = fs::read_to_string(&p).unwrap();
-                if body.contains("crate::__ds::engine::call_module_fn") {
-                    stub = body;
-                }
+        for p in files {
+            let body = fs::read_to_string(&p).unwrap();
+            if body.contains("crate::__ds::engine::call_module_fn") {
+                stub = body;
             }
         }
         assert!(
@@ -3426,8 +3506,12 @@ mod tests {
         let out = tmp.path().join("out");
         translate_project(root, &package_at(root), &out, None).unwrap();
         assert!(
-            out.join("src").join("foo").join("mod.rs").exists(),
-            "barrel src/foo/mod.rs missing"
+            out.join("src")
+                .join("app")
+                .join("foo")
+                .join("mod.rs")
+                .exists(),
+            "barrel src/app/foo/mod.rs missing"
         );
         assert!(
             !out.join("src").join("index.rs").exists(),
@@ -3493,7 +3577,7 @@ mod tests {
         let out = tmp.path().join("out");
         translate_project(root, &package_at(root), &out, None).unwrap();
         let main_rs = fs::read_to_string(out.join("src").join("main.rs")).unwrap();
-        let util_rs = fs::read_to_string(out.join("src").join("util.rs")).unwrap();
+        let util_rs = fs::read_to_string(out.join("src").join("app").join("util.rs")).unwrap();
         assert!(
             main_rs.contains("fn main"),
             "bin entry missing fn main: {main_rs}"
@@ -3527,16 +3611,24 @@ mod tests {
         translate_project(root, &package_at(root), &out, None).unwrap();
         let main_rs = fs::read_to_string(out.join("src").join("main.rs")).unwrap();
         assert!(
-            main_rs.contains("crate::sub::util"),
-            "nested import should resolve to crate::sub::util, got: {main_rs}"
+            main_rs.contains("crate::app::sub::util"),
+            "nested import should resolve to crate::app::sub::util, got: {main_rs}"
         );
         assert!(
-            out.join("src").join("sub").join("util.rs").exists(),
-            "src/sub/util.rs missing"
+            out.join("src")
+                .join("app")
+                .join("sub")
+                .join("util.rs")
+                .exists(),
+            "src/app/sub/util.rs missing"
         );
         assert!(
-            out.join("src").join("sub").join("mod.rs").exists(),
-            "src/sub/mod.rs missing"
+            out.join("src")
+                .join("app")
+                .join("sub")
+                .join("mod.rs")
+                .exists(),
+            "src/app/sub/mod.rs missing"
         );
     }
 }
