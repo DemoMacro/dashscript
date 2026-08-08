@@ -712,7 +712,37 @@ pub fn translate_project(
     // Phase B: translate each file (no `mod` declarations — `emit_tree`
     // synthesizes those from the path tree), collecting emit files and the
     // per-importer path overrides that route nested imports to `crate::<tree>`.
-    let translator = Translator::new();
+    //
+    // Aggregate interface field types + optional field names across the
+    // member's files before translating, so each file sees imported
+    // interfaces' fields — a cross-file `obj?.field ?? d` (chain `and_then`),
+    // `for (const c of obj.field ?? [])` (flatten-iter), or `obj.field == v`
+    // (as_deref compare) needs the imported interface's field type/optional
+    // flag, but each file builds its own `TypeRegistry`. The lone-file path
+    // (`translate_sources`) does the equivalent via `collect_package_*`; a
+    // workspace member's files are already enumerated in `files`, so a
+    // per-file collect + merge covers the member's intra-package imports.
+    let collector = Translator::new();
+    let mut shared_fields: std::collections::HashMap<
+        String,
+        Vec<crate::translator::InterfaceField>,
+    > = std::collections::HashMap::new();
+    let mut shared_optionals: std::collections::HashMap<String, std::collections::HashSet<String>> =
+        std::collections::HashMap::new();
+    for ds in &files {
+        let Ok(src) = fs::read_to_string(ds) else {
+            continue;
+        };
+        for (name, fields) in collector.collect_fields(&src).unwrap_or_default() {
+            shared_fields.entry(name).or_insert_with(|| fields);
+        }
+        for (name, opts) in collector.collect_optionals(&src).unwrap_or_default() {
+            shared_optionals.entry(name).or_insert_with(|| opts);
+        }
+    }
+    let translator = collector
+        .with_extra_fields(shared_fields)
+        .with_extra_optionals(shared_optionals);
     let mut deps = RuntimeDeps::default();
     let mut emit_files: Vec<EmitFile> = Vec::new();
     for ds in &files {
