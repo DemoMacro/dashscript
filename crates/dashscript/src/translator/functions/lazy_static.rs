@@ -354,20 +354,23 @@ pub(in crate::translator) fn lazy_static_items(
 /// [`lazy_static_export_info`] (cross-file table).
 fn cell_type(d: &VariableDeclarator, init: &Expression, registry: &TypeRegistry) -> Type {
     if let Some(ta) = d.type_annotation.as_ref() {
-        types::translate_type(&ta.type_annotation)
+        resolve_infer_holes(types::translate_type(&ta.type_annotation), init)
     } else if let Expression::TSAsExpression(as_expr) = init {
         if is_const_assertion(&as_expr.type_annotation) {
             infer_init_type(&as_expr.expression, registry)
         } else {
-            types::translate_type(&as_expr.type_annotation)
+            resolve_infer_holes(
+                types::translate_type(&as_expr.type_annotation),
+                &as_expr.expression,
+            )
         }
     } else if let Expression::TSTypeAssertion(t) = init {
-        types::translate_type(&t.type_annotation)
+        resolve_infer_holes(types::translate_type(&t.type_annotation), &t.expression)
     } else if let Expression::TSSatisfiesExpression(s) = init {
         // `expr satisfies T`: the cell type is the satisfied type `T`; the init
         // translates as the inner `expr` (a runtime no-op — see
         // `translate_expr`). Matches the `is_typed_assertion` candidate above.
-        types::translate_type(&s.type_annotation)
+        resolve_infer_holes(types::translate_type(&s.type_annotation), &s.expression)
     } else if let Expression::Identifier(id) = init {
         // An alias of an imported lazy static (`const x = m;`): the cell type
         // is the aliased accessor's cell type, from the cross-file export table.
@@ -375,6 +378,80 @@ fn cell_type(d: &VariableDeclarator, init: &Expression, registry: &TypeRegistry)
             .unwrap_or_else(|| parse_quote!(_))
     } else {
         infer_init_type(init, registry)
+    }
+}
+
+/// Patch an annotation-derived cell type that lowered with an infer hole. A
+/// complex TS annotation (`readonly (keyof T & string)[]`) often has no static
+/// Rust lowering, so `translate_type` leaves a `_` placeholder (`Vec<_>`) —
+/// illegal in an item signature (E0121) and uninferrable on a `static`
+/// `OnceLock` (E0282). When the initializer is a uniform scalar array (the
+/// runtime shape that `keyof T & string` always is), fall back to the inferred
+/// `Vec<String>`/`Vec<f64>`. Non-scalar initializers (tuples, objects, mixed
+/// arrays) keep the annotated type — the fallback would guess wrong and the
+/// hole surfaces as a real diagnostic instead.
+fn resolve_infer_holes(ty: Type, init: &Expression) -> Type {
+    if type_has_infer(&ty) {
+        if let Expression::ArrayExpression(arr) = init {
+            if let Some(scalar) = scalar_array_type(arr) {
+                return scalar;
+            }
+        }
+    }
+    ty
+}
+
+/// Whether a `syn::Type` contains any `_` (infer) placeholder, anywhere in its
+/// generic arguments or references — `Vec<_>`, `HashMap<_, V>`, `&[_]`,
+/// `(A, _)`.
+fn type_has_infer(ty: &Type) -> bool {
+    match ty {
+        Type::Infer(_) => true,
+        Type::Path(p) => p.path.segments.iter().any(|seg| {
+            if let syn::PathArguments::AngleBracketed(ab) = &seg.arguments {
+                ab.args.iter().any(|arg| match arg {
+                    syn::GenericArgument::Type(t) => type_has_infer(t),
+                    syn::GenericArgument::AssocType(a) => type_has_infer(&a.ty),
+                    _ => false,
+                })
+            } else {
+                false
+            }
+        }),
+        Type::Reference(r) => type_has_infer(&r.elem),
+        Type::Tuple(t) => t.elems.iter().any(type_has_infer),
+        Type::Slice(s) => type_has_infer(&s.elem),
+        Type::Array(a) => type_has_infer(&a.elem),
+        Type::Group(g) => type_has_infer(&g.elem),
+        Type::Paren(pa) => type_has_infer(&pa.elem),
+        _ => false,
+    }
+}
+
+/// The cell type of a uniform scalar array initializer — `Vec<String>` when
+/// every element is a string literal, `Vec<f64>` when every element is a
+/// numeric literal; `None` for an empty, mixed, spread, or non-scalar array
+/// (those keep the annotated type).
+fn scalar_array_type(arr: &ArrayExpression) -> Option<Type> {
+    use oxc_ast::ast::ArrayExpressionElement;
+    if arr.elements.is_empty() {
+        return None;
+    }
+    let mut all_str = true;
+    let mut all_num = true;
+    for el in &arr.elements {
+        match el {
+            ArrayExpressionElement::StringLiteral(_) => all_num = false,
+            ArrayExpressionElement::NumericLiteral(_) => all_str = false,
+            _ => return None,
+        }
+    }
+    if all_str {
+        Some(parse_quote!(Vec<String>))
+    } else if all_num {
+        Some(parse_quote!(Vec<f64>))
+    } else {
+        None
     }
 }
 
