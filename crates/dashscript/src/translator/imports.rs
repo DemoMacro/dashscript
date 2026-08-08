@@ -48,6 +48,36 @@ pub(crate) fn clear_workspace_deps() {
 }
 
 thread_local! {
+    /// Bare specifiers of workspace members translated as independent crates
+    /// (cargo path deps) by `project::translate_project`. Unlike
+    /// [`WORKSPACE_DEPS`] — which routes a member or `.js` stub *merged into this
+    /// crate* as `crate::<mod>` (the lone-file merge model) — these are sibling
+    /// crates reached through the extern prelude, so a `use` names the crate
+    /// ident bare: `use ds_office_openSxml::X`. Set once per member before its
+    /// files translate, so every file emits the bare-extern path; cleared when
+    /// the member's translate ends.
+    static WORKSPACE_MEMBER_CRATES: std::cell::RefCell<std::collections::HashSet<String>> =
+        std::cell::RefCell::new(std::collections::HashSet::new());
+}
+
+/// Record the workspace members this member imports as independent extern
+/// crates (set once before the member's files translate), so [`mod_use_path`]
+/// routes them to a bare extern-crate `use`. See [`WORKSPACE_MEMBER_CRATES`].
+pub(crate) fn set_workspace_member_crates(deps: std::collections::HashSet<String>) {
+    WORKSPACE_MEMBER_CRATES.with(|c| {
+        let mut set = c.borrow_mut();
+        set.clear();
+        set.extend(deps);
+    });
+}
+
+/// Clear the member-crate set when a `translate_project` member run ends, so it
+/// does not leak into a later translate. See [`WORKSPACE_MEMBER_CRATES`].
+pub(crate) fn clear_workspace_member_crates() {
+    WORKSPACE_MEMBER_CRATES.with(|c| c.borrow_mut().clear());
+}
+
+thread_local! {
     /// Cross-file lazy-static exports visible to the file being translated:
     /// each export's accessor name (`snake(TS export name)` — the name the
     /// `OnceLock` accessor fn takes) mapped to its cell value type (the `T` in
@@ -330,9 +360,11 @@ pub(crate) fn module_ident(source: &str) -> Option<Ident> {
 }
 
 /// The `use` path for an import/export source, split by code origin: a local
-/// relative import → `crate::app::<mod>`; a workspace-member bare specifier →
-/// `crate::<mod>` (cargo path dep); a `cargo:` crate → bare `<mod>` (extern
-/// prelude); a bare npm specifier → `crate::third_party::<mod>`.
+/// relative import → `crate::app::<mod>`; a workspace-member crate (a sibling
+/// crate built independently by `translate_project`) → bare `<crate_ident>`
+/// (extern prelude); a merged in-crate dep (a `.js` stub a lone file pulls in)
+/// → `crate::<mod>`; a `cargo:` crate → bare `<mod>` (extern prelude); a bare
+/// npm specifier → `crate::third_party::<mod>`.
 pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
     if source.starts_with('.') {
         // Local relative import → rooted under `app/`. The override carries
@@ -351,9 +383,18 @@ pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
             return parse_quote!(crate::app::#prefixed);
         }
         parse_quote!(crate::app::#mod_ident)
+    } else if WORKSPACE_MEMBER_CRATES.with(|c| c.borrow().contains(source)) {
+        // A bare specifier resolving to a sibling workspace member translated
+        // as an independent crate (a cargo path dep built by
+        // `translate_project`) — reached bare through the extern prelude, so
+        // the `use` names the crate ident verbatim (`ds_office_openSxml`),
+        // matching the crate name / path-dep key / member cache dir.
+        parse_quote!(#mod_ident)
     } else if WORKSPACE_DEPS.with(|c| c.borrow().contains(source)) {
-        // A bare specifier resolving to a sibling workspace member is an
-        // independent crate (cargo path dep) — reached as `crate::<ident>`.
+        // A bare specifier merged *into this crate* as a `mod` (the lone-file
+        // path: a registry `.js` package degrades to a stub `mod`), reached as
+        // `crate::<mod>` from any submodule. Distinct from a workspace member
+        // crate above — that is a sibling crate, not a mod of this one.
         parse_quote!(crate::#mod_ident)
     } else if source.starts_with("cargo:") {
         // An extern crate (`cargo:serde`) — bare use via the extern prelude.
@@ -1010,6 +1051,34 @@ mod tests {
         clear_workspace_deps();
         // After clear, the specifier is no longer a workspace dep — it routes
         // as a bare npm dep under third_party/.
+        let path = mod_use_path("@scope/b", &ident);
+        assert_eq!(
+            path.segments.first().expect("segments").ident.to_string(),
+            "third_party"
+        );
+    }
+
+    #[test]
+    fn workspace_member_crate_resolves_as_bare_extern() {
+        clear_workspace_deps();
+        clear_workspace_member_crates();
+        let mut deps = std::collections::HashSet::new();
+        deps.insert("@scope/b".to_string());
+        set_workspace_member_crates(deps);
+        // A workspace member built as an independent crate (translate_project)
+        // is reached bare through the extern prelude — `ds_scopeSb`, not under
+        // crate:: or third_party::.
+        let ident = bare_module_ident("@scope/b");
+        assert_eq!(ident.to_string(), "ds_scopeSb");
+        let path = mod_use_path("@scope/b", &ident);
+        assert_eq!(path.segments.len(), 1);
+        assert_eq!(
+            path.segments.first().expect("segments").ident.to_string(),
+            "ds_scopeSb"
+        );
+        clear_workspace_member_crates();
+        // After clear, the specifier is no longer a member crate — routes as a
+        // bare npm dep under third_party/.
         let path = mod_use_path("@scope/b", &ident);
         assert_eq!(
             path.segments.first().expect("segments").ident.to_string(),

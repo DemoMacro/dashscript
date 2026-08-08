@@ -729,6 +729,13 @@ pub fn translate_project(
     > = std::collections::HashMap::new();
     let mut shared_optionals: std::collections::HashMap<String, std::collections::HashSet<String>> =
         std::collections::HashMap::new();
+    // Workspace members this member imports are independent sibling crates
+    // (cargo path deps), so their bare specifier must lower to a bare extern
+    // `use` (`ds_office_openSxml::X`) — not a `crate::…` mod (that is the
+    // lone-file merge model) nor a `third_party::` path (an npm dep). Collect
+    // the specifiers across the member's files before translating so every
+    // file's import lowering routes them through the extern prelude.
+    let mut member_crates: std::collections::HashSet<String> = std::collections::HashSet::new();
     for ds in &files {
         let Ok(src) = fs::read_to_string(ds) else {
             continue;
@@ -739,10 +746,24 @@ pub fn translate_project(
         for (name, opts) in collector.collect_optionals(&src).unwrap_or_default() {
             shared_optionals.entry(name).or_insert_with(|| opts);
         }
+        let base = ds.parent().unwrap_or_else(|| Path::new(""));
+        for imp in collector.imports(&src) {
+            if workspace_member_crate(base, &imp.source).is_some() {
+                member_crates.insert(imp.source);
+            }
+        }
     }
     let translator = collector
         .with_extra_fields(shared_fields)
         .with_extra_optionals(shared_optionals);
+    crate::translator::imports::set_workspace_member_crates(member_crates);
+    struct MemberCrateGuard;
+    impl Drop for MemberCrateGuard {
+        fn drop(&mut self) {
+            crate::translator::imports::clear_workspace_member_crates();
+        }
+    }
+    let _member_crate_guard = MemberCrateGuard;
     let mut deps = RuntimeDeps::default();
     let mut emit_files: Vec<EmitFile> = Vec::new();
     for ds in &files {
