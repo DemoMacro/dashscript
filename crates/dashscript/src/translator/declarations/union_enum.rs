@@ -311,18 +311,28 @@ fn scalar_variant(ty: &TSType) -> Option<syn::Variant> {
 /// For an all-scalar-keyword union, the `(enum name, sorted variants)` — so
 /// the same union spelled in any member order (`string | number` vs `number |
 /// string`) yields one shared enum. The name is `__DsUnion` + the sorted
-/// member tags (e.g. `__DsUnionNumStrUndef`); the variants are sorted to
-/// match, so two references to the same shape cannot produce two enum defs
-/// with different variant orders. `None` when any member is not a scalar
-/// keyword, so a mixed union still falls back. The single source of truth for
-/// an inline union's enum name — `types::union_type` calls this to name the
-/// type, and the registry pre-pass calls it to emit the definition.
+/// member tags (e.g. `__DsUnionNumStr`); the variants are sorted to match, so
+/// two references to the same shape cannot produce two enum defs with
+/// different variant orders. `null`/`undefined` members are skipped — they
+/// lower to an `Option<…>` outer in `types::union_type` (the `nullable` flag),
+/// matching `inline_mixed_union_enum`, so a nullable multi-way union
+/// (`string | number | null`) yields the same enum as its non-null shape plus
+/// an `Option<>` wrapper — identical to an optional interface field
+/// (`text?: string | number` → `Option<__DsUnionNumStr>`). `None` when any
+/// non-null member is not a scalar keyword (a mixed union falls back) or when
+/// every member is null/undef. The single source of truth for an inline
+/// union's enum name — `types::union_type` calls this to name the type, and
+/// the registry pre-pass calls it to emit the definition.
 pub fn scalar_union_enum(u: &TSUnionType) -> Option<(Ident, Vec<syn::Variant>)> {
     let mut tagged: Vec<(String, syn::Variant)> = u
         .types
         .iter()
+        .filter(|t| !matches!(t, TSType::TSNullKeyword(_) | TSType::TSUndefinedKeyword(_)))
         .map(|t| Some((scalar_tag(t)?.to_string(), scalar_variant(t)?)))
         .collect::<Option<_>>()?;
+    if tagged.is_empty() {
+        return None;
+    }
     tagged.sort_by(|a, b| a.0.cmp(&b.0));
     tagged.dedup_by(|a, b| a.0 == b.0);
     let stem: String = tagged.iter().map(|(t, _)| t.as_str()).collect();

@@ -604,11 +604,12 @@ fn translates_record_to_hashmap_literal() {
 
 #[test]
 fn boxes_record_literal_values_into_union_enum() {
-    // A top-level `Record<K, scalar-union>` literal (the implicit-`main` shape a
-    // script uses) boxes each value into the matching variant of the generated
-    // enum, so the map matches a `HashMap<K, Enum>` parameter type. Mirrors the
-    // `attrs({ id, name, hidden })` XML-attribute shape that motivated scalar
-    // unions.
+    // A top-level `Record<K, nullable-scalar-union>` literal (the implicit-`main`
+    // shape a script uses): a `| undefined` member makes the union nullable, so
+    // the value type is `Option<Enum>` — each scalar value boxes into
+    // `Some(Enum::Variant)`, and `undefined` maps to `None`. Mirrors the
+    // `attrs({ id, name, hidden })` XML-attribute shape (an optional field)
+    // that motivated scalar unions.
     let src = "const r: Record<string, string | number | boolean | undefined> = { id: 1, name: \"foo\", ok: true, hidden: undefined };";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
@@ -624,8 +625,8 @@ fn boxes_record_literal_values_into_union_enum() {
         "boolean value boxes into Bool: got:\n{rust}"
     );
     assert!(
-        rust.contains("::Undef"),
-        "undefined value boxes into Undef: got:\n{rust}"
+        rust.contains("Option::None"),
+        "undefined value maps to None (nullable union): got:\n{rust}"
     );
 }
 

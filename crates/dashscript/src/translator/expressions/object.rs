@@ -152,13 +152,28 @@ fn missing_optionals(
 /// into its variant so the map matches a `HashMap<K, Enum>` parameter type.
 fn hashmap_literal(obj: &ObjectExpression, val_ty: Option<&syn::Path>, ctx: &Ctx<'_>) -> Expr {
     // A `Record<K, Union>` whose value type is a registered scalar-union enum
-    // boxes each literal value into its variant (`{id: 1}` → `Enum::Num(1.0)`);
-    // any other value type leaves the value unboxed (the common `HashMap<K, V>`
-    // case).
-    let union_ident = val_ty
-        .and_then(|p| p.segments.last())
-        .map(|s| s.ident.clone())
-        .filter(|id| ctx.registry().union_enums.contains_key(id));
+    // boxes each literal value into its variant (`{id: 1}` → `Enum::Num(1.0)`).
+    // A `Record<K, Option<Union>>` (a nullable multi-way union, matching an
+    // optional `text?: string | number | boolean` field) additionally wraps
+    // each value in `Some(..)` and maps `null`/`undefined` to `None`; any other
+    // value type leaves the value unboxed (the common `HashMap<K, V>` case).
+    let (union_ident, nullable): (Option<Ident>, bool) =
+        match val_ty.and_then(|p| p.segments.last()) {
+            // `Option<Union>` — strip to the inner enum name.
+            Some(seg) if seg.ident == "Option" => {
+                let id = val_ty
+                    .and_then(super::option_inner_last_ident)
+                    .map(|n| Ident::new(&n, proc_macro2::Span::call_site()));
+                match id {
+                    Some(id) if ctx.registry().union_enums.contains_key(&id) => (Some(id), true),
+                    _ => (None, false),
+                }
+            }
+            Some(seg) if ctx.registry().union_enums.contains_key(&seg.ident) => {
+                (Some(seg.ident.clone()), false)
+            }
+            _ => (None, false),
+        };
     let entries: Vec<Expr> = obj
         .properties
         .iter()
@@ -167,7 +182,7 @@ fn hashmap_literal(obj: &ObjectExpression, val_ty: Option<&syn::Path>, ctx: &Ctx
                 return None;
             };
             let value = match &union_ident {
-                Some(e) => box_union_value(&op.value, e, ctx),
+                Some(e) => box_union_value(&op.value, e, nullable, ctx),
                 None => array_elem_expr(&op.value, ctx),
             };
             let key = if op.computed {
@@ -214,28 +229,42 @@ fn hashmap_value_path(path: &syn::Path) -> Option<syn::Path> {
 
 /// Box a literal value into the matching variant of a scalar-union enum:
 /// `"foo"` → `Enum::Str("foo".to_string())`, `1` → `Enum::Num(1.0)`, `true` →
-/// `Enum::Bool(true)`, `undefined` → `Enum::Undef`, `null` → `Enum::Null`. A
-/// non-literal value (a variable, a call) is left as-is — boxing it needs a
-/// runtime discriminant and is out of scope; cargo check surfaces the mismatch.
-fn box_union_value(value: &Expression, enum_ident: &Ident, ctx: &Ctx<'_>) -> Expr {
-    match value {
-        Expression::StringLiteral(s) => {
-            let v = s.value.to_string();
-            parse_quote!(crate::#enum_ident::Str(#v.to_string()))
+/// `Enum::Bool(true)`. When `nullable`, the value type is `Option<Enum>` (a
+/// nullable multi-way union), so each variant is wrapped in `Some(..)` and
+/// `null`/`undefined` map to `None`. A non-literal value (a variable, a call)
+/// is left as-is — boxing it needs a runtime discriminant and is out of scope;
+/// cargo check surfaces the mismatch.
+fn box_union_value(value: &Expression, enum_ident: &Ident, nullable: bool, ctx: &Ctx<'_>) -> Expr {
+    let Some(item) = ctx.registry().union_enums.get(enum_ident) else {
+        return super::translate_expr(value, ctx);
+    };
+    let has = |name: &str| item.variants.iter().any(|v| v.ident == name);
+    let variant = match value {
+        Expression::StringLiteral(s) if has("Str") => {
+            let v = super::literals::string_expr(s);
+            parse_quote!(crate::#enum_ident::Str(#v))
         }
-        Expression::NumericLiteral(n) => {
+        Expression::NumericLiteral(n) if has("Num") => {
             let v = super::literals::numeric_expr(n.value);
             parse_quote!(crate::#enum_ident::Num(#v))
         }
-        Expression::BooleanLiteral(b) => {
+        Expression::BooleanLiteral(b) if has("Bool") => {
             let v = b.value;
             parse_quote!(crate::#enum_ident::Bool(#v))
         }
-        Expression::Identifier(id) if id.name.as_str() == "undefined" => {
-            parse_quote!(crate::#enum_ident::Undef)
+        // `Option<Enum>`: `null`/`undefined` is the absent variant.
+        Expression::Identifier(id) if nullable && id.name.as_str() == "undefined" => {
+            return parse_quote!(::core::option::Option::None);
         }
-        Expression::NullLiteral(_) => parse_quote!(crate::#enum_ident::Null),
-        _ => super::translate_expr(value, ctx),
+        Expression::NullLiteral(_) if nullable => {
+            return parse_quote!(::core::option::Option::None);
+        }
+        _ => return super::translate_expr(value, ctx),
+    };
+    if nullable {
+        parse_quote!(::core::option::Option::Some(#variant))
+    } else {
+        variant
     }
 }
 

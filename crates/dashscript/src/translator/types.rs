@@ -560,8 +560,9 @@ fn reference_type(r: &TSTypeReference) -> Type {
 }
 
 /// `T | null` / `T | undefined` → `Option<T>` (one non-null member); a real
-/// multi-member union (`A | B`) maps to an `enum` later, so it falls back to
-/// `_` here and surfaces as a `cargo check` error until then.
+/// multi-member union (`A | B`) maps to a generated `__DsUnion…` enum, with
+/// an `Option<>` outer when the union is nullable (`A | B | null`) — matching
+/// an optional interface field (`text?: A | B` → `Option<__DsUnionAB>`).
 fn union_type(u: &TSUnionType) -> Type {
     let mut non_null: Vec<&TSType> = Vec::new();
     let mut nullable = false;
@@ -584,13 +585,27 @@ fn union_type(u: &TSUnionType) -> Type {
         // `crate::`-prefixed so the enum resolves at the crate root whether the
         // file is a lone entry (the enum lives in its own crate root) or a
         // project module (the entry emits the enum; modules reference it). A
-        // bare name would name a distinct type per module (E0308).
-        return parse_quote!(crate::#name);
+        // bare name would name a distinct type per module (E0308). `null`/
+        // `undefined` members were stripped by `scalar_union_enum`, so a
+        // nullable union wraps the enum in `Option<>` — matching an optional
+        // interface field.
+        let inner = parse_quote!(crate::#name);
+        return if nullable {
+            parse_quote!(Option<#inner>)
+        } else {
+            inner
+        };
     }
     // A mixed union (`boolean | string[]`, `string | { … }`) — each member
-    // independently lowers to a variant. Same `crate::` prefix rationale.
+    // independently lowers to a variant. Same `crate::` prefix + nullable
+    // `Option<>` wrap rationale as the scalar branch above.
     if let Some((name, _, _)) = super::declarations::inline_mixed_union_enum(u) {
-        return parse_quote!(crate::#name);
+        let inner = parse_quote!(crate::#name);
+        return if nullable {
+            parse_quote!(Option<#inner>)
+        } else {
+            inner
+        };
     }
     parse_quote!(_)
 }

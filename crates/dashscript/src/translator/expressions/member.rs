@@ -9,6 +9,7 @@ use super::super::builtins;
 use super::super::context::Ctx;
 use super::super::types;
 use super::is_hashset;
+use super::option_inner_last_ident;
 use super::translate_expr;
 use super::{is_hashmap, is_vec_u8};
 
@@ -87,24 +88,6 @@ pub(super) fn static_member_is_optional_field(
     };
     ctx.struct_optionals(&seg.ident.to_string())
         .is_some_and(|s| s.contains(field.to_string().as_str()))
-}
-
-/// The last path segment inside an `Option<…>` type path (`Option<X>` → `X`),
-/// when the path is a single `Option` segment with one generic type argument.
-fn option_inner_last_ident(path: &syn::Path) -> Option<String> {
-    let seg = path.segments.last()?;
-    if seg.ident != "Option" {
-        return None;
-    }
-    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
-        return None;
-    };
-    args.args.iter().find_map(|arg| match arg {
-        syn::GenericArgument::Type(syn::Type::Path(tp)) => {
-            tp.path.segments.last().map(|s| s.ident.to_string())
-        }
-        _ => None,
-    })
 }
 
 /// `p.x` → field access. (A `console.log` callee is intercepted earlier.)
