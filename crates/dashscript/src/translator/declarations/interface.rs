@@ -1,4 +1,7 @@
-use oxc_ast::ast::{TSInterfaceDeclaration, TSSignature, TSType, TSTypeLiteral, TSTypeName};
+use oxc_ast::ast::{
+    TSInterfaceDeclaration, TSMethodSignature, TSPropertySignature, TSSignature, TSType,
+    TSTypeLiteral, TSTypeName, TSTypeParameterDeclaration,
+};
 use proc_macro2::TokenStream;
 use quote::{format_ident, quote};
 use std::collections::HashSet;
@@ -71,10 +74,41 @@ pub fn translate_interface(iface: &TSInterfaceDeclaration, registry: &TypeRegist
         fields.push(quote!(pub #key: #ty,));
     }
     let mut items = anon;
+    let generics = interface_generics(&iface.type_parameters);
     items.push(Item::Struct(
-        parse_quote! { #[derive(Clone, Debug, PartialEq)] struct #name { #(#fields)* } },
+        parse_quote! { #[derive(Clone, Debug, PartialEq)] struct #name #generics { #(#fields)* } },
     ));
     items
+}
+
+/// `<T, U = V>` for a generic interface — the param idents plus any default
+/// type, so a use that omits a defaulted param still resolves
+/// (`CustomDescriptor<ChartSpaceOptions>` against
+/// `interface CustomDescriptor<TInput, Ctx = WriteContext, TOutput = TInput>`).
+/// Empty for a non-generic interface. Constraints (`T extends X`) are dropped
+/// (no `where` clause); the `#[derive(Clone, Debug, PartialEq)]` macros add
+/// the matching `T:` bounds automatically.
+fn interface_generics(
+    tp: &Option<oxc_allocator::Box<'_, TSTypeParameterDeclaration>>,
+) -> TokenStream {
+    let Some(tp) = tp.as_deref() else {
+        return TokenStream::new();
+    };
+    let params: Vec<TokenStream> = tp
+        .params
+        .iter()
+        .map(|p| {
+            let name = bindings::type_ident(&p.name.name);
+            match &p.default {
+                Some(default) => {
+                    let default_ty = types::translate_type(default);
+                    quote!(#name = #default_ty)
+                }
+                None => quote!(#name),
+            }
+        })
+        .collect();
+    quote!(<#(#params),*>)
 }
 
 /// Recursively collect the own fields of every interface `name` extends
@@ -143,20 +177,34 @@ pub(in crate::translator) fn index_signature_type(lit: &TSTypeLiteral) -> Option
     Some(parse_quote!(::std::collections::HashMap<String, #val>))
 }
 
-/// One struct field from a property signature: `pub name: Type,`. An inline-
-/// object type (`{ ... }`) lowers to a named `__Ds<parent><Field>` struct
-/// pushed into `anon` (emitted before the owning struct). A direct self-
-/// reference (`parent?: Element` on `interface Element`) wraps in `Box` so the
-/// struct has finite size; an array self-reference (`elements?: Element[]`)
-/// does not — `Vec` is already heap-allocated.
+/// One struct field from a property or method signature: `pub name: Type,`.
+/// A property (`field: Type`) maps to a data field; a method (`m(a: A): R`)
+/// maps to a function-typed field (`pub m: fn(A) -> R`) — an interface method
+/// carries no body, so the field is a bare `fn` pointer a concrete object
+/// supplies. An inline-object type (`declaration?: { attributes?: X }`) lowers
+/// to a named `__Ds<Interface><Field>` struct pushed into `anon` (emitted
+/// before the owning struct). A direct self-reference (`parent?: Element`)
+/// wraps in `Box` so the struct has finite size; an array self-reference
+/// (`elements?: Element[]`) does not — `Vec` is already heap-allocated.
 pub(super) fn struct_field(
     sig: &TSSignature,
     parent: &str,
     anon: &mut Vec<Item>,
 ) -> Option<TokenStream> {
-    let TSSignature::TSPropertySignature(ps) = sig else {
-        return None;
-    };
+    match sig {
+        TSSignature::TSPropertySignature(ps) => property_field(ps, parent, anon),
+        TSSignature::TSMethodSignature(ms) => method_field(ms),
+        _ => None,
+    }
+}
+
+/// A property signature (`field: Type`) → `pub field: Type,` — the inline-
+/// object, self-reference, and optional handling of the data-field path.
+fn property_field(
+    ps: &TSPropertySignature,
+    parent: &str,
+    anon: &mut Vec<Item>,
+) -> Option<TokenStream> {
     let key = bindings::property_key_name(&ps.key)?;
     let ta = ps.type_annotation.as_ref()?;
     let field_name = key.to_string();
@@ -173,6 +221,31 @@ pub(super) fn struct_field(
         ty
     };
     Some(quote!(pub #key: #ty,))
+}
+
+/// A method signature (`stringify(value: TInput, ctx: Ctx): string`) → a
+/// function-typed field (`pub stringify: fn(TInput, Ctx) -> String`). A TS
+/// interface method carries no body, so the field is a bare `fn` pointer; a
+/// concrete object literal provides the callable. Param types emit in order
+/// (names dropped — a Rust `fn` type names only types), so the type params the
+/// method names land in the field type and the struct uses its generics.
+fn method_field(ms: &TSMethodSignature) -> Option<TokenStream> {
+    let key = bindings::property_key_name(&ms.key)?;
+    let params: Vec<Type> = ms
+        .params
+        .items
+        .iter()
+        .filter_map(|p| {
+            let ta = p.type_annotation.as_deref()?;
+            Some(types::translate_type(&ta.type_annotation))
+        })
+        .collect();
+    let ret: Type = ms
+        .return_type
+        .as_ref()
+        .map(|t| types::translate_type(&t.type_annotation))
+        .unwrap_or_else(|| parse_quote!(()));
+    Some(quote!(pub #key: fn(#(#params),*) -> #ret,))
 }
 
 /// A field's value type. An inline-object (`{ ... }`) becomes a named anon
