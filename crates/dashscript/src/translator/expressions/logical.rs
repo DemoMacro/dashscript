@@ -109,8 +109,16 @@ pub(super) fn logical_expr(log: &LogicalExpression, ctx: &Ctx<'_>) -> Expr {
 /// chain result, and a bare name whose type went unrecorded (e.g. `let x = cond
 /// ? v : undefined`, whose inferred Option type is not in the locals table).
 fn coalesce_expr(left: &Expression, right: &Expression, ctx: &Ctx<'_>) -> Expr {
-    let left_val = translate_expr(left, ctx);
     let right_val = translate_expr(right, ctx);
+    // `m[k] ?? default` for a HashMap local: the index is already an `Option`
+    // (`.get().cloned()`), so coalesce directly instead of double-unwrapping the
+    // indexed value (`computed_member_impl` emits `.unwrap()` for `m[k]`).
+    if let Expression::ComputedMemberExpression(cm) = left {
+        if let Some(expr) = super::member::hashmap_coalesce(cm, &right_val, ctx) {
+            return expr;
+        }
+    }
+    let left_val = translate_expr(left, ctx);
     parse_quote!(#left_val.unwrap_or_else(|| #right_val))
 }
 

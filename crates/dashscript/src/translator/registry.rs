@@ -352,7 +352,8 @@ fn register_function(func: &Function, names: &NameTable, registry: &mut TypeRegi
         name,
         FnSignature {
             type_params: generic_param_names(func.type_parameters.as_deref()),
-            return_type: func.return_type.as_deref().and_then(return_type_of),
+            return_type: super::functions::closure_object::factory_return_type(func)
+                .or_else(|| func.return_type.as_deref().and_then(return_type_of)),
             source_crate: None,
         },
     );

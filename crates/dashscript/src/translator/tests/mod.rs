@@ -5,6 +5,7 @@ mod check;
 mod cjs;
 mod classes;
 mod clone_move;
+mod closure_object;
 mod collections;
 mod console;
 mod control_flow;

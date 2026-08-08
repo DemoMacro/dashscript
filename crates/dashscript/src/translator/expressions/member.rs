@@ -534,6 +534,24 @@ fn computed_member_impl(cm: &ComputedMemberExpression, ctx: &Ctx<'_>, borrow: bo
     }
 }
 
+/// `m[k] ?? default` for a HashMap local `m`: the index's `.get().cloned()` is
+/// already an `Option`, so coalesce directly to `unwrap_or_else` instead of the
+/// indexed `.unwrap()` ([`computed_member_impl`] assumes the key exists, which
+/// would double-unwrap). `None` for a non-HashMap index.
+pub(in crate::translator) fn hashmap_coalesce(
+    cm: &ComputedMemberExpression,
+    right: &Expr,
+    ctx: &Ctx<'_>,
+) -> Option<Expr> {
+    if !is_hashmap_local(&cm.object, ctx) {
+        return None;
+    }
+    let obj = translate_expr(&cm.object, ctx);
+    let key = index_key(&cm.expression, ctx);
+    let access = hashmap_access_method(&cm.object, ctx);
+    Some(parse_quote!(#obj.get(#key).#access().unwrap_or_else(|| #right)))
+}
+
 /// A `usize`-typed index for `arr[expr]`. A bitwise index (`i & mask`) emits
 /// its masked result directly to `usize`, skipping the `f64` round-trip the
 /// number model adds between `bitwise_expr` and the index cast. That hop both
@@ -810,7 +828,22 @@ fn receiver_class_name(expr: &Expression, ctx: &Ctx<'_>) -> Option<String> {
 
 /// True when `expr` is a local whose type is a `HashMap`, or a `this.<field>`
 /// receiver inside a class method whose instance field type is a `HashMap`.
+/// Strip type assertions (`(x as T)`, `(x!)`, `<T>x`) so a member access on an
+/// asserted expression reads the underlying local's type — `(m as Record<…>)[k]`
+/// indexes `m` the same as `m[k]`. A TS assertion is a type-level no-op at
+/// runtime, so the indexed value's static type is the inner expression's.
+fn strip_type_assertion<'a>(expr: &'a Expression<'a>) -> &'a Expression<'a> {
+    match expr {
+        Expression::TSAsExpression(e) => strip_type_assertion(&e.expression),
+        Expression::TSNonNullExpression(e) => strip_type_assertion(&e.expression),
+        Expression::TSTypeAssertion(e) => strip_type_assertion(&e.expression),
+        Expression::ParenthesizedExpression(e) => strip_type_assertion(&e.expression),
+        _ => expr,
+    }
+}
+
 pub(in crate::translator) fn is_hashmap_local(expr: &Expression, ctx: &Ctx<'_>) -> bool {
+    let expr = strip_type_assertion(expr);
     if let Expression::Identifier(id) = expr {
         let name = bindings::snake(&id.name).to_string();
         if ctx.local_type(&name).is_some_and(is_hashmap) {

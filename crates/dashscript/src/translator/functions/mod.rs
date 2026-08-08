@@ -4,6 +4,7 @@
 //! destructuring patterns in [`destructure`]; this module holds the function
 //! skeleton (params, body, return type) and the statement dispatcher.
 
+pub(in crate::translator) mod closure_object;
 mod control_flow;
 mod destructure;
 mod engine;
@@ -176,9 +177,7 @@ pub fn translate_statement(
     names: &NameTable<'_>,
 ) -> Vec<syn::Item> {
     match stmt {
-        Statement::FunctionDeclaration(func) => {
-            vec![syn::Item::Fn(translate_function(func, registry, names))]
-        }
+        Statement::FunctionDeclaration(func) => translate_function(func, registry, names),
         Statement::ClassDeclaration(class) => super::class::translate_class(class, registry, names),
         Statement::TSInterfaceDeclaration(iface) => {
             declarations::translate_interface(iface, registry)
@@ -399,7 +398,28 @@ fn fn_output(func: &Function, registry: &TypeRegistry) -> ReturnType {
         .unwrap_or(ReturnType::Default)
 }
 
-fn translate_function(func: &Function, registry: &TypeRegistry, names: &NameTable<'_>) -> ItemFn {
+/// A function declaration → one or more items. A closure-object factory
+/// (e.g. `bidi { return { to: …, from: …, forward, reverse } }`) lowers to a
+/// synthesized `struct` + `impl` + the fn; any other function lowers to its
+/// single `fn` item.
+fn translate_function(
+    func: &Function,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> Vec<syn::Item> {
+    if let Some(shape) = closure_object::recognize(func) {
+        return closure_object::translate(func, &shape, registry, names);
+    }
+    vec![syn::Item::Fn(translate_function_item(
+        func, registry, names,
+    ))]
+}
+
+fn translate_function_item(
+    func: &Function,
+    registry: &TypeRegistry,
+    names: &NameTable<'_>,
+) -> ItemFn {
     let name = func
         .id
         .as_ref()
@@ -1059,9 +1079,10 @@ pub(in crate::translator) fn translate_stmt(
             if nested_fn_should_be_closure(f, locals, registry, names) {
                 vec![nested_fn_closure(f, locals, registry, names)]
             } else {
-                vec![Stmt::Item(syn::Item::Fn(translate_function(
-                    f, registry, names,
-                )))]
+                translate_function(f, registry, names)
+                    .into_iter()
+                    .map(Stmt::Item)
+                    .collect()
             }
         }
         // Top-level-only constructs — declarations and module declarations do

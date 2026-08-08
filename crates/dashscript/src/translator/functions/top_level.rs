@@ -174,9 +174,7 @@ pub(super) fn translate_exported_declaration(
     names: &NameTable<'_>,
 ) -> Vec<syn::Item> {
     match decl {
-        Declaration::FunctionDeclaration(func) => {
-            vec![syn::Item::Fn(translate_function(func, registry, names))]
-        }
+        Declaration::FunctionDeclaration(func) => translate_function(func, registry, names),
         Declaration::ClassDeclaration(class) => class::translate_class(class, registry, names),
         Declaration::TSInterfaceDeclaration(iface) => {
             declarations::translate_interface(iface, registry)
@@ -258,7 +256,7 @@ pub(super) fn translate_default_declaration(
 ) -> Vec<syn::Item> {
     match decl {
         ExportDefaultDeclarationKind::FunctionDeclaration(func) => {
-            vec![syn::Item::Fn(translate_function(func, registry, names))]
+            translate_function(func, registry, names)
         }
         ExportDefaultDeclarationKind::ClassDeclaration(class) => {
             class::translate_class(class, registry, names)
