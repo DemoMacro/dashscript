@@ -736,6 +736,16 @@ pub fn translate_project(
     // the specifiers across the member's files before translating so every
     // file's import lowering routes them through the extern prelude.
     let mut member_crates: std::collections::HashSet<String> = std::collections::HashSet::new();
+    // Lazy-static exports (a top-level `const X = { … }` → `pub fn x() ->
+    // &'static …` accessor) aggregated across the member's files, so a
+    // consumer's value import routes to the snake accessor (`use crate::…::x`,
+    // not `::X`) and a reference emits `x()`. Without this, an imported
+    // `as const` object's PascalCase name resolves to nothing. The lone-file
+    // path builds this via `collect_package_lazy_statics`; a member's files are
+    // already enumerated in `files`, so a per-file collect + merge covers the
+    // member's intra-package imports — the same shape as fields/optionals above.
+    let mut shared_lazy_statics: std::collections::HashMap<String, syn::Type> =
+        std::collections::HashMap::new();
     for ds in &files {
         let Ok(src) = fs::read_to_string(ds) else {
             continue;
@@ -745,6 +755,9 @@ pub fn translate_project(
         }
         for (name, opts) in collector.collect_optionals(&src).unwrap_or_default() {
             shared_optionals.entry(name).or_insert_with(|| opts);
+        }
+        for (k, v) in collector.collect_lazy_static_exports(&src) {
+            shared_lazy_statics.entry(k).or_insert(v);
         }
         let base = ds.parent().unwrap_or_else(|| Path::new(""));
         for imp in collector.imports(&src) {
@@ -757,10 +770,15 @@ pub fn translate_project(
         .with_extra_fields(shared_fields)
         .with_extra_optionals(shared_optionals);
     crate::translator::imports::set_workspace_member_crates(member_crates);
+    crate::translator::imports::set_lazy_static_exports(shared_lazy_statics);
+    // Clears the two Phase B thread-locals (workspace-member crates + lazy-
+    // static exports) when this member's translate ends, so neither leaks into
+    // a sibling member's translate in the same process.
     struct MemberCrateGuard;
     impl Drop for MemberCrateGuard {
         fn drop(&mut self) {
             crate::translator::imports::clear_workspace_member_crates();
+            crate::translator::imports::clear_lazy_static_exports();
         }
     }
     let _member_crate_guard = MemberCrateGuard;
