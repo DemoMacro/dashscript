@@ -849,6 +849,18 @@ impl DsDisplay for bool {
     }
 }
 
+/// A `number` renders via `number_to_string` (ryu-js) so `${1e21}` is "1e+21",
+/// not Rust's `Display`. The interpolation router (`is_number_expr`) sends a
+/// recognized-numeric expression through `number_to_string` directly, but one
+/// it does not recognize (a ternary `c ? 1 : 0`) reaches `display`, which
+/// without this impl is E0277 on `f64`.
+impl DsDisplay for f64 {
+    #[inline]
+    fn ds_display(&self) -> String {
+        crate::__ds::number_to_string(*self)
+    }
+}
+
 impl DsDisplay for () {
     #[inline]
     fn ds_display(&self) -> String {
