@@ -165,6 +165,68 @@ pub(crate) fn register_imported_lazy_statics(
 }
 
 thread_local! {
+    /// `(source, snake_exported)` pairs the file being translated re-exports
+    /// via `export { X } from "./m"`. A barrel that also imports the same
+    /// symbol (`import { X } from "./m"`) emits both a `pub use` and a `use`
+    /// for `X`, which Rust rejects as E0252 — the `pub use` already binds the
+    /// name locally, so the import's `use` is redundant. The import arm drops
+    /// such specifiers by querying this set. Per-file: set at each translate
+    /// entry, cleared when it ends (a re-export and an import are distinct
+    /// bindings, so the key is the `(source, name)` pair, not a `SymbolId`).
+    static RE_EXPORTS: std::cell::RefCell<std::collections::HashSet<(String, String)>> =
+        std::cell::RefCell::new(std::collections::HashSet::new());
+}
+
+/// Record this file's re-exports — each `export { X } from "./m"` adds
+/// `("./m", snake(X))` — so a sibling import of the same symbol is recognized
+/// as a redundant duplicate. A body pre-pass mirroring
+/// [`register_imported_lazy_statics`]; stores to a thread-local because the
+/// match key is a `(source, name)` pair, not a `SymbolId`.
+pub(crate) fn register_re_exports(body: &[Statement]) {
+    let mut pairs = std::collections::HashSet::new();
+    for stmt in body {
+        let Statement::ExportNamedDeclaration(exp) = stmt else {
+            continue;
+        };
+        let Some(src) = exp.source.as_ref() else {
+            continue;
+        };
+        let src_val = src.value.to_string();
+        for spec in &exp.specifiers {
+            let exported = module_export_name_str(&spec.exported);
+            pairs.insert((src_val.clone(), bindings::snake(&exported).to_string()));
+        }
+    }
+    RE_EXPORTS.with(|c| {
+        let mut set = c.borrow_mut();
+        set.clear();
+        set.extend(pairs);
+    });
+}
+
+/// Clear the re-export set when a translate ends so it does not leak into a
+/// later file. See [`RE_EXPORTS`].
+pub(crate) fn clear_re_exports() {
+    RE_EXPORTS.with(|c| c.borrow_mut().clear());
+}
+
+/// Whether `spec` (an import) names a symbol this file already re-exports from
+/// the same `source` — the `use` it would emit duplicates the `pub use`, so the
+/// import arm drops it. A namespace import has no per-symbol form and never
+/// collides, so it is left alone.
+pub(crate) fn import_re_exports_symbol(spec: &ImportDeclarationSpecifier, source: &str) -> bool {
+    let local = match spec {
+        ImportDeclarationSpecifier::ImportSpecifier(s) => &s.local.name,
+        ImportDeclarationSpecifier::ImportDefaultSpecifier(s) => &s.local.name,
+        ImportDeclarationSpecifier::ImportNamespaceSpecifier(_) => return false,
+    };
+    RE_EXPORTS.with(|c| {
+        c.borrow()
+            .contains(&(source.to_string(), bindings::snake(local).to_string()))
+    })
+}
+
+thread_local! {
     /// The workspace member the file currently being translated lives in
     /// (`Some("member_crate")` while translating a file reached through a
     /// workspace-member barrel; `None` for the entry's own package). A

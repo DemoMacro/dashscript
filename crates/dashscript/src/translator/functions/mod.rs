@@ -271,6 +271,7 @@ pub fn translate_statement(
             // sibling module, not only the crate root.
             let trees: Vec<syn::UseTree> = specifiers
                 .iter()
+                .filter(|spec| !super::imports::import_re_exports_symbol(spec, &imp.source.value))
                 .filter_map(super::imports::named_use_tree)
                 .collect();
             if !trees.is_empty() {

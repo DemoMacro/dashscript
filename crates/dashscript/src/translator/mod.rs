@@ -774,6 +774,18 @@ impl Translator {
         // entry translates; a lone-file translate (empty table) registers
         // nothing.
         imports::register_imported_lazy_statics(&program.body, &mut names);
+        // Record this file's re-exports (`export { X } from "./m"`) so a
+        // sibling `import { X } from "./m"` drops the redundant `use` (the
+        // `pub use` already binds X locally) instead of emitting both, which
+        // Rust rejects as E0252 (the name defined multiple times).
+        imports::register_re_exports(&program.body);
+        struct ReExportGuard;
+        impl Drop for ReExportGuard {
+            fn drop(&mut self) {
+                imports::clear_re_exports();
+            }
+        }
+        let _re_export_guard = ReExportGuard;
         // Pure-TS execution semantics: a top-level statement that *runs* in
         // source order (a `const`, an expression, control flow, a throw) does
         // not map to a Rust item — it belongs inside the entry point, the way
