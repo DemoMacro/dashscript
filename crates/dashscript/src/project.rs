@@ -720,10 +720,11 @@ fn dep_mod_name(source: &str, module: &str, member: &Option<String>) -> String {
             None => module.to_string(),
         }
     } else {
-        // A bare npm dep emits under `third_party/` as a module — the `ds_`
-        // prefix is stripped there (isolated namespace), unlike a workspace
-        // member which keeps it as a real cargo crate ident.
-        crate::translator::imports::npm_third_party_ident(source)
+        // A bare npm dep emits under `third_party/<segment-path>` preserving
+        // the specifier's directory structure (isolated namespace, no `ds_`
+        // prefix), unlike a workspace member which keeps it as a real cargo
+        // crate ident.
+        crate::translator::imports::npm_third_party_module_path(source)
     }
 }
 
@@ -853,11 +854,12 @@ pub fn translate_sources(
         .to_string();
     let emit_name_map = compute_emit_name_map(&translator, src, base)?;
     let mut seen: std::collections::HashSet<String> = std::collections::HashSet::new();
-    // Per-tier `mod` decls: local relative deps under app/, bare npm deps
-    // under third_party/. Each tier gets a synthesized mod.rs; the entry's
-    // crate root declares `mod app;` / `mod third_party;`.
+    // Per-tier emit state: local relative deps land under app/ (flat, single
+    // segment, declared in a synthesized app/mod.rs); bare npm deps land under
+    // third_party/<segment-path> (preserving the specifier tree) and go through
+    // emit_tree, which synthesizes third_party/mod.rs + every interior mod.rs.
     let mut app_mods = String::new();
-    let mut third_party_mods = String::new();
+    let mut tp_files: Vec<EmitFile> = Vec::new();
     // The inline `__DsUnion…` enums the entry already emits at the crate root
     // (it lowers as `BinEntry`). A dependency may name a union the entry never
     // uses directly — its module references `crate::__DsUnion…`, but no
@@ -934,21 +936,26 @@ pub fn translate_sources(
             .get(&canon)
             .cloned()
             .unwrap_or_else(|| dep_mod_name(&source, &module, &member));
-        // Local relative deps go under app/, bare npm deps under third_party/
-        // (workspace members are path deps, already skipped above).
+        // Local relative deps go under app/ (flat single segment); bare npm
+        // deps go under third_party/<segment-path> via emit_tree (which also
+        // synthesizes the mod.rs chain). Workspace members are path deps,
+        // already skipped above.
         let is_local = source.starts_with('.');
-        let dir = project_dir
-            .join("src")
-            .join(if is_local { "app" } else { "third_party" });
-        fs::create_dir_all(&dir)?;
-        fs::write(
-            dir.join(format!("{}.rs", mod_file_stem(&emit_name))),
-            dep_rust,
-        )?;
         if is_local {
-            app_mods.push_str(&format!("mod {emit_name};\n"));
+            let app_dir = project_dir.join("src").join("app");
+            fs::create_dir_all(&app_dir)?;
+            fs::write(
+                app_dir.join(format!("{}.rs", mod_file_stem(&emit_name))),
+                dep_rust,
+            )?;
+            app_mods.push_str(&format!("pub mod {emit_name};\n"));
         } else {
-            third_party_mods.push_str(&format!("mod {emit_name};\n"));
+            tp_files.push(EmitFile {
+                rel_path: format!("third_party/{emit_name}"),
+                content: dep_rust,
+                is_barrel: false,
+                is_root_entry: false,
+            });
         }
         let dep_src = fs::read_to_string(&dep_path)
             .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
@@ -980,7 +987,10 @@ pub fn translate_sources(
     }
 
     // Each tier's deps are declared in a synthesized mod.rs; the entry's crate
-    // root declares the tiers it uses (plus any hoisted union enums).
+    // root declares the tiers it uses (plus any hoisted union enums). app/ is
+    // flat (one mod.rs of `mod <seg>;` lines); third_party/ preserves the
+    // specifier tree, so emit_tree writes its files and synthesizes the whole
+    // mod.rs chain (third_party/mod.rs + every interior directory).
     let mut root_decls = String::new();
     if !app_mods.is_empty() {
         let app_dir = project_dir.join("src").join("app");
@@ -988,10 +998,8 @@ pub fn translate_sources(
         fs::write(app_dir.join("mod.rs"), &app_mods)?;
         root_decls.push_str("mod app;\n");
     }
-    if !third_party_mods.is_empty() {
-        let tp_dir = project_dir.join("src").join("third_party");
-        fs::create_dir_all(&tp_dir)?;
-        fs::write(tp_dir.join("mod.rs"), &third_party_mods)?;
+    if !tp_files.is_empty() {
+        emit_tree(&project_dir.join("src"), &tp_files)?;
         root_decls.push_str("mod third_party;\n");
     }
     let main = if root_decls.is_empty() && extra_enum_text.is_empty() {
@@ -1372,7 +1380,7 @@ fn translate_one_with_mods(
         flat_deps.push(EmitFile {
             rel_path: format!(
                 "third_party/{}",
-                crate::translator::imports::npm_third_party_ident(&imp.source)
+                crate::translator::imports::npm_third_party_module_path(&imp.source)
             ),
             content: dep_rust,
             is_barrel: false,
@@ -2368,9 +2376,12 @@ fn emit_tree(src_dir: &Path, files: &[EmitFile]) -> Result<(), Box<dyn Error>> {
         }
     }
     let decls_for = |dir: &str| -> String {
+        // `pub mod` so a cross-layer `use` (e.g. the entry reaching
+        // `third_party::noble::hashes::sha2Djs`) sees every interior module —
+        // a private `mod` would hide each level from its grandparent (E0603).
         children
             .get(dir)
-            .map(|kids| kids.iter().map(|c| format!("mod {c};\n")).collect())
+            .map(|kids| kids.iter().map(|c| format!("pub mod {c};\n")).collect())
             .unwrap_or_default()
     };
     // Write each translated file. A barrel prepends its directory's children;

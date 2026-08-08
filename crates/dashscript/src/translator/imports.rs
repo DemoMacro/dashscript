@@ -351,13 +351,16 @@ pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
         // An extern crate (`cargo:serde`) — bare use via the extern prelude.
         parse_quote!(#mod_ident)
     } else {
-        // A bare npm specifier is transpiled into the crate under `third_party/`
-        // — reached as `crate::third_party::<ident>`. The ident drops the `ds_`
-        // prefix ([`npm_third_party_ident`]): `third_party/` already isolates
-        // npm deps, so the prefix a workspace member keeps (it lowers to a real
-        // cargo crate) is redundant here.
-        let ident = bindings::crate_mod(&npm_third_party_ident(source));
-        parse_quote!(third_party::#ident)
+        // A bare npm specifier lives under `third_party/<segment-path>`,
+        // preserving the specifier's directory structure (the scope→name and
+        // pkg→subpath `/` boundaries). The use path mirrors that tree (relative,
+        // like the original single-segment form): `@noble/hashes/sha2.js` →
+        // `third_party::noble::hashes::sha2Djs`.
+        let path = format!(
+            "third_party::{}",
+            npm_third_party_module_path(source).replace('/', "::")
+        );
+        syn::parse_str(&path).unwrap_or_else(|_| parse_quote!(third_party))
     }
 }
 
@@ -407,19 +410,47 @@ pub(crate) fn npm_to_ds_ident(name: &str) -> String {
     out
 }
 
-/// A bare npm specifier → the module ident it takes **inside `third_party/`**:
-/// [`npm_to_ds_ident`] with the `ds_` prefix stripped. `third_party/` is an
-/// isolated namespace — its `crate::third_party::` path root already marks npm
-/// origin, so the `ds_` prefix that separates npm-origin crates from
-/// cargo-native crates in the extern prelude is redundant here. A workspace
-/// **member** still lowers to a real cargo crate and keeps the prefix (via
-/// [`npm_to_ds_ident`]); only a transpiled non-member dep drops it. The escape
-/// markers (`S`/`U`/`D`/`X`) stay, so the map is still injective.
-pub(crate) fn npm_third_party_ident(source: &str) -> String {
-    npm_to_ds_ident(source)
-        .strip_prefix("ds_")
-        .map(str::to_owned)
-        .unwrap_or_else(|| npm_to_ds_ident(source))
+/// A bare npm specifier → a `/`-joined multi-segment emit path under
+/// `third_party/`, preserving the specifier's directory structure (the
+/// scope→name and pkg→subpath boundaries). Each segment is escaped with the
+/// same injective rules as [`npm_to_ds_ident`] but WITHOUT flattening `/` (the
+/// `/` is the directory boundary, not escaped), and the file extension is
+/// preserved via `.`→`D` (`sha2.js`→`sha2Djs`) so `cache.mjs`/`.cjs`/`.js`
+/// coexisting as siblings stay distinct. A digit-leading segment (a subpath
+/// filename, never a package name) is prefixed `N` so it stays a legal ident
+/// without colliding with `-`→`_`. Unlike [`npm_to_ds_ident`] (which a workspace
+/// member keeps `ds_`-prefixed as a real cargo crate), a transpiled non-member
+/// dep lives in the isolated `third_party/` namespace and needs no prefix.
+pub(crate) fn npm_third_party_module_path(source: &str) -> String {
+    source
+        .trim_start_matches('@')
+        .split('/')
+        .map(escape_npm_segment)
+        .collect::<Vec<_>>()
+        .join("/")
+}
+
+/// Escape one path segment of an npm specifier to a legal, injective Rust ident
+/// fragment. The rules mirror [`npm_to_ds_ident`]'s per-character map but
+/// without the `ds_` prefix or `/`→`S` (the caller splits on `/`); a digit
+/// leading the segment gets an `N` prefix so the fragment is a valid ident and
+/// cannot collide with a `-`→`_` escape.
+fn escape_npm_segment(seg: &str) -> String {
+    let mut out = String::with_capacity(seg.len() + 1);
+    let chars: Vec<char> = seg.chars().collect();
+    if chars.first().is_some_and(|c| c.is_ascii_digit()) {
+        out.push('N');
+    }
+    for c in chars {
+        match c {
+            '-' => out.push('_'),
+            '_' => out.push('U'),
+            '.' => out.push('D'),
+            c if c.is_ascii_lowercase() || c.is_ascii_digit() => out.push(c),
+            c => out.push_str(&format!("X{:06x}", u32::from(c))),
+        }
+    }
+    out
 }
 
 /// A bare npm specifier (`lodash`, `@scope/pkg`, `@scope/pkg/sub`) → one valid
@@ -1016,5 +1047,49 @@ mod tests {
         // injectively via the hex fallback and never collides with its
         // lowercase peer.
         assert_ne!(npm_to_ds_ident("jQuery"), npm_to_ds_ident("jquery"));
+    }
+
+    #[test]
+    fn npm_third_party_module_path_preserves_tree_and_extension() {
+        // The specifier's `/` boundaries are real directories (scope→name,
+        // pkg→subpath), preserved as path segments; the `@` scope marker is
+        // dropped; the file extension survives as `.`→`D` so sibling
+        // cache.{m,c,}js stay distinct.
+        assert_eq!(
+            npm_third_party_module_path("@noble/hashes/sha2.js"),
+            "noble/hashes/sha2Djs"
+        );
+        assert_eq!(npm_third_party_module_path("lodash"), "lodash");
+        assert_eq!(
+            npm_third_party_module_path("@scope/pkg-name"),
+            "scope/pkg_name"
+        );
+        // Extension preservation: three siblings sharing a stem but differing
+        // in extension never collapse.
+        assert_eq!(npm_third_party_module_path("p/cache.mjs"), "p/cacheDmjs");
+        assert_eq!(npm_third_party_module_path("p/cache.cjs"), "p/cacheDcjs");
+        assert_eq!(npm_third_party_module_path("p/cache.js"), "p/cacheDjs");
+
+        // Injective per segment: distinct specifiers never share one path.
+        let mut seen = std::collections::HashSet::new();
+        for path in [
+            npm_third_party_module_path("@noble/hashes"),
+            npm_third_party_module_path("noble-hashes"),
+            npm_third_party_module_path("@noble_hashes"),
+            npm_third_party_module_path("noble.hashes"),
+        ] {
+            assert!(
+                seen.insert(path.clone()),
+                "collision: {path} from two distinct specifiers"
+            );
+        }
+
+        // A digit-leading subpath segment (never a package name) gets an `N`
+        // prefix so it is a legal ident and cannot collide with `-`→`_`.
+        assert_eq!(npm_third_party_module_path("pkg/3rd"), "pkg/N3rd");
+        assert_ne!(
+            npm_third_party_module_path("pkg/3rd"),
+            npm_third_party_module_path("pkg/-3rd")
+        );
     }
 }

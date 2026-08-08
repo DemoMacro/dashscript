@@ -95,16 +95,17 @@ fn bare_import_emits_use_for_npm_resolution() {
 
 #[test]
 fn bare_import_normalizes_scope_and_hyphen() {
-    // `@scope/pkg-name` → `scopeSpkg_name` under `third_party/`: a valid Rust
-    // module ident. The leading `@` is dropped; the scope separator `/` escapes
-    // to `S` and the hyphen to `_`, so the map is injective (distinct npm names
-    // never share one ident). The `ds_` prefix a cargo crate keeps is dropped
-    // here (`third_party/` is isolated, no cargo-native collision).
+    // `@scope/pkg-name` → `scope/pkg_name` under `third_party/`, preserving the
+    // specifier's directory structure: the leading `@` is dropped, the `/` is
+    // the scope→name boundary (a real directory, not escaped), and the hyphen
+    // escapes to `_` within the segment. So the use path is multi-segment
+    // `crate::third_party::scope::pkg_name::x` — distinct npm names never share
+    // one path (the map is injective per segment).
     let rust = Translator::new()
         .translate("import { x } from \"@scope/pkg-name\";")
         .expect("should translate");
     assert!(
-        rust.contains("use third_party::scopeSpkg_name::x"),
+        rust.contains("use third_party::scope::pkg_name::x"),
         "scope/hyphen not normalized: {rust}"
     );
 }
