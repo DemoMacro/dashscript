@@ -215,6 +215,16 @@ fn property_field(
     if is_direct_self_reference(&ta.type_annotation, parent) {
         ty = parse_quote!(Box<#ty>);
     }
+    // `field: Self | undefined` (or `| null`) — the nullable-union spelling of
+    // a recursive field, equivalent to `field?: Self`. field_type already
+    // lowered the union to `Option<Self>`; Box the inner so the struct is
+    // finite-sized: `Option<Box<Self>>`. A union does not satisfy the bare
+    // check above, so without this `parent: Self | undefined` would lower to
+    // the infinite-sized `Option<Self>` (E0072).
+    if is_nullable_self_reference(&ta.type_annotation, parent) {
+        let parent_ident = format_ident!("{}", parent);
+        ty = parse_quote!(Option<Box<#parent_ident>>);
+    }
     let ty: Type = if ps.optional {
         parse_quote!(Option<#ty>)
     } else {
@@ -305,4 +315,21 @@ fn is_direct_self_reference(ty: &TSType, parent: &str) -> bool {
     };
     let name: &str = &id.name;
     name == parent
+}
+
+/// Whether `ty` is a nullable-union self-reference — `Self | undefined` or
+/// `Self | null`, the `| undefined` spelling of a recursive field (equivalent
+/// to `field?: Self`). The union must hold both a bare reference to `parent`
+/// and a `null`/`undefined` member, so a non-nullable union like `Self | Other`
+/// is not a direct self-reference (it lowers to a tagged enum instead).
+fn is_nullable_self_reference(ty: &TSType, parent: &str) -> bool {
+    let TSType::TSUnionType(u) = ty else {
+        return false;
+    };
+    let has_self = u.types.iter().any(|t| is_direct_self_reference(t, parent));
+    let has_null = u
+        .types
+        .iter()
+        .any(|t| matches!(t, TSType::TSUndefinedKeyword(_) | TSType::TSNullKeyword(_)));
+    has_self && has_null
 }

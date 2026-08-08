@@ -299,6 +299,20 @@ fn translates_optional_field_supplied_wraps_some() {
 }
 
 #[test]
+fn nullable_union_self_reference_field_becomes_boxed_option() {
+    // `parent: Node | undefined` — the nullable-union spelling of a recursive
+    // field (equivalent to `parent?: Node`). Lowers to `Option<Box<Node>>`, not
+    // the infinite-sized `Option<Node>` that would trip E0072. `Box` makes the
+    // struct finite-sized while preserving the optionality.
+    let src = "interface Node { value: number; parent: Node | undefined; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("pub parent: Option<Box<Node>>"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_generic_function_params() {
     let src = "function id<T>(x: T): T { return x; }";
     let rust = Translator::new().translate(src).expect("should translate");
