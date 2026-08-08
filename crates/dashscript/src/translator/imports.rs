@@ -351,10 +351,13 @@ pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
         // An extern crate (`cargo:serde`) — bare use via the extern prelude.
         parse_quote!(#mod_ident)
     } else {
-        // A bare npm specifier (`ds_fflate`) is transpiled into the crate under
-        // `third_party/` — reached as `crate::third_party::<ident>` (the 2018
-        // path root prefix is implicit).
-        parse_quote!(third_party::#mod_ident)
+        // A bare npm specifier is transpiled into the crate under `third_party/`
+        // — reached as `crate::third_party::<ident>`. The ident drops the `ds_`
+        // prefix ([`npm_third_party_ident`]): `third_party/` already isolates
+        // npm deps, so the prefix a workspace member keeps (it lowers to a real
+        // cargo crate) is redundant here.
+        let ident = bindings::crate_mod(&npm_third_party_ident(source));
+        parse_quote!(third_party::#ident)
     }
 }
 
@@ -402,6 +405,21 @@ pub(crate) fn npm_to_ds_ident(name: &str) -> String {
         }
     }
     out
+}
+
+/// A bare npm specifier → the module ident it takes **inside `third_party/`**:
+/// [`npm_to_ds_ident`] with the `ds_` prefix stripped. `third_party/` is an
+/// isolated namespace — its `crate::third_party::` path root already marks npm
+/// origin, so the `ds_` prefix that separates npm-origin crates from
+/// cargo-native crates in the extern prelude is redundant here. A workspace
+/// **member** still lowers to a real cargo crate and keeps the prefix (via
+/// [`npm_to_ds_ident`]); only a transpiled non-member dep drops it. The escape
+/// markers (`S`/`U`/`D`/`X`) stay, so the map is still injective.
+pub(crate) fn npm_third_party_ident(source: &str) -> String {
+    npm_to_ds_ident(source)
+        .strip_prefix("ds_")
+        .map(str::to_owned)
+        .unwrap_or_else(|| npm_to_ds_ident(source))
 }
 
 /// A bare npm specifier (`lodash`, `@scope/pkg`, `@scope/pkg/sub`) → one valid

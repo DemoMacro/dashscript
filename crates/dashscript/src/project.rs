@@ -720,7 +720,10 @@ fn dep_mod_name(source: &str, module: &str, member: &Option<String>) -> String {
             None => module.to_string(),
         }
     } else {
-        module.to_string()
+        // A bare npm dep emits under `third_party/` as a module — the `ds_`
+        // prefix is stripped there (isolated namespace), unlike a workspace
+        // member which keeps it as a real cargo crate ident.
+        crate::translator::imports::npm_third_party_ident(source)
     }
 }
 
@@ -1367,7 +1370,10 @@ fn translate_one_with_mods(
         let spec = ds_resolve_specifier(&entry_spec, &imp.source);
         let dep_rust = translate_dep(translator, &dep_path, kind, &spec, None, deps)?;
         flat_deps.push(EmitFile {
-            rel_path: format!("third_party/{}", imp.module),
+            rel_path: format!(
+                "third_party/{}",
+                crate::translator::imports::npm_third_party_ident(&imp.source)
+            ),
             content: dep_rust,
             is_barrel: false,
             is_root_entry: false,
