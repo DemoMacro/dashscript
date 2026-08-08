@@ -41,6 +41,10 @@ pub fn translate_sources(
     // translate. A degraded function marshals cross-file types through
     // `serde_json::Value`, so every type it touches needs `Serialize`/
     // `Deserialize` — including the union enums hoisted to the crate root below.
+    //
+    // Reset the cross-file non-serde name set so a previous project's callback
+    // type names cannot steer this project's serde derives.
+    crate::translator::declarations::reset_non_serde_names();
     let probe = Translator::new();
     let project_uses_engine = probe_sources_use_engine(
         &probe,
@@ -621,6 +625,10 @@ pub fn translate_project(
     project_dir: &Path,
     lib_entry: Option<&str>,
 ) -> Result<(ProjectTargets, RuntimeDeps), Box<dyn Error>> {
+    // Start each project translation with an empty cross-file non-serde set
+    // so a name from a prior member or fixture cannot leak in. The translate
+    // below accumulates the set within this project.
+    crate::translator::declarations::reset_non_serde_names();
     let src_dir = project_dir.join("src");
     fs::create_dir_all(&src_dir)?;
     // Clear stale translations from a prior run (a renamed bin, or a switch
@@ -840,6 +848,14 @@ pub fn translate_project(
             entry.content = format!("{extra_union_enums}{}", entry.content);
         }
     }
+    // Global non-serde fixpoint: a type graph cycle can span files (a struct
+    // in one file ↔ a `__DsUnion` the barrel emits from another), and the
+    // per-file `add_serde_derives` passes above cannot resolve such a cycle in
+    // one shot. Re-parse every emitted file, run the fixpoint over all
+    // struct/enum items at once, and re-print.
+    if project_uses_engine {
+        global_serde_fixpoint(&mut emit_files);
+    }
     emit_tree(&src_dir, &emit_files)?;
 
     detect_bin_imports_bin(root, &bins)?;
@@ -852,4 +868,46 @@ pub fn translate_project(
         eprintln!("warning: {e}");
     }
     Ok(((bins, lib), deps))
+}
+
+/// Re-run the non-serde fixpoint across every emitted file at once. Per-file
+/// `add_serde_derives` cannot resolve a type cycle that spans files — a struct
+/// in one file referencing a `__DsUnion` the barrel emits from another — so
+/// after all files are emitted (and the barrel's unions prepended), re-parse
+/// them, run the fixpoint over the whole crate's struct/enum items together,
+/// and re-print. Idempotent: `add_serde_derives` strips prior serde derives.
+fn global_serde_fixpoint(emit_files: &mut [EmitFile]) {
+    let mut parsed: Vec<syn::File> = Vec::with_capacity(emit_files.len());
+    let mut all_items: Vec<syn::Item> = Vec::new();
+    let mut locs: Vec<(usize, usize)> = Vec::new();
+    for (fi, ef) in emit_files.iter().enumerate() {
+        let file = syn::parse_file(&ef.content).unwrap_or_else(|_| syn::File {
+            shebang: None,
+            attrs: Vec::new(),
+            items: Vec::new(),
+        });
+        for (ii, item) in file.items.iter().enumerate() {
+            if matches!(
+                item,
+                syn::Item::Struct(_) | syn::Item::Enum(_) | syn::Item::Type(_)
+            ) {
+                all_items.push(item.clone());
+                locs.push((fi, ii));
+            }
+        }
+        parsed.push(file);
+    }
+    crate::translator::declarations::add_serde_derives(&mut all_items);
+    for ((fi, ii), item) in locs.iter().zip(all_items.iter()) {
+        if let Some(file) = parsed.get_mut(*fi) {
+            if let Some(slot) = file.items.get_mut(*ii) {
+                *slot = item.clone();
+            }
+        }
+    }
+    for (fi, file) in parsed.iter().enumerate() {
+        if let Some(ef) = emit_files.get_mut(fi) {
+            ef.content = prettyplease::unparse(file);
+        }
+    }
 }

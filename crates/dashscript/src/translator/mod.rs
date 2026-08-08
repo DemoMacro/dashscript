@@ -396,6 +396,9 @@ impl Translator {
     /// # Errors
     /// Returns an error string if oxc reports parse diagnostics.
     pub fn translate_with_deps(&self, source: &str) -> Result<(String, RuntimeDeps), String> {
+        // One-shot translation: start with an empty cross-file non-serde set so
+        // a name from a previous fixture cannot leak into this one.
+        declarations::reset_non_serde_names();
         self.translate_with_deps_as(source, FileRole::BinEntry)
     }
 
@@ -1549,56 +1552,66 @@ impl Translator {
         // derives — the same project-wide flag `translate_with_deps` honors for
         // a file's own items.
         let force = functions::force_serde_derive();
-        let mut items: Vec<(String, String)> = registry
+        // Collect every union enum + anon struct into one item slice so the
+        // non-serde fixpoint propagates across them. A per-enum
+        // `add_serde_derives` call sees only that one enum, so a union whose
+        // variants name a callback type owned by *another* union keeps serde
+        // and fails the unsatisfiable bound. Running the fixpoint over all of
+        // them at once resolves the cross-union edge.
+        let mut serde_items: Vec<syn::Item> = registry
             .union_enums
             .into_values()
-            .map(|e| {
-                let name = e.ident.to_string();
-                let display = declarations::union_display_impl(&e);
-                // A union enum lives at the crate root, where a cross-module
-                // caller may stringify it (`__ds::display(&union_value)`). It
-                // already carries a `Display` impl (above), so its `DsDisplay`
-                // forwards to `to_string` and the active scalar variant renders.
-                let ds_display: syn::ItemImpl = {
-                    let ident = &e.ident;
-                    syn::parse_quote! {
-                        impl crate::__ds::DsDisplay for #ident {
-                            #[inline]
-                            fn ds_display(&self) -> String {
-                                ::std::string::ToString::to_string(self)
+            .map(syn::Item::Enum)
+            .chain(registry.anon_structs.into_values().map(syn::Item::Struct))
+            .collect();
+        if force {
+            declarations::add_serde_derives(&mut serde_items);
+        }
+        let mut items: Vec<(String, String)> = Vec::new();
+        for item in &serde_items {
+            match item {
+                syn::Item::Enum(e) => {
+                    let name = e.ident.to_string();
+                    let display = declarations::union_display_impl(e);
+                    // A union enum lives at the crate root, where a cross-module
+                    // caller may stringify it (`__ds::display(&union_value)`).
+                    // It already carries a `Display` impl (above), so its
+                    // `DsDisplay` forwards to `to_string`.
+                    let ds_display: syn::ItemImpl = {
+                        let ident = &e.ident;
+                        syn::parse_quote! {
+                            impl crate::__ds::DsDisplay for #ident {
+                                #[inline]
+                                fn ds_display(&self) -> String {
+                                    ::std::string::ToString::to_string(self)
+                                }
                             }
                         }
-                    }
-                };
-                let mut ui = vec![
-                    syn::Item::Enum(e),
-                    syn::Item::Impl(display),
-                    syn::Item::Impl(ds_display),
-                ];
-                if force {
-                    declarations::add_serde_derives(&mut ui);
+                    };
+                    let ui = vec![
+                        item.clone(),
+                        syn::Item::Impl(display),
+                        syn::Item::Impl(ds_display),
+                    ];
+                    let text = prettyplease::unparse(&syn::File {
+                        shebang: None,
+                        attrs: Vec::new(),
+                        items: ui,
+                    });
+                    items.push((name, text));
                 }
-                let text = prettyplease::unparse(&syn::File {
-                    shebang: None,
-                    attrs: Vec::new(),
-                    items: ui,
-                });
-                (name, text)
-            })
-            .collect();
-        items.extend(registry.anon_structs.into_values().map(|s| {
-            let name = s.ident.to_string();
-            let mut si = vec![syn::Item::Struct(s)];
-            if force {
-                declarations::add_serde_derives(&mut si);
+                syn::Item::Struct(s) => {
+                    let name = s.ident.to_string();
+                    let text = prettyplease::unparse(&syn::File {
+                        shebang: None,
+                        attrs: Vec::new(),
+                        items: vec![item.clone()],
+                    });
+                    items.push((name, text));
+                }
+                _ => {}
             }
-            let text = prettyplease::unparse(&syn::File {
-                shebang: None,
-                attrs: Vec::new(),
-                items: si,
-            });
-            (name, text)
-        }));
+        }
         items.sort_by(|a, b| a.0.cmp(&b.0));
         items
     }
