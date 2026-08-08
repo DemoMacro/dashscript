@@ -221,12 +221,13 @@ fn workspace_member_for_entry(entry: &Path) -> Option<(PathBuf, String)> {
 }
 
 /// Build the workspace at `root` — every member, or just the one named by
-/// `--filter` (package name or member directory). For `bin`, members are
-/// emitted under `.cache/dash/members/<name>/` of one cargo workspace, so they
-/// share a single `target/` and `Cargo.lock`: a dependency two members use
-/// compiles once (cargo's native hoisted-`node_modules`). For `rust`, each
-/// member's crate is emitted independently to `dist/<name>/` (no compilation,
-/// nothing to share).
+/// `--filter` (package name or member directory). Both targets emit one cargo
+/// workspace under `.cache/dash/`: members at `<cache>/<cargo_name>/` beneath a
+/// root `[workspace]` Cargo.toml, sharing a single `target/` and `Cargo.lock`
+/// (a dependency two members use compiles once), with cross-member imports
+/// lowering to cargo path deps on sibling `../<cargo_name>` directories. `bin`
+/// then compiles the workspace and copies each binary to its member's `dist/`;
+/// `rust` stops at the emitted crates for inspection (no compile).
 pub(crate) fn workspace_build(
     root: &Path,
     filter: Option<&str>,
@@ -264,30 +265,67 @@ pub(crate) fn workspace_build(
     let target = target_override
         .map(|t| t.to_string())
         .unwrap_or_else(|| "bin".to_string());
-    if target == "rust" {
-        // Rust crates are emitted, not compiled — no shared `target/` to gain.
-        // Each member's crate lands in its own `<member>/dist/<name>/` so the
-        // package stays independently publishable.
-        for (name, member_dir, entry) in &selected {
-            println!("ds: {name} (workspace member, rust crate)");
-            build_at(entry, Some("rust"), &member_dir.join("dist"))?;
-        }
-        return Ok(ExitCode::SUCCESS);
-    }
-    if target != "bin" {
+    if target != "bin" && target != "rust" {
         return Err(format!(
             "ds build: target '{target}' not yet supported (use --target <bin|rust>)"
         )
         .into());
     }
 
-    // bin: emit one cargo workspace — members share `target/` + `Cargo.lock`.
-    // Member dirs sit directly under the cache root (`<cache>/<name>/`),
-    // mirroring the single-package `.cache/dash/<name>/`; a stale member from
-    // a prior run is ignored by cargo, `ds cache clean` reclaims the space.
+    // One cargo workspace at the cache root: members sit directly under it at
+    // `<cache>/<cargo_name>/` beneath a shared `[workspace]` Cargo.toml, so
+    // cross-member imports resolve as cargo path deps to sibling
+    // `../<cargo_name>` directories (and a dep two members use compiles once).
+    // `bin` then compiles the workspace and copies each binary to its member's
+    // `dist/`; `rust` stops at the emitted crates for inspection (no compile,
+    // no `dist/` copy). A stale member from a prior run is ignored by cargo;
+    // `ds cache clean` reclaims the space.
     let cache = root.join(".cache").join("dash");
     fs::create_dir_all(&cache)?;
 
+    let member_packages = emit_workspace_members(root, &selected, &cache)?;
+
+    if target == "rust" {
+        println!("ds: emitted workspace crates at {} (rust)", cache.display());
+        return Ok(ExitCode::SUCCESS);
+    }
+
+    println!("ds: building workspace (shared target)...");
+    let status = invoke_cargo(&cache, ["build", "--release", "--quiet"])?;
+    if !status.success() {
+        return Ok(status_to_code(status));
+    }
+
+    // Copy each member binary to its own `<member>/dist/` — not the workspace
+    // root — so each package's artifact is independent and publishable.
+    for ((name, member_dir, _), package) in selected.iter().zip(&member_packages) {
+        let dest_dir = member_dir.join("dist");
+        let _ = fs::remove_dir_all(&dest_dir);
+        fs::create_dir_all(&dest_dir)?;
+        let bins = package.bin_entries();
+        if bins.is_empty() {
+            // No declared bins → cargo built src/main.rs as <member name>.
+            copy_release_bin(&cache, name, &dest_dir)?;
+        } else {
+            for (bin_name, _) in &bins {
+                copy_release_bin(&cache, bin_name, &dest_dir)?;
+            }
+        }
+    }
+    Ok(ExitCode::SUCCESS)
+}
+
+/// Emit every selected workspace member as one crate under a shared cargo
+/// workspace at `cache` — members at `<cache>/<cargo_name>/` beneath a root
+/// `[workspace]` Cargo.toml, so cross-member imports resolve as cargo path
+/// deps to sibling `../<cargo_name>` directories. Shared by `--target bin`
+/// (which then compiles + copies binaries) and `--target rust` (inspection
+/// only). Returns each member's package for the downstream binary copy.
+fn emit_workspace_members(
+    root: &Path,
+    selected: &[(String, PathBuf, String)],
+    cache: &Path,
+) -> Result<Vec<Package>, Box<dyn Error>> {
     let member_packages: Vec<Package> = selected
         .iter()
         .map(|(_, dir, _)| {
@@ -372,29 +410,7 @@ pub(crate) fn workspace_build(
         println!("ds: {name} (workspace member)");
     }
 
-    println!("ds: building workspace (shared target)...");
-    let status = invoke_cargo(&cache, ["build", "--release", "--quiet"])?;
-    if !status.success() {
-        return Ok(status_to_code(status));
-    }
-
-    // Copy each member binary to its own `<member>/dist/` — not the workspace
-    // root — so each package's artifact is independent and publishable.
-    for ((name, member_dir, _), package) in selected.iter().zip(&member_packages) {
-        let dest_dir = member_dir.join("dist");
-        let _ = fs::remove_dir_all(&dest_dir);
-        fs::create_dir_all(&dest_dir)?;
-        let bins = package.bin_entries();
-        if bins.is_empty() {
-            // No declared bins → cargo built src/main.rs as <member name>.
-            copy_release_bin(&cache, name, &dest_dir)?;
-        } else {
-            for (bin_name, _) in &bins {
-                copy_release_bin(&cache, bin_name, &dest_dir)?;
-            }
-        }
-    }
-    Ok(ExitCode::SUCCESS)
+    Ok(member_packages)
 }
 
 /// Discover workspace members from any supported manifest. Tried in order:
