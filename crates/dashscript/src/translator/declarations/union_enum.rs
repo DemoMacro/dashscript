@@ -105,7 +105,11 @@ pub fn inline_mixed_union_enum(u: &TSUnionType) -> Option<(Ident, ItemEnum, Vec<
             None => return None,
         }
     }
-    if tagged.is_empty() {
+    // A single non-null member is not a discriminated union — `union_type`
+    // lowers `T | null` to `Option<T>` directly. Returning `None` here keeps
+    // the registry pre-pass from hoisting a dead one-variant `__DsUnionT`
+    // enum (whose inner type may not even resolve) to the crate root.
+    if tagged.len() < 2 {
         return None;
     }
     tagged.sort_by(|a, b| a.0.cmp(&b.0));
@@ -330,7 +334,9 @@ pub fn scalar_union_enum(u: &TSUnionType) -> Option<(Ident, Vec<syn::Variant>)> 
         .filter(|t| !matches!(t, TSType::TSNullKeyword(_) | TSType::TSUndefinedKeyword(_)))
         .map(|t| Some((scalar_tag(t)?.to_string(), scalar_variant(t)?)))
         .collect::<Option<_>>()?;
-    if tagged.is_empty() {
+    // Mirrors `inline_mixed_union_enum`: a sole non-null member is `Option<T>`
+    // in `union_type`, not a tagged enum, so do not collect a one-variant enum.
+    if tagged.len() < 2 {
         return None;
     }
     tagged.sort_by(|a, b| a.0.cmp(&b.0));

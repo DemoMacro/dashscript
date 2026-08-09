@@ -638,9 +638,13 @@ fn union_type(u: &TSUnionType) -> Type {
             other => non_null.push(other),
         }
     }
-    if nullable && non_null.len() == 1 {
+    if non_null.len() == 1 {
         let inner = translate_type(non_null[0]);
-        return parse_quote!(Option<#inner>);
+        return if nullable {
+            parse_quote!(Option<#inner>)
+        } else {
+            inner
+        };
     }
     // An all-scalar-keyword union (the XML-attribute / JSON-value shape:
     // `string | number | boolean | undefined`) becomes a generated `__DsUnion…`

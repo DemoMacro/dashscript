@@ -404,6 +404,21 @@ fn translates_scalar_union_to_enum() {
 }
 
 #[test]
+fn nullable_single_type_ref_union_becomes_option_not_dead_enum() {
+    // A nullable single-member union on a field (`bar: Foo | undefined`) lowers
+    // to `Option<Foo>`, never a one-variant `__DsUnionFoo { Foo(Foo) }` enum.
+    // A single-variant tagged union carries no discrimination and, hoisted to a
+    // crate root where the inner type does not resolve, becomes a dead E0425.
+    let src = "interface Foo { x: number }\ninterface Baz { bar: Foo | undefined }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("bar: Option"), "got:\n{rust}");
+    assert!(
+        !rust.contains("__DsUnionFoo"),
+        "nullable single-member union must not spawn a dead enum:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_mixed_union_scalar_and_array_to_enum() {
     // `boolean | string[]` — the `alwaysArray` shape — mixes a scalar and an
     // array member; each lowers to its own variant (ts2rust tagged-union model).
