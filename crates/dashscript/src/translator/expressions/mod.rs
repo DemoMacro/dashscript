@@ -638,6 +638,13 @@ pub fn translate_argument_init(arg: &Argument, hint: Option<&Type>, ctx: &Ctx<'_
         return object::object_expr(obj, hint, ctx);
     }
     if let Some(expr) = arg.as_expression() {
+        // A value flowing into a union parameter boxes into the matching
+        // variant (`f(tag, 1)` where the 2nd param is `string | number` →
+        // `f(tag, Enum::Num(1.0))`). Same rule as a return/let into a union,
+        // ahead of the optional-field unwrap below.
+        if let Some(id) = hint_union_ident(hint, ctx) {
+            return box_to_union(expr, id, ctx);
+        }
         if let Some(unwrapped) = unwrap_optional_field_read(expr, hint, ctx) {
             return unwrapped;
         }
@@ -794,6 +801,17 @@ fn unwrap_optional_field_read(
     None
 }
 
+/// The union-enum ident a type hint names, when the hint is a plain path to a
+/// registered union enum (`__DsUnionNumStr`); `None` otherwise. Shared by
+/// initializers (return/let) and call arguments so a value flowing into a
+/// union parameter boxes into the matching variant.
+fn hint_union_ident<'a>(hint: Option<&'a Type>, ctx: &Ctx<'_>) -> Option<&'a Ident> {
+    hint.and_then(types::type_path)
+        .and_then(|p| p.segments.last())
+        .map(|s| &s.ident)
+        .filter(|id| ctx.registry().union_enums.contains_key(id))
+}
+
 /// Translate an initializer; an object literal borrows its struct name from
 /// the variable's type annotation (anonymous literals are unsupported yet).
 pub fn translate_init(expr: &Expression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) -> Expr {
@@ -804,12 +822,7 @@ pub fn translate_init(expr: &Expression, ty_hint: Option<&Type>, ctx: &Ctx<'_>) 
     // variant (`return value` where `value: String` into
     // `__DsUnionNumStr::Str`). `null`/`undefined` map to the `Null`/`Undef`
     // unit variants here, ahead of the `Option<T>` `None` rule below.
-    if let Some(id) = ty_hint
-        .and_then(types::type_path)
-        .and_then(|p| p.segments.last())
-        .map(|s| &s.ident)
-        .filter(|id| ctx.registry().union_enums.contains_key(id))
-    {
+    if let Some(id) = hint_union_ident(ty_hint, ctx) {
         return box_to_union(expr, id, ctx);
     }
     // An optional struct field read into its inner (non-`Option`) type unwraps

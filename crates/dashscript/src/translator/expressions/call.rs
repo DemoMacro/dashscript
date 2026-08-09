@@ -738,7 +738,12 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
             // (`compute(i)` where `i` is an `i64` counter) is site-cast to
             // match the callee's `f64` parameter type. A non-number argument
             // keeps the struct-hint / default-aware path.
-            let val = if is_number_arg(a, ctx) {
+            // A union parameter takes the argument boxed into its `Num`
+            // variant (via `translate_argument_init`), not cast to a bare
+            // `f64` — so skip the number-flavor path when the hint is a union.
+            let val = if is_number_arg(a, ctx)
+                && super::hint_union_ident(hint_ty.as_ref(), ctx).is_none()
+            {
                 match a.as_expression() {
                     Some(e) => translate_number_to(e, NumberFlavor::F64, ctx),
                     None => translate_argument_init(a, hint_ty.as_ref(), ctx),

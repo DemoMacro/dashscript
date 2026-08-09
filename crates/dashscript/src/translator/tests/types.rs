@@ -706,6 +706,24 @@ fn boxes_record_literal_values_into_union_enum() {
 }
 
 #[test]
+fn boxes_call_argument_into_union_param() {
+    // A scalar argument flowing into a union parameter boxes into the matching
+    // variant — `val_el("c:v", 1)` where the 2nd param is `string | number` →
+    // `val_el(.., Enum::Num(1_f64))`. Without it the call passes a bare
+    // `f64`/`String`, an E0308 against the enum parameter type.
+    let src = "function val_el(tag: string, value: string | number): string { return tag; }\nfunction f(): void { val_el(\"c:v\", 1); val_el(\"c:v\", \"foo\"); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("::Num(1_f64)"),
+        "number argument boxes into Num: got:\n{rust}"
+    );
+    assert!(
+        rust.contains("::Str(\"foo\".to_string())"),
+        "string argument boxes into Str: got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_hashmap_index_to_get() {
     let src =
         "function f(): number { const m: Record<string, number> = { a: 1 }; return m[\"a\"]; }";
