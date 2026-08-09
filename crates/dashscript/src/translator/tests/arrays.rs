@@ -414,6 +414,17 @@ fn translates_array_filter_with_named_callback() {
 }
 
 #[test]
+fn translates_array_filter_with_boolean_coercion_callback() {
+    // `arr.filter(Boolean)` — `Boolean` as a callback reference is not a value
+    // in Rust (no `Boolean` fn object), so the truthiness it names is inlined
+    // as a closure rather than wrapping a call to the lowercased identifier.
+    let src = "function f(): void { const xs: number[] = [1, 2]; const ys = xs.filter(Boolean); }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("crate::__ds::truthy(&__cb)"), "got:\n{rust}");
+    assert!(!rust.contains("boolean("), "got:\n{rust}");
+}
+
+#[test]
 fn translates_array_every_with_named_callback() {
     // `every`/`some`/`forEach` take the item by value, so a named callback is
     // passed bare (no deref wrap).

@@ -455,6 +455,17 @@ fn array_method_impl(recv: &Ident, name: &str, args: &[Argument], ctx: &Ctx<'_>)
 fn callback_arg(arg: &Argument, ctx: &Ctx<'_>, borrow: bool) -> Option<Expr> {
     match arg {
         Argument::ArrowFunctionExpression(arrow) => Some(arrow_expr(arrow, ctx, borrow)),
+        // A global callable used as a callback reference — `arr.filter(Boolean)`,
+        // `arr.map(Number)` — is not a value in Rust (there is no `Boolean` fn
+        // object), so inline the coercion it names as a closure rather than
+        // wrapping a call to the lowercased identifier.
+        Argument::Identifier(id) if borrow => {
+            if let Some(closure) = global_callable_closure(&id.name) {
+                return Some(closure);
+            }
+            let f = translate_argument(arg, ctx);
+            Some(parse_quote!((|__cb| #f(*__cb))))
+        }
         _ => {
             let f = translate_argument(arg, ctx);
             if borrow {
@@ -464,6 +475,19 @@ fn callback_arg(arg: &Argument, ctx: &Ctx<'_>, borrow: bool) -> Option<Expr> {
             }
         }
     }
+}
+
+/// The closure form of a global callable used as a callback reference. Only
+/// the coercions whose runtime helper is generic over the element type are
+/// covered (`Boolean` → truthiness, `String` → `Display`); `Number` and the
+/// parse globals depend on the element type and are left to the caller's
+/// fallback. `None` for any other name.
+fn global_callable_closure(name: &str) -> Option<Expr> {
+    Some(match name {
+        "Boolean" => parse_quote!((|__cb| crate::__ds::truthy(&__cb))),
+        "String" => parse_quote!((|__cb| crate::__ds::display(&__cb))),
+        _ => return None,
+    })
 }
 
 /// `Array.<m>(…)`: `of(…)` → a fresh `vec![…]`; `isArray(x)` folds at compile
