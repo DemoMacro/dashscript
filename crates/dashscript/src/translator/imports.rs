@@ -591,8 +591,15 @@ pub(crate) fn named_local(spec: &ImportDeclarationSpecifier) -> Option<Ident> {
 /// interface/type alias) keeps PascalCase; otherwise snake_cased (a function or
 /// value). The same rule applies to both the imported name (what the source
 /// module exports) and the local binding — a Rust `use` of a type is a type, a
-/// `use` of a value is a value.
+/// `use` of a value is a value. A SCREAMING_SNAKE name (all-caps with an
+/// underscore) is a `const` export by TS convention, not a type — snake-fold
+/// it to match the const-item emit (which snake-folds the binding), so a
+/// cross-file `use` resolves. A single all-caps word without an underscore
+/// (`URL`, `T`) is ambiguous and stays a type.
 fn casing_ident(name: &str) -> Ident {
+    if name.contains('_') && name.chars().all(|c| !c.is_ascii_lowercase()) {
+        return bindings::snake(name);
+    }
     if name.chars().next().is_some_and(char::is_uppercase) {
         bindings::type_ident(name)
     } else {
@@ -1076,6 +1083,24 @@ mod tests {
         let sig = f.signature.as_ref().expect("sig");
         assert!(sig.return_type.is_none());
         assert_eq!(sig.params[0].type_text.as_deref(), Some("number"));
+    }
+
+    #[test]
+    fn casing_ident_snake_folds_screaming_snake_const() {
+        // A SCREAMING_SNAKE name is a const export, snake-folded to match the
+        // const-item emit (which snake-folds the binding) so a cross-file `use`
+        // resolves to the definition.
+        assert_eq!(
+            casing_ident("ZIP_DEFLATE_LEVEL").to_string(),
+            "zip_deflate_level"
+        );
+        assert_eq!(casing_ident("MAX_SIZE").to_string(), "max_size");
+        // PascalCase stays a type; camelCase snake-folds; a single all-caps word
+        // without an underscore stays a type (URL, T).
+        assert_eq!(casing_ident("MyType").to_string(), "MyType");
+        assert_eq!(casing_ident("myFunc").to_string(), "my_func");
+        assert_eq!(casing_ident("URL").to_string(), "URL");
+        assert_eq!(casing_ident("T").to_string(), "T");
     }
 
     #[test]
