@@ -879,3 +879,20 @@ fn translates_readonly_operator_to_inner() {
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(rust.contains("type R = Vec<f64>"), "got:\n{rust}");
 }
+
+#[test]
+fn nullable_struct_return_boxes_literal_in_some() {
+    // A function returning `T | undefined` whose body returns a `T`-shaped
+    // object literal must lower to `Some(T { .. })`, not `Option { .. }`
+    // (which treats the wrapper as a struct — E0574).
+    let src = "interface Point { x: number; y: number }\nfunction make(): Point | undefined { return { x: 1, y: 2 }; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("Some(Point"),
+        "should wrap the literal in Some(Point): got:\n{rust}"
+    );
+    assert!(
+        !rust.contains("Option {"),
+        "should not treat Option as a struct: got:\n{rust}"
+    );
+}

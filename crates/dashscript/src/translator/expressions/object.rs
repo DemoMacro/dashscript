@@ -20,30 +20,46 @@ pub(super) fn object_expr(
     ty_hint: Option<&syn::Type>,
     ctx: &Ctx<'_>,
 ) -> Expr {
-    let Some(path) = ty_hint.and_then(types::type_path) else {
+    // A nullable target (`Option<T>`) wraps the whole literal in `Some(...)`.
+    // Strip the Option to its inner type's path so the literal constructs the
+    // inner type (struct, HashMap, or union variant); the wrapper is applied
+    // once at the end. Without this, `Option<Struct>` emits `Option { .. }` —
+    // treating the wrapper as the struct (E0574).
+    let (path, wrap_some) = match ty_hint.and_then(types::type_path) {
+        Some(hint_path) => match option_inner_path(hint_path) {
+            Some(inner) => (inner, true),
+            None => (hint_path.clone(), false),
+        },
         // No type hint: an anonymous object literal lowers to a `HashMap` (JS
         // objects are dynamic maps). A binding infers `HashMap<String, V>` from
         // its values via `infer_literal_type`, so its field accesses route
         // through `is_hashmap_local`; a literal with no binding context still
         // produces a usable `HashMap` rather than `todo!()`.
-        return hashmap_literal(obj, None, ctx);
+        None => return hashmap_literal(obj, None, ctx),
+    };
+    let some = |expr: Expr| -> Expr {
+        if wrap_some {
+            parse_quote!(::core::option::Option::Some(#expr))
+        } else {
+            expr
+        }
     };
     // `Record<K, V>` (a `HashMap`) → `HashMap::from([(key, value), …])`. A
     // value type that is a scalar-union enum boxes each literal into its variant.
-    if is_hashmap(path) {
-        let val_ty = hashmap_value_path(path);
-        return hashmap_literal(obj, val_ty.as_ref(), ctx);
+    if is_hashmap(&path) {
+        let val_ty = hashmap_value_path(&path);
+        return some(hashmap_literal(obj, val_ty.as_ref(), ctx));
     }
-    if let Some(expr) = variant_construct(obj, path, ctx) {
-        return expr;
+    if let Some(expr) = variant_construct(obj, &path, ctx) {
+        return some(expr);
     }
     // A `…v` spread records a struct-update base (`Struct { …, ..v }`); only an
     // identifier base is supported. If multiple spreads appear, the last wins.
-    let optionals = optional_fields_for(path, ctx);
+    let optionals = optional_fields_for(&path, ctx);
     // A struct-literal expression cannot carry generic arguments — `Foo<T> { .. }`
     // parses as `Foo < T > { .. }` (comparison). Use a bare path; the literal's
     // type is inferred from context, so the args are redundant in the expression.
-    let bare_path = strip_generic_args(path);
+    let bare_path = strip_generic_args(&path);
     let mut base: Option<Expr> = None;
     let fields: Vec<syn::FieldValue> = obj
         .properties
@@ -74,7 +90,7 @@ pub(super) fn object_expr(
             }
         })
         .collect();
-    match base {
+    let literal = match base {
         Some(b) => {
             if fields.is_empty() {
                 parse_quote!(#bare_path { ..#b })
@@ -83,14 +99,37 @@ pub(super) fn object_expr(
             }
         }
         None => {
-            let extras = missing_optionals(path, &fields, ctx);
+            let extras = missing_optionals(&path, &fields, ctx);
             // A single repetition avoids a dangling comma when both `fields`
             // and `extras` are empty — `Element { , }` would not parse.
             let mut all = fields;
             all.extend(extras);
             parse_quote!(#bare_path { #(#all),* })
         }
+    };
+    some(literal)
+}
+
+/// The inner type's path when `path` is `Option<T>` with a single type argument
+/// that is itself a path — the shape a nullable struct/HashMap/union return
+/// lowers to. Returns `None` for a non-`Option` path or an inner type that is
+/// not a simple path (`Option<Vec<_>>`, `Option<(A, B)>`, …), so those fall
+/// through unchanged.
+fn option_inner_path(path: &syn::Path) -> Option<syn::Path> {
+    let seg = path.segments.last()?;
+    if seg.ident != "Option" {
+        return None;
     }
+    let syn::PathArguments::AngleBracketed(args) = &seg.arguments else {
+        return None;
+    };
+    let Some(syn::GenericArgument::Type(inner)) = args.args.first() else {
+        return None;
+    };
+    let syn::Type::Path(tp) = inner else {
+        return None;
+    };
+    Some(tp.path.clone())
 }
 
 /// A copy of `path` with every segment's generic arguments stripped. A
