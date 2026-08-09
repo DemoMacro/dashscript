@@ -60,6 +60,14 @@ pub fn translate_type(ty: &TSType) -> Type {
         },
         // `(T)` — parens are grouping only; the inner type is the shape.
         TSType::TSParenthesizedType(p) => translate_type(&p.type_annotation),
+        // `A & B` (intersection) — take the first member; the merged shape is
+        // not reified, so a named struct `A` plus an inline extension lowers to
+        // `A` (its fields are what the body typically accesses).
+        TSType::TSIntersectionType(inter) => inter
+            .types
+            .first()
+            .map(translate_type)
+            .unwrap_or_else(|| parse_quote!(_)),
         // `` `Hello ${string}` `` — a template-literal type is a `String` at runtime.
         TSType::TSTemplateLiteralType(_) => parse_quote!(String),
         // `object` (non-primitive) → `serde_json::Value`, the runtime shape of an
@@ -76,14 +84,13 @@ pub fn translate_type(ty: &TSType) -> Type {
         | TSType::TSAnyKeyword(_)
         | TSType::TSIntrinsicKeyword(_) => parse_quote!(_),
         // TS type-level computation with no Rust analogue (conditional/mapped/
-        // infer/indexed/intersection/`typeof`/predicate/import/named-tuple). `_`
-        // surfaces each as a cargo error.
+        // infer/indexed/`typeof`/predicate/import/named-tuple). `_` surfaces
+        // each as a cargo error.
         TSType::TSConditionalType(_)
         | TSType::TSConstructorType(_)
         | TSType::TSImportType(_)
         | TSType::TSIndexedAccessType(_)
         | TSType::TSInferType(_)
-        | TSType::TSIntersectionType(_)
         | TSType::TSMappedType(_)
         | TSType::TSNamedTupleMember(_)
         | TSType::TSTypePredicate(_)
@@ -460,8 +467,19 @@ fn reference_type(r: &TSTypeReference) -> Type {
         return parse_quote!(_);
     };
     let name: &str = &id.name;
-    // `Readonly<T>` → `T` (a TS type-level constraint; the runtime shape is `T`).
-    if name == "Readonly" {
+    // `Readonly<T>` / `Partial<T>` / `Required<T>` → `T`. Readonly is a pure
+    // type-level constraint; Partial/Required reify field optionality, but the
+    // runtime shape stays `T` — option fields are already `Option<T>`, and a
+    // `Partial<HashMap>` is just the map — so the modifier is unwrapped.
+    // Field-level Option wrapping is not reified.
+    if matches!(name, "Readonly" | "Partial" | "Required") {
+        if let Some(inner) = r.type_arguments.as_ref().and_then(|a| a.params.first()) {
+            return translate_type(inner);
+        }
+    }
+    // `Exclude<T, U>` / `Extract<T, U>` / `NonNullable<T>` → `T` (the first
+    // type argument; the filtered subset is not reified at the type level).
+    if matches!(name, "Exclude" | "Extract" | "NonNullable") {
         if let Some(inner) = r.type_arguments.as_ref().and_then(|a| a.params.first()) {
             return translate_type(inner);
         }
