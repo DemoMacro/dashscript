@@ -163,6 +163,30 @@ pub(super) fn translate_for_of(
             return vec![parse_quote!(for (#k, #v) in #record.clone().into_iter() #body)];
         }
     }
+    // `for (const [i, v] of E.entries())` →
+    // `{ for (idx, v) in E.iter().cloned().enumerate() { let i = idx as f64; … } }`.
+    // ES `Array.prototype.entries()` yields `[index, value]` pairs, but a Rust
+    // `Vec` has no `.entries()`, so lower the destructure to `iter().enumerate()`.
+    // The value is cloned to an owned `T` (descriptor options derive `Clone`) so
+    // a move-site use — passing `v` to a function — needs no reference dance;
+    // the index is rebound as `f64` (the TS `number`) so it marshals like any
+    // other `number` (a `: number` param, a `Vec` index via the usual cast).
+    // `Object.entries(record)` is the separate path above.
+    if let Some((k, v)) = for_of_array_pattern_bindings(&stmt.left) {
+        if let Some(recv) = entries_method_receiver(&stmt.right) {
+            locals.insert(k.to_string(), parse_quote!(f64));
+            let ctx = Ctx::new(&*locals, registry, narrow, names);
+            let recv_expr = expressions::translate_expr(recv, &ctx);
+            let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
+            let idx = format_ident!("__ds_idx");
+            return vec![parse_quote!({
+                for (#idx, #v) in #recv_expr.iter().cloned().enumerate() {
+                    let #k: f64 = #idx as f64;
+                    #body
+                }
+            })];
+        }
+    }
     let Some(pat) = for_of_binding(&stmt.left, names) else {
         return vec![];
     };
@@ -402,6 +426,29 @@ fn object_entries_receiver<'a, 'b>(
         return None;
     }
     call.arguments.first()
+}
+
+/// `<expr>.entries()` (no arguments) → the receiver `<expr>`, when `right` is
+/// exactly that member call. ES `Array.prototype.entries` (and
+/// `Map.prototype.entries`) yield `[index, value]` pairs with no arguments; a
+/// Rust `Vec` has no `.entries()`, so [`super::translate_for_of`] lowers the
+/// destructure to `iter().enumerate()`. `None` for anything else — including
+/// `Object.entries(x)` (one argument, owned by [`object_entries_receiver`]) —
+/// so the generic for-of path handles ordinary iterables.
+fn entries_method_receiver<'a, 'b>(right: &'b Expression<'a>) -> Option<&'b Expression<'a>> {
+    let Expression::CallExpression(call) = right else {
+        return None;
+    };
+    if !call.arguments.is_empty() {
+        return None;
+    }
+    let Expression::StaticMemberExpression(m) = &call.callee else {
+        return None;
+    };
+    if m.property.name.as_str() != "entries" {
+        return None;
+    }
+    Some(&m.object)
 }
 
 /// The element type of a homogeneous inline array literal — `[/pat/]` →
