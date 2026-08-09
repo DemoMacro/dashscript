@@ -76,17 +76,18 @@ fn collect_skips_cargo_import() {
 #[test]
 fn bare_import_emits_use_for_npm_resolution() {
     // A bare specifier (`lodash`) is an npm import — the translator emits
-    // `use third_party::lodash::x;` (the `ds_` prefix a cargo crate keeps is
-    // dropped under `third_party/`, its isolated namespace) and `check` passes.
-    // Resolution is the build pipeline's job (the third correctness layer);
-    // whether it lowers depends on the target. `ds build` resolves `lodash`
-    // under `node_modules/`: a `.ts` entry translates, a `.js` entry errors
-    // honestly.
+    // `use crate::third_party::lodash::x;` (the `ds_` prefix a cargo crate
+    // keeps is dropped under `third_party/`, its isolated namespace; rooted at
+    // `crate::` so a submodule's `use` resolves the crate-root mod) and `check`
+    // passes. Resolution is the build pipeline's job (the third correctness
+    // layer); whether it lowers depends on the target. `ds build` resolves
+    // `lodash` under `node_modules/`: a `.ts` entry translates, a `.js` entry
+    // errors honestly.
     let rust = Translator::new()
         .translate("import { x } from \"lodash\";")
         .expect("should translate");
     assert!(
-        rust.contains("use third_party::lodash::x"),
+        rust.contains("use crate::third_party::lodash::x"),
         "bare import emitted no use: {rust}"
     );
     let diags = Translator::new().check("import { x } from \"lodash\";");
@@ -105,7 +106,7 @@ fn bare_import_normalizes_scope_and_hyphen() {
         .translate("import { x } from \"@scope/pkg-name\";")
         .expect("should translate");
     assert!(
-        rust.contains("use third_party::scope::pkg_name::x"),
+        rust.contains("use crate::third_party::scope::pkg_name::x"),
         "scope/hyphen not normalized: {rust}"
     );
 }

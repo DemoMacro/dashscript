@@ -464,14 +464,15 @@ pub(crate) fn mod_use_path(source: &str, mod_ident: &Ident) -> syn::Path {
     } else {
         // A bare npm specifier lives under `third_party/<segment-path>`,
         // preserving the specifier's directory structure (the scope→name and
-        // pkg→subpath `/` boundaries). The use path mirrors that tree (relative,
-        // like the original single-segment form): `@noble/hashes/sha2.js` →
-        // `third_party::noble::hashes::sha2Djs`.
+        // pkg→subpath `/` boundaries). Rooted at `crate::` so a submodule's
+        // `use` resolves the crate-root `third_party` mod (2021 edition does
+        // not resolve a bare first segment to a crate item):
+        // `@noble/hashes/sha2.js` → `crate::third_party::noble::hashes::sha2Djs`.
         let path = format!(
-            "third_party::{}",
+            "crate::third_party::{}",
             npm_third_party_module_path(source).replace('/', "::")
         );
-        syn::parse_str(&path).unwrap_or_else(|_| parse_quote!(third_party))
+        syn::parse_str(&path).unwrap_or_else(|_| parse_quote!(crate::third_party))
     }
 }
 
@@ -1137,11 +1138,11 @@ mod tests {
         );
         clear_workspace_deps();
         // After clear, the specifier is no longer a workspace dep — it routes
-        // as a bare npm dep under third_party/.
+        // as a bare npm dep under crate::third_party/.
         let path = mod_use_path("@scope/b", &ident);
         assert_eq!(
             path.segments.first().expect("segments").ident.to_string(),
-            "third_party"
+            "crate"
         );
     }
 
@@ -1165,11 +1166,11 @@ mod tests {
         );
         clear_workspace_member_crates();
         // After clear, the specifier is no longer a member crate — routes as a
-        // bare npm dep under third_party/.
+        // bare npm dep under crate::third_party/.
         let path = mod_use_path("@scope/b", &ident);
         assert_eq!(
             path.segments.first().expect("segments").ident.to_string(),
-            "third_party"
+            "crate"
         );
     }
 
