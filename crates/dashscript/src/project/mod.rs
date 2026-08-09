@@ -771,6 +771,15 @@ pub fn translate_project(
     // member's intra-package imports — the same shape as fields/optionals above.
     let mut shared_lazy_statics: std::collections::HashMap<String, syn::Type> =
         std::collections::HashMap::new();
+    // Function/const-arrow signatures aggregated across the member's files, so a
+    // module-global singleton (`const x = buildWidget()`) infers its `OnceLock`
+    // cell type from a factory defined in another file of the same member. The
+    // lone-file path shares these via `collect_package_function_signatures`; a
+    // member's files are already enumerated in `files`, so a per-file collect +
+    // merge covers the member's intra-package imports — the same shape as
+    // fields/optionals/lazy-statics above.
+    let mut shared_signatures: std::collections::HashMap<String, crate::translator::FnSignature> =
+        std::collections::HashMap::new();
     for ds in &files {
         let Ok(src) = fs::read_to_string(ds) else {
             continue;
@@ -784,6 +793,12 @@ pub fn translate_project(
         for (k, v) in collector.collect_lazy_static_exports(&src) {
             shared_lazy_statics.entry(k).or_insert(v);
         }
+        for (k, v) in collector
+            .collect_function_signatures(&src)
+            .unwrap_or_default()
+        {
+            shared_signatures.entry(k).or_insert(v);
+        }
         let base = ds.parent().unwrap_or_else(|| Path::new(""));
         for imp in collector.imports(&src) {
             if workspace_member_crate(base, &imp.source).is_some() {
@@ -793,7 +808,8 @@ pub fn translate_project(
     }
     let translator = collector
         .with_extra_fields(shared_fields)
-        .with_extra_optionals(shared_optionals);
+        .with_extra_optionals(shared_optionals)
+        .with_extra_function_signatures(shared_signatures);
     crate::translator::imports::set_workspace_member_crates(member_crates);
     crate::translator::imports::set_lazy_static_exports(shared_lazy_statics);
     // Clears the two Phase B thread-locals (workspace-member crates + lazy-
