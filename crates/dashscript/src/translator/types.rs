@@ -349,11 +349,14 @@ fn literal_type(lit: &TSLiteralType) -> Type {
 /// `readonly T` (the `TSTypeOperator` form, e.g. `readonly string[]`) → `T`.
 /// `readonly` is a TS type-level immutability constraint; Rust has no separate
 /// immutable-collection type, so the inner type is the runtime shape.
-/// `keyof T` / `unique symbol` have no Rust analogue and fall back to `_`.
+/// `keyof T` is a union of the operand's string property names — at runtime
+/// every value is a string, so it lowers to `String`. `unique symbol` has no
+/// Rust analogue and falls back to `_`.
 fn operator_type(op: &TSTypeOperator) -> Type {
     match op.operator {
         TSTypeOperatorOperator::Readonly => translate_type(&op.type_annotation),
-        _ => parse_quote!(_),
+        TSTypeOperatorOperator::Keyof => parse_quote!(String),
+        TSTypeOperatorOperator::Unique => parse_quote!(_),
     }
 }
 

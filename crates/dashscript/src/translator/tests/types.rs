@@ -846,3 +846,21 @@ fn web_api_type_annotation_maps_to_ds_wrapper() {
         "ReadableStream<Uint8Array> annotation -> DsReadableStream<Vec<u8>>: {rust}"
     );
 }
+
+#[test]
+fn translates_keyof_operator_to_string() {
+    // `keyof T` is a union of T's string property names; at runtime every
+    // value is a string, so it lowers to `String` (not the `_` placeholder,
+    // which is invalid in a static/return signature).
+    let src = "interface O { a: number; b: string } type K = keyof O;";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("type K = String"), "got:\n{rust}");
+}
+
+#[test]
+fn translates_readonly_operator_to_inner() {
+    // `readonly T` is a type-level immutability hint; the runtime shape is T.
+    let src = "type R = readonly number[];";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(rust.contains("type R = Vec<f64>"), "got:\n{rust}");
+}
