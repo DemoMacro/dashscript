@@ -1306,3 +1306,33 @@ fn whole_module_degrade_routes_all_functions_to_call_module_fn() {
         deps.js_module_sources()
     );
 }
+
+#[test]
+fn whole_module_degrade_still_emits_const_expr_literal() {
+    // whole_module_degrade routes top-level functions to the engine but leaves
+    // class methods static. A const-expr literal (`const LEVEL = 0`) is a
+    // compile-time constant with no runtime initializer, so it must still
+    // lower to a `const` item even under whole_module_degrade — otherwise a
+    // static class method referencing it is E0425 (the literal was swept into
+    // the engine exec_stmts, never emitted as an item). Non-const-expr value
+    // bindings (`const M = new Map()`) stay in the engine as before.
+    Translator::set_whole_module_degrade(true);
+    struct DegradeGuard;
+    impl Drop for DegradeGuard {
+        fn drop(&mut self) {
+            Translator::set_whole_module_degrade(false);
+        }
+    }
+    let _dg = DegradeGuard;
+    let src = "const LEVEL = 0;\n\
+               export class C {\n\
+                 \x20  save(): number { return LEVEL; }\n\
+               }";
+    let (rust, _deps) = Translator::new()
+        .translate_with_deps_as(src, FileRole::Module)
+        .expect("should translate");
+    assert!(
+        rust.contains("const level: f64 = 0_f64"),
+        "const-expr literal must still emit under whole_module_degrade:\n{rust}"
+    );
+}

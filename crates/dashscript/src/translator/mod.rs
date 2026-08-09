@@ -830,22 +830,29 @@ impl Translator {
         let const_arrow_names = functions::const_arrow_fn_names(&program.body, &names);
         let mut exec_stmts: Vec<&oxc_ast::ast::Statement> = Vec::new();
         for s in &program.body {
-            // whole_module_degrade: every value binding and executable runs
-            // under the engine (the module source carries them), so skip the
-            // static hoist paths — a `const M = new Map()` must not be emitted
-            // as a half-initialized OnceLock alongside the engine's filled map.
-            // Declarations (function/class/interface/type/import/export) still
-            // lower to items; their function bodies route to `call_module_fn`.
-            if functions::whole_module_degrade() && functions::is_executable_top_level(s) {
-                exec_stmts.push(s);
-                continue;
-            }
-            // A promoted const-expr `const` lowers to a crate-level `const`
-            // item here (escape promotion, A3) — NOT collected into `fn main`,
-            // so a top-level function reading it resolves to the item, not a
-            // `main` local it cannot see.
+            // A promoted const-expr `const` (a Number/Bool/String literal)
+            // lowers to a crate-level `const` item even under
+            // whole_module_degrade: it is a compile-time constant with no
+            // runtime initializer, so a static class method referencing it
+            // resolves to the item. whole_module_degrade routes top-level
+            // functions to the engine but leaves class methods static, so the
+            // literal must be emitted — otherwise the static reference is
+            // E0425. (`promoted_const_item` only matches literals, so a
+            // non-const-expr like `const M = new Map()` falls through to the
+            // engine path below.)
             if let Some(item) = functions::promoted_const_item(s, &promoted, &names) {
                 items.push(item);
+                continue;
+            }
+            // whole_module_degrade: every other value binding and executable
+            // runs under the engine (the module source carries them), so skip
+            // the static hoist paths — a `const M = new Map()` must not be
+            // emitted as a half-initialized OnceLock alongside the engine's
+            // filled map. Declarations (function/class/interface/type/import/
+            // export) still lower to items; their function bodies route to
+            // `call_module_fn`.
+            if functions::whole_module_degrade() && functions::is_executable_top_level(s) {
+                exec_stmts.push(s);
                 continue;
             }
             // A module-level non-const-expr `const`/non-mutated `let` (an
