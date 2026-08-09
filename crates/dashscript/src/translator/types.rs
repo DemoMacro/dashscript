@@ -478,7 +478,10 @@ fn reference_type(r: &TSTypeReference) -> Type {
     // raw byte buffer, no element type). A `sha1(): Uint8Array` return or a
     // `bytesToHex(buf: Uint8Array)` param thus marshals as a Rust vec of the
     // element type, matching the constructor (`new Int32Array(n)` → `Vec<i32>`).
-    if matches!(name, "ArrayBuffer" | "Buffer") {
+    if matches!(
+        name,
+        "ArrayBuffer" | "ArrayBufferLike" | "Buffer" | "DataView"
+    ) {
         return parse_quote!(Vec<u8>);
     }
     if let Some(elem) = super::expressions::typed_array_elem_type(name) {

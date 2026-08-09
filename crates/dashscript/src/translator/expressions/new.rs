@@ -417,6 +417,19 @@ pub(super) fn new_expr(n: &NewExpression, ctx: &Ctx<'_>) -> Expr {
         if let Some(e) = set_from_array_arg(&n.arguments, ctx) {
             return e;
         }
+        // `new Set(iterable)` where the iterable is a non-literal (a `Vec<T>`
+        // local/member) → collect into a `HashSet<T>`. The array-literal case
+        // above handles `new Set([…])`; a single non-spread arg here is a
+        // `Vec`/iterator (`new Set(fields)`). `.iter().cloned()` borrows and
+        // clones each element (works for owned and borrowed Vecs); a
+        // number-element set surfaces at `cargo check` honestly (f64 lacks
+        // Hash — the literal path wraps in `DsF64Key`, this one does not).
+        if n.arguments.len() == 1 && !matches!(n.arguments[0], Argument::SpreadElement(_)) {
+            let e = array_elem_arg(&n.arguments[0], ctx);
+            return parse_quote!(
+                (#e).iter().cloned().collect::<::std::collections::HashSet<_>>()
+            );
+        }
     }
     // A class field typed `number` is `f64`, so the synthesized `new` takes
     // `f64` parameters — a flavor-promoted `i64` argument (`new Point3D(i, …)`

@@ -436,7 +436,13 @@ fn type_ref_variant(ty: &TSType) -> Option<syn::Variant> {
             }
         }
     }
-    Some(parse_quote!(#variant(#variant)))
+    // Resolve the payload through `translate_type` so a builtin alias
+    // (`Uint8Array`→`Vec<u8>`, `ArrayBuffer`/`Buffer`→`Vec<u8>`, …) lands its
+    // mapped Rust type rather than the bare TS name. A user type (`Foo`) still
+    // resolves to itself, so `Foo(Foo)` is unchanged; only aliased lib types
+    // that previously emitted `Uint8Array(Uint8Array)` (E0425) are fixed.
+    let payload = types::translate_type(ty);
+    Some(parse_quote!(#variant(#payload)))
 }
 
 /// The discriminant value of one object-literal property signature, when its
