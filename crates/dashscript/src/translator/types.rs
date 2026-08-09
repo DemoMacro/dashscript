@@ -547,6 +547,46 @@ fn reference_type(r: &TSTypeReference) -> Type {
     if let Some(ty) = super::builtins::urlpattern_ctor_type(name) {
         return ty;
     }
+    // The remaining WinterTC Web API global constructors used as type
+    // annotations (`blob: Blob`, `stream: ReadableStream<Vec<u8>>`, `… :
+    // Headers`/`Response`/`Request`/`File`/`FormData`/`EventTarget`/`Event`/
+    // `AbortController`/`AbortSignal`/`CompressionStream`) → their `__ds::Ds*`
+    // wrapper — the same type the `new` lowering builds, so an annotation and a
+    // constructor agree. Without this the bare name emits unresolved
+    // (E0433/E0425). The marker probe (mod.rs) catches the `__ds::Ds*` text
+    // this emits, so the matching helper slice is injected automatically —
+    // `Blob` → BLOB_HELPER, `ReadableStream` → DS_STREAMS_HELPER, … — the way
+    // `URL` → URL_HELPER. `DsResponse`/`DsRequest` trip the explicit Fetch probe
+    // (mod.rs), and `DsEventTarget`/`DsAbort*` match the prefix markers
+    // (`__ds::DsEvent`/`__ds::DsAbort`). A generic `ReadableStream<T>` keeps its
+    // argument; a bare `ReadableStream` defaults to `Vec<u8>` (the byte-stream
+    // shape a `new ReadableStream(…)` builds).
+    let web_api: Option<Type> = match name {
+        "Blob" => Some(parse_quote!(crate::__ds::DsBlob)),
+        "File" => Some(parse_quote!(crate::__ds::DsFile)),
+        "FormData" => Some(parse_quote!(crate::__ds::DsFormData)),
+        "Headers" => Some(parse_quote!(crate::__ds::DsHeaders)),
+        "Response" => Some(parse_quote!(crate::__ds::DsResponse)),
+        "Request" => Some(parse_quote!(crate::__ds::DsRequest)),
+        "EventTarget" => Some(parse_quote!(crate::__ds::DsEventTarget)),
+        "Event" => Some(parse_quote!(crate::__ds::DsEvent)),
+        "AbortController" => Some(parse_quote!(crate::__ds::DsAbortController)),
+        "AbortSignal" => Some(parse_quote!(crate::__ds::DsAbortSignal)),
+        "CompressionStream" => Some(parse_quote!(crate::__ds::DsCompressionStream)),
+        "ReadableStream" => {
+            let inner = r
+                .type_arguments
+                .as_ref()
+                .and_then(|a| a.params.first())
+                .map(translate_type)
+                .unwrap_or_else(|| parse_quote!(::std::vec::Vec<u8>));
+            Some(parse_quote!(crate::__ds::DsReadableStream<#inner>))
+        }
+        _ => None,
+    };
+    if let Some(ty) = web_api {
+        return ty;
+    }
     // A named reference with type arguments (`Packer<TFile>`, `Promise<T>`)
     // keeps its arguments — a generic return type is what cross-file singleton
     // inference instantiates from. Readonly/Array/Record/Map/Set above already

@@ -814,8 +814,12 @@ fn web_api_type_annotation_maps_to_ds_wrapper() {
     // the bare `URL`/`URLSearchParams`/`URLPattern` name (an unresolved Rust
     // type → E0433, which dropped the urlpattern-constructor fixture to
     // `partial`). `DsUrl,` (trailing comma) distinguishes the first param
-    // from `DsUrlSearchParams`.
-    let src = "function f(u: URL, s: URLSearchParams, p: URLPattern): void {}";
+    // from `DsUrlSearchParams`. The same holds for the remaining Web API
+    // constructors (`Blob`/`Headers`/`ReadableStream<…>`) — a static struct
+    // field or a degraded signature referencing one resolves to the wrapper,
+    // and the marker probe injects the matching helper slice automatically.
+    // `ReadableStream<T>` keeps its argument (`Uint8Array` → `Vec<u8>`).
+    let src = "function f(u: URL, s: URLSearchParams, p: URLPattern, b: Blob, h: Headers, st: ReadableStream<Uint8Array>): void {}";
     let rust = Translator::new().translate(src).expect("should translate");
     assert!(
         rust.contains("crate::__ds::DsUrl,"),
@@ -828,5 +832,17 @@ fn web_api_type_annotation_maps_to_ds_wrapper() {
     assert!(
         rust.contains("crate::__ds::DsURLPattern"),
         "URLPattern annotation -> DsURLPattern: {rust}"
+    );
+    assert!(
+        rust.contains("crate::__ds::DsBlob"),
+        "Blob annotation -> DsBlob: {rust}"
+    );
+    assert!(
+        rust.contains("crate::__ds::DsHeaders"),
+        "Headers annotation -> DsHeaders: {rust}"
+    );
+    assert!(
+        rust.contains("crate::__ds::DsReadableStream<Vec<u8>>"),
+        "ReadableStream<Uint8Array> annotation -> DsReadableStream<Vec<u8>>: {rust}"
     );
 }
