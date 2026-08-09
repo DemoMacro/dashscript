@@ -46,7 +46,7 @@ pub fn translate_interface(iface: &TSInterfaceDeclaration, registry: &TypeRegist
         .body
         .body
         .iter()
-        .filter_map(|sig| struct_field(sig, &parent, &mut anon))
+        .filter_map(|sig| struct_field(sig, &parent, &mut anon, registry))
         .collect();
     // Flatten `extends A, B` parents' fields into this struct (Rust has no
     // struct inheritance, so a parent's fields are merged verbatim). A field
@@ -190,9 +190,10 @@ pub(super) fn struct_field(
     sig: &TSSignature,
     parent: &str,
     anon: &mut Vec<Item>,
+    registry: &TypeRegistry,
 ) -> Option<TokenStream> {
     match sig {
-        TSSignature::TSPropertySignature(ps) => property_field(ps, parent, anon),
+        TSSignature::TSPropertySignature(ps) => property_field(ps, parent, anon, registry),
         TSSignature::TSMethodSignature(ms) => method_field(ms),
         _ => None,
     }
@@ -204,11 +205,12 @@ fn property_field(
     ps: &TSPropertySignature,
     parent: &str,
     anon: &mut Vec<Item>,
+    registry: &TypeRegistry,
 ) -> Option<TokenStream> {
     let key = bindings::property_key_name(&ps.key)?;
     let ta = ps.type_annotation.as_ref()?;
     let field_name = key.to_string();
-    let mut ty = field_type(&ta.type_annotation, parent, &field_name, anon);
+    let mut ty = field_type(&ta.type_annotation, parent, &field_name, anon, registry);
     // A bare `field: <parent>` (the struct naming itself, not via `[]`) would
     // make the struct infinite-sized; `Box` indirection fixes it. The optional
     // wrap is added after, so `parent?: Element` → `Option<Box<Element>>`.
@@ -224,6 +226,14 @@ fn property_field(
     if is_nullable_self_reference(&ta.type_annotation, parent) {
         let parent_ident = format_ident!("{}", parent);
         ty = parse_quote!(Option<Box<#parent_ident>>);
+    }
+    // Mutual recursion: `A.b: B` where `B.a: A` (transitively). The bare
+    // self-checks above miss it (B != A), so a cycle through B leaves the
+    // struct infinite-sized (E0072). Box a field whose named struct reaches
+    // back to `parent` via the registry's interface fields — `Box<B>` for a
+    // bare reference, `Option<Box<B>>` for a nullable `B | undefined`/`B | null`.
+    if let Some(boxed) = box_if_mutual_recursive(&ta.type_annotation, parent, registry) {
+        ty = boxed;
     }
     let ty: Type = if ps.optional {
         parse_quote!(Option<#ty>)
@@ -262,7 +272,13 @@ fn method_field(ms: &TSMethodSignature) -> Option<TokenStream> {
 /// struct (recursive: its own inline-object fields become nested anon structs,
 /// parented by the new struct's name). An array of inline objects becomes
 /// `Vec<anon>`. Anything else maps through `types::translate_type`.
-fn field_type(ty: &TSType, parent: &str, field: &str, anon: &mut Vec<Item>) -> Type {
+fn field_type(
+    ty: &TSType,
+    parent: &str,
+    field: &str,
+    anon: &mut Vec<Item>,
+    registry: &TypeRegistry,
+) -> Type {
     match ty {
         TSType::TSTypeLiteral(lit) => {
             let anon_name = anon_struct_name(parent, field);
@@ -270,7 +286,7 @@ fn field_type(ty: &TSType, parent: &str, field: &str, anon: &mut Vec<Item>) -> T
             let fields: Vec<TokenStream> = lit
                 .members
                 .iter()
-                .filter_map(|sig| struct_field(sig, &anon_parent, anon))
+                .filter_map(|sig| struct_field(sig, &anon_parent, anon, registry))
                 .collect();
             anon.push(Item::Struct(
                 parse_quote! { #[derive(Clone, Debug, PartialEq)] struct #anon_name { #(#fields)* } },
@@ -278,7 +294,7 @@ fn field_type(ty: &TSType, parent: &str, field: &str, anon: &mut Vec<Item>) -> T
             parse_quote!(#anon_name)
         }
         TSType::TSArrayType(arr) => {
-            let inner = field_type(&arr.element_type, parent, field, anon);
+            let inner = field_type(&arr.element_type, parent, field, anon, registry);
             parse_quote!(Vec<#inner>)
         }
         _ => types::translate_type_for_data(ty),
@@ -332,4 +348,104 @@ fn is_nullable_self_reference(ty: &TSType, parent: &str) -> bool {
         .iter()
         .any(|t| matches!(t, TSType::TSUndefinedKeyword(_) | TSType::TSNullKeyword(_)));
     has_self && has_null
+}
+
+/// The struct name a bare type reference names (`B` for `field: B`), or `None`
+/// for anything else (a union, array, primitive). A mutual-recursion check
+/// only considers a direct struct reference — `B[]` is already `Vec`-indirect.
+fn single_struct_ref(ty: &TSType) -> Option<String> {
+    let TSType::TSTypeReference(r) = ty else {
+        return None;
+    };
+    let TSTypeName::IdentifierReference(id) = &r.type_name else {
+        return None;
+    };
+    Some(id.name.to_string())
+}
+
+/// Recurse a lowered `syn::Type`, collecting every path-segment ident (a
+/// candidate struct name) and recursing into angle-bracketed type arguments.
+/// Container idents (`Option`, `Vec`, `Box`, `HashMap`) are collected too but
+/// harmlessly ignored — `reaches_back` filters them via the registry lookup.
+fn collect_struct_idents(ty: &Type, out: &mut Vec<String>) {
+    if let Type::Path(tp) = ty {
+        for seg in &tp.path.segments {
+            out.push(seg.ident.to_string());
+            if let syn::PathArguments::AngleBracketed(args) = &seg.arguments {
+                for arg in &args.args {
+                    if let syn::GenericArgument::Type(t) = arg {
+                        collect_struct_idents(t, out);
+                    }
+                }
+            }
+        }
+    }
+}
+
+/// Whether struct `start` transitively references `target` through its fields
+/// (and their fields, …), per the registry's interface signatures. A `visited`
+/// set bounds the walk — a cycle that does not reach `target` terminates. The
+/// field types are already-lowered `syn::Type`s; `collect_struct_idents`
+/// recurses through `Option`/`Vec`/`Box`/`HashMap` type arguments so a field
+/// spelled `Option<Box<B>>` still counts as referencing `B`.
+fn reaches_back(
+    start: &str,
+    target: &str,
+    registry: &TypeRegistry,
+    visited: &mut HashSet<String>,
+) -> bool {
+    if start == target {
+        return true;
+    }
+    if !visited.insert(start.to_string()) {
+        return false;
+    }
+    let Some(fields) = registry.interface_own_fields.get(start) else {
+        return false;
+    };
+    let mut ids = Vec::new();
+    for f in fields {
+        ids.clear();
+        collect_struct_idents(&f.ty, &mut ids);
+        for id in &ids {
+            if reaches_back(id, target, registry, visited) {
+                return true;
+            }
+        }
+    }
+    false
+}
+
+/// Box a field whose named struct cycles back to `parent` (mutual recursion),
+/// returning the boxed `Type` or `None` when the field is not part of such a
+/// cycle. A bare `field: B` (B reaches `parent`) becomes `Box<B>`; a nullable
+/// `field: B | undefined`/`B | null` becomes `Option<Box<B>>`. Direct
+/// self-references (`B == parent`) are left to the dedicated self-checks.
+fn box_if_mutual_recursive(ty: &TSType, parent: &str, registry: &TypeRegistry) -> Option<Type> {
+    // Bare `field: B` where B (!= parent) cycles back to parent.
+    if let Some(b) = single_struct_ref(ty) {
+        if b != parent && reaches_back(&b, parent, registry, &mut HashSet::new()) {
+            let b_ident = format_ident!("{}", b);
+            return Some(parse_quote!(Box<#b_ident>));
+        }
+    }
+    // Nullable `field: B | undefined`/`B | null` where some member B
+    // (B != parent) cycles back to parent.
+    if let TSType::TSUnionType(u) = ty {
+        let has_null = u
+            .types
+            .iter()
+            .any(|t| matches!(t, TSType::TSUndefinedKeyword(_) | TSType::TSNullKeyword(_)));
+        if has_null {
+            for member in &u.types {
+                if let Some(b) = single_struct_ref(member) {
+                    if b != parent && reaches_back(&b, parent, registry, &mut HashSet::new()) {
+                        let b_ident = format_ident!("{}", b);
+                        return Some(parse_quote!(Option<Box<#b_ident>>));
+                    }
+                }
+            }
+        }
+    }
+    None
 }

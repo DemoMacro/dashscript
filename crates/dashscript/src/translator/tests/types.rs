@@ -313,6 +313,52 @@ fn nullable_union_self_reference_field_becomes_boxed_option() {
 }
 
 #[test]
+fn mutual_recursion_bare_field_becomes_boxed() {
+    // `A.b: B` where `B.a: A` — a cycle the direct self-check misses (B != A).
+    // Each field Box-indirects so neither struct is infinite-sized (E0072).
+    let src = "interface A { b: B; }\ninterface B { a: A; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("pub b: Box<B>"),
+        "A.b should box to break the A↔B cycle: got:\n{rust}"
+    );
+    assert!(
+        rust.contains("pub a: Box<A>"),
+        "B.a should box to break the A↔B cycle: got:\n{rust}"
+    );
+}
+
+#[test]
+fn mutual_recursion_optional_field_becomes_boxed_option() {
+    // `A.b: B` where `B.a?: A` (optional) — the cycle through B still makes A
+    // infinite-sized, so A.b boxes; B.a is the nullable side and lowers to
+    // `Option<Box<A>>` (Box inner + optional wrap), mirroring effect-dag's
+    // BlendEffectOptions.container / EffectDagOptions.blend? pair.
+    let src = "interface A { b: B; }\ninterface B { a?: A; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("pub b: Box<B>"),
+        "A.b should box to break the A↔B cycle: got:\n{rust}"
+    );
+    assert!(
+        rust.contains("pub a: Option<Box<A>>"),
+        "B.a should be Option<Box<A>>: got:\n{rust}"
+    );
+}
+
+#[test]
+fn non_recursive_struct_field_is_not_boxed() {
+    // `A.b: B` where B never reaches A — not a cycle, so no Box. Guards against
+    // the cycle check over-triggering on any cross-struct reference.
+    let src = "interface A { b: B; }\ninterface B { value: number; }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("pub b: B,") && !rust.contains("pub b: Box<B>"),
+        "A.b should stay bare (no cycle): got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_generic_function_params() {
     let src = "function id<T>(x: T): T { return x; }";
     let rust = Translator::new().translate(src).expect("should translate");

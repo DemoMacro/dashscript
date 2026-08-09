@@ -16,10 +16,17 @@ pub fn translate_type_alias(alias: &TSTypeAliasDeclaration) -> Vec<Item> {
         TSType::TSTypeLiteral(lit) => {
             let parent = name.to_string();
             let mut anon = Vec::new();
+            // A type-alias inline struct is not itself registered as an
+            // interface, so its fields never cycle back to the alias name —
+            // pass an empty registry (the cycle check is a no-op here, the
+            // same behavior as before the mutual-recursion support).
+            let registry = super::super::registry::TypeRegistry::default();
             let fields: Vec<TokenStream> = lit
                 .members
                 .iter()
-                .filter_map(|sig| super::interface::struct_field(sig, &parent, &mut anon))
+                .filter_map(|sig| {
+                    super::interface::struct_field(sig, &parent, &mut anon, &registry)
+                })
                 .collect();
             let mut items = anon;
             // A struct a crate-root union enum references (its alias was
