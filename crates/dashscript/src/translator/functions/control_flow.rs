@@ -187,6 +187,23 @@ pub(super) fn translate_for_of(
             })];
         }
     }
+    // `for (const [k, v] of <iterable>)` — a two-element array-pattern
+    // destructure over a bare pair source that is neither `Object.entries(x)`
+    // nor `<x>.entries()` (both handled above): a const tuple table
+    // (`BORDER_SIDES`), a `Map`, or any pair-yielding expression. Lower to
+    // `for (k, v) in <iter>.clone().into_iter()` so each binding owns its tuple
+    // field — mirroring the Object.entries branch. The iterable is cloned once
+    // (typically a small const table or a `Map`'s entry list), so a move-site
+    // use of `v` needs no reference dance; the bindings stay untyped (their
+    // uses fall through to generic handling), which is strictly better than the
+    // previous fall-through that emitted `for _ in …` and left every `k`/`v`
+    // use as an E0425.
+    if let Some((k, v)) = for_of_array_pattern_bindings(&stmt.left) {
+        let ctx = Ctx::new(&*locals, registry, narrow, names);
+        let iter = expressions::translate_expr(&stmt.right, &ctx);
+        let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
+        return vec![parse_quote!(for (#k, #v) in #iter.clone().into_iter() #body)];
+    }
     let Some(pat) = for_of_binding(&stmt.left, names) else {
         return vec![];
     };

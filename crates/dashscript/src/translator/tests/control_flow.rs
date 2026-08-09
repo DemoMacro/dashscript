@@ -24,6 +24,21 @@ fn translates_for_of_as_borrow() {
 }
 
 #[test]
+fn translates_for_of_bare_array_pattern_destructure() {
+    // `for (const [k, v] of <iterable>)` over a bare pair source that is
+    // neither `Object.entries(x)` nor `<x>.entries()` — a const pair table or
+    // a Map — lowers to `for (k, v) in <iter>.clone().into_iter()` so each
+    // binding owns its tuple field. The previous fall-through emitted
+    // `for _ in …`, leaving every `k`/`v` use as an E0425.
+    let src = "function main(): void { const pairs: [string, number][] = [['a', 1], ['b', 2]]; for (const [k, v] of pairs) { console.log(k); console.log(v); } }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("for (k, v) in pairs.clone().into_iter()"),
+        "got:\n{rust}"
+    );
+}
+
+#[test]
 fn translates_switch_to_match() {
     let src = "type Status = \"pending\" | \"done\"; function f(s: Status): void { switch (s) { case \"pending\": console.log(\"p\"); break; default: console.log(\"?\"); } }";
     let rust = Translator::new().translate(src).expect("should translate");
