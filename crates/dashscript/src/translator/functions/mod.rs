@@ -245,17 +245,12 @@ pub fn translate_statement(
         // namespace import (`import * as ns`) lowers to its own
         // `use other as ns;` (a module-path alias, not a group leaf).
         Statement::ImportDeclaration(imp) => {
-            // B6-5c: a whole-module-degraded file's functions all run under the
-            // engine (`call_module_fn`), so a value import (`import { sha512 }`
-            // from a degraded npm `.js`) is never referenced statically — its
-            // `use` would point at a stub whose `export const sha512` has no
-            // callable specialization, failing to resolve. Skip value-import
-            // `use`; the engine's module loader resolves it at run time. A type
-            // import (`import type`) is still emitted — Rust signatures still
-            // reference the imported type.
-            if whole_module_degrade() && imp.import_kind.is_value() {
-                return Vec::new();
-            }
+            // whole_module_degrade routes top-level functions to the engine
+            // (`call_module_fn`), but class methods stay static (a class is not
+            // an exec stmt) and may reference a value import — so the `use`
+            // must still resolve. Emit value-import `use`; one that only feeds
+            // engine-routed top-level fns is an unused warning, not an error.
+            // (A type import emits the same way regardless.)
             let Some(mod_ident) = super::imports::module_ident(&imp.source.value) else {
                 return Vec::new();
             };
