@@ -503,6 +503,16 @@ fn collect_inline_type_defs(ty: &TSType, registry: &mut TypeRegistry) {
                 }
             }
         }
+        // `A & B` (intersection) — `translate_type` lowers it to the first
+        // member, so an inline-object member (`{ ... } & Mixin`) emits a
+        // `crate::__DsAnon_<hash>` reference to that literal. Recurse into
+        // every member so the literal's anon struct is registered and hoisted
+        // to the crate root; otherwise the reference is unresolved (E0425).
+        TSType::TSIntersectionType(inter) => {
+            for t in &inter.types {
+                collect_inline_type_defs(t, registry);
+            }
+        }
         TSType::TSArrayType(arr) => collect_inline_type_defs(&arr.element_type, registry),
         TSType::TSTupleType(t) => {
             for e in &t.element_types {

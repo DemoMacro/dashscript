@@ -160,7 +160,55 @@ pub(crate) fn collect_package_union_enums(
     Ok(shared)
 }
 
-/// Walk the entry's import graph and aggregate every file's function/const-arrow
+/// Walk the entry's import graph and aggregate every file's anonymous
+/// `__DsAnon_<hash>` structs, the struct analogue of
+/// [`collect_package_union_enums`]. A module-file inline-object type
+/// (`type IParts = { … }`) is referenced as `crate::__DsAnon_<hash>`, so the
+/// entry must hoist every module's anon struct to the crate root via
+/// [`Translator::with_extra_anon_structs`].
+pub(crate) fn collect_package_anon_structs(
+    src: &str,
+    src_path: &Path,
+) -> Result<std::collections::HashMap<syn::Ident, syn::ItemStruct>, Box<dyn Error>> {
+    use std::collections::{HashMap, HashSet, VecDeque};
+    let collector = Translator::new();
+    let mut shared: HashMap<syn::Ident, syn::ItemStruct> = collector
+        .collect_anon_structs(src)
+        .map_err(|e| format!("collect anon structs {}: {e}", src_path.display()))?;
+    let base = src_path.parent().unwrap_or_else(|| Path::new(""));
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut worklist: VecDeque<(PathBuf, Option<String>)> = VecDeque::new();
+    for imp in collector.imports(src) {
+        let member = workspace_member_crate(base, &imp.source);
+        if seen.insert(dep_mod_name(&imp.source, &imp.module, &member)) {
+            let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+            if !matches!(kind, DepKind::Js) {
+                worklist.push_back((dep_path, member));
+            }
+        }
+    }
+    while let Some((path, member)) = worklist.pop_front() {
+        let dep_src = fs::read_to_string(&path)
+            .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
+        for (k, v) in collector
+            .collect_anon_structs(&dep_src)
+            .map_err(|e| format!("collect anon structs {}: {e}", path.display()))?
+        {
+            shared.entry(k).or_insert_with(|| v);
+        }
+        let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in collector.imports(&dep_src) {
+            let child_member = workspace_member_crate(dep_base, &imp.source).or(member.clone());
+            if seen.insert(dep_mod_name(&imp.source, &imp.module, &child_member)) {
+                let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
+                if !matches!(kind, DepKind::Js) {
+                    worklist.push_back((dep_path, child_member));
+                }
+            }
+        }
+    }
+    Ok(shared)
+}
 /// signatures (name, type params, return type), the signature analogue of
 /// [`collect_package_union_enums`]. A module-global factory singleton
 /// (`const p = createFactory<T>(...)`) infers its type from a callee defined in

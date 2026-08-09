@@ -301,6 +301,11 @@ pub struct Translator {
     /// build aggregates union enums once ([`Self::collect_union_enums`]) and
     /// injects them ([`Self::with_extra_union_enums`]).
     extra_union_enums: HashMap<syn::Ident, syn::ItemEnum>,
+    /// Anonymous `__DsAnon_<hash>` structs from the rest of the package (see
+    /// [`Self::with_extra_anon_structs`]), merged into each file's registry so
+    /// an inline-object type referenced via `crate::__DsAnon_*` resolves at the
+    /// crate root whether the type originates in this file or a module.
+    extra_anon_structs: HashMap<syn::Ident, syn::ItemStruct>,
     /// Function/const-arrow signatures from the rest of the package (see
     /// [`Self::with_extra_function_signatures`]), merged into each file's
     /// registry so a module-global factory singleton infers its type from a
@@ -316,6 +321,7 @@ impl Translator {
             extra_optionals: HashMap::new(),
             extra_fields: HashMap::new(),
             extra_union_enums: HashMap::new(),
+            extra_anon_structs: HashMap::new(),
             extra_function_signatures: HashMap::new(),
         }
     }
@@ -354,6 +360,20 @@ impl Translator {
     #[must_use]
     pub fn with_extra_union_enums(mut self, unions: HashMap<syn::Ident, syn::ItemEnum>) -> Self {
         self.extra_union_enums = unions;
+        self
+    }
+
+    /// Inject anonymous `__DsAnon_<hash>` structs collected from the rest of
+    /// the package, so a module-file inline-object type (`type IParts = { … }`)
+    /// referenced as `crate::__DsAnon_*` is hoisted to the crate root by the
+    /// entry's [`Self::union_enum_items`]. The struct analogue of
+    /// [`Self::with_extra_union_enums`].
+    #[must_use]
+    pub fn with_extra_anon_structs(
+        mut self,
+        structs: HashMap<syn::Ident, syn::ItemStruct>,
+    ) -> Self {
+        self.extra_anon_structs = structs;
         self
     }
 
@@ -1447,6 +1467,30 @@ impl Translator {
         Ok(registry.union_enums)
     }
 
+    /// Collect this file's anonymous `__DsAnon_<hash>` structs (one per unique
+    /// inline-object-literal type shape), the struct analogue of
+    /// [`Self::collect_union_enums`]. `ds build` aggregates these across the
+    /// import graph so the entry can hoist every module's anon struct to the
+    /// crate root (where `crate::__DsAnon_*` references resolve).
+    pub fn collect_anon_structs(
+        &self,
+        source: &str,
+    ) -> Result<HashMap<syn::Ident, syn::ItemStruct>, String> {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return Err(format!(
+                "dashscript: oxc reported {} parse diagnostic(s)",
+                ret.diagnostics.len()
+            ));
+        }
+        let program = allocator.alloc(ret.program);
+        let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+        let names = name_table::build(sret.semantic.scoping());
+        let registry = registry::build_registry(&program.body, &names);
+        Ok(registry.anon_structs)
+    }
+
     /// Collect this file's function/const-arrow signatures (name, type params,
     /// return type), for cross-file sharing via
     /// [`Self::with_extra_function_signatures`]. The signature analogue of
@@ -1554,6 +1598,15 @@ impl Translator {
         for (name, item) in &self.extra_union_enums {
             registry
                 .union_enums
+                .entry(name.clone())
+                .or_insert_with(|| item.clone());
+        }
+        // Same cross-file merge for anon structs: a module's
+        // `crate::__DsAnon_<hash>` reference resolves at the crate root only
+        // if the entry hoists that module's anon struct here.
+        for (name, item) in &self.extra_anon_structs {
+            registry
+                .anon_structs
                 .entry(name.clone())
                 .or_insert_with(|| item.clone());
         }

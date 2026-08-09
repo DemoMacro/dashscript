@@ -97,12 +97,14 @@ pub fn translate_sources(
     let shared_optionals = collect_package_optionals(src, src_path)?;
     let shared_fields = collect_package_fields(src, src_path)?;
     let shared_unions = collect_package_union_enums(src, src_path)?;
+    let shared_anon_structs = collect_package_anon_structs(src, src_path)?;
     let shared_signatures = collect_package_function_signatures(src, src_path)?;
     let shared_lazy_statics = collect_package_lazy_statics(src, src_path)?;
     let translator = Translator::new()
         .with_extra_optionals(shared_optionals)
         .with_extra_fields(shared_fields)
         .with_extra_union_enums(shared_unions)
+        .with_extra_anon_structs(shared_anon_structs)
         .with_extra_function_signatures(shared_signatures);
     // Publish the import graph's lazy-static exports so every consumer file
     // recognizes an imported lazy static (accessor-name `use`, accessor-call
