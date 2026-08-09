@@ -204,6 +204,32 @@ pub(super) fn translate_for_of(
         let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
         return vec![parse_quote!(for (#k, #v) in #iter.clone().into_iter() #body)];
     }
+    // `for (const { a, b } of <iterable>)` — an object-pattern destructure over
+    // a struct-yielding source (a `Vec<record>` parameter, a const table of
+    // object literals). Lower to a synthetic loop element with a per-field
+    // prelude — `let a = __ds_for_of_elem.a;` — so each sub-binding enters
+    // scope, reusing the param-destructure prelude (`destructure_param_binding`).
+    // The iterable is cloned once and iterated owned, so a field moves out of
+    // the element freely; the element is a `pub`-field record (a named struct or
+    // a synthetic anonymous struct, both `#[derive(Clone)]`). The previous
+    // fall-through emitted `for _ in …` and left every field use as an E0425.
+    // Nested/rest/default sub-patterns are an honest partial — the prelude
+    // emits no binding for them, so a body use stays an E0425 (same as the
+    // param form).
+    if let Some(pat) = for_of_object_pattern(&stmt.left) {
+        let elem = format_ident!("__ds_for_of_elem");
+        let ctx = Ctx::new(&*locals, registry, narrow, names);
+        let iter = expressions::translate_expr(&stmt.right, &ctx);
+        let prelude =
+            super::destructure::destructure_param_binding(pat, elem.clone(), false, names);
+        let body = statement_block(&stmt.body, locals, registry, narrow, return_path, names);
+        return vec![parse_quote!({
+            for #elem in #iter.clone().into_iter() {
+                #(#prelude)*
+                #body
+            }
+        })];
+    }
     let Some(pat) = for_of_binding(&stmt.left, names) else {
         return vec![];
     };
@@ -387,6 +413,20 @@ fn for_of_array_pattern_bindings(left: &ForStatementLeft) -> Option<(Ident, Iden
     let key = binding_ident(arr.elements.first()?.as_ref()?)?;
     let val = binding_ident(arr.elements.get(1)?.as_ref()?)?;
     Some((key, val))
+}
+
+/// `for (const { … } of …)` — the object-pattern binding, when the left is an
+/// object destructure. `None` for any other left shape (a single binding, an
+/// array pattern, etc.).
+fn for_of_object_pattern<'a>(left: &'a ForStatementLeft<'a>) -> Option<&'a BindingPattern<'a>> {
+    let ForStatementLeft::VariableDeclaration(decl) = left else {
+        return None;
+    };
+    let d = decl.declarations.first()?;
+    match &d.id {
+        BindingPattern::ObjectPattern(_) => Some(&d.id),
+        _ => None,
+    }
 }
 
 fn binding_ident(pat: &BindingPattern) -> Option<Ident> {

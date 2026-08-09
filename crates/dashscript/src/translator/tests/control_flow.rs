@@ -39,6 +39,22 @@ fn translates_for_of_bare_array_pattern_destructure() {
 }
 
 #[test]
+fn translates_for_of_object_pattern_destructure() {
+    // `for (const { a, b } of <iterable>)` over a struct-yielding source lowers
+    // to a synthetic loop element with a per-field prelude (`let a = e.a;`),
+    // reusing the param-destructure prelude. The previous fall-through emitted
+    // `for _ in …`, leaving every field use as an E0425.
+    let src = "interface P { a: number; b: string; } function main(xs: P[]): void { for (const { a, b } of xs) { console.log(a); console.log(b); } }";
+    let rust = Translator::new().translate(src).expect("should translate");
+    assert!(
+        rust.contains("for __ds_for_of_elem in xs.clone().into_iter()"),
+        "got:\n{rust}"
+    );
+    assert!(rust.contains("let a = __ds_for_of_elem.a"), "got:\n{rust}");
+    assert!(rust.contains("let b = __ds_for_of_elem.b"), "got:\n{rust}");
+}
+
+#[test]
 fn translates_switch_to_match() {
     let src = "type Status = \"pending\" | \"done\"; function f(s: Status): void { switch (s) { case \"pending\": console.log(\"p\"); break; default: console.log(\"?\"); } }";
     let rust = Translator::new().translate(src).expect("should translate");
