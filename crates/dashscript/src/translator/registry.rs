@@ -400,6 +400,19 @@ fn register_variable_declaration(decl: &VariableDeclaration, registry: &mut Type
                 source_crate: None,
             },
         );
+        // A const-arrow's param/return annotations can carry an inline union
+        // (`const f = (x: Foo | number): Bar | number => …`) whose `__DsUnion…`
+        // enum the body — degraded or not — references. A `function` decl walks
+        // these in `register_function`; a const arrow must too, or the enum is
+        // named in the signature but never emitted (E0425 at the call site).
+        for fp in &arrow.params.items {
+            if let Some(ta) = fp.type_annotation.as_ref() {
+                collect_inline_type_defs(&ta.type_annotation, registry);
+            }
+        }
+        if let Some(ta) = arrow.return_type.as_deref() {
+            collect_inline_type_defs(&ta.type_annotation, registry);
+        }
     }
 }
 
