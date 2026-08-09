@@ -99,13 +99,15 @@ pub fn translate_sources(
     let shared_unions = collect_package_union_enums(src, src_path)?;
     let shared_anon_structs = collect_package_anon_structs(src, src_path)?;
     let shared_signatures = collect_package_function_signatures(src, src_path)?;
+    let shared_param_optional = collect_package_function_param_optional(src, src_path)?;
     let shared_lazy_statics = collect_package_lazy_statics(src, src_path)?;
     let translator = Translator::new()
         .with_extra_optionals(shared_optionals)
         .with_extra_fields(shared_fields)
         .with_extra_union_enums(shared_unions)
         .with_extra_anon_structs(shared_anon_structs)
-        .with_extra_function_signatures(shared_signatures);
+        .with_extra_function_signatures(shared_signatures)
+        .with_extra_function_param_optional(shared_param_optional);
     // Publish the import graph's lazy-static exports so every consumer file
     // recognizes an imported lazy static (accessor-name `use`, accessor-call
     // reference, `HashMap` index). Cleared on translate end (the guard) so it
@@ -782,6 +784,8 @@ pub fn translate_project(
     // fields/optionals/lazy-statics above.
     let mut shared_signatures: std::collections::HashMap<String, crate::translator::FnSignature> =
         std::collections::HashMap::new();
+    let mut shared_param_optional: std::collections::HashMap<String, Vec<bool>> =
+        std::collections::HashMap::new();
     for ds in &files {
         let Ok(src) = fs::read_to_string(ds) else {
             continue;
@@ -801,6 +805,12 @@ pub fn translate_project(
         {
             shared_signatures.entry(k).or_insert(v);
         }
+        for (k, v) in collector
+            .collect_function_param_optional(&src)
+            .unwrap_or_default()
+        {
+            shared_param_optional.entry(k).or_insert_with(|| v);
+        }
         let base = ds.parent().unwrap_or_else(|| Path::new(""));
         for imp in collector.imports(&src) {
             if workspace_member_crate(base, &imp.source).is_some() {
@@ -808,10 +818,27 @@ pub fn translate_project(
             }
         }
     }
+    // Cross-package (sibling-member) optional-param flags. A workspace member
+    // imports a sibling crate's functions (e.g. `element` from a sibling xml
+    // crate), and a caller must wrap a plain `T` in `Some` for that callee's
+    // optional parameter. The per-file loop above covers this member's own
+    // files (intra-package); this walks the import graph from each entry into
+    // sibling members (cargo path deps) to collect theirs. Same-package flags
+    // (inserted above) win via `or_insert_with`.
+    for entry in &entry_paths {
+        if let Ok(src) = fs::read_to_string(entry) {
+            if let Ok(cross) = collect_package_function_param_optional(&src, entry) {
+                for (k, v) in cross {
+                    shared_param_optional.entry(k).or_insert_with(|| v);
+                }
+            }
+        }
+    }
     let translator = collector
         .with_extra_fields(shared_fields)
         .with_extra_optionals(shared_optionals)
-        .with_extra_function_signatures(shared_signatures);
+        .with_extra_function_signatures(shared_signatures)
+        .with_extra_function_param_optional(shared_param_optional);
     crate::translator::imports::set_workspace_member_crates(member_crates);
     crate::translator::imports::set_lazy_static_exports(shared_lazy_statics);
     // Clears the two Phase B thread-locals (workspace-member crates + lazy-

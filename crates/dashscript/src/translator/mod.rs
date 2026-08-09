@@ -311,6 +311,11 @@ pub struct Translator {
     /// registry so a module-global factory singleton infers its type from a
     /// callee defined in another file.
     extra_function_signatures: HashMap<String, FnSignature>,
+    /// Per-function optional (`?:`) parameter flags from the rest of the
+    /// package (see [`Self::with_extra_function_param_optional`]), merged into
+    /// each file's registry so a caller wraps a plain `T` in `Some` for a
+    /// cross-file/cross-package callee's optional parameter.
+    extra_function_param_optional: HashMap<String, Vec<bool>>,
 }
 
 impl Translator {
@@ -323,6 +328,7 @@ impl Translator {
             extra_union_enums: HashMap::new(),
             extra_anon_structs: HashMap::new(),
             extra_function_signatures: HashMap::new(),
+            extra_function_param_optional: HashMap::new(),
         }
     }
 
@@ -387,6 +393,16 @@ impl Translator {
         signatures: HashMap<String, FnSignature>,
     ) -> Self {
         self.extra_function_signatures = signatures;
+        self
+    }
+
+    /// Inject per-function optional (`?:`) parameter flags collected from the
+    /// rest of the package (and cross-package deps), so a caller into a
+    /// cross-file callee wraps a plain `T` in `Some` for that callee's optional
+    /// parameter. The signature analogue of [`Self::with_extra_function_signatures`].
+    #[must_use]
+    pub fn with_extra_function_param_optional(mut self, flags: HashMap<String, Vec<bool>>) -> Self {
+        self.extra_function_param_optional = flags;
         self
     }
 
@@ -706,6 +722,15 @@ impl Translator {
                 .function_signatures
                 .entry(name.clone())
                 .or_insert_with(|| sig.clone());
+        }
+        // Merge per-function optional-parameter flags from the rest of the
+        // package (and cross-package deps), so a caller into a cross-file
+        // callee wraps a plain `T` in `Some` for that callee's optional param.
+        for (name, flags) in &self.extra_function_param_optional {
+            registry
+                .function_param_optional
+                .entry(name.clone())
+                .or_insert_with(|| flags.clone());
         }
         // Escape promotion (A3): a top-level `const` number/boolean literal
         // referenced from a top-level `function` cannot stay in `fn main` (a
@@ -1518,6 +1543,34 @@ impl Translator {
         let names = name_table::build(sret.semantic.scoping());
         let registry = registry::build_registry(&program.body, &names);
         Ok(registry.function_signatures)
+    }
+
+    /// Collect this file's per-function optional (`?:`) parameter flags, for
+    /// cross-file sharing via
+    /// [`Self::with_extra_function_param_optional`]. The param analogue of
+    /// [`Self::collect_function_signatures`]: a package build aggregates these
+    /// across the import graph and injects them, so a caller wraps a plain `T`
+    /// in `Some` for a cross-file/cross-package callee's optional parameter.
+    ///
+    /// # Errors
+    /// Returns an error string if oxc reports parse diagnostics.
+    pub fn collect_function_param_optional(
+        &self,
+        source: &str,
+    ) -> Result<HashMap<String, Vec<bool>>, String> {
+        let allocator = Allocator::default();
+        let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
+        if !ret.diagnostics.is_empty() {
+            return Err(format!(
+                "dashscript: oxc reported {} parse diagnostic(s)",
+                ret.diagnostics.len()
+            ));
+        }
+        let program = allocator.alloc(ret.program);
+        let sret = SemanticBuilder::new().with_build_nodes(true).build(program);
+        let names = name_table::build(sret.semantic.scoping());
+        let registry = registry::build_registry(&program.body, &names);
+        Ok(registry.function_param_optional)
     }
 
     /// The lazy-static exports of a `.ts` source — each export's accessor name

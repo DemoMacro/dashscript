@@ -704,6 +704,13 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
         Expression::Identifier(id) => ctx.function_defaults(&id.name),
         _ => None,
     };
+    // Per-parameter "is optional (`?:`, no default)?" flags — an optional
+    // parameter lowers to `Option<T>`, so a caller passing a plain `T` wraps
+    // it in `Some` (a defaulted parameter is wrapped by the `defaults` path).
+    let optional_flags: Option<&[bool]> = match &call.callee {
+        Expression::Identifier(id) => ctx.function_param_optional(&id.name),
+        _ => None,
+    };
     // Per-parameter reference-parameter (`&mut`) flags — a call borrows a
     // bare-identifier argument in place (`&mut arg`) at those positions instead
     // of cloning, so the callee's `c[i] = v` is visible here (ES reference
@@ -783,6 +790,11 @@ pub(super) fn translate_call(call: &CallExpression, ctx: &Ctx<'_>) -> Expr {
             // the callee takes `Option<Element>`) also needs `Some`.
             if defaults.is_some_and(|d| d.get(i) == Some(&true)) {
                 parse_quote!(Some(#val))
+            } else if optional_flags.is_some_and(|o| o.get(i) == Some(&true)) {
+                match a.as_expression() {
+                    Some(e) => super::wrap_for_optional_param(e, val, ctx),
+                    None => val,
+                }
             } else if let Some(e) = a.as_expression() {
                 super::implicit_some(e, val, hint_ty.as_ref(), ctx)
             } else {

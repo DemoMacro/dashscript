@@ -75,6 +75,14 @@ pub struct TypeRegistry {
     /// Function name → per-parameter "has a default initializer?" flag. Callers
     /// wrap a supplied value in `Some`, and an omitted trailing one in `None`.
     pub function_defaults: HashMap<String, Vec<bool>>,
+    /// Function name → per-parameter "is optional (`?:`)?" flag. An optional
+    /// parameter lowers to `Option<T>`, so a caller passing a plain `T` wraps
+    /// it in `Some`. Distinct from `function_defaults` (a `=` initializer):
+    /// both lower to `Option<T>`, but a defaulted param is wrapped by the
+    /// `function_defaults` path, an optional-no-default param by this one.
+    /// Consulted only for the wrap decision — unlike `functions` (param type
+    /// paths), it never flows into hint-type consumers.
+    pub function_param_optional: HashMap<String, Vec<bool>>,
     /// Function name → per-parameter "is a reference parameter?" (`&mut`) flag.
     /// A parameter the body member-mutates (`c[i] = v`, `xs.push(…)`) but does
     /// not rebind becomes `&mut T`, so the caller's mutation is visible — ES
@@ -146,6 +154,7 @@ impl TypeRegistry {
             unions: HashMap::new(),
             functions: HashMap::new(),
             function_defaults: HashMap::new(),
+            function_param_optional: HashMap::new(),
             ref_params: HashMap::new(),
             function_returns: HashMap::new(),
             function_signatures: HashMap::new(),
@@ -342,6 +351,9 @@ fn register_function(func: &Function, names: &NameTable, registry: &mut TypeRegi
     registry
         .function_defaults
         .insert(name.clone(), function_default_flags(func));
+    registry
+        .function_param_optional
+        .insert(name.clone(), function_param_optional_flags(func));
     registry
         .ref_params
         .insert(name.clone(), ref_param_flags(func, names));
@@ -636,6 +648,17 @@ fn function_default_flags(func: &Function) -> Vec<bool> {
         .items
         .iter()
         .map(|fp| fp.initializer.is_some())
+        .collect()
+}
+
+/// Per-parameter "is optional (`?:`)?" flag. An optional parameter has no
+/// initializer (a `= …` makes it defaulted, not optional) but a `?`, and
+/// lowers to `Option<T>` — so a caller passing a plain `T` wraps it in `Some`.
+fn function_param_optional_flags(func: &Function) -> Vec<bool> {
+    func.params
+        .items
+        .iter()
+        .map(|fp| fp.optional && fp.initializer.is_none())
         .collect()
 }
 

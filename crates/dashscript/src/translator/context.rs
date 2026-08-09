@@ -346,6 +346,17 @@ impl<'a> Ctx<'a> {
         self.registry.function_defaults.get(name).map(Vec::as_slice)
     }
 
+    /// Per-parameter "is optional (`?:`, no default)?" flags for the function
+    /// named `name` (original `.ts` spelling). An optional parameter lowers to
+    /// `Option<T>`, so a caller passing a plain `T` wraps it in `Some`.
+    #[must_use]
+    pub fn function_param_optional(&self, name: &str) -> Option<&'a [bool]> {
+        self.registry
+            .function_param_optional
+            .get(name)
+            .map(Vec::as_slice)
+    }
+
     /// Per-parameter "is a reference parameter?" (`&mut`) flags for the function
     /// named `name` (original `.ts` spelling), if any. A call site passes
     /// `&mut arg` (not a clone) at those positions so the callee's mutation is

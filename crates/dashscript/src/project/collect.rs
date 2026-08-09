@@ -270,6 +270,57 @@ pub(crate) fn collect_package_function_signatures(
     Ok(shared)
 }
 
+/// Aggregate per-function optional (`?:`) parameter flags across the whole
+/// import graph (the entry and each recursive `.ts` dep), the param analogue
+/// of [`collect_package_function_signatures`]. A caller into a cross-file or
+/// cross-package callee needs that callee's optional-param flags to wrap a
+/// plain `T` in `Some`, but each file builds its own `TypeRegistry`, so the
+/// package build shares them here via
+/// [`Translator::with_extra_function_param_optional`].
+pub(crate) fn collect_package_function_param_optional(
+    src: &str,
+    src_path: &Path,
+) -> Result<std::collections::HashMap<String, Vec<bool>>, Box<dyn Error>> {
+    use std::collections::{HashMap, HashSet, VecDeque};
+    let collector = Translator::new();
+    let mut shared: HashMap<String, Vec<bool>> = collector
+        .collect_function_param_optional(src)
+        .map_err(|e| format!("collect optional params {}: {e}", src_path.display()))?;
+    let base = src_path.parent().unwrap_or_else(|| Path::new(""));
+    let mut seen: HashSet<String> = HashSet::new();
+    let mut worklist: VecDeque<(PathBuf, Option<String>)> = VecDeque::new();
+    for imp in collector.imports(src) {
+        let member = workspace_member_crate(base, &imp.source);
+        if seen.insert(dep_mod_name(&imp.source, &imp.module, &member)) {
+            let (dep_path, kind) = resolve_local_module(base, &imp.source)?;
+            if !matches!(kind, DepKind::Js) {
+                worklist.push_back((dep_path, member));
+            }
+        }
+    }
+    while let Some((path, _member)) = worklist.pop_front() {
+        let dep_src = fs::read_to_string(&path)
+            .map_err(|e| format!("cannot read import {}: {e}", path.display()))?;
+        for (k, v) in collector
+            .collect_function_param_optional(&dep_src)
+            .map_err(|e| format!("collect optional params {}: {e}", path.display()))?
+        {
+            shared.entry(k).or_insert_with(|| v);
+        }
+        let dep_base = path.parent().unwrap_or_else(|| Path::new(""));
+        for imp in collector.imports(&dep_src) {
+            let child_member = workspace_member_crate(dep_base, &imp.source).or(_member.clone());
+            if seen.insert(dep_mod_name(&imp.source, &imp.module, &child_member)) {
+                let (dep_path, kind) = resolve_local_module(dep_base, &imp.source)?;
+                if !matches!(kind, DepKind::Js) {
+                    worklist.push_back((dep_path, child_member));
+                }
+            }
+        }
+    }
+    Ok(shared)
+}
+
 /// Aggregate the lazy-static exports across the whole import graph (the
 /// entry and each recursive `.ts` dep) into one accessor-name to cell-type
 /// map, set on the translator before the entry translates so every consumer

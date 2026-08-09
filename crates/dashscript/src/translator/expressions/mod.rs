@@ -83,6 +83,40 @@ pub(in crate::translator) fn implicit_some(
     expr
 }
 
+/// Wrap `val` in `Some(..)` for an optional (`?:`) parameter — one that
+/// lowers to `Option<T>` — when the argument is a plain `T`. The dual of
+/// [`implicit_some`] for non-identifier arguments: a fresh value (a literal,
+/// array, object, or `new` expression) is never itself an `Option<T>`, so
+/// wrapping is always correct; an identifier reuses the `implicit_some` guard
+/// (skip `undefined`/`null` and known `Option<T>` locals). Anything else (a
+/// call, member access, logical/conditional) might already be `Option<T>`, so
+/// it keeps its spelling — `cargo check` backstops a missing wrap. `?:` is a
+/// TypeScript-only parameter shape, so pure-ES (`.js`) sources never reach
+/// here.
+pub(in crate::translator) fn wrap_for_optional_param(
+    arg: &Expression,
+    val: Expr,
+    ctx: &Ctx<'_>,
+) -> Expr {
+    use oxc_ast::ast::Expression::*;
+    match arg {
+        Identifier(id) => {
+            let is_none_literal = matches!(id.name.as_str(), "undefined" | "null");
+            if !is_none_literal && !ctx.is_option(&bindings::snake(&id.name).to_string()) {
+                parse_quote!(::std::option::Option::Some(#val))
+            } else {
+                val
+            }
+        }
+        // A fresh value is never an `Option<T>` itself. (`null`/`undefined`
+        // literals are not in this set — they already lowered to `None`.)
+        StringLiteral(_) | NumericLiteral(_) | BooleanLiteral(_) | BigIntLiteral(_)
+        | RegExpLiteral(_) | TemplateLiteral(_) | ArrayExpression(_) | ObjectExpression(_)
+        | NewExpression(_) => parse_quote!(::std::option::Option::Some(#val)),
+        _ => val,
+    }
+}
+
 /// Translate `expr` and cast it to number-flavor `to`. A numeric literal is
 /// re-emitted at the target flavor (no cast); any other expression is
 /// translated then cast if its own flavor differs. Used at arithmetic /
