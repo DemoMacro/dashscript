@@ -156,7 +156,7 @@ pub fn translate_sources(
     // definition reaches the crate root. So each dep's unions are collected
     // too, and any the entry did not already emit are prepended to `main.rs`.
     let mut emitted_enums: std::collections::HashSet<String> = translator
-        .union_enum_items(src)
+        .union_enum_items(src, &Default::default())
         .into_iter()
         .map(|(name, _)| name)
         .collect();
@@ -254,7 +254,7 @@ pub fn translate_sources(
         }
         let dep_src = fs::read_to_string(&dep_path)
             .map_err(|e| format!("cannot read import {}: {e}", dep_path.display()))?;
-        for (name, text) in translator.union_enum_items(&dep_src) {
+        for (name, text) in translator.union_enum_items(&dep_src, &Default::default()) {
             if emitted_enums.insert(name) {
                 extra_enum_text.push_str(&text);
                 extra_enum_text.push('\n');
@@ -869,6 +869,20 @@ pub fn translate_project(
     // emit no definition. Without this the crate root lacks the union
     // definitions every module names (`translate_sources` does the equivalent
     // at its lone-file crate root — `ds build` collects across entry + deps).
+    // The barrel enums name types defined in `app/` submodules; at the crate
+    // root those bare names do not resolve, so build a type→module map from
+    // the emitted files and let `union_enum_items` qualify them.
+    let mut type_module: std::collections::HashMap<String, String> =
+        std::collections::HashMap::new();
+    for f in &emit_files {
+        if f.is_root_entry {
+            continue;
+        }
+        let module = f.rel_path.trim_end_matches(".rs").replace('/', "::");
+        for name in translator.pub_types_in(&f.content) {
+            type_module.insert(name, module.clone());
+        }
+    }
     let mut emitted_union_enums: std::collections::HashSet<String> =
         std::collections::HashSet::new();
     let mut extra_union_enums = String::new();
@@ -876,7 +890,7 @@ pub fn translate_project(
         let Ok(src) = fs::read_to_string(ds) else {
             continue;
         };
-        for (name, text) in translator.union_enum_items(&src) {
+        for (name, text) in translator.union_enum_items(&src, &type_module) {
             if emitted_union_enums.insert(name) {
                 extra_union_enums.push_str(&text);
                 extra_union_enums.push('\n');

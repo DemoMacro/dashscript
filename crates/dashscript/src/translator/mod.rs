@@ -1535,7 +1535,11 @@ impl Translator {
     /// directly still resolves, rather than leaving the module pointing at a
     /// missing `crate::__DsUnion…`.
     #[must_use]
-    pub fn union_enum_items(&self, source: &str) -> Vec<(String, String)> {
+    pub fn union_enum_items(
+        &self,
+        source: &str,
+        type_module: &std::collections::HashMap<String, String>,
+    ) -> Vec<(String, String)> {
         let allocator = Allocator::default();
         let ret = Parser::new(&allocator, source, SourceType::ts()).parse();
         let program = allocator.alloc(ret.program);
@@ -1574,6 +1578,11 @@ impl Translator {
         if force {
             declarations::add_serde_derives(&mut serde_items);
         }
+        // The crate-root barrel names types defined in `app/` submodules; at
+        // the crate root those bare names do not resolve, so qualify them to
+        // `crate::<module>::<name>`. (`type_module` is empty in lone-file
+        // mode, making this a no-op there.)
+        declarations::qualify_item_types(&mut serde_items, type_module);
         let mut items: Vec<(String, String)> = Vec::new();
         for item in &serde_items {
             match item {
@@ -1621,6 +1630,28 @@ impl Translator {
         }
         items.sort_by(|a, b| a.0.cmp(&b.0));
         items
+    }
+
+    /// The public struct/enum names defined at the top level of the given Rust
+    /// source (already-emitted content). Used by the project layer to build the
+    /// type→module map that `union_enum_items` qualifies barrel types against.
+    #[must_use]
+    pub fn pub_types_in(&self, rust_src: &str) -> Vec<String> {
+        let Ok(file) = syn::parse_file(rust_src) else {
+            return Vec::new();
+        };
+        file.items
+            .into_iter()
+            .filter_map(|item| match item {
+                syn::Item::Struct(s) if matches!(s.vis, syn::Visibility::Public(_)) => {
+                    Some(s.ident.to_string())
+                }
+                syn::Item::Enum(e) if matches!(e.vis, syn::Visibility::Public(_)) => {
+                    Some(e.ident.to_string())
+                }
+                _ => None,
+            })
+            .collect()
     }
 
     /// The bare-crate imports in a `.ts` file (`import { X } from "crate"`),

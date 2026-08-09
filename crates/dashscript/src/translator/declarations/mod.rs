@@ -18,9 +18,13 @@ pub(in crate::translator) use union_enum::{
 };
 
 use std::cell::RefCell;
-use std::collections::HashSet;
+use std::collections::{HashMap, HashSet};
 
-use syn::{parse_quote, Ident, Item, Meta, Type};
+use syn::{
+    parse_quote,
+    visit_mut::{self, VisitMut},
+    Ident, Item, Meta, Type,
+};
 
 thread_local! {
     /// Type names that cannot derive serde, accumulated across the files of one
@@ -37,6 +41,45 @@ thread_local! {
 /// `translate_with_deps`) so a name from one cannot leak into another.
 pub(crate) fn reset_non_serde_names() {
     NON_SERDE_NAMES.with(|c| c.borrow_mut().clear());
+}
+
+/// Rewrite bare single-segment type paths in the given items to their
+/// fully-qualified crate path. A union enum / anon struct hoisted to the crate
+/// root names types defined in `app/` submodules; at the crate root those bare
+/// names do not resolve (the submodule is not in scope), so `PathArcTo` must
+/// become `crate::app::…::PathArcTo`. `type_module` maps a type's name to its
+/// defining module path (without the leading `crate::`); names absent from the
+/// map are left bare. An empty map is a no-op.
+pub(crate) fn qualify_item_types(items: &mut [Item], type_module: &HashMap<String, String>) {
+    if type_module.is_empty() {
+        return;
+    }
+    let mut visitor = QualifyTypes { map: type_module };
+    for item in items.iter_mut() {
+        visitor.visit_item_mut(item);
+    }
+}
+
+struct QualifyTypes<'a> {
+    map: &'a HashMap<String, String>,
+}
+
+impl<'a> VisitMut for QualifyTypes<'a> {
+    fn visit_type_mut(&mut self, ty: &mut Type) {
+        // Recurse first (bottom-up): rewriting an outer type must not skip an
+        // inner bare name (`Vec<PathArcTo>` → `Vec<crate::…::PathArcTo>`).
+        visit_mut::visit_type_mut(self, ty);
+        if let Type::Path(tp) = ty {
+            if let Some(ident) = tp.path.get_ident() {
+                if let Some(module) = self.map.get(&ident.to_string()) {
+                    let qualified = format!("crate::{module}::{ident}");
+                    if let Ok(new_ty) = syn::parse_str::<Type>(&qualified) {
+                        *ty = new_ty;
+                    }
+                }
+            }
+        }
+    }
 }
 
 /// Append `serde::Serialize`/`serde::Deserialize` to every emitted struct/enum's
